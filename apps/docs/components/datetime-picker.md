@@ -282,7 +282,7 @@ const handleChange = (value) => {
 
 ## 移动端适配
 
-组件完美适配移动端，在移动设备上会以模态框形式显示。
+组件完美适配移动端，在移动设备上会以下拉/上拉浮动区域形式显示。
 
 :::demo
 
@@ -291,7 +291,7 @@ const handleChange = (value) => {
   <div class="demo-container">
     <div class="demo-item">
       <h4>移动端适配</h4>
-      <p>在移动设备上，选择器会以全屏模态框形式显示，提供更好的用户体验。</p>
+      <p>在移动设备上，选择器会以下拉/上拉浮动区域形式显示，提供更好的用户体验。</p>
       <XDateTimePicker v-model="datetime" mode="datetime" />
       <div class="demo-result">选择结果: {{ datetime }}</div>
     </div>
@@ -303,6 +303,51 @@ import { ref } from 'vue'
 import { XDateTimePicker } from '@xlui/xux-ui'
 
 const datetime = ref(new Date())
+</script>
+```
+
+:::
+
+## 与 useDateTime 结合使用
+
+组件内部集成了 `useDateTime` composable，你也可以单独使用它来处理时间相关的逻辑。
+
+:::demo
+
+```vue
+<template>
+  <div class="demo-container">
+    <div class="demo-item">
+      <h4>结合 useDateTime 使用</h4>
+      <XDateTimePicker v-model="datetime" mode="datetime" />
+      <div class="demo-result">
+        <p>选择结果: {{ datetime }}</p>
+        <p>格式化显示: {{ formatDateTime }}</p>
+        <p>相对时间: {{ relativeTime }}</p>
+        <p>是否今天: {{ isToday ? '是' : '否' }}</p>
+      </div>
+    </div>
+  </div>
+</template>
+
+<script setup>
+import { ref, computed } from 'vue'
+import { XDateTimePicker, useDateTime } from '@xlui/xux-ui'
+
+const datetime = ref(new Date())
+const { format, fromNow, isSame } = useDateTime()
+
+const formatDateTime = computed(() => {
+  return datetime.value ? format(datetime.value, 'YYYY年MM月DD日 HH:mm:ss') : ''
+})
+
+const relativeTime = computed(() => {
+  return datetime.value ? fromNow(datetime.value) : ''
+})
+
+const isToday = computed(() => {
+  return datetime.value ? isSame(datetime.value, new Date(), 'day') : false
+})
 </script>
 ```
 
@@ -347,22 +392,33 @@ const datetime = ref(new Date())
    - 时间选择：只选择时间
    - 日期时间选择：同时选择日期和时间
 
-2. **移动端优化**
+2. **智能定位**
+   - 自动检测屏幕空间
+   - 智能选择下拉或上拉显示
+   - 点击外部自动关闭
+
+3. **移动端优化**
    - 响应式设计，自动适配移动端
-   - 移动端以模态框形式显示
+   - 移动端以下拉/上拉浮动区域形式显示
    - 触摸友好的交互设计
 
-3. **丰富的交互**
+4. **丰富的交互**
    - 日期网格选择
    - 时间滑块和输入框
    - 键盘导航支持
    - 清空和确认操作
 
-4. **灵活的配置**
+5. **灵活的配置**
    - 支持日期范围限制
    - 可自定义标题和占位符
    - 多种尺寸选择
    - 国际化支持
+
+6. **强大的时间处理**
+   - 基于 dayjs 的时间处理
+   - 内置 useDateTime composable
+   - 支持时区和多语言
+   - 完整的时间计算和比较功能
 
 #### 样式设计
 
@@ -378,3 +434,7 @@ const datetime = ref(new Date())
 - 日程安排和会议时间选择
 - 数据筛选和查询
 - 移动端应用的时间选择
+- 时间范围选择器
+- 倒计时和定时器
+- 时间格式化和显示
+- 时间计算和比较

@@ -20,6 +20,7 @@ export { default as XDateTimePicker } from './components/DateTimePicker/index.vu
 // 导出 Composables
 export { xlMsg, default as useMsg } from './composables/Msg'
 export { xlAlert, default as useAlert } from './composables/Alert'
+export { useDateTime, useDateRange, useCountdown, default as useDateTimeDefault } from './composables/DateTime'
 
 // 导出类型定义
 export type { Country, CountrySelectProps } from './components/CountrySelect/index.vue'
@@ -34,4 +35,5 @@ export type { TooltipsProps } from './components/Tooltips/index.vue'
 export type { ScoreProps } from './components/Score/index.vue'
 export type { RadioOption, RadioProps } from './components/Radio/index.vue'
 export type { DateTimePickerProps } from './components/DateTimePicker/index.vue'
+export type { DateTimeOptions, DateRange, CalendarDate } from './composables/DateTime'
 

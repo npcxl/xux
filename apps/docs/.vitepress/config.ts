@@ -31,6 +31,7 @@ export default defineConfig({
     nav: [
       { text: '指南', link: '/guide/introduction' },
       { text: '组件', link: '/components/button' },
+      { text: 'Composables', link: '/composables/' },
       { 
         text: '资源',
         items: [
@@ -50,6 +51,9 @@ export default defineConfig({
             { text: '快速开始', link: '/guide/quickstart' },
           ]
         }
+      ],
+      '/composables/': [
+        
       ],
       '/components/': [
         {
@@ -91,6 +95,12 @@ export default defineConfig({
             { text: 'Modal 弹窗', link: '/components/modal' },
             { text: 'Msg 消息提示', link: '/components/msg' },
             { text: 'Tooltips 提示框', link: '/components/tooltips' },
+          ]
+        },
+        {
+          text: '时间函数',
+          items: [
+            { text: '时间处理函数', link: '/components/datetime-functions' },
           ]
         }
       ]
