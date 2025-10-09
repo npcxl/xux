@@ -136,40 +136,6 @@ const score4 = ref(5)
 </script>
 ```
 
-:::
-
-## 半星评分
-
-支持半星评分功能，提供更精确的评分体验。
-
-:::demo
-
-```vue
-<template>
-  <div class="flex flex-col gap-6">
-    <div class="flex gap-6 items-center">
-      <XScore 
-        v-model="scoreHalf" 
-        :allow-half="true"
-        :show-text="true"
-        :show-value="true"
-      />
-    </div>
-    <div class="text-sm text-gray-600">
-      当前评分: {{ scoreHalf }} 星
-    </div>
-  </div>
-</template>
-
-<script setup>
-import { ref } from 'vue'
-
-const scoreHalf = ref(2.5)
-</script>
-```
-
-:::
-
 ## 自定义最大星数
 
 可以自定义最大星数，比如 10 星评分。
@@ -359,7 +325,6 @@ const handleProductScore = (value) => {
 | showText | 是否显示评分文字 | `boolean` | — | `false` |
 | showValue | 是否显示数值 | `boolean` | — | `false` |
 | texts | 自定义评分文字 | `string[]` | — | `['极差', '差', '一般', '好', '极好']` |
-| allowHalf | 是否允许半星评分 | `boolean` | — | `false` |
 | color | 自定义颜色 | `string` | — | `#ffc73a` |
 
 ### Events
@@ -392,7 +357,6 @@ const handleProductScore = (value) => {
 
 - 支持自定义颜色、尺寸、星数
 - 可配置评分文字和显示选项
-- 预留半星评分功能接口
 
 ## 注意事项
 

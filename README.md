@@ -71,26 +71,6 @@ app.mount('#app')
 </script>
 ```
 
-## 组件列表
-
-- [x] Button 按钮
-- [ ] Card 卡片
-- [ ] Input 输入框
-- [ ] ... 更多组件开发中
-
-## 开发
-
-```bash
-# 安装依赖
-pnpm install
-
-# 开发模式
-pnpm dev
-
-# 构建
-pnpm build
-```
-
 ## License
 
 MIT

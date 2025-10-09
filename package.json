@@ -2,7 +2,7 @@
   "name": "@xux/monorepo",
   "version": "1.0.0",
   "private": true,
-  "description": "UniApp X 组件库 Monorepo",
+  "description": "VUE3组件库 Monorepo",
   "scripts": {
     "dev": "pnpm --filter @xux/docs dev",
     "dev:demo": "pnpm --filter @xux/demo dev",
