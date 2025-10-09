@@ -36,16 +36,16 @@
               <slot name="header">
                 <h3 class="modal-title">{{ title }}</h3>
               </slot>
-              <button
+              <XButton
                 v-if="showClose"
+                size="small"
                 class="modal-close"
+                icon="mdi:close"
                 @click="handleClose"
                 aria-label="关闭"
               >
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <path d="M18 6L6 18M6 6l12 12" />
-                </svg>
-              </button>
+                <Icon icon="mdi:close" />
+              </XButton>
             </div>
 
             <!-- 内容 -->
@@ -56,22 +56,28 @@
             <!-- 底部 -->
             <div v-if="showFooter" class="modal-footer">
               <slot name="footer">
-                <button
+                <XButton
                   v-if="showCancel"
-                  class="modal-btn modal-btn--cancel"
+                  size="small"
+                  ghost
+                  type="danger"
+                
                   @click="handleCancel"
                 >
                   {{ cancelText }}
-                </button>
-                <button
+                </XButton>
+                <XButton
                   v-if="showConfirm"
-                  class="modal-btn modal-btn--confirm"
+                  size="small"
+                  ghost
+                  type="primary"
+              
                   @click="handleConfirm"
                   :disabled="confirmLoading"
                 >
                   <span v-if="confirmLoading" class="loading-spinner"></span>
                   {{ confirmText }}
-                </button>
+                </XButton>
               </slot>
             </div>
           </div>
@@ -83,7 +89,7 @@
 
 <script setup lang="ts">
 import { watch } from 'vue'
-
+import { Icon } from '@iconify/vue'
 /**
  * Modal 模态框组件
  * @displayName XModal

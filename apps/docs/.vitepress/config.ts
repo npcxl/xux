@@ -31,6 +31,7 @@ export default defineConfig({
     nav: [
       { text: '指南', link: '/guide/introduction' },
       { text: '组件', link: '/components/button' },
+      { text: 'Composables', link: '/composables/' },
       { 
         text: '资源',
         items: [
@@ -51,6 +52,9 @@ export default defineConfig({
           ]
         }
       ],
+      '/composables/': [
+        
+      ],
       '/components/': [
         {
           text: '通用',
@@ -70,8 +74,10 @@ export default defineConfig({
             { text: 'Input 输入框', link: '/components/input' },
             { text: 'Select 选择器', link: '/components/select' },
             { text: 'Checkboxes 多选框', link: '/components/checkboxes' },
+            { text: 'Radio 单选框', link: '/components/radio' },
             { text: 'CountrySelect 国家选择', link: '/components/country-select' },
             { text: 'Switch 开关', link: '/components/switch' },
+            { text: 'DateTimePicker 日期时间选择器', link: '/components/datetime-picker' },
           ]
         },
         {
@@ -80,6 +86,7 @@ export default defineConfig({
             { text: 'Accordion 手风琴', link: '/components/accordion' },
             { text: 'Skeleton 骨架屏', link: '/components/skeleton' },
             { text: 'ThumbnailContainer 缩略图容器', link: '/components/thumbnail-container' },
+            { text: 'Score 评分', link: '/components/score' },
           ]
         },
         {
@@ -89,6 +96,12 @@ export default defineConfig({
             { text: 'Modal 弹窗', link: '/components/modal' },
             { text: 'Msg 消息提示', link: '/components/msg' },
             { text: 'Tooltips 提示框', link: '/components/tooltips' },
+          ]
+        },
+        {
+          text: '时间函数',
+          items: [
+            { text: '时间处理函数', link: '/components/datetime-functions' },
           ]
         }
       ]

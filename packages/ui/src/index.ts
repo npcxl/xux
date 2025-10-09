@@ -14,10 +14,14 @@ export { default as XSkeleton } from './components/Skeleton/index.vue'
 export { default as XModal } from './components/Modal/index.vue'
 export { default as XTooltips } from './components/Tooltips/index.vue'
 export { default as XSwitch } from './components/Switch/index.vue'
+export { default as XScore } from './components/Score/index.vue'
+export { default as XRadio } from './components/Radio/index.vue'
+export { default as XDateTimePicker } from './components/DateTimePicker/index.vue'
 
 // 导出 Composables
 export { xlMsg, default as useMsg } from './composables/Msg'
 export { xlAlert, default as useAlert } from './composables/Alert'
+export { useDateTime, useDateRange, useCountdown, default as useDateTimeDefault } from './composables/DateTime'
 
 // 导出类型定义
 export type { Country, CountrySelectProps } from './components/CountrySelect/index.vue'
@@ -29,4 +33,8 @@ export type { ThumbnailContainerProps } from './components/ThumbnailContainer/in
 export type { SkeletonProps } from './components/Skeleton/index.vue'
 export type { ModalProps } from './components/Modal/index.vue'
 export type { TooltipsProps } from './components/Tooltips/index.vue'
+export type { ScoreProps } from './components/Score/index.vue'
+export type { RadioOption, RadioProps } from './components/Radio/index.vue'
+export type { DateTimePickerProps } from './components/DateTimePicker/index.vue'
+export type { DateTimeOptions, DateRange, CalendarDate } from './composables/DateTime'
 

@@ -2,6 +2,8 @@
 
 Vue3 电商组件库 - 专为电商平台打造的现代化 UI 组件库
 
+## 在线文档 [xux.xlcig.cn](https://xux.xlcig.cn)
+
 ## 📦 安装
 
 ```bash
