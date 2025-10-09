@@ -10,12 +10,16 @@
       >
         <div class="relative p-2">
           <!-- 瀑布流保持自然高度 -->
-          <img
-            :src="product.image"
-            :alt="product.name"
-            loading="lazy"
-            class="w-full h-auto rounded-lg bg-gray-100 object-cover transition-transform duration-300 group-hover:scale-[1.01]"
-          />
+          <div class="image-container relative overflow-hidden rounded-lg bg-gray-100">
+            <img
+              :src="product.image"
+              :alt="product.name"
+              loading="lazy"
+              class="w-full h-auto object-cover transition-transform duration-300 group-hover:scale-[1.01]"
+            />
+            <!-- 光效蒙版 -->
+            <div class="light-effect"></div>
+          </div>
 
           <div v-if="product.label" class="absolute top-3 left-3">
             <span class="label-badge">{{ product.label }}</span>
@@ -44,18 +48,20 @@
     <div v-else :class="['grid', gridColsClass, 'gap-4 lg:gap-6']">
       <div v-for="product in displayProducts" :key="product.id + '-grid'" class="h-full">
         <div
-          class="group cursor-pointer product-card h-full flex flex-col"
+          class="py-2 px-2 group cursor-pointer product-card h-full flex flex-col"
           @click="handleProductClick(product.id)"
         >
           <div class="relative flex-shrink-0 p-2">
             <!-- 网格布局使用固定比例 -->
-            <div class="aspect-square bg-gray-100 rounded-lg overflow-hidden">
+            <div class="image-container aspect-square bg-gray-100 rounded-lg overflow-hidden relative">
               <img
                 :src="product.image"
                 :alt="product.name"
-                class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                class="w-full h-full object-cover transition-transform duration-300"
                 loading="lazy"
               />
+              <!-- 光效蒙版 -->
+              <div class="light-effect"></div>
             </div>
 
             <div v-if="product.label" class="absolute top-3 left-3">
@@ -75,8 +81,8 @@
                 size="small"
                 class="like-button !min-w-0 !p-1"
               >
-                <Icon v-if="!product.isWish" icon="bi:heart" class="bi bi-heart text-gray-500"></Icon>
-                <Icon v-else icon="bi:heart-fill" class="bi bi-heart-fill text-[#FE374F]"></Icon>
+                <Icon v-if="!product.isWish" icon="bi:heart" class="bi bi-heart text-gray-500 text-lg"></Icon>
+                <Icon v-else icon="bi:heart-fill" class="bi bi-heart-fill text-[#FE374F] text-lg"></Icon>
               </XButton>
             </div>
           </div>
@@ -381,6 +387,33 @@ const handleLike = (product: Product) => {
 .break-inside-avoid {
   break-inside: avoid;
   page-break-inside: avoid;
+}
+
+/* 光效蒙版动画 */
+.light-effect {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    135deg,
+    transparent 0%,
+    transparent 30%,
+    rgba(255, 255, 255, 0.1) 50%,
+    rgba(255, 255, 255, 0.3) 60%,
+    rgba(255, 255, 255, 0.1) 70%,
+    transparent 100%
+  );
+  transform: translateX(-100%) translateY(-100%);
+  transition: transform 0.3s ease-out;
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* 只在悬停图片容器时触发光效动画 */
+.image-container:hover .light-effect {
+  transform: translateX(100%) translateY(100%);
 }
 </style>
 
