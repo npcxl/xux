@@ -7,6 +7,10 @@ settings:
 importers:
 
   .:
+    dependencies:
+      dayjs:
+        specifier: ^1.11.18
+        version: 1.11.18
     devDependencies:
       '@typescript-eslint/eslint-plugin':
         specifier: ^6.21.0
