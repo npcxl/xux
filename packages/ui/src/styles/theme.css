@@ -1,0 +1,120 @@
+/**
+ * XUX 电商主题色系统
+ * 基准色: #1a1a1a
+ */
+
+:root {
+  /* ========== 基准色 ========== */
+  --x-color-base: #1a1a1a;
+  
+  /* ========== 主色 - 深色系 ========== */
+  --x-color-primary: #1a1a1a;
+  --x-color-primary-light: #3a3a3a;
+  --x-color-primary-lighter: #4a4a4a;
+  --x-color-primary-dark: #0d0d0d;
+  --x-color-primary-darker: #000000;
+  
+  /* ========== 辅助色 - 深蓝色系（链接、信息） ========== */
+  --x-color-secondary: #4a90e2;
+  --x-color-secondary-light: #6ba8ed;
+  --x-color-secondary-lighter: #8dc0f7;
+  --x-color-secondary-dark: #3a7bc8;
+  --x-color-secondary-darker: #2a6bb0;
+  
+  /* ========== 成功色 - 翠绿色系 ========== */
+  --x-color-success: #10b981;
+  --x-color-success-light: #34d399;
+  --x-color-success-lighter: #6ee7b7;
+  --x-color-success-dark: #059669;
+  --x-color-success-darker: #047857;
+  
+  /* ========== 警告色 - 琥珀色系 ========== */
+  --x-color-warning: #f59e0b;
+  --x-color-warning-light: #fbbf24;
+  --x-color-warning-lighter: #fcd34d;
+  --x-color-warning-dark: #d97706;
+  --x-color-warning-darker: #b45309;
+  
+  /* ========== 危险色 - 红色系 ========== */
+  --x-color-danger: #ef4444;
+  --x-color-danger-light: #f87171;
+  --x-color-danger-lighter: #fca5a5;
+  --x-color-danger-dark: #dc2626;
+  --x-color-danger-darker: #b91c1c;
+  
+  /* ========== 中性色 - 基于 #1a1a1a ========== */
+  --x-color-black: #1a1a1a;
+  --x-color-gray-900: #2a2a2a;
+  --x-color-gray-800: #3a3a3a;
+  --x-color-gray-700: #4a4a4a;
+  --x-color-gray-600: #6a6a6a;
+  --x-color-gray-500: #8a8a8a;
+  --x-color-gray-400: #aaaaaa;
+  --x-color-gray-300: #cacaca;
+  --x-color-gray-200: #e5e5e5;
+  --x-color-gray-100: #f5f5f5;
+  --x-color-white: #ffffff;
+  
+  /* ========== 渐变色 ========== */
+  --x-gradient-primary: linear-gradient(135deg, #1a1a1a 0%, #3a3a3a 100%);
+  --x-gradient-primary-hover: linear-gradient(135deg, #3a3a3a 0%, #4a4a4a 100%);
+  --x-gradient-secondary: linear-gradient(135deg, #4a90e2 0%, #3a7bc8 100%);
+  --x-gradient-success: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  --x-gradient-warning: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+  --x-gradient-danger: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+  --x-gradient-dark: linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 100%);
+  
+  /* ========== 阴影 ========== */
+  --x-shadow-sm: 0 1px 2px rgba(26, 26, 26, 0.05);
+  --x-shadow: 0 2px 8px rgba(26, 26, 26, 0.1);
+  --x-shadow-md: 0 4px 12px rgba(26, 26, 26, 0.15);
+  --x-shadow-lg: 0 8px 24px rgba(26, 26, 26, 0.2);
+  --x-shadow-xl: 0 16px 48px rgba(26, 26, 26, 0.25);
+  
+  /* 彩色阴影 */
+  --x-shadow-primary: 0 4px 12px rgba(26, 26, 26, 0.3);
+  --x-shadow-primary-lg: 0 8px 24px rgba(26, 26, 26, 0.4);
+  --x-shadow-secondary: 0 4px 12px rgba(74, 144, 226, 0.3);
+  --x-shadow-success: 0 4px 12px rgba(16, 185, 129, 0.3);
+  --x-shadow-warning: 0 4px 12px rgba(245, 158, 11, 0.3);
+  --x-shadow-danger: 0 4px 12px rgba(239, 68, 68, 0.3);
+  
+  /* ========== 边框圆角 ========== */
+  --x-radius-sm: 4px;
+  --x-radius: 6px;
+  --x-radius-md: 8px;
+  --x-radius-lg: 12px;
+  --x-radius-xl: 16px;
+  --x-radius-full: 9999px;
+  
+  /* ========== 过渡动画 ========== */
+  --x-transition-fast: 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+  --x-transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  --x-transition-slow: 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  
+  /* ========== 字体 ========== */
+  --x-font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  --x-font-size-xs: 12px;
+  --x-font-size-sm: 14px;
+  --x-font-size: 16px;
+  --x-font-size-lg: 18px;
+  --x-font-size-xl: 20px;
+  --x-font-size-2xl: 24px;
+  --x-font-size-3xl: 30px;
+}
+
+/* ========== 暗色模式 ========== */
+.dark {
+  --x-color-white: #1a1a1a;
+  --x-color-black: #ffffff;
+  --x-color-gray-100: #2a2a2a;
+  --x-color-gray-200: #3a3a3a;
+  --x-color-gray-300: #4a4a4a;
+  --x-color-gray-400: #6a6a6a;
+  --x-color-gray-500: #8a8a8a;
+  --x-color-gray-600: #aaaaaa;
+  --x-color-gray-700: #cacaca;
+  --x-color-gray-800: #e5e5e5;
+  --x-color-gray-900: #f5f5f5;
+}
+

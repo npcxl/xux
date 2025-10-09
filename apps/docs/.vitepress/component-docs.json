@@ -1,0 +1,161 @@
+{
+  "Button": {
+    "exportName": "default",
+    "displayName": "Button",
+    "description": "",
+    "tags": {},
+    "props": [
+      {
+        "name": "type",
+        "description": "按钮类型",
+        "tags": {
+          "values": [
+            {
+              "description": "default, primary, success, warning, danger, text",
+              "title": "values"
+            }
+          ]
+        },
+        "required": false,
+        "type": {
+          "name": "ButtonType"
+        },
+        "defaultValue": {
+          "func": false,
+          "value": "'default'"
+        }
+      },
+      {
+        "name": "size",
+        "description": "按钮尺寸",
+        "tags": {
+          "values": [
+            {
+              "description": "small, medium, large",
+              "title": "values"
+            }
+          ]
+        },
+        "required": false,
+        "type": {
+          "name": "ButtonSize"
+        },
+        "defaultValue": {
+          "func": false,
+          "value": "'medium'"
+        }
+      },
+      {
+        "name": "icon",
+        "description": "左侧图标（使用 iconify 图标名）",
+        "tags": {
+          "example": [
+            {
+              "description": "\"mdi:cart\"",
+              "title": "example"
+            }
+          ]
+        },
+        "required": false,
+        "type": {
+          "name": "string"
+        }
+      },
+      {
+        "name": "iconRight",
+        "description": "右侧图标（使用 iconify 图标名）",
+        "tags": {
+          "example": [
+            {
+              "description": "\"mdi:arrow-right\"",
+              "title": "example"
+            }
+          ]
+        },
+        "required": false,
+        "type": {
+          "name": "string"
+        }
+      },
+      {
+        "name": "disabled",
+        "description": "是否禁用",
+        "required": false,
+        "type": {
+          "name": "boolean"
+        },
+        "defaultValue": {
+          "func": false,
+          "value": "false"
+        }
+      },
+      {
+        "name": "loading",
+        "description": "是否加载中",
+        "required": false,
+        "type": {
+          "name": "boolean"
+        },
+        "defaultValue": {
+          "func": false,
+          "value": "false"
+        }
+      },
+      {
+        "name": "block",
+        "description": "是否为块级按钮",
+        "required": false,
+        "type": {
+          "name": "boolean"
+        },
+        "defaultValue": {
+          "func": false,
+          "value": "false"
+        }
+      },
+      {
+        "name": "round",
+        "description": "是否为圆形按钮",
+        "required": false,
+        "type": {
+          "name": "boolean"
+        },
+        "defaultValue": {
+          "func": false,
+          "value": "false"
+        }
+      },
+      {
+        "name": "plain",
+        "description": "是否为朴素按钮",
+        "required": false,
+        "type": {
+          "name": "boolean"
+        },
+        "defaultValue": {
+          "func": false,
+          "value": "false"
+        }
+      }
+    ],
+    "events": [
+      {
+        "name": "click",
+        "type": {
+          "names": [
+            "MouseEvent"
+          ]
+        },
+        "description": "点击按钮时触发"
+      }
+    ],
+    "slots": [
+      {
+        "name": "default"
+      }
+    ],
+    "sourceFiles": [
+      "D:\\codeGitee\\xux\\packages\\ui\\src\\components\\Button\\index.vue"
+    ]
+  }
+}

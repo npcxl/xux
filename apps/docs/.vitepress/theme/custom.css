@@ -1,0 +1,319 @@
+/**
+ * XUX 文档自定义样式
+ * 主题色: #1a1a1a
+ */
+
+:root {
+  /* 品牌色 - 使用 #1a1a1a 作为主色调 */
+  --vp-c-brand-1: #1a1a1a;
+  --vp-c-brand-2: #2a2a2a;
+  --vp-c-brand-3: #3a3a3a;
+  --vp-c-brand-soft: rgba(26, 26, 26, 0.14);
+  
+  /* 背景色 */
+  --vp-c-bg: #ffffff;
+  --vp-c-bg-alt: #f9fafb;
+  --vp-c-bg-elv: #ffffff;
+  --vp-c-bg-soft: #f9fafb;
+  
+  /* 文本色 */
+  --vp-c-text-1: #1a1a1a;
+  --vp-c-text-2: #4a4a4a;
+  --vp-c-text-3: #6a6a6a;
+  
+  /* 边框色 */
+  --vp-c-border: #e5e7eb;
+  --vp-c-divider: #e5e7eb;
+  --vp-c-gutter: #e5e7eb;
+  
+  /* 按钮色 */
+  --vp-button-brand-bg: #1a1a1a;
+  --vp-button-brand-text: #ffffff;
+  --vp-button-brand-hover-bg: #2a2a2a;
+  --vp-button-brand-hover-text: #ffffff;
+  --vp-button-brand-active-bg: #0d0d0d;
+  --vp-button-brand-active-text: #ffffff;
+  
+  /* 链接色 */
+  --vp-c-brand: #1a1a1a;
+  --vp-c-brand-dark: #0d0d0d;
+  --vp-c-brand-darker: #000000;
+  --vp-c-brand-light: #2a2a2a;
+  --vp-c-brand-lighter: #3a3a3a;
+  
+  /* 代码块 */
+  --vp-code-bg: #f6f8fa;
+  --vp-code-color: #1a1a1a;
+  
+  /* 自定义组件库颜色变量 */
+  --x-color-primary: #1a1a1a;
+  --x-color-primary-light: #3a3a3a;
+  --x-color-primary-dark: #0d0d0d;
+}
+
+/* 暗色模式 */
+.dark {
+  --vp-c-brand-1: #e5e5e5;
+  --vp-c-brand-2: #cacaca;
+  --vp-c-brand-3: #aaaaaa;
+  --vp-c-brand-soft: rgba(229, 229, 229, 0.14);
+  
+  --vp-c-bg: #1a1a1a;
+  --vp-c-bg-alt: #0d0d0d;
+  --vp-c-bg-elv: #1a1a1a;
+  --vp-c-bg-soft: #1a1a1a;
+  
+  --vp-c-text-1: #e5e5e5;
+  --vp-c-text-2: #cacaca;
+  --vp-c-text-3: #aaaaaa;
+  
+  --vp-c-border: #2a2a2a;
+  --vp-c-divider: #2a2a2a;
+  --vp-c-gutter: #2a2a2a;
+  
+  --vp-button-brand-bg: #e5e5e5;
+  --vp-button-brand-text: #1a1a1a;
+  --vp-button-brand-hover-bg: #ffffff;
+  --vp-button-brand-hover-text: #1a1a1a;
+  --vp-button-brand-active-bg: #cacaca;
+  --vp-button-brand-active-text: #1a1a1a;
+  
+  --vp-code-bg: #0d0d0d;
+  --vp-code-color: #e5e5e5;
+  
+  --x-color-primary: #e5e5e5;
+  --x-color-primary-light: #ffffff;
+  --x-color-primary-dark: #cacaca;
+}
+
+/* 自定义样式增强 */
+
+/* Logo 样式优化 */
+.VPNav .logo {
+  height: 40px !important;
+  max-height: 40px !important;
+}
+
+.VPNav .VPImage {
+  height: 40px !important;
+  max-height: 40px !important;
+}
+
+/* 首页 Hero Logo 样式 */
+.VPHero .image-bg {
+  max-width: 320px !important;
+  max-height: 320px !important;
+}
+
+.VPHero .image-container {
+  max-width: 320px !important;
+}
+
+.VPHero .VPImage {
+  max-width: 100% !important;
+  height: auto !important;
+}
+
+/* Hero 区域优化 */
+.VPHero .text {
+  font-size: 48px;
+  font-weight: 700;
+  line-height: 1.2;
+  background: linear-gradient(135deg, #1a1a1a 0%, #3a3a3a 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.dark .VPHero .text {
+  background: linear-gradient(135deg, #ffffff 0%, #e5e5e5 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* 特性卡片优化 */
+.VPFeature {
+  border: 1px solid var(--vp-c-border);
+  border-radius: 12px;
+  transition: all 0.3s ease;
+}
+
+.VPFeature:hover {
+  border-color: var(--vp-c-brand-1);
+  box-shadow: 0 8px 24px rgba(26, 26, 26, 0.1);
+  transform: translateY(-2px);
+}
+
+.dark .VPFeature:hover {
+  box-shadow: 0 8px 24px rgba(255, 255, 255, 0.05);
+}
+
+/* 代码块优化 */
+div[class*='language-'] {
+  border-radius: 8px;
+  margin: 16px 0;
+}
+
+div[class*='language-'] code {
+  font-family: 'JetBrains Mono', 'Fira Code', Consolas, Monaco, 'Courier New', monospace;
+  font-size: 14px;
+  line-height: 1.7;
+}
+
+/* 表格优化 */
+table {
+  display: block;
+  border-collapse: collapse;
+  margin: 20px 0;
+  overflow-x: auto;
+  border-radius: 8px;
+  border: 1px solid var(--vp-c-border);
+}
+
+th {
+  background-color: var(--vp-c-bg-soft);
+  font-weight: 600;
+  text-align: left;
+}
+
+th, td {
+  border: 1px solid var(--vp-c-border);
+  padding: 12px 16px;
+}
+
+tr:hover {
+  background-color: var(--vp-c-bg-soft);
+}
+
+/* 组件示例容器 */
+.demo-container {
+  border: 1px solid var(--vp-c-border);
+  border-radius: 8px;
+  padding: 24px;
+  margin: 16px 0;
+  background-color: var(--vp-c-bg-soft);
+}
+
+/* 徽章优化 */
+.vp-badge {
+  border-radius: 4px;
+  padding: 2px 8px;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+/* 侧边栏优化 */
+.VPSidebar {
+  padding-top: 24px;
+}
+
+.VPSidebarItem.is-active .text {
+  color: var(--vp-c-brand-1);
+  font-weight: 600;
+}
+
+/* 导航栏优化 */
+.VPNavBar {
+  border-bottom: 1px solid var(--vp-c-border);
+  backdrop-filter: blur(8px);
+}
+
+/* 文档内容优化 */
+.vp-doc h1 {
+  border-bottom: 2px solid var(--vp-c-brand-1);
+  padding-bottom: 16px;
+  margin-top: 24px;
+}
+
+.vp-doc h2 {
+  margin-top: 32px;
+  padding-top: 24px;
+  border-top: 1px solid var(--vp-c-divider);
+}
+
+.vp-doc a {
+  color: var(--vp-c-brand-1);
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.2s;
+}
+
+.vp-doc a:hover {
+  color: var(--vp-c-brand-2);
+  text-decoration: underline;
+}
+
+/* 按钮优化 */
+.VPButton {
+  border-radius: 8px;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.VPButton:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(26, 26, 26, 0.15);
+}
+
+.dark .VPButton:hover {
+  box-shadow: 0 4px 12px rgba(255, 255, 255, 0.1);
+}
+
+/* 搜索框优化 */
+.VPNavBarSearch {
+  border-radius: 8px;
+}
+
+/* 页脚优化 */
+.VPFooter {
+  border-top: 1px solid var(--vp-c-border);
+  margin-top: 64px;
+  padding-top: 32px;
+}
+
+/* 滚动条优化 */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--vp-c-bg-soft);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--vp-c-border);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--vp-c-brand-1);
+}
+
+/* 响应式优化 */
+@media (max-width: 768px) {
+  .demo-container {
+    padding: 16px;
+  }
+  
+  table {
+    font-size: 14px;
+  }
+  
+  th, td {
+    padding: 8px 12px;
+  }
+  
+  .VPNav .logo,
+  .VPNav .VPImage {
+    height: 32px !important;
+    max-height: 32px !important;
+  }
+  
+  .VPHero .image-bg,
+  .VPHero .image-container {
+    max-width: 240px !important;
+    max-height: 240px !important;
+  }
+}

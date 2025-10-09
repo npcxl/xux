@@ -1,0 +1,489 @@
+# Modal 模态框
+
+模态框组件，用于在当前页面打开浮层，承载相关操作或信息。
+
+## 基础用法
+
+最基本的模态框用法。
+
+:::demo
+
+```vue
+<template>
+  <div>
+    <button 
+      @click="visible = true"
+      class="px-4 py-2 bg-gray-800 text-white rounded hover:bg-gray-700"
+    >
+      打开模态框
+    </button>
+    
+    <XModal v-model:visible="visible" title="基础模态框">
+      <p>这是模态框的内容</p>
+      <p>可以放置任何内容</p>
+    </XModal>
+  </div>
+</template>
+
+<script setup>
+import { ref } from 'vue'
+
+const visible = ref(false)
+</script>
+```
+
+:::
+
+## 自定义尺寸
+
+通过 `size` 或 `width` 属性设置模态框大小。
+
+:::demo
+
+```vue
+<template>
+  <div class="flex flex-wrap gap-2">
+    <XButton 
+      @click="visibleSmall = true"
+      type="primary"
+    >
+      小尺寸
+    </XButton>
+    <button 
+      @click="visibleMedium = true"
+      v
+    >
+      中等尺寸
+    </button>
+    <button 
+      @click="visibleLarge = true"
+     type="primary"
+    >
+      大尺寸
+    </button>
+    <button 
+      @click="visibleCustom = true"
+      type="primary"
+    >
+      自定义宽度
+    </button>
+  </div>
+  
+  <XModal v-model:visible="visibleSmall" title="小尺寸模态框" size="small">
+    <p>这是一个小尺寸的模态框（400px）</p>
+  </XModal>
+  
+  <XModal v-model:visible="visibleMedium" title="中等尺寸模态框" size="medium">
+    <p>这是一个中等尺寸的模态框（600px）</p>
+  </XModal>
+  
+  <XModal v-model:visible="visibleLarge" title="大尺寸模态框" size="large">
+    <p>这是一个大尺寸的模态框（800px）</p>
+  </XModal>
+  
+  <XModal v-model:visible="visibleCustom" title="自定义宽度" width="1000px">
+    <p>这是一个自定义宽度的模态框（1000px）</p>
+  </XModal>
+</template>
+
+<script setup>
+import { ref } from 'vue'
+
+const visibleSmall = ref(false)
+const visibleMedium = ref(false)
+const visibleLarge = ref(false)
+const visibleCustom = ref(false)
+</script>
+```
+
+:::
+
+## 全屏模态框
+
+设置 `fullscreen` 属性显示全屏模态框。
+
+:::demo
+
+```vue
+<template>
+  <div>
+    <XButton 
+      @click="visible = true"
+      type="primary"
+    >
+      全屏模态框
+    </XButton>
+    
+    <XModal v-model:visible="visible" title="全屏模态框" fullscreen>
+      <div class="space-y-4">
+        <p>这是一个全屏显示的模态框</p>
+        <p>适合需要大量内容展示的场景</p>
+        <p>比如：详细表单、图片查看、数据展示等</p>
+      </div>
+    </XModal>
+  </div>
+</template>
+
+<script setup>
+import { ref } from 'vue'
+
+const visible = ref(false)
+</script>
+```
+
+:::
+
+## 自定义按钮文本
+
+自定义确认和取消按钮的文本。
+
+:::demo
+
+```vue
+<template>
+  <div>
+    <XButton 
+      @click="visible = true"
+    type="danger"
+    >
+      删除操作
+    </XButton>
+    
+    <XModal 
+      v-model:visible="visible" 
+      title="确认删除"
+      confirm-text="删除"
+      cancel-text="我再想想"
+      @confirm="handleDelete"
+      @cancel="handleCancel"
+    >
+      <p>您确定要删除这个项目吗？</p>
+      <p class="text-red-600 text-sm mt-2">此操作无法撤销！</p>
+    </XModal>
+  </div>
+</template>
+
+<script setup>
+import { ref } from 'vue'
+import { xlMsg } from '@xux/ui'
+
+const visible = ref(false)
+const msg = xlMsg()
+
+const handleDelete = () => {
+  msg.success('删除成功')
+  visible.value = false
+}
+
+const handleCancel = () => {
+  msg.info('已取消删除')
+}
+</script>
+```
+
+:::
+
+## 异步关闭
+
+通过 `confirm-loading` 属性控制确认按钮的加载状态。
+
+:::demo
+
+```vue
+<template>
+  <div>
+    <XButton 
+      @click="visible = true"
+      type="primary"
+    >
+      提交表单
+    </XButton>
+    
+    <XModal 
+      v-model:visible="visible" 
+      title="提交数据"
+      :confirm-loading="loading"
+      @confirm="handleSubmit"
+    >
+      <p>点击确定后将模拟异步提交...</p>
+      <p class="text-sm text-gray-500 mt-2">（2秒后自动关闭）</p>
+    </XModal>
+  </div>
+</template>
+
+<script setup>
+import { ref } from 'vue'
+import { xlMsg } from '@xux/ui'
+
+const visible = ref(false)
+const loading = ref(false)
+const msg = xlMsg()
+
+const handleSubmit = () => {
+  loading.value = true
+  
+  setTimeout(() => {
+    loading.value = false
+    visible.value = false
+    msg.success('提交成功')
+  }, 2000)
+}
+</script>
+```
+
+:::
+
+## 隐藏头部或底部
+
+通过 `show-header` 和 `show-footer` 控制显示。
+
+:::demo
+
+```vue
+<template>
+  <div class="flex gap-2">
+    <XButton 
+      @click="visibleNoHeader = true"
+     type="primary"
+    >
+      无头部
+    </XButton>
+    <XButton 
+      @click="visibleNoFooter = true"
+     type="primary"
+    >
+      无底部
+    </XButton>
+    <XButton 
+      @click="visibleContentOnly = true"
+    type="primary"
+    >
+      仅内容
+    </XButton>
+  </div>
+  
+  <XModal v-model:visible="visibleNoHeader" :show-header="false">
+    <p>这是一个没有头部的模态框</p>
+  </XModal>
+  
+  <XModal v-model:visible="visibleNoFooter" title="无底部" :show-footer="false">
+    <p>这是一个没有底部的模态框</p>
+  </XModal>
+  
+  <XModal 
+    v-model:visible="visibleContentOnly" 
+    :show-header="false" 
+    :show-footer="false"
+    :show-close="false"
+  >
+    <div class="text-center py-8">
+      <p class="text-lg mb-4">仅展示内容</p>
+      <XButton 
+        @click="visibleContentOnly = false"
+       type="primary"
+      >
+        关闭
+      </XButton>
+    </div>
+  </XModal>
+</template>
+
+<script setup>
+import { ref } from 'vue'
+
+const visibleNoHeader = ref(false)
+const visibleNoFooter = ref(false)
+const visibleContentOnly = ref(false)
+</script>
+```
+
+:::
+
+## 自定义插槽
+
+使用插槽自定义头部和底部内容。
+
+:::demo
+
+```vue
+<template>
+  <div>
+    <XButton 
+      @click="visible = true"
+      type="primary"
+    >
+      自定义插槽
+    </XButton>
+    
+    <XModal v-model:visible="visible">
+      <template #header>
+        <div class="flex items-center gap-2">
+          <span class="text-xl">🎉</span>
+          <h3 class="text-lg font-semibold">自定义头部</h3>
+        </div>
+      </template>
+      
+      <div class="space-y-3">
+        <p>这是自定义的头部和底部内容</p>
+        <p>可以放置任何组件和元素</p>
+      </div>
+      
+      <template #footer>
+        <div class="flex items-center justify-between w-full">
+          <span class="text-sm text-gray-500">提示信息</span>
+          <div class="flex gap-2">
+            <button 
+              @click="visible = false"
+              class="px-4 py-2 bg-gray-200 rounded hover:bg-gray-300 text-sm"
+            >
+              稍后再说
+            </button>
+            <button 
+              @click="handleSave"
+              class="px-4 py-2 bg-purple-600 text-white rounded hover:bg-purple-700 text-sm"
+            >
+              保存设置
+            </button>
+          </div>
+        </div>
+      </template>
+    </XModal>
+  </div>
+</template>
+
+<script setup>
+import { ref } from 'vue'
+import { xlMsg } from '@xux/ui'
+
+const visible = ref(false)
+const msg = xlMsg()
+
+const handleSave = () => {
+  msg.success('保存成功')
+  visible.value = false
+}
+</script>
+```
+
+:::
+
+## 禁用遮罩关闭
+
+设置 `:mask-closable="false"` 禁止点击遮罩关闭。
+
+:::demo
+
+```vue
+<template>
+  <div>
+    <XButton 
+      @click="visible = true"
+      type="primary"
+    >
+      禁用遮罩关闭
+    </XButton>
+    
+    <XModal 
+      v-model:visible="visible" 
+      title="重要提示"
+      :mask-closable="false"
+      :esc-closable="false"
+    >
+      <p>此模态框无法通过点击遮罩或按 ESC 键关闭</p>
+      <p class="text-sm text-gray-500 mt-2">必须点击按钮才能关闭</p>
+    </XModal>
+  </div>
+</template>
+
+<script setup>
+import { ref } from 'vue'
+
+const visible = ref(false)
+</script>
+```
+
+:::
+
+## API
+
+### Props
+
+| 属性 | 说明 | 类型 | 默认值 |
+|------|------|------|--------|
+| visible / v-model:visible | 是否显示模态框 | `boolean` | `false` |
+| title | 模态框标题 | `string` | `'提示'` |
+| width | 模态框宽度 | `string` | - |
+| size | 预设尺寸 | `'small' \| 'medium' \| 'large'` | `'medium'` |
+| fullscreen | 是否全屏显示 | `boolean` | `false` |
+| showHeader | 是否显示头部 | `boolean` | `true` |
+| showFooter | 是否显示底部 | `boolean` | `true` |
+| showClose | 是否显示关闭按钮 | `boolean` | `true` |
+| showCancel | 是否显示取消按钮 | `boolean` | `true` |
+| showConfirm | 是否显示确认按钮 | `boolean` | `true` |
+| cancelText | 取消按钮文本 | `string` | `'取消'` |
+| confirmText | 确认按钮文本 | `string` | `'确定'` |
+| confirmLoading | 确认按钮加载状态 | `boolean` | `false` |
+| maskClosable | 点击遮罩是否关闭 | `boolean` | `true` |
+| escClosable | 按 ESC 键是否关闭 | `boolean` | `true` |
+
+### Events
+
+| 事件名 | 说明 | 回调参数 |
+|--------|------|----------|
+| update:visible | 显示状态改变时触发 | `(visible: boolean)` |
+| close | 关闭时触发 | `()` |
+| cancel | 点击取消按钮时触发 | `()` |
+| confirm | 点击确认按钮时触发 | `()` |
+| opened | 完全打开后触发 | `()` |
+| closed | 完全关闭后触发 | `()` |
+
+### Slots
+
+| 插槽名 | 说明 |
+|--------|------|
+| default | 模态框内容 |
+| header | 自定义头部内容 |
+| footer | 自定义底部内容 |
+
+### Exposed Methods
+
+| 方法名 | 说明 | 参数 |
+|--------|------|------|
+| close | 关闭模态框 | `()` |
+
+## 使用场景
+
+1. **信息展示**：详细信息、用户协议、帮助文档
+2. **表单输入**：创建、编辑、设置等表单
+3. **确认操作**：删除确认、退出确认
+4. **内容预览**：图片查看、视频播放
+5. **多步骤流程**：向导式操作流程
+
+## 最佳实践
+
+1. **尺寸选择**：
+   - small：简单确认、提示
+   - medium：一般表单、信息
+   - large：复杂表单、详细内容
+   - fullscreen：大量内容、图片预览
+
+2. **按钮文本**：
+   - 使用明确的动词
+   - 避免使用"是/否"
+   - 描述具体操作
+
+3. **交互设计**：
+   - 危险操作禁用遮罩关闭
+   - 异步操作显示加载状态
+   - 提供明确的关闭方式
+
+4. **内容组织**：
+   - 标题简洁明了
+   - 内容层次清晰
+   - 重要信息突出显示
+
+5. **可访问性**：
+   - 支持键盘操作（ESC 关闭）
+   - 焦点管理
+   - 合理的层级结构
+
