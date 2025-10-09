@@ -13,6 +13,9 @@ export { default as XThumbnailContainer } from './components/ThumbnailContainer/
 export { default as XSkeleton } from './components/Skeleton/index.vue'
 export { default as XModal } from './components/Modal/index.vue'
 export { default as XTooltips } from './components/Tooltips/index.vue'
+export { default as XScore } from './components/Score/index.vue'
+export { default as XRadio } from './components/Radio/index.vue'
+export { default as XDateTimePicker } from './components/DateTimePicker/index.vue'
 
 // 导出 Composables
 export { xlMsg, default as useMsg } from './composables/Msg'
@@ -28,4 +31,7 @@ export type { ThumbnailContainerProps } from './components/ThumbnailContainer/in
 export type { SkeletonProps } from './components/Skeleton/index.vue'
 export type { ModalProps } from './components/Modal/index.vue'
 export type { TooltipsProps } from './components/Tooltips/index.vue'
+export type { ScoreProps } from './components/Score/index.vue'
+export type { RadioOption, RadioProps } from './components/Radio/index.vue'
+export type { DateTimePickerProps } from './components/DateTimePicker/index.vue'
 

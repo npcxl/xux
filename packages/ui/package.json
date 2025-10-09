@@ -48,6 +48,9 @@
   "bugs": {
     "url": "https://gitee.com/leheya/xux/issues"
   },
+  "dependencies": {
+    "dayjs": "^1.11.10"
+  },
   "peerDependencies": {
     "vue": "^3.3.0"
   },
