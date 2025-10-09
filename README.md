@@ -4,6 +4,8 @@
 
 专为电商平台打造的 Vue3 UI 组件库，提供丰富的电商场景组件。
 
+## 在线文档 [xux.xlcig.cn](https://xux.xlcig.cn)
+
 ## 快速开始
 
 ```bash
