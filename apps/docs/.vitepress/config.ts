@@ -71,6 +71,7 @@ export default defineConfig({
             { text: 'Select 选择器', link: '/components/select' },
             { text: 'Checkboxes 多选框', link: '/components/checkboxes' },
             { text: 'CountrySelect 国家选择', link: '/components/country-select' },
+            { text: 'Switch 开关', link: '/components/switch' },
           ]
         },
         {

@@ -92,7 +92,6 @@
 
 <script setup>
 import { ref } from 'vue'
-import { XButton } from '@xux/ui'
 
 const cols = ref(3)
 </script>
@@ -218,7 +217,6 @@ const handleLike = (product) => {
 
 <script setup>
 import { ref } from 'vue'
-import { XButton } from '@xux/ui'
 
 const layout = ref('grid')
 </script>

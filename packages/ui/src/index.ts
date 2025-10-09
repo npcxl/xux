@@ -13,6 +13,7 @@ export { default as XThumbnailContainer } from './components/ThumbnailContainer/
 export { default as XSkeleton } from './components/Skeleton/index.vue'
 export { default as XModal } from './components/Modal/index.vue'
 export { default as XTooltips } from './components/Tooltips/index.vue'
+export { default as XSwitch } from './components/Switch/index.vue'
 
 // 导出 Composables
 export { xlMsg, default as useMsg } from './composables/Msg'
