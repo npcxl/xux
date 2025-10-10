@@ -19,10 +19,6 @@ export { default as XRadio } from './components/Radio/index.vue'
 export { default as XDateTimePicker } from './components/DateTimePicker/index.vue'
 export { default as XRegionCascader } from './components/RegionCascader/index.vue'
 export { default as XQrcode } from './components/Qrcode/index.vue'
-<<<<<<< HEAD
-=======
-
->>>>>>> ce56332fadaf874e9f254c827d7d42e7c3c19cb0
 // 导出 Composables
 export { xlMsg, default as useMsg } from './composables/Msg'
 export { xlAlert, default as useAlert } from './composables/Alert'
@@ -42,11 +38,7 @@ export type { ScoreProps } from './components/Score/index.vue'
 export type { RadioOption, RadioProps } from './components/Radio/index.vue'
 export type { DateTimePickerProps } from './components/DateTimePicker/index.vue'
 export type { RegionCascaderProps } from './components/RegionCascader/index.vue'
-<<<<<<< HEAD
-export type { DateTimeOptions, DateRange, CalendarDate } from './composables/DateTime'      
-=======
 export type { QrcodeProps } from './components/Qrcode/index.vue'
 export type { DateTimeOptions, DateRange, CalendarDate } from './composables/DateTime'
->>>>>>> ce56332fadaf874e9f254c827d7d42e7c3c19cb0
 
 
