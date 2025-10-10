@@ -13,15 +13,15 @@
 点击时触发绚丽的烟花爆炸效果。
 
 <div class='flex gap-3'>
-  <XFireworks>
+  <XFirework>
     <XButton type='primary'>点击烟花</XButton>
-  </XFireworks>
+  </XFirework>
 </div>
 
 ```vue
-<XFireworks>
+<XFirework>
   <button>点击我</button>
-</XFireworks>
+</XFirework>
 ```
 
 ---
@@ -62,7 +62,7 @@
 <!-- 这里可以添加更多特效组件 -->
 
 <script setup>
-import { XFireworks, XGButton, XButton } from '../../../packages/ui/src/index'
+import { XFirework, XGButton, XButton } from '../../../packages/ui/src/index'
 </script>
 
 ## 贡献者
