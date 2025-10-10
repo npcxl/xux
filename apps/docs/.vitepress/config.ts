@@ -76,6 +76,7 @@ export default defineConfig({
             { text: 'RegionCascader 地区级联', link: '/components/region-cascader' },
             { text: 'Switch 开关', link: '/components/switch' },
             { text: 'DateTimePicker 日期时间选择器', link: '/components/datetime-picker' },
+            { text: 'Qrcode 二维码', link: '/components/qrcode' },
           ]
         },
         {
