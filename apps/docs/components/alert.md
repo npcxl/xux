@@ -196,29 +196,4 @@ const showNoCloseBtn = () => {
 | duration | 自动关闭时间（毫秒），0 表示不自动关闭 | `number` | — | `5000` |
 | closable | 是否显示关闭按钮 | `boolean` | — | `true` |
 
-## 使用示例
-
-```ts
-import { useAlert } from '@xlui/xux-ui'
-
-const alert = useAlert()
-
-// 快捷方法
-alert.success('操作成功！')
-alert.error('操作失败！')
-alert.warning('请注意！')
-alert.info('温馨提示')
-
-// 完整配置
-const instance = alert.show({
-  title: '确认操作',
-  content: '您确定要执行此操作吗？',
-  type: 'warning',
-  duration: 0,  // 不自动关闭
-  closable: true
-})
-
-// 手动关闭
-instance.close()
-```
 

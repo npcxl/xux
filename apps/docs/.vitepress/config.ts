@@ -26,7 +26,7 @@ export default defineConfig({
       dark: '/logo.PNG',
       alt: 'XUX'
     },
-    siteTitle: false, // 只显示 logo，不显示文字
+    siteTitle: 'XUX-UI',
     
     nav: [
       { text: '指南', link: '/guide/introduction' },
@@ -100,6 +100,12 @@ export default defineConfig({
           text: '时间函数',
           items: [
             { text: '时间处理函数', link: '/components/datetime-functions' },
+          ]
+        },
+        {
+          text: '特殊效果',
+          items: [
+            { text: '特殊动画效果', link: '/components/special-effects' },
           ]
         }
       ]

@@ -10,9 +10,8 @@
 
 ```vue
 <template>
-  <div class="flex gap-3">
-    <XButton>默认按钮</XButton>
-    <XButton type="primary">主要按钮</XButton>
+  <div class="flex gap-3 ">
+    <XButton  type="primary">主要按钮</XButton>
     <XButton type="success">成功按钮</XButton>
     <XButton type="warning">警告按钮</XButton>
     <XButton type="danger">危险按钮</XButton>

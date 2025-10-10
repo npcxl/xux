@@ -116,23 +116,24 @@
                :tabindex="0"
              >
                            <div class="flex items-center gap-3">
-                 <!-- 多选复选框 -->
-                 <div v-if="multiple" class="flex items-center">
-                   <div
-                     :class="[
-                       'w-4 h-4 rounded border flex items-center justify-center transition-all duration-150',
-                       {
-                         'border-[#1a1a1a] text-white': isSelected(option),
-                         'border-gray-300 bg-white': !isSelected(option)
-                       }
-                     ]"
-                   >
-                     <i
-                       v-if="isSelected(option)"
-                       class="bi bi-check text-[#1a1a1a] text-xs"
-                     ></i>
-                   </div>
-                 </div>
+                <!-- 多选复选框 -->
+                <div v-if="multiple" class="flex items-center">
+                  <div
+                    :class="[
+                      'w-4 h-4 rounded border flex items-center justify-center transition-all duration-150',
+                      {
+                        'border-[#1a1a1a] ': isSelected(option),
+                        'border-gray-300 bg-white': !isSelected(option)
+                      }
+                    ]"
+                  >
+                    <Icon
+                      v-if="isSelected(option)"
+                      icon="mdi:check"
+                      class="text-[#1a1a1a] text-xs font-bold"
+                    ></Icon>
+                  </div>
+                </div>
                  <!-- 单选单选框 -->
                  <div v-else class="flex items-center">
                    <div
@@ -160,6 +161,7 @@
   </template>
   
   <script setup lang="ts">
+  import { Icon } from '@iconify/vue'
 /**
  * Select 选择器组件
  * @displayName XSelect

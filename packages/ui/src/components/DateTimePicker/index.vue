@@ -17,12 +17,19 @@
     </div>
 
     <!-- 选择器面板 -->
-    <div v-if="isOpen" class="datetime-panel" :class="panelPosition">
+    <Transition
+      enter-active-class="panel-enter-active"
+      enter-from-class="panel-enter-from"
+      enter-to-class="panel-enter-to"
+      leave-active-class="panel-leave-active"
+      leave-from-class="panel-leave-from"
+      leave-to-class="panel-leave-to"
+    >
+      <div v-if="isOpen" class="datetime-panel" :class="panelPosition">
       <!-- 头部 -->
       <div class="datetime-header">
         <div class="datetime-title">{{ title }}</div>
         <XButton icon="mdi:close" size="small" @click="closePicker">
-          <Icon icon="mdi:close" />
         </XButton>
       </div>
 
@@ -140,6 +147,7 @@
         </XButton>
       </div>
     </div>
+    </Transition>
 
   </div>
 </template>
@@ -445,31 +453,34 @@ export interface DateTimePickerProps {
   position: relative;
   display: flex;
   align-items: center;
-  border: 1px solid #d1d5db;
+  border: 1px solid #e5e7eb;
   border-radius: 0.5rem;
   background-color: #ffffff;
-  transition: all 0.2s ease;
+  transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
   cursor: pointer;
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.03);
 }
 
 .datetime-input-wrapper:hover {
   border-color: #1a1a1a;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.08);
 }
 
 .datetime-input-wrapper:focus-within {
   border-color: #1a1a1a;
-  box-shadow: 0 0 0 1px #1a1a1a;
+  box-shadow: 0 0 0 3px rgba(26, 26, 26, 0.08);
 }
 
 .datetime-input {
   flex: 1;
-  padding: 0.75rem 1rem;
+  padding: 0.625rem 0.875rem;
   border: none;
   outline: none;
   background: transparent;
   font-size: 0.875rem;
   color: #1a1a1a;
   cursor: pointer;
+  line-height: 1.5;
 }
 
 .datetime-input::placeholder {
@@ -480,10 +491,15 @@ export interface DateTimePickerProps {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 2rem;
-  height: 2rem;
+  width: 1.75rem;
+  height: 1.75rem;
   color: #6b7280;
   margin-right: 0.5rem;
+  transition: color 0.15s ease;
+}
+
+.datetime-input-wrapper:hover .datetime-icon {
+  color: #1a1a1a;
 }
 
 /* 尺寸变体 */
@@ -527,20 +543,49 @@ export interface DateTimePickerProps {
   background: #ffffff;
   border: 1px solid #e5e7eb;
   border-radius: 0.75rem;
-  box-shadow: 0 10px 25px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
   overflow: hidden;
-  max-height: 400px;
-  overflow-y: auto;
+  min-width: 320px;
+  backdrop-filter: blur(8px);
 }
 
 .panel-bottom {
   top: 100%;
-  margin-top: 0.25rem;
+  margin-top: 0.5rem;
 }
 
 .panel-top {
   bottom: 100%;
-  margin-bottom: 0.25rem;
+  margin-bottom: 0.5rem;
+}
+
+/* 面板动画 */
+.panel-enter-active {
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.panel-leave-active {
+  transition: all 0.15s cubic-bezier(0.4, 0, 1, 1);
+}
+
+.panel-enter-from {
+  opacity: 0;
+  transform: translateY(-8px) scale(0.96);
+}
+
+.panel-enter-to {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+
+.panel-leave-from {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+
+.panel-leave-to {
+  opacity: 0;
+  transform: translateY(-8px) scale(0.96);
 }
 
 /* 头部 */
@@ -548,15 +593,16 @@ export interface DateTimePickerProps {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 1rem;
-  border-bottom: 1px solid #e5e7eb;
-  background-color: #f9fafb;
+  padding: 0.875rem 1rem;
+  border-bottom: 1px solid #f3f4f6;
+  background: linear-gradient(to bottom, #fafafa, #ffffff);
 }
 
 .datetime-title {
   font-weight: 600;
   color: #1a1a1a;
-  font-size: 1rem;
+  font-size: 0.9375rem;
+  letter-spacing: -0.01em;
 }
 
 .datetime-close {
@@ -676,20 +722,24 @@ export interface DateTimePickerProps {
   display: flex;
   align-items: center;
   justify-content: center;
-  height: 2.5rem;
-  font-size: 0.875rem;
-  color: #1a1a1a;
+  height: 2.25rem;
+  font-size: 0.8125rem;
+  color: #374151;
   cursor: pointer;
-  border-radius: 0.375rem;
-  transition: all 0.2s ease;
+  border-radius: 0.5rem;
+  transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+  font-weight: 500;
+  position: relative;
 }
 
-.date-cell:hover:not(.date-disabled) {
-  background-color: #f3f4f6;
+.date-cell:hover:not(.date-disabled):not(.date-selected) {
+  background-color: #f9fafb;
+  color: #1a1a1a;
+  transform: scale(1.05);
 }
 
 .date-other-month {
-  color: #9ca3af;
+  color: #d1d5db;
 }
 
 .date-today {
@@ -698,19 +748,38 @@ export interface DateTimePickerProps {
   font-weight: 600;
 }
 
+.date-today::after {
+  content: '';
+  position: absolute;
+  bottom: 0.25rem;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 0.25rem;
+  height: 0.25rem;
+  border-radius: 50%;
+  background-color: #f59e0b;
+}
+
 .date-selected {
   background-color: #1a1a1a;
   color: #ffffff;
   font-weight: 600;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.date-selected:hover {
+  transform: scale(1.05);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.15);
 }
 
 .date-disabled {
-  color: #d1d5db;
+  color: #e5e7eb;
   cursor: not-allowed;
 }
 
 .date-disabled:hover {
   background-color: transparent;
+  transform: none;
 }
 
 /* 时间选择器 */
@@ -784,38 +853,51 @@ export interface DateTimePickerProps {
 
 .time-slider {
   width: 100%;
-  height: 0.5rem;
+  height: 0.375rem;
   border-radius: 0.25rem;
-  background: #e5e7eb;
+  background: linear-gradient(to right, #e5e7eb 0%, #e5e7eb 100%);
   outline: none;
   cursor: pointer;
   -webkit-appearance: none;
   appearance: none;
+  position: relative;
 }
 
 .time-slider::-webkit-slider-thumb {
   -webkit-appearance: none;
   appearance: none;
-  width: 1.25rem;
-  height: 1.25rem;
+  width: 1rem;
+  height: 1rem;
   border-radius: 50%;
   background: #1a1a1a;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
 }
 
 .time-slider::-webkit-slider-thumb:hover {
-  transform: scale(1.1);
+  transform: scale(1.15);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25);
+}
+
+.time-slider::-webkit-slider-thumb:active {
+  transform: scale(1.05);
 }
 
 .time-slider::-moz-range-thumb {
-  width: 1.25rem;
-  height: 1.25rem;
+  width: 1rem;
+  height: 1rem;
   border-radius: 50%;
   background: #1a1a1a;
   cursor: pointer;
   border: none;
-  transition: all 0.2s ease;
+  transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+}
+
+.time-slider::-moz-range-thumb:hover {
+  transform: scale(1.15);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25);
 }
 
 .slider-value {
@@ -828,10 +910,10 @@ export interface DateTimePickerProps {
 /* 底部操作 */
 .datetime-footer {
   display: flex;
-  gap: 0.75rem;
-  padding: 1rem;
-  border-top: 1px solid #e5e7eb;
-  background-color: #f9fafb;
+  gap: 0.625rem;
+  padding: 0.875rem 1rem;
+  border-top: 1px solid #f3f4f6;
+  background: linear-gradient(to top, #fafafa, #ffffff);
 }
 
 .btn {

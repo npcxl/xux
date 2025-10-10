@@ -664,31 +664,6 @@ const handleChange = async (newValue) => {
 </script>
 ```
 
-### 异步工作流程
-
-1. 用户点击开关
-2. 组件同时发出 `update:modelValue` 和 `change` 事件，**开关状态立即改变**
-3. 父组件在 `change` 事件中立即设置 `loading: true`
-4. 父组件执行异步操作（如API调用）
-5. **成功时**：更新 `modelValue` 为新值（保持已改变的状态）
-6. **失败时**：恢复 `modelValue` 为原值（开关回到原来的状态）
-7. 无论成功失败，都要设置 `loading: false`
-
-### 优化要点
-
-- **简化使用**：移除了 `async` prop，通过监听 `change` 事件自动启用异步模式
-- **loading状态由父组件管理**：组件只负责展示loading状态
-- **立即反馈+异步确认**：点击时立即改变状态（提供即时反馈），异步失败时再恢复原状态
-- **失败时恢复原状态**：在 catch 块中使用 `value.value = !newValue` 恢复原状态
-- **finally块确保loading取消**：无论成功失败都要取消loading状态
-
-### UI优化
-
-- **流畅的加载动画**：改进的spinner设计，更清晰的视觉反馈
-- **精致的过渡效果**：优化了切换动画，使用更自然的缓动函数
-- **增强的交互反馈**：点击时的拉伸效果，提升用户体验
-- **完善的状态显示**：加载状态下的特殊样式和光标
-
 ## 贡献者
 
 <div class="contributors">
