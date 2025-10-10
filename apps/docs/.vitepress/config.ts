@@ -85,6 +85,7 @@ export default defineConfig({
             { text: 'Skeleton 骨架屏', link: '/components/skeleton' },
             { text: 'ThumbnailContainer 缩略图容器', link: '/components/thumbnail-container' },
             { text: 'Score 评分', link: '/components/score' },
+            { text:'Qrcode 二维码',link:'/components/qrcode'},
           ]
         },
         {

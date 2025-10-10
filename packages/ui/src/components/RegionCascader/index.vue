@@ -35,7 +35,7 @@
       :style="{ minWidth: '100%', width: 'max-content' }"
     >
       <!-- 搜索框 -->
-      <div class="p-3 border-b border-gray-200">
+      <div v-if="searchable" class="p-3 border-b border-gray-200">
         <div class="relative">
           <input
             ref="searchInputRef"
@@ -72,7 +72,7 @@
       </div>
 
       <!-- 全局搜索结果 -->
-      <div v-if="searchKeyword && searchResults.length > 0" class="max-h-80 overflow-y-auto" style="min-width: 600px;">
+      <div v-if="searchable && searchKeyword && searchResults.length > 0" class="max-h-80 overflow-y-auto" style="min-width: 600px;">
         <div class="px-3 py-2 text-xs text-gray-500 bg-gray-50 sticky top-0">
           找到 {{ searchResults.length }} 个结果（点击自动定位）
         </div>
@@ -96,7 +96,8 @@
         </div>
       </div>
 
-      <div v-else class="flex" style="min-width: 600px;">
+      <!-- 级联列表 -->
+      <div v-if="!searchable || !searchKeyword || searchResults.length === 0" class="flex" style="min-width: 600px;">
         <!-- 省份列表 -->
         <div ref="provinceListRef" class="flex-1 border-r border-gray-200 max-h-60 overflow-y-auto min-w-[200px]">
           <div
@@ -192,6 +193,7 @@ export interface RegionCascaderProps {
   customClass?: string
   separator?: string
   maxLevel?: 1 | 2 | 3 // 最大级别：1-省，2-省市，3-省市区
+  searchable?: boolean // 是否启用搜索功能
 }
 
 const props = withDefaults(defineProps<RegionCascaderProps>(), {
@@ -200,7 +202,8 @@ const props = withDefaults(defineProps<RegionCascaderProps>(), {
   disabled: false,
   customClass: '',
   separator: ' / ',
-  maxLevel: 3
+  maxLevel: 3,
+  searchable: false
 })
 
 const emit = defineEmits<{
@@ -373,10 +376,12 @@ const toggleDropdown = async () => {
       // 恢复之前的选择状态
       await restoreSelection()
       
-      // 打开时聚焦搜索框
-      setTimeout(() => {
-        searchInputRef.value?.focus()
-      }, 100)
+      // 打开时聚焦搜索框（仅当启用搜索时）
+      if (props.searchable) {
+        setTimeout(() => {
+          searchInputRef.value?.focus()
+        }, 100)
+      }
     }
   }
 }
@@ -546,10 +551,12 @@ const selectProvince = async (province: AreaNode) => {
     console.log('[RegionCascader] 城市列表加载完成:', citiesList.length, '个城市')
     console.log('[RegionCascader] 下拉框状态 isOpen:', isOpen.value)
     
-    // 聚焦搜索框，准备搜索城市
-    setTimeout(() => {
-      searchInputRef.value?.focus()
-    }, 100)
+    // 聚焦搜索框，准备搜索城市（仅当启用搜索时）
+    if (props.searchable) {
+      setTimeout(() => {
+        searchInputRef.value?.focus()
+      }, 100)
+    }
   } else {
     console.log('[RegionCascader] 省份是叶子节点或maxLevel<2，关闭下拉框')
     emitValue()
@@ -582,10 +589,12 @@ const selectCity = async (city: AreaNode) => {
   // 加载下一级
   if (!city.leaf && props.maxLevel >= 3) {
     districts.value = await loadChildren(city.value)
-    // 聚焦搜索框，准备搜索区县
-    setTimeout(() => {
-      searchInputRef.value?.focus()
-    }, 100)
+    // 聚焦搜索框，准备搜索区县（仅当启用搜索时）
+    if (props.searchable) {
+      setTimeout(() => {
+        searchInputRef.value?.focus()
+      }, 100)
+    }
   } else {
     emitValue()
     closeDropdown()
@@ -750,11 +759,81 @@ onMounted(async () => {
   })
 })
 
-// 监听 modelValue 变化（TODO: 实现值恢复）
-watch(() => props.modelValue, () => {
-  // 这里可以实现根据code恢复选中状态，需要从Worker查询
-  console.log('[RegionCascader] modelValue changed:', props.modelValue)
-}, { deep: true })
+// 根据 modelValue 恢复选中状态
+async function restoreFromModelValue(codes: string[]) {
+  if (!codes || codes.length === 0) {
+    // 清空选择
+    selectedProvince.value = null
+    selectedCity.value = null
+    selectedDistrict.value = null
+    provinces.value = []
+    cities.value = []
+    districts.value = []
+    return
+  }
+
+  console.log('[RegionCascader] 恢复选中状态:', codes)
+
+  try {
+    // 确保provinces列表已加载
+    if (provinces.value.length === 0) {
+      provinces.value = await loadRoots()
+    }
+    
+    // 恢复省份
+    if (codes[0]) {
+      const province = provinces.value.find(p => p.value === codes[0])
+      
+      if (province) {
+        selectedProvince.value = province
+        
+        // 如果有市级代码，恢复城市
+        if (codes[1] && props.maxLevel >= 2) {
+          cities.value = await loadChildren(codes[0])
+          const city = cities.value.find(c => c.value === codes[1])
+          
+          if (city) {
+            selectedCity.value = city
+            
+            // 如果有区级代码，恢复区县
+            if (codes[2] && props.maxLevel >= 3) {
+              districts.value = await loadChildren(codes[1])
+              const district = districts.value.find(d => d.value === codes[2])
+              
+              if (district) {
+                selectedDistrict.value = district
+              }
+            }
+          }
+        }
+      } else {
+        console.warn('[RegionCascader] 未找到省份代码:', codes[0])
+      }
+    }
+
+    console.log('[RegionCascader] 恢复完成:', {
+      province: selectedProvince.value?.label,
+      city: selectedCity.value?.label,
+      district: selectedDistrict.value?.label
+    })
+  } catch (error) {
+    console.error('[RegionCascader] 恢复选中状态失败:', error)
+  }
+}
+
+// 监听 modelValue 变化
+watch(() => props.modelValue, async (newValue) => {
+  console.log('[RegionCascader] modelValue changed:', newValue)
+  await restoreFromModelValue(newValue)
+}, { deep: true, immediate: false })
+
+// 在 Worker 就绪后恢复初始值
+watch(workerReady, async (ready) => {
+  if (ready && props.modelValue && props.modelValue.length > 0) {
+    console.log('[RegionCascader] Worker就绪，开始恢复初始值:', props.modelValue)
+    await restoreFromModelValue(props.modelValue)
+  }
+}, { immediate: true })
 
 // 暴露方法和数据
 defineExpose({
