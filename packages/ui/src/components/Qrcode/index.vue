@@ -119,90 +119,32 @@ const canvasStyle = computed(() => ({
     borderRadius: '4px'
 }))
 
-// 简单的二维码生成算法（模拟）
-function generateQRCode(value: string, size: number): Promise<void> {
-    return new Promise((resolve, reject) => {
-        try {
-            const canvas = canvasRef.value
-            if (!canvas) {
-                reject(new Error('Canvas not found'))
-                return
-            }
+// 使用qrcode库生成真正的二维码
+async function generateQRCode(value: string, size: number): Promise<void> {
+  try {
+    // 动态导入qrcode库
+    const QRCode = (await import('qrcode')).default
+    const canvas = canvasRef.value
+    if (!canvas) {
+      throw new Error('Canvas not found')
+    }
 
-            const ctx = canvas.getContext('2d')
-            if (!ctx) {
-                reject(new Error('Canvas context not found'))
-                return
-            }
+    // 配置二维码选项
+    const options = {
+      width: size,
+      margin: 1,
+      color: {
+        dark: props.foregroundColor,
+        light: props.backgroundColor
+      },
+      errorCorrectionLevel: props.errorCorrectionLevel
+    }
 
-            // 清空画布
-            ctx.clearRect(0, 0, size, size)
-
-            // 设置背景色
-            ctx.fillStyle = props.backgroundColor
-            ctx.fillRect(0, 0, size, size)
-
-            // 生成简单的二维码图案（模拟）
-            const moduleSize = Math.floor(size / 25) // 25x25 模块
-            const padding = (size - moduleSize * 25) / 2
-
-            ctx.fillStyle = props.foregroundColor
-
-            // 生成随机图案模拟二维码
-            const seed = value.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0)
-            const random = (seed: number) => {
-                const x = Math.sin(seed) * 10000
-                return x - Math.floor(x)
-            }
-
-            for (let row = 0; row < 25; row++) {
-                for (let col = 0; col < 25; col++) {
-                    const moduleSeed = seed + row * 25 + col
-                    if (random(moduleSeed) > 0.5) {
-                        ctx.fillRect(
-                            padding + col * moduleSize,
-                            padding + row * moduleSize,
-                            moduleSize,
-                            moduleSize
-                        )
-                    }
-                }
-            }
-
-            // 添加定位点（左上、右上、左下）
-            const cornerSize = moduleSize * 7
-            const cornerModules = [
-                { x: padding, y: padding },
-                { x: padding + moduleSize * 18, y: padding },
-                { x: padding, y: padding + moduleSize * 18 }
-            ]
-
-            cornerModules.forEach(corner => {
-                // 外框
-                ctx.fillRect(corner.x, corner.y, cornerSize, cornerSize)
-                // 内框
-                ctx.fillStyle = props.backgroundColor
-                ctx.fillRect(
-                    corner.x + moduleSize,
-                    corner.y + moduleSize,
-                    cornerSize - moduleSize * 2,
-                    cornerSize - moduleSize * 2
-                )
-                // 中心点
-                ctx.fillStyle = props.foregroundColor
-                ctx.fillRect(
-                    corner.x + moduleSize * 2,
-                    corner.y + moduleSize * 2,
-                    cornerSize - moduleSize * 4,
-                    cornerSize - moduleSize * 4
-                )
-            })
-
-            resolve()
-        } catch (err) {
-            reject(err)
-        }
-    })
+    // 生成二维码到canvas
+    await QRCode.toCanvas(canvas, value, options)
+  } catch (err) {
+    throw new Error(`Failed to generate QR code: ${err}`)
+  }
 }
 
 async function createQRCode() {

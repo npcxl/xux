@@ -208,6 +208,76 @@ const qrValue = ref('https://example.com')
 
 :::
 
+## 容错级别
+
+二维码支持四种容错级别，级别越高，容错能力越强，但二维码密度也越高。
+
+:::demo
+
+```vue
+<template>
+  <div>
+    <div class="mb-4">
+      <XSelect 
+        v-model="errorLevel" 
+        :options="errorLevelOptions"
+        placeholder="选择容错级别"
+        class="w-60"
+      />
+    </div>
+    <div class="flex gap-4">
+      <div class="text-center">
+        <XQrcode 
+          value="https://example.com" 
+          error-correction-level="L"
+          :size="150"
+        />
+        <p class="mt-2 text-sm text-gray-600">L - 低 (~7%)</p>
+      </div>
+      <div class="text-center">
+        <XQrcode 
+          value="https://example.com" 
+          error-correction-level="M"
+          :size="150"
+        />
+        <p class="mt-2 text-sm text-gray-600">M - 中 (~15%)</p>
+      </div>
+      <div class="text-center">
+        <XQrcode 
+          value="https://example.com" 
+          error-correction-level="Q"
+          :size="150"
+        />
+        <p class="mt-2 text-sm text-gray-600">Q - 高 (~25%)</p>
+      </div>
+      <div class="text-center">
+        <XQrcode 
+          value="https://example.com" 
+          error-correction-level="H"
+          :size="150"
+        />
+        <p class="mt-2 text-sm text-gray-600">H - 最高 (~30%)</p>
+      </div>
+    </div>
+  </div>
+</template>
+
+<script setup>
+import { ref } from 'vue'
+
+const errorLevel = ref('M')
+
+const errorLevelOptions = [
+  { label: 'L - 低 (~7%)', value: 'L' },
+  { label: 'M - 中 (~15%)', value: 'M' },
+  { label: 'Q - 高 (~25%)', value: 'Q' },
+  { label: 'H - 最高 (~30%)', value: 'H' }
+]
+</script>
+```
+
+:::
+
 ## API
 
 ### Props
@@ -240,6 +310,7 @@ const qrValue = ref('https://example.com')
 
 ### 注意事项
 
-- 本组件使用 Canvas API 生成二维码，生成的是模拟图案，不是真正的二维码
-- 如需生成真正的二维码，建议使用专业的二维码库
+- 本组件使用 `qrcode` 库生成二维码
+- 支持多种容错级别（L、M、Q、H），建议使用 M 级别以获得最佳效果
 - 组件支持响应式设计，在移动端会自动调整样式
+- 二维码内容过长时，建议适当增大尺寸以确保可读性
