@@ -66,7 +66,7 @@ const handleChange = (values, labelArr) => {
 <script setup>
 import { ref, computed } from 'vue'
 
-const region = ref(['110000', '110100', '110101'])
+const region = ref(['11', '1101', '110101'])
 
 const displayText = computed(() => {
   if (region.value.length === 0) return '未选择'
@@ -113,9 +113,9 @@ const displayText = computed(() => {
 <script setup>
 import { ref } from 'vue'
 
-const region1 = ref(['110000', '110100', '110101'])
-const region2 = ref(['310000', '310100', '310101'])
-const region3 = ref(['440000', '440100', '440103'])
+const region1 = ref(['11', '1101', '110101'])
+const region2 = ref(['31', '3101', '310101'])
+const region3 = ref(['44', '4401', '440103'])
 </script>
 
 <style scoped>
@@ -151,7 +151,7 @@ const region3 = ref(['440000', '440100', '440103'])
 <script setup>
 import { ref } from 'vue'
 
-const region = ref(['110000', '110100', '110101'])
+const region = ref(['11', '1101', '110101'])
 </script>
 
 <style scoped>
@@ -201,14 +201,14 @@ const region2 = ref([])
 
 ## 智能搜索功能（全局搜索 + 智能反填）
 
-组件内置强大的全局搜索功能，支持跨层级搜索和智能路径反填。
+组件内置强大的全局搜索功能，支持跨层级搜索和智能路径反填。通过设置 `searchable` 属性为 `true` 来启用。
 
 :::demo
 
 ```vue
 <template>
   <div class="demo-region-cascader-search">
-    <XRegionCascader v-model="region" @change="handleChange" />
+    <XRegionCascader v-model="region" searchable @change="handleChange" />
     <div class="text-sm text-gray-600 mt-4">
       选中的值: {{ region }}
     </div>
@@ -420,6 +420,7 @@ const handleSubmit = () => {
 | customClass | 自定义样式类名 | `string` | `''` |
 | separator | 显示分隔符 | `string` | `' / '` |
 | maxLevel | 最大级别：1-省，2-省市，3-省市区 | `1 \| 2 \| 3` | `3` |
+| searchable | 是否启用搜索功能 | `boolean` | `false` |
 
 ### Events
 
@@ -432,22 +433,23 @@ const handleSubmit = () => {
 
 ### 地区代码格式
 
-组件使用的地区代码遵循国家标准，支持3级：
+组件使用的地区代码格式如下：
 
-- 省级（1级）：6位代码，如 `110000`（北京市）
-- 市级（2级）：6位代码，如 `110100`（北京市市辖区）
+- 省级（1级）：2位代码，如 `11`（北京市）
+- 市级（2级）：4位代码，如 `1101`（北京市市辖区）
 - 区县（3级）：6位代码，如 `110101`（东城区）
 
-### 代码转文本
-
-如需将代码转换为文本，可以使用 `element-china-area-data` 提供的工具：
+### 示例代码
 
 ```javascript
-import { codeToText } from 'element-china-area-data'
+// 北京市东城区
+const region = ['11', '1101', '110101']
 
-const provinceName = codeToText['110000'] // '北京市'
-const cityName = codeToText['110100'] // '市辖区'
-const districtName = codeToText['110101'] // '东城区'
+// 上海市黄浦区
+const region = ['31', '3101', '310101']
+
+// 广东省广州市荔湾区
+const region = ['44', '4401', '440103']
 ```
 
 ## 级别控制说明
