@@ -18,7 +18,6 @@ export { default as XScore } from './components/Score/index.vue'
 export { default as XRadio } from './components/Radio/index.vue'
 export { default as XDateTimePicker } from './components/DateTimePicker/index.vue'
 export { default as XRegionCascader } from './components/RegionCascader/index.vue'
-export { default as XQrcode } from './components/Qrcode/index.vue'
 
 // 导出 Composables
 export { xlMsg, default as useMsg } from './composables/Msg'
@@ -40,4 +39,5 @@ export type { RadioOption, RadioProps } from './components/Radio/index.vue'
 export type { DateTimePickerProps } from './components/DateTimePicker/index.vue'
 export type { RegionCascaderProps } from './components/RegionCascader/index.vue'
 export type { DateTimeOptions, DateRange, CalendarDate } from './composables/DateTime'
+
 

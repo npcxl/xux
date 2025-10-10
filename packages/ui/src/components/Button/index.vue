@@ -25,7 +25,7 @@
     </span>
     
     <!-- 按钮内容 -->
-    <span class="x-btn-content">
+    <span class="x-btn-content ">
       <slot />
     </span>
     
@@ -358,15 +358,15 @@ function handleMouseDown(event: MouseEvent) {
 .x-btn-ghost.x-btn-primary {
   background-color: transparent;
   background: transparent;
-  border-color: var(--x-color-primary, #ff6b35);
-  color: var(--x-color-primary, #ff6b35);
+  border-color: var(--x-color-primary, #1a1a1a);
+  color: var(--x-color-primary, #1a1a1a);
   box-shadow: none;
 }
 
 .x-btn-ghost.x-btn-primary:hover:not(.x-btn-disabled):not(.x-btn-loading) {
-  background-color: rgba(255, 107, 53, 0.1);
-  background: rgba(255, 107, 53, 0.1);
-  border-color: var(--x-color-primary, #ff6b35);
+  background-color: rgba(26, 26, 26, 0.1);
+  background: rgba(26, 26, 26, 0.1);
+  border-color: var(--x-color-primary, #1a1a1a);
   box-shadow: none;
 }
 
