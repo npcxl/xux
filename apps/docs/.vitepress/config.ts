@@ -73,6 +73,7 @@ export default defineConfig({
             { text: 'Checkboxes 多选框', link: '/components/checkboxes' },
             { text: 'Radio 单选框', link: '/components/radio' },
             { text: 'CountrySelect 国家选择', link: '/components/country-select' },
+            { text: 'RegionCascader 地区级联', link: '/components/region-cascader' },
             { text: 'Switch 开关', link: '/components/switch' },
             { text: 'DateTimePicker 日期时间选择器', link: '/components/datetime-picker' },
           ]
