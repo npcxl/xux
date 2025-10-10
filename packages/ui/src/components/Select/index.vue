@@ -53,15 +53,16 @@
             </template>
           </div>
         </div>
-               <i
+               <Icon
            :class="[
-             'bi text-gray-400 transition-transform duration-200 text-lg',
+             'text-gray-400 transition-transform duration-300 ease-in-out text-lg',
              {
-               'bi-chevron-down': !isOpen,
-               'bi-chevron-up': isOpen
+               'rotate-180': isOpen,
+               'rotate-0': !isOpen
              }
            ]"
-         ></i>
+           icon="mdi:chevron-down"
+         ></Icon>
       </div>
   
       <!-- 下拉菜单 -->
