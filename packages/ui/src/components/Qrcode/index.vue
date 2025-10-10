@@ -24,7 +24,7 @@ import { ref, computed, watch, onMounted, nextTick } from 'vue'
  * @displayName XQrcode
  */
 
-interface Props {
+export interface QrcodeProps {
     /**
      * 二维码内容
      */
@@ -84,7 +84,7 @@ interface Props {
     errorText?: string
 }
 
-const props = withDefaults(defineProps<Props>(), {
+const props = withDefaults(defineProps<QrcodeProps>(), {
   size: 200,
   iconSize: 40,
   iconColor: '#000000',
