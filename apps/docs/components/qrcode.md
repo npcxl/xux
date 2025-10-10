@@ -10,7 +10,7 @@
 
 ```vue
 <template>
-  <XQrcode value="https://example.com" />
+  <XQrcode value="代码写出来是给人看的" />
 </template>
 ```
 
@@ -25,9 +25,9 @@
 ```vue
 <template>
   <div class="flex gap-4">
-    <XQrcode value="https://example.com" :size="150" />
-    <XQrcode value="https://example.com" :size="200" />
-    <XQrcode value="https://example.com" :size="250" />
+    <XQrcode value="代码写出来是给人看的" :size="150" />
+    <XQrcode value="代码写出来是给人看的" :size="200" />
+    <XQrcode value="代码写出来是给人看的" :size="250" />
   </div>
 </template>
 ```
@@ -44,17 +44,17 @@
 <template>
   <div class="flex gap-4">
     <XQrcode 
-      value="https://example.com" 
+      value="代码写出来是给人看的" 
       background-color="#f0f0f0"
       foreground-color="#333333"
     />
     <XQrcode 
-      value="https://example.com" 
+      value="代码写出来是给人看的" 
       background-color="#1a1a1a"
       foreground-color="#ffffff"
     />
     <XQrcode 
-      value="https://example.com" 
+      value="代码写出来是给人看的" 
       background-color="#e8f5e8"
       foreground-color="#2d5a2d"
     />
@@ -73,8 +73,8 @@
 ```vue
 <template>
   <div class="flex gap-4">
-    <XQrcode value="https://example.com" :bordered="true" />
-    <XQrcode value="https://example.com" :bordered="false" />
+    <XQrcode value="代码写出来是给人看的" :bordered="true" />
+    <XQrcode value="代码写出来是给人看的" :bordered="false" />
   </div>
 </template>
 ```
@@ -91,17 +91,17 @@
 <template>
   <div class="flex gap-4">
     <XQrcode 
-      value="https://example.com" 
+      value="代码写出来是给人看的" 
       border-color="#ff6b35"
       :border-width="2"
     />
     <XQrcode 
-      value="https://example.com" 
+      value="代码写出来是给人看的" 
       border-color="#10b981"
       :border-width="3"
     />
     <XQrcode 
-      value="https://example.com" 
+      value="代码写出来是给人看的" 
       border-color="#8b5cf6"
       :border-width="1"
     />
@@ -121,7 +121,7 @@
 <template>
   <div>
     <XQrcode 
-      value="https://example.com" 
+      value="代码写出来是给人看的" 
       @success="handleSuccess"
       @error="handleError"
     />
@@ -155,7 +155,7 @@ function handleError(error) {
   <div>
     <XQrcode 
       ref="qrcodeRef"
-      value="https://example.com" 
+      value="代码写出来是给人看的" 
     />
     <div class="mt-4">
       <XButton @click="refreshQR">刷新二维码</XButton>
@@ -202,7 +202,7 @@ function refreshQR() {
 <script setup>
 import { ref } from 'vue'
 
-const qrValue = ref('https://example.com')
+const qrValue = ref('代码写出来是给人看的')
 </script>
 ```
 
@@ -228,7 +228,7 @@ const qrValue = ref('https://example.com')
     <div class="flex gap-4">
       <div class="text-center">
         <XQrcode 
-          value="https://example.com" 
+          value="代码写出来是给人看的" 
           error-correction-level="L"
           :size="150"
         />
@@ -236,7 +236,7 @@ const qrValue = ref('https://example.com')
       </div>
       <div class="text-center">
         <XQrcode 
-          value="https://example.com" 
+          value="代码写出来是给人看的" 
           error-correction-level="M"
           :size="150"
         />
@@ -244,7 +244,7 @@ const qrValue = ref('https://example.com')
       </div>
       <div class="text-center">
         <XQrcode 
-          value="https://example.com" 
+          value="代码写出来是给人看的" 
           error-correction-level="Q"
           :size="150"
         />
@@ -252,7 +252,7 @@ const qrValue = ref('https://example.com')
       </div>
       <div class="text-center">
         <XQrcode 
-          value="https://example.com" 
+          value="代码写出来是给人看的" 
           error-correction-level="H"
           :size="150"
         />
@@ -278,6 +278,139 @@ const errorLevelOptions = [
 
 :::
 
+## 文本图标
+
+可以在二维码中心添加文本图标，支持emoji和普通文本。
+
+:::demo
+
+```vue
+<template>
+  <div class="flex gap-4">
+    <div class="text-center">
+      <XQrcode 
+        value="代码写出来是给人看的" 
+        text-icon="🚀"
+        :icon-size="30"
+        :size="150"
+      />
+      <p class="mt-2 text-sm text-gray-600">Emoji图标</p>
+    </div>
+    <div class="text-center">
+      <XQrcode 
+        value="代码写出来是给人看的" 
+        text-icon="LOGO"
+        :icon-size="25"
+        :size="150"
+      />
+      <p class="mt-2 text-sm text-gray-600">文本图标</p>
+    </div>
+    <div class="text-center">
+      <XQrcode 
+        value="代码写出来是给人看的" 
+        text-icon="⭐"
+        icon-color="#ff6b35"
+        :icon-size="30"
+        :size="150"
+      />
+      <p class="mt-2 text-sm text-gray-600">彩色文本图标</p>
+    </div>
+  </div>
+</template>
+```
+
+:::
+```
+
+:::
+
+## 图标尺寸
+
+可以自定义图标的尺寸大小。
+
+:::demo
+
+```vue
+<template>
+  <div class="flex gap-4">
+    <div class="text-center">
+      <XQrcode 
+        value="代码写出来是给人看的" 
+        text-icon="⭐"
+        :icon-size="20"
+        :size="150"
+      />
+      <p class="mt-2 text-sm text-gray-600">小图标 (20px)</p>
+    </div>
+    <div class="text-center">
+      <XQrcode 
+        value="代码写出来是给人看的" 
+        text-icon="⭐"
+        :icon-size="40"
+        :size="150"
+      />
+      <p class="mt-2 text-sm text-gray-600">中图标 (40px)</p>
+    </div>
+    <div class="text-center">
+      <XQrcode 
+        value="代码写出来是给人看的" 
+        text-icon="⭐"
+        :icon-size="60"
+        :size="150"
+      />
+      <p class="mt-2 text-sm text-gray-600">大图标 (60px)</p>
+    </div>
+  </div>
+</template>
+```
+
+:::
+
+## 图标颜色
+
+可以自定义文本图标的颜色，emoji图标不受影响。
+
+:::demo
+
+```vue
+<template>
+  <div class="flex gap-4">
+    <div class="text-center">
+      <XQrcode 
+        value="代码写出来是给人看的" 
+        text-icon="LOGO"
+        icon-color="#ff6b35"
+        :icon-size="25"
+        :size="150"
+      />
+      <p class="mt-2 text-sm text-gray-600">橙色文本</p>
+    </div>
+    <div class="text-center">
+      <XQrcode 
+        value="代码写出来是给人看的" 
+        text-icon="LOGO"
+        icon-color="#10b981"
+        :icon-size="25"
+        :size="150"
+      />
+      <p class="mt-2 text-sm text-gray-600">绿色文本</p>
+    </div>
+    <div class="text-center">
+      <XQrcode 
+        value="代码写出来是给人看的" 
+        text-icon="LOGO"
+        icon-color="#8b5cf6"
+        :icon-size="25"
+        :size="150"
+      />
+      <p class="mt-2 text-sm text-gray-600">紫色文本</p>
+    </div>
+  </div>
+</template>
+```
+
+:::
+
 ## API
 
 ### Props
@@ -285,6 +418,10 @@ const errorLevelOptions = [
 | 参数 | 说明 | 类型 | 默认值 |
 | --- | --- | --- | --- |
 | value | 二维码内容 | `string` | - |
+| textIcon | 文本图标（支持emoji、文本） | `string` | - |
+| icon | 图片图标（支持图片URL） | `string` | - |
+| iconSize | 图标尺寸 | `number` | `40` |
+| iconColor | 图标颜色（仅对文本图标有效） | `string` | `#000000` |
 | size | 二维码尺寸 | `number` | `200` |
 | backgroundColor | 背景色 | `string` | `#ffffff` |
 | foregroundColor | 前景色 | `string` | `#000000` |
@@ -312,5 +449,9 @@ const errorLevelOptions = [
 
 - 本组件使用 `qrcode` 库生成二维码
 - 支持多种容错级别（L、M、Q、H），建议使用 M 级别以获得最佳效果
+- `textIcon` 用于文本图标（包括emoji），`icon` 用于图片图标
+- 图片图标会自动处理跨域问题
+- 图标颜色仅对文本图标有效，emoji图标保持原有颜色
+- 图标尺寸建议不超过二维码尺寸的1/3，以确保二维码可读性
 - 组件支持响应式设计，在移动端会自动调整样式
 - 二维码内容过长时，建议适当增大尺寸以确保可读性

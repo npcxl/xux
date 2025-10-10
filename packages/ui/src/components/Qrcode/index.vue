@@ -29,10 +29,26 @@ interface Props {
      * 二维码内容
      */
     value: string
-    /**
-     * 二维码尺寸
-     */
-    size?: number
+  /**
+   * 文本图标（支持emoji、文本）
+   */
+  textIcon?: string
+  /**
+   * 图片图标（支持图片URL）
+   */
+  icon?: string
+  /**
+   * 图标尺寸
+   */
+  iconSize?: number
+  /**
+   * 图标颜色（仅对文本图标有效）
+   */
+  iconColor?: string
+  /**
+   * 二维码尺寸
+   */
+  size?: number
     /**
      * 二维码背景色
      */
@@ -69,15 +85,17 @@ interface Props {
 }
 
 const props = withDefaults(defineProps<Props>(), {
-    size: 200,
-    backgroundColor: '#ffffff',
-    foregroundColor: '#000000',
-    errorCorrectionLevel: 'M',
-    bordered: true,
-    borderColor: '#d9d9d9',
-    borderWidth: 1,
-    loadingText: '生成中...',
-    errorText: '生成失败'
+  size: 200,
+  iconSize: 40,
+  iconColor: '#000000',
+  backgroundColor: '#ffffff',
+  foregroundColor: '#1a1a1a',
+  errorCorrectionLevel: 'M',
+  bordered: true,
+  borderColor: '#d9d9d9',
+  borderWidth: 1,
+  loadingText: '生成中...',
+  errorText: '生成失败'
 })
 
 const emit = defineEmits<{
@@ -121,30 +139,102 @@ const canvasStyle = computed(() => ({
 
 // 使用qrcode库生成真正的二维码
 async function generateQRCode(value: string, size: number): Promise<void> {
-  try {
-    // 动态导入qrcode库
-    const QRCode = (await import('qrcode')).default
-    const canvas = canvasRef.value
-    if (!canvas) {
-      throw new Error('Canvas not found')
-    }
+    try {
+        // 动态导入qrcode库
+        const QRCode = (await import('qrcode')).default
+        const canvas = canvasRef.value
+        if (!canvas) {
+            throw new Error('Canvas not found')
+        }
 
-    // 配置二维码选项
-    const options = {
-      width: size,
-      margin: 1,
-      color: {
-        dark: props.foregroundColor,
-        light: props.backgroundColor
-      },
-      errorCorrectionLevel: props.errorCorrectionLevel
-    }
+        // 配置二维码选项
+        const options = {
+            width: size,
+            margin: 1,
+            color: {
+                dark: props.foregroundColor,
+                light: props.backgroundColor
+            },
+            errorCorrectionLevel: props.errorCorrectionLevel
+        }
 
-    // 生成二维码到canvas
-    await QRCode.toCanvas(canvas, value, options)
-  } catch (err) {
-    throw new Error(`Failed to generate QR code: ${err}`)
-  }
+        // 生成二维码到canvas
+        await QRCode.toCanvas(canvas, value, options)
+
+        // 如果有图标，在二维码中心绘制图标
+        if (props.textIcon || props.icon) {
+            await drawIconInCenter(canvas, size)
+        }
+    } catch (err) {
+        throw new Error(`Failed to generate QR code: ${err}`)
+    }
+}
+
+// 在二维码中心绘制图标
+async function drawIconInCenter(canvas: HTMLCanvasElement, size: number): Promise<void> {
+    const ctx = canvas.getContext('2d')
+    if (!ctx) return
+
+    const iconSize = props.iconSize
+    const centerX = size / 2
+    const centerY = size / 2
+    const iconX = centerX - iconSize / 2
+    const iconY = centerY - iconSize / 2
+
+    // 优先处理图片图标
+    if (props.icon) {
+        // 图片图标处理
+        const img = new Image()
+        img.crossOrigin = 'anonymous'
+        
+        return new Promise((resolve, reject) => {
+            img.onload = () => {
+                try {
+                    // 绘制白色背景矩形
+                    ctx.fillStyle = props.backgroundColor
+                    ctx.beginPath()
+                    ctx.rect(iconX - 4, iconY - 4, iconSize + 8, iconSize + 8)
+                    ctx.fill()
+                    
+                    ctx.drawImage(img, iconX, iconY, iconSize, iconSize)
+                    resolve()
+                } catch (err) {
+                    reject(err)
+                }
+            }
+            img.onerror = () => {
+                reject(new Error('Failed to load icon image'))
+            }
+            img.src = props.icon!
+        })
+    } else if (props.textIcon) {
+        // 文本图标处理（包括emoji）
+        ctx.font = `${iconSize}px Arial`
+        ctx.textAlign = 'center'
+        ctx.textBaseline = 'middle'
+        
+        // 测量文本实际尺寸
+        const textMetrics = ctx.measureText(props.textIcon)
+        const textWidth = textMetrics.width
+        const textHeight = iconSize // 字体大小作为高度参考
+        
+        // 计算背景矩形尺寸，添加适当的内边距
+        const padding = 8
+        const bgWidth = Math.max(textWidth + padding, iconSize)
+        const bgHeight = Math.max(textHeight + padding, iconSize)
+        const bgX = centerX - bgWidth / 2
+        const bgY = centerY - bgHeight / 2
+        
+        // 绘制白色背景矩形
+        ctx.fillStyle = props.backgroundColor
+        ctx.beginPath()
+        ctx.rect(bgX, bgY, bgWidth, bgHeight)
+        ctx.fill()
+        
+        // 绘制文本
+        ctx.fillStyle = props.iconColor
+        ctx.fillText(props.textIcon, centerX, centerY)
+    }
 }
 
 async function createQRCode() {
@@ -170,13 +260,13 @@ async function createQRCode() {
 
 // 监听属性变化
 watch(
-    () => [props.value, props.size, props.backgroundColor, props.foregroundColor],
-    () => {
-        nextTick(() => {
-            createQRCode()
-        })
-    },
-    { deep: true }
+  () => [props.value, props.size, props.backgroundColor, props.foregroundColor, props.textIcon, props.icon, props.iconSize, props.iconColor],
+  () => {
+    nextTick(() => {
+      createQRCode()
+    })
+  },
+  { deep: true }
 )
 
 onMounted(() => {
