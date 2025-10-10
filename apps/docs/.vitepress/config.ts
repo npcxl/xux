@@ -52,9 +52,6 @@ export default defineConfig({
           ]
         }
       ],
-      '/composables/': [
-        
-      ],
       '/components/': [
         {
           text: '通用',

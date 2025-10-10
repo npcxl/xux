@@ -1,13 +1,26 @@
 <template>
-  <div class="switch" :class="[`size-${size}`, { 'disabled': disabled }]" :style="colorStyle">
+  <div 
+    class="switch" 
+    :class="[
+      `size-${size}`, 
+      { 'disabled': disabled }, 
+      { 'loading': loading },
+      { 'checked': modelValue }
+    ]" 
+    :style="colorStyle"
+  >
     <input 
       :id="switchId"
       :checked="modelValue"
       @change="handleChange"
-      :disabled="disabled"
+      :disabled="disabled || loading"
       type="checkbox"
     >
-    <label :for="switchId" class="slider"></label>
+    <label :for="switchId" class="slider">
+      <span v-if="loading" class="loading-spinner">
+        <span class="spinner-inner"></span>
+      </span>
+    </label>
   </div>
 </template>
 
@@ -26,18 +39,21 @@ interface Props {
   color?: string
   shadowColor?: string
   thumbColor?: string
+  loading?: boolean
 }
 
 const props = withDefaults(defineProps<Props>(), {
   disabled: false,
   size: 'medium',
-  color: '#0974f1',
-  shadowColor: '#0974f1',
-  thumbColor: '#ffffff'
+  color: '#1a1a1a',
+  shadowColor: '#1a1a1a',
+  thumbColor: '#ffffff',
+  loading: false
 })
 
 const emit = defineEmits<{
   (e: 'update:modelValue', value: boolean): void
+  (e: 'change', value: boolean): void
 }>()
 
 // 生成唯一的 ID 避免冲突
@@ -74,7 +90,7 @@ const hexToRgb = (hex: string) => {
     const b = parseInt(result[3], 16)
     return `${r}, ${g}, ${b}`
   }
-  return '9, 117, 241' // 默认蓝色
+  return '26, 26, 26' // 默认深灰色 #1a1a1a
 }
 
 // 将颜色变浅
@@ -96,8 +112,16 @@ const lightenColor = (hex: string, factor: number) => {
 }
 
 const handleChange = () => {
-  if (!props.disabled) {
-    emit('update:modelValue', !props.modelValue)
+  if (!props.disabled && !props.loading) {
+    const newValue = !props.modelValue
+    
+    // 发出 change 事件供父组件处理异步逻辑
+    emit('change', newValue)
+    
+    // 注意：在异步模式下，父组件应该在 @change 事件中阻止默认更新
+    // 通过在异步操作成功后手动更新 v-model
+    // 同步模式下，直接更新即可
+    emit('update:modelValue', newValue)
   }
 }
 </script>
@@ -124,9 +148,9 @@ const handleChange = () => {
   position: absolute;
   cursor: pointer;
   inset: 0;
-  border: none;
+  border: 2px solid transparent;
   border-radius: 50px;
-  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   background-color: var(--switch-bg-color);
 }
 
@@ -139,17 +163,19 @@ const handleChange = () => {
   bottom: 0.2em;
   background-color: var(--switch-thumb-color);
   border-radius: inherit;
-  transition: all 0.4s cubic-bezier(0.23, 1, 0.320, 1);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .switch input:checked + .slider {
-  box-shadow: 0 0 20px rgba(var(--switch-shadow-color-rgb), 0.8);
-  border: 2px solid var(--switch-active-color);
-  background-color: var(--switch-active-color);
+  box-shadow: 0 0 12px rgba(var(--switch-shadow-color-rgb), 0.5);
+  border-color: var(--switch-color);
+  background-color: var(--switch-color);
 }
 
 .switch input:checked + .slider:before {
   transform: translateX(1.5em);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
 }
 
 /* 尺寸变体 */
@@ -206,29 +232,104 @@ const handleChange = () => {
 }
 
 /* 悬停效果 */
-.switch:not(.disabled):hover .slider {
-  box-shadow: 0 0 20px rgba(var(--switch-shadow-color-rgb), 0.8);
+.switch:not(.disabled):not(.loading):hover .slider {
+  border-color: rgba(var(--switch-color-rgb), 0.4);
+  box-shadow: 0 0 8px rgba(var(--switch-shadow-color-rgb), 0.3);
 }
 
-.switch:not(.disabled) input:checked + .slider:hover {
-  box-shadow: 0 0 20px rgba(var(--switch-shadow-color-rgb), 0.8);
+.switch:not(.disabled):not(.loading) input:checked + .slider:hover {
+  box-shadow: 0 0 16px rgba(var(--switch-shadow-color-rgb), 0.6);
 }
 
-/* 点击后移除边框 */
-.switch input:active + .slider {
-  box-shadow: none;
+/* 点击效果 */
+.switch:not(.disabled):not(.loading) input:active + .slider {
+  transform: scale(0.96);
 }
 
-.switch input:checked:active + .slider {
-  box-shadow: 0 0 20px rgba(var(--switch-shadow-color-rgb), 0.8);
+.switch:not(.disabled):not(.loading) input:active + .slider:before {
+  width: 1.6em;
+}
+
+.switch:not(.disabled):not(.loading) input:checked:active + .slider:before {
+  width: 1.6em;
+  transform: translateX(1.3em);
 }
 
 /* 焦点状态 */
 .switch input:focus-visible + .slider {
-  box-shadow: 0 0 0 3px rgba(var(--switch-shadow-color-rgb), 0.3);
+  outline: 2px solid rgba(var(--switch-color-rgb), 0.5);
+  outline-offset: 2px;
 }
 
 .switch input:checked:focus-visible + .slider {
-  box-shadow: 0 0 20px rgba(var(--switch-shadow-color-rgb), 0.8), 0 0 0 3px rgba(var(--switch-shadow-color-rgb), 0.3);
+  outline: 2px solid rgba(var(--switch-color-rgb), 0.5);
+  outline-offset: 2px;
+}
+
+/* 加载状态 */
+.switch.loading .slider {
+  cursor: wait;
+  opacity: 0.9;
+}
+
+.switch.loading .slider:before {
+  opacity: 0.6;
+}
+
+.loading-spinner {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+}
+
+.spinner-inner {
+  display: block;
+  width: 0.8em;
+  height: 0.8em;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-top-color: var(--switch-thumb-color);
+  border-radius: 50%;
+  animation: spin 0.6s linear infinite;
+}
+
+.switch.checked .spinner-inner {
+  border-color: rgba(var(--switch-color-rgb), 0.3);
+  border-top-color: var(--switch-color);
+}
+
+.switch.size-small .spinner-inner {
+  width: 0.6em;
+  height: 0.6em;
+  border-width: 1.5px;
+}
+
+.switch.size-large .spinner-inner {
+  width: 1em;
+  height: 1em;
+  border-width: 2.5px;
+}
+
+/* 加载状态下禁用悬停效果 */
+.switch.loading:hover .slider {
+  transform: none;
+  border-color: transparent;
+}
+
+.switch.loading input:checked + .slider {
+  box-shadow: 0 0 12px rgba(var(--switch-shadow-color-rgb), 0.5);
+}
+
+.switch.loading input:checked + .slider:hover {
+  box-shadow: 0 0 12px rgba(var(--switch-shadow-color-rgb), 0.5);
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
 }
 </style>

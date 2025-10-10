@@ -334,6 +334,264 @@ const privacyMode = ref(false)
 
 :::
 
+## 异步状态
+
+Switch 组件支持异步操作，适用于需要网络请求或耗时操作的场景。
+
+:::demo
+
+```vue
+<template>
+  <div class="flex flex-col gap-6">
+    <div class="flex flex-col gap-4">
+      <h4 class="font-medium">基础异步用法</h4>
+      <div class="flex items-center gap-3">
+        <XSwitch 
+          v-model="asyncValue" 
+          :loading="isLoading"
+          @change="handleAsyncChange"
+        />
+        <span>异步开关状态: {{ asyncValue ? '开启' : '关闭' }}</span>
+        <span v-if="isLoading" class="text-sm text-blue-500">处理中...</span>
+      </div>
+    </div>
+    
+    <div class="flex flex-col gap-4">
+      <h4 class="font-medium">模拟网络请求</h4>
+      <div class="flex items-center gap-3">
+        <XSwitch 
+          v-model="networkValue" 
+          :loading="networkLoading"
+          @change="handleNetworkChange"
+        />
+        <span>网络设置: {{ networkValue ? '开启' : '关闭' }}</span>
+        <span v-if="networkLoading" class="text-sm text-orange-500">同步中...</span>
+      </div>
+    </div>
+    
+    <div class="flex flex-col gap-4">
+      <h4 class="font-medium">带错误处理的异步</h4>
+      <div class="flex items-center gap-3">
+        <XSwitch 
+          v-model="errorValue" 
+          :loading="errorLoading"
+          @change="handleErrorChange"
+        />
+        <span>可能失败的操作: {{ errorValue ? '开启' : '关闭' }}</span>
+        <span v-if="errorLoading" class="text-sm text-red-500">处理中...</span>
+        <span v-if="errorMessage" class="text-sm text-red-500">{{ errorMessage }}</span>
+      </div>
+    </div>
+  </div>
+</template>
+
+<script setup>
+import { ref } from 'vue'
+
+const asyncValue = ref(false)
+const isLoading = ref(false)
+
+const networkValue = ref(true)
+const networkLoading = ref(false)
+
+const errorValue = ref(false)
+const errorLoading = ref(false)
+const errorMessage = ref('')
+
+const handleAsyncChange = async (value) => {
+  isLoading.value = true
+  try {
+    // 模拟异步操作
+    await new Promise(resolve => setTimeout(resolve, 1000))
+    // 异步操作成功后才更新状态
+    asyncValue.value = value
+  } catch (error) {
+    console.error('操作失败:', error)
+    // 失败时恢复原状态
+    asyncValue.value = !value
+  } finally {
+    isLoading.value = false
+  }
+}
+
+const handleNetworkChange = async (value) => {
+  networkLoading.value = true
+  
+  try {
+    // 模拟网络请求
+    await new Promise(resolve => setTimeout(resolve, 2000))
+    // 异步操作成功后才更新状态
+    networkValue.value = value
+  } catch (error) {
+    console.error('网络请求失败:', error)
+    // 失败时恢复原状态
+    networkValue.value = !value
+  } finally {
+    networkLoading.value = false
+  }
+}
+
+const handleErrorChange = async (value) => {
+  errorLoading.value = true
+  errorMessage.value = ''
+  
+  try {
+    // 模拟网络请求
+    await new Promise(resolve => setTimeout(resolve, 1500))
+    
+    // 模拟随机失败
+    if (Math.random() > 0.5) {
+      throw new Error('网络请求失败')
+    }
+    
+    // 异步操作成功后才更新状态
+    errorValue.value = value
+  } catch (error) {
+    errorMessage.value = error.message
+    // 失败时恢复原状态
+    errorValue.value = !value
+  } finally {
+    errorLoading.value = false
+  }
+}
+</script>
+```
+
+:::
+
+## 异步设置场景
+
+在实际应用中，异步开关常用于需要与服务器同步的设置项。
+
+:::demo
+
+```vue
+<template>
+  <div class="flex flex-col gap-6 p-4 bg-gray-50 rounded-lg">
+    <h3 class="text-lg font-semibold">云端设置同步</h3>
+    
+    <div class="flex flex-col gap-4">
+      <div class="flex items-center justify-between">
+        <div>
+          <div class="font-medium">自动备份</div>
+          <div class="text-sm text-gray-500">每日自动备份数据到云端</div>
+        </div>
+        <XSwitch 
+          v-model="autoBackup" 
+          :loading="backupLoading"
+          @change="handleBackupChange"
+        />
+      </div>
+      
+      <div class="flex items-center justify-between">
+        <div>
+          <div class="font-medium">实时同步</div>
+          <div class="text-sm text-gray-500">实时同步设置到所有设备</div>
+        </div>
+        <XSwitch 
+          v-model="realTimeSync" 
+          :loading="syncLoading"
+          @change="handleSyncChange"
+        />
+      </div>
+      
+      <div class="flex items-center justify-between">
+        <div>
+          <div class="font-medium">智能推荐</div>
+          <div class="text-sm text-gray-500">基于使用习惯推荐内容</div>
+        </div>
+        <XSwitch 
+          v-model="smartRecommend" 
+          :loading="recommendLoading"
+          @change="handleRecommendChange"
+        />
+      </div>
+    </div>
+    
+    <div v-if="lastSyncTime" class="text-sm text-gray-500">
+      最后同步时间: {{ lastSyncTime }}
+    </div>
+  </div>
+</template>
+
+<script setup>
+import { ref } from 'vue'
+
+const autoBackup = ref(true)
+const backupLoading = ref(false)
+
+const realTimeSync = ref(false)
+const syncLoading = ref(false)
+
+const smartRecommend = ref(true)
+const recommendLoading = ref(false)
+
+const lastSyncTime = ref('')
+
+const simulateApiCall = async (setting, value) => {
+  // 模拟API调用
+  await new Promise(resolve => setTimeout(resolve, 1000 + Math.random() * 1000))
+  
+  // 模拟偶尔的失败
+  if (Math.random() < 0.1) {
+    throw new Error('网络连接失败')
+  }
+  
+  return { success: true, timestamp: new Date().toLocaleString() }
+}
+
+const handleBackupChange = async (value) => {
+  backupLoading.value = true
+  try {
+    await simulateApiCall('autoBackup', value)
+    // 异步操作成功后才更新状态
+    autoBackup.value = value
+    lastSyncTime.value = new Date().toLocaleString()
+  } catch (error) {
+    console.error('备份设置更新失败:', error)
+    // 失败时恢复原状态
+    autoBackup.value = !value
+  } finally {
+    backupLoading.value = false
+  }
+}
+
+const handleSyncChange = async (value) => {
+  syncLoading.value = true
+  try {
+    await simulateApiCall('realTimeSync', value)
+    // 异步操作成功后才更新状态
+    realTimeSync.value = value
+    lastSyncTime.value = new Date().toLocaleString()
+  } catch (error) {
+    console.error('同步设置更新失败:', error)
+    // 失败时恢复原状态
+    realTimeSync.value = !value
+  } finally {
+    syncLoading.value = false
+  }
+}
+
+const handleRecommendChange = async (value) => {
+  recommendLoading.value = true
+  try {
+    await simulateApiCall('smartRecommend', value)
+    // 异步操作成功后才更新状态
+    smartRecommend.value = value
+    lastSyncTime.value = new Date().toLocaleString()
+  } catch (error) {
+    console.error('推荐设置更新失败:', error)
+    // 失败时恢复原状态
+    smartRecommend.value = !value
+  } finally {
+    recommendLoading.value = false
+  }
+}
+</script>
+```
+
+:::
+
 ## API
 
 ### Props
@@ -343,15 +601,17 @@ const privacyMode = ref(false)
 | modelValue | 开关状态 | `boolean` | `false` |
 | disabled | 是否禁用 | `boolean` | `false` |
 | size | 开关尺寸 | `'small' \| 'medium' \| 'large'` | `'medium'` |
-| color | 激活状态边框颜色 | `string` | `'#0974f1'` |
-| shadowColor | 阴影和光晕颜色 | `string` | `'#0974f1'` |
+| color | 激活状态边框颜色 | `string` | `'#1a1a1a'` |
+| shadowColor | 阴影和光晕颜色 | `string` | `'#1a1a1a'` |
 | thumbColor | 滑块颜色 | `string` | `'#ffffff'` |
+| loading | 是否处于加载状态 | `boolean` | `false` |
 
 ### Events
 
 | 事件名 | 说明 | 回调参数 |
 | --- | --- | --- |
 | update:modelValue | 开关状态改变时触发 | `(value: boolean)` |
+| change | 开关状态改变时触发，可用于异步处理 | `(value: boolean)` |
 
 ### Slots
 
@@ -359,6 +619,75 @@ const privacyMode = ref(false)
 | --- | --- |
 | - | 无插槽 |
 
+## 异步模式说明
+
+### 基础用法（同步模式）
+默认情况下，开关状态会立即更新，适用于本地状态管理：
+
+```vue
+<XSwitch v-model="value" />
+```
+
+### 异步模式
+当需要处理异步操作时，监听 `change` 事件并设置 `loading` 状态。**关键点：在异步失败时需要恢复原状态。**
+
+```vue
+<template>
+  <XSwitch 
+    v-model="value" 
+    :loading="isLoading"
+    @change="handleChange"
+  />
+</template>
+
+<script setup>
+import { ref } from 'vue'
+
+const value = ref(false)
+const isLoading = ref(false)
+
+const handleChange = async (newValue) => {
+  isLoading.value = true
+  try {
+    // 执行异步操作
+    await updateSetting(newValue)
+    // 成功后更新状态
+    value.value = newValue
+  } catch (error) {
+    console.error('操作失败:', error)
+    // 失败时恢复原状态（重要！）
+    value.value = !newValue
+  } finally {
+    isLoading.value = false
+  }
+}
+</script>
+```
+
+### 异步工作流程
+
+1. 用户点击开关
+2. 组件同时发出 `update:modelValue` 和 `change` 事件，**开关状态立即改变**
+3. 父组件在 `change` 事件中立即设置 `loading: true`
+4. 父组件执行异步操作（如API调用）
+5. **成功时**：更新 `modelValue` 为新值（保持已改变的状态）
+6. **失败时**：恢复 `modelValue` 为原值（开关回到原来的状态）
+7. 无论成功失败，都要设置 `loading: false`
+
+### 优化要点
+
+- **简化使用**：移除了 `async` prop，通过监听 `change` 事件自动启用异步模式
+- **loading状态由父组件管理**：组件只负责展示loading状态
+- **立即反馈+异步确认**：点击时立即改变状态（提供即时反馈），异步失败时再恢复原状态
+- **失败时恢复原状态**：在 catch 块中使用 `value.value = !newValue` 恢复原状态
+- **finally块确保loading取消**：无论成功失败都要取消loading状态
+
+### UI优化
+
+- **流畅的加载动画**：改进的spinner设计，更清晰的视觉反馈
+- **精致的过渡效果**：优化了切换动画，使用更自然的缓动函数
+- **增强的交互反馈**：点击时的拉伸效果，提升用户体验
+- **完善的状态显示**：加载状态下的特殊样式和光标
 
 ## 贡献者
 
