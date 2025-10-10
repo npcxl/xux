@@ -1,37 +1,135 @@
-# Dependencies
+# ==================== Dependencies ====================
 node_modules
 .pnpm-store
+.yarn
+.npm
+bower_components
 
-# Build outputs
+# ==================== Build Outputs ====================
 dist
 build
+out
 *.local
+lib
+es
+*.tsbuildinfo
 
-# IDE
+# ==================== VitePress / Vite ====================
+.vitepress/dist
+.vitepress/cache
+.vite
+cache
+
+# ==================== TypeScript ====================
+*.tsbuildinfo
+.tsbuildinfo
+
+# ==================== IDE & Editors ====================
+# VSCode
 .vscode/*
 !.vscode/settings.json
 !.vscode/extensions.json
+!.vscode/launch.json
+!.vscode/tasks.json
+
+# JetBrains (WebStorm, IntelliJ IDEA, etc.)
 .idea
+*.iml
+*.ipr
+*.iws
+
+# Sublime Text
+*.sublime-project
+*.sublime-workspace
+
+# Visual Studio
 *.suo
 *.ntvs*
 *.njsproj
 *.sln
 *.sw?
+.vs
 
-# Logs
+# Vim
+*.swp
+*.swo
+*~
+.*.swp
+
+# ==================== Logs ====================
 logs
 *.log
 npm-debug.log*
 pnpm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+lerna-debug.log*
 
-# OS
+# ==================== OS Specific ====================
+# macOS
 .DS_Store
-Thumbs.db
+.AppleDouble
+.LSOverride
+._*
 
-# Temp
+# Windows
+Thumbs.db
+Thumbs.db:encryptable
+ehthumbs.db
+ehthumbs_vista.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# Linux
+.directory
+.Trash-*
+
+# ==================== Testing ====================
+coverage
+*.lcov
+.nyc_output
+test-results
+playwright-report
+
+# ==================== Environment Variables ====================
+.env
+.env.local
+.env.*.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# ==================== Temporary Files ====================
 *.tmp
+*.temp
 .cache
 .temp
+.eslintcache
+.stylelintcache
+
+# ==================== Package Manager ====================
+# 如果团队统一使用 pnpm，可以忽略其他锁文件
+package-lock.json
+yarn.lock
+
+# ==================== Misc ====================
+# Backup files
+*.bak
+*.backup
+*~
+
+# Compressed files
+*.7z
+*.dmg
+*.gz
+*.iso
+*.jar
+*.rar
+*.tar
+*.zip
+
+# Lock files from other tools
+*.lock
+!pnpm-lock.yaml
+!package-lock.json.example
 
