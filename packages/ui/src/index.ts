@@ -18,8 +18,6 @@ export { default as XScore } from './components/Score/index.vue'
 export { default as XRadio } from './components/Radio/index.vue'
 export { default as XDateTimePicker } from './components/DateTimePicker/index.vue'
 export { default as XRegionCascader } from './components/RegionCascader/index.vue'
-export { default as XFireworks } from './components/SpecialEffects/fireworks.vue'
-export { default as XGButton } from './components/SpecialEffects/glow.vue'
 
 // 导出 Composables
 export { xlMsg, default as useMsg } from './composables/Msg'

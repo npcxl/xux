@@ -53,12 +53,14 @@
     "dayjs": "^1.11.10",
     "element-china-area-data": "^6.1.0",
     "glob": "^11.0.3",
-    "pinyin": "^4.0.0"
+    "pinyin": "^4.0.0",
+    "qrcode": "^1.5.4"
   },
   "peerDependencies": {
     "vue": "^3.3.0"
   },
   "devDependencies": {
+    "@types/qrcode": "^1.5.5",
     "@vitejs/plugin-vue": "^5.0.3",
     "typescript": "^5.3.3",
     "vite": "^5.0.11",
