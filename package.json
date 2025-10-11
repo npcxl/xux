@@ -1,6 +1,6 @@
 {
   "name": "@xux/monorepo",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "private": true,
   "description": "VUE3组件库 Monorepo",
   "scripts": {

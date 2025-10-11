@@ -4,6 +4,10 @@ import { resolve } from 'path'
 
 export default defineConfig({
   plugins: [vue()],
+  worker: {
+    format: 'es',
+    plugins: () => []
+  },
   build: {
     lib: {
       entry: resolve(__dirname, 'src/index.ts'),
@@ -21,6 +25,10 @@ export default defineConfig({
         assetFileNames: (assetInfo) => {
           if (assetInfo.name === 'style.css') return 'index.css'
           return assetInfo.name || ''
+        },
+        chunkFileNames: 'assets/[name]-[hash].js',
+        entryFileNames: (chunkInfo) => {
+          return chunkInfo.name === 'index' ? 'index.js' : '[name].js'
         }
       }
     },
