@@ -30,21 +30,13 @@ export interface QrcodeProps {
      */
     value: string
   /**
-   * 文本图标（支持emoji、文本）
+   * Logo图片（仅支持图片URL）
    */
-  textIcon?: string
+  logo?: string
   /**
-   * 图片图标（支持图片URL）
+   * Logo尺寸
    */
-  icon?: string
-  /**
-   * 图标尺寸
-   */
-  iconSize?: number
-  /**
-   * 图标颜色（仅对文本图标有效）
-   */
-  iconColor?: string
+  logoSize?: number
   /**
    * 二维码尺寸
    */
@@ -54,7 +46,7 @@ export interface QrcodeProps {
      */
     backgroundColor?: string
     /**
-     * 二维码前景色
+     * 二维码前景色（支持渐变：gradient-{color1}-{color2}）
      */
     foregroundColor?: string
     /**
@@ -62,6 +54,11 @@ export interface QrcodeProps {
      * @values L, M, Q, H
      */
     errorCorrectionLevel?: 'L' | 'M' | 'Q' | 'H'
+    /**
+     * 二维码样式类型
+     * @values normal, rounded, dots
+     */
+    type?: 'normal' | 'rounded' | 'dots'
     /**
      * 是否显示边框
      */
@@ -86,11 +83,11 @@ export interface QrcodeProps {
 
 const props = withDefaults(defineProps<QrcodeProps>(), {
   size: 200,
-  iconSize: 40,
-  iconColor: '#000000',
+  logoSize: 40,
   backgroundColor: '#ffffff',
   foregroundColor: '#1a1a1a',
-  errorCorrectionLevel: 'M',
+  errorCorrectionLevel: 'H',
+  type: 'normal',
   bordered: true,
   borderColor: '#d9d9d9',
   borderWidth: 1,
@@ -149,91 +146,96 @@ async function generateQRCode(value: string, size: number): Promise<void> {
 
         // 配置二维码选项
         const options = {
-            width: size,
-            margin: 1,
-            color: {
-                dark: props.foregroundColor,
-                light: props.backgroundColor
-            },
-            errorCorrectionLevel: props.errorCorrectionLevel
+            errorCorrectionLevel: props.errorCorrectionLevel,
+            margin: 1
         }
 
-        // 生成二维码到canvas
-        await QRCode.toCanvas(canvas, value, options)
-
-        // 如果有图标，在二维码中心绘制图标
-        if (props.textIcon || props.icon) {
-            await drawIconInCenter(canvas, size)
+        // 先生成二维码数据
+        const qrData = QRCode.create(value, options)
+        
+        // 根据type类型渲染不同风格
+        if (props.type === 'normal') {
+            // 使用默认渲染
+            await QRCode.toCanvas(canvas, value, {
+                width: size,
+                margin: 1,
+                color: {
+                    dark: props.foregroundColor.startsWith('gradient') ? '#000000' : props.foregroundColor,
+                    light: props.backgroundColor
+                },
+                errorCorrectionLevel: props.errorCorrectionLevel
+            })
+        } else {
+            // 自定义渲染风格化二维码
+            renderStyledQRCode(qrData, canvas, size)
         }
     } catch (err) {
         throw new Error(`Failed to generate QR code: ${err}`)
     }
 }
 
-// 在二维码中心绘制图标
-async function drawIconInCenter(canvas: HTMLCanvasElement, size: number): Promise<void> {
+// 渲染风格化二维码
+function renderStyledQRCode(qrData: any, canvas: HTMLCanvasElement, size: number) {
     const ctx = canvas.getContext('2d')
     if (!ctx) return
 
-    const iconSize = props.iconSize
-    const centerX = size / 2
-    const centerY = size / 2
-    const iconX = centerX - iconSize / 2
-    const iconY = centerY - iconSize / 2
+    const modules = qrData.modules
+    const moduleCount = modules.size
+    const margin = 1
+    const totalModules = moduleCount + margin * 2
+    const moduleSize = size / totalModules
 
-    // 优先处理图片图标
-    if (props.icon) {
-        // 图片图标处理
-        const img = new Image()
-        img.crossOrigin = 'anonymous'
-        
-        return new Promise((resolve, reject) => {
-            img.onload = () => {
-                try {
-                    // 绘制白色背景矩形
-                    ctx.fillStyle = props.backgroundColor
+    // 清空并填充背景
+    ctx.fillStyle = props.backgroundColor
+    ctx.fillRect(0, 0, size, size)
+
+    // 设置前景色
+    ctx.fillStyle = props.foregroundColor
+
+    // 遍历每个模块
+    for (let row = 0; row < moduleCount; row++) {
+        for (let col = 0; col < moduleCount; col++) {
+            const isDark = modules.get(row, col)
+            
+            if (isDark) {
+                const x = (col + margin) * moduleSize
+                const y = (row + margin) * moduleSize
+
+                if (props.type === 'dots') {
+                    // 点状粒子风格 - 绘制圆点
                     ctx.beginPath()
-                    ctx.rect(iconX - 4, iconY - 4, iconSize + 8, iconSize + 8)
+                    ctx.arc(
+                        x + moduleSize / 2,
+                        y + moduleSize / 2,
+                        moduleSize * 0.46, // 使用46%的半径确保足够覆盖
+                        0,
+                        Math.PI * 2
+                    )
                     ctx.fill()
-                    
-                    ctx.drawImage(img, iconX, iconY, iconSize, iconSize)
-                    resolve()
-                } catch (err) {
-                    reject(err)
+                } else if (props.type === 'rounded') {
+                    // 圆角方块风格
+                    const radius = Math.min(moduleSize * 0.28, 3) // 圆角半径
+                    const padding = moduleSize * 0.03
+                    const rectX = x + padding
+                    const rectY = y + padding
+                    const rectWidth = moduleSize - padding * 2
+                    const rectHeight = moduleSize - padding * 2
+
+                    ctx.beginPath()
+                    ctx.moveTo(rectX + radius, rectY)
+                    ctx.lineTo(rectX + rectWidth - radius, rectY)
+                    ctx.arcTo(rectX + rectWidth, rectY, rectX + rectWidth, rectY + radius, radius)
+                    ctx.lineTo(rectX + rectWidth, rectY + rectHeight - radius)
+                    ctx.arcTo(rectX + rectWidth, rectY + rectHeight, rectX + rectWidth - radius, rectY + rectHeight, radius)
+                    ctx.lineTo(rectX + radius, rectY + rectHeight)
+                    ctx.arcTo(rectX, rectY + rectHeight, rectX, rectY + rectHeight - radius, radius)
+                    ctx.lineTo(rectX, rectY + radius)
+                    ctx.arcTo(rectX, rectY, rectX + radius, rectY, radius)
+                    ctx.closePath()
+                    ctx.fill()
                 }
             }
-            img.onerror = () => {
-                reject(new Error('Failed to load icon image'))
-            }
-            img.src = props.icon!
-        })
-    } else if (props.textIcon) {
-        // 文本图标处理（包括emoji）
-        ctx.font = `${iconSize}px Arial`
-        ctx.textAlign = 'center'
-        ctx.textBaseline = 'middle'
-        
-        // 测量文本实际尺寸
-        const textMetrics = ctx.measureText(props.textIcon)
-        const textWidth = textMetrics.width
-        const textHeight = iconSize // 字体大小作为高度参考
-        
-        // 计算背景矩形尺寸，添加适当的内边距
-        const padding = 8
-        const bgWidth = Math.max(textWidth + padding, iconSize)
-        const bgHeight = Math.max(textHeight + padding, iconSize)
-        const bgX = centerX - bgWidth / 2
-        const bgY = centerY - bgHeight / 2
-        
-        // 绘制白色背景矩形
-        ctx.fillStyle = props.backgroundColor
-        ctx.beginPath()
-        ctx.rect(bgX, bgY, bgWidth, bgHeight)
-        ctx.fill()
-        
-        // 绘制文本
-        ctx.fillStyle = props.iconColor
-        ctx.fillText(props.textIcon, centerX, centerY)
+        }
     }
 }
 
@@ -260,7 +262,7 @@ async function createQRCode() {
 
 // 监听属性变化
 watch(
-  () => [props.value, props.size, props.backgroundColor, props.foregroundColor, props.textIcon, props.icon, props.iconSize, props.iconColor],
+  () => [props.value, props.size, props.backgroundColor, props.foregroundColor, props.logo, props.logoSize, props.type],
   () => {
     nextTick(() => {
       createQRCode()
