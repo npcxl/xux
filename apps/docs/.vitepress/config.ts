@@ -9,6 +9,9 @@ export default defineConfig({
   lang: 'zh-CN',
   lastUpdated: true,
   cleanUrls: true,
+  sitemap: {
+    hostname: 'https://xux.xlcig.cn'
+  },
   
   head: [
     ['link', { rel: 'icon', href: '/logo.PNG' }],
@@ -174,8 +177,15 @@ export default defineConfig({
     ],
     resolve: {
       alias: {
-        '@xlui/xux-ui': '/../../packages/ui/src/index.ts'
+        '@xlui/xux-ui': path.resolve(__dirname, '../../../packages/ui/src/index.ts'),
+        '@xux/ui': path.resolve(__dirname, '../../../packages/ui/src/index.ts')
       }
+    },
+    worker: {
+      format: 'es'
+    },
+    optimizeDeps: {
+      exclude: ['@xlui/xux-ui', '@xux/ui']
     }
   },
 
