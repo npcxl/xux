@@ -5,13 +5,13 @@
         <!-- 加载状态 -->
         <div v-if="loading" class="x-qrcode-loading">
             <div class="x-qrcode-spinner"></div>
-            <span v-if="loadingText" class="x-qrcode-loading-text">{{ loadingText }}</span>
+            <span v-if="config.loadingText" class="x-qrcode-loading-text">{{ config.loadingText }}</span>
         </div>
 
         <!-- 错误状态 -->
         <div v-if="error" class="x-qrcode-error">
             <div class="x-qrcode-error-icon">⚠️</div>
-            <span v-if="errorText" class="x-qrcode-error-text">{{ errorText }}</span>
+            <span v-if="config.errorText" class="x-qrcode-error-text">{{ config.errorText }}</span>
         </div>
     </div>
 </template>
@@ -24,23 +24,80 @@ import { ref, computed, watch, onMounted, nextTick } from 'vue'
  * @displayName XQrcode
  */
 
+export interface QrcodeOptions {
+    /**
+     * 二维码尺寸
+     */
+    size?: number
+    /**
+     * 二维码背景色
+     */
+    backgroundColor?: string
+    /**
+     * 二维码前景色（支持渐变：gradient-{color1}-{color2}）
+     */
+    foregroundColor?: string
+    /**
+     * 二维码容错级别
+     * @values L, M, Q, H
+     */
+    errorCorrectionLevel?: 'L' | 'M' | 'Q' | 'H'
+    /**
+     * 二维码样式类型
+     * @values normal, rounded, dots
+     */
+    type?: 'normal' | 'rounded' | 'dots'
+    /**
+     * Logo图片（仅支持图片URL）
+     */
+    logo?: string
+    /**
+     * Logo尺寸
+     */
+    logoSize?: number
+    /**
+     * 是否显示边框
+     */
+    bordered?: boolean
+    /**
+     * 边框颜色
+     */
+    borderColor?: string
+    /**
+     * 边框宽度
+     */
+    borderWidth?: number
+    /**
+     * 加载文本
+     */
+    loadingText?: string
+    /**
+     * 错误文本
+     */
+    errorText?: string
+}
+
 export interface QrcodeProps {
     /**
      * 二维码内容
      */
     value: string
-  /**
-   * Logo图片（仅支持图片URL）
-   */
-  logo?: string
-  /**
-   * Logo尺寸
-   */
-  logoSize?: number
-  /**
-   * 二维码尺寸
-   */
-  size?: number
+    /**
+     * 二维码配置选项（优先级高于单独的 props）
+     */
+    options?: QrcodeOptions
+    /**
+     * Logo图片（仅支持图片URL）
+     */
+    logo?: string
+    /**
+     * Logo尺寸
+     */
+    logoSize?: number
+    /**
+     * 二维码尺寸
+     */
+    size?: number
     /**
      * 二维码背景色
      */
@@ -106,17 +163,33 @@ const emit = defineEmits<{
     (e: 'error', error: Error): void
 }>()
 
+// 合并配置：options 优先级高于单独的 props
+const config = computed(() => ({
+  size: props.options?.size ?? props.size,
+  logoSize: props.options?.logoSize ?? props.logoSize,
+  backgroundColor: props.options?.backgroundColor ?? props.backgroundColor,
+  foregroundColor: props.options?.foregroundColor ?? props.foregroundColor,
+  errorCorrectionLevel: props.options?.errorCorrectionLevel ?? props.errorCorrectionLevel,
+  type: props.options?.type ?? props.type,
+  logo: props.options?.logo ?? props.logo,
+  bordered: props.options?.bordered ?? props.bordered,
+  borderColor: props.options?.borderColor ?? props.borderColor,
+  borderWidth: props.options?.borderWidth ?? props.borderWidth,
+  loadingText: props.options?.loadingText ?? props.loadingText,
+  errorText: props.options?.errorText ?? props.errorText
+}))
+
 const canvasRef = ref<HTMLCanvasElement>()
 const loading = ref(false)
 const error = ref(false)
 
-const canvasSize = computed(() => props.size)
-const containerSize = computed(() => props.bordered ? props.size + props.borderWidth * 2 : props.size)
+const canvasSize = computed(() => config.value.size)
+const containerSize = computed(() => config.value.bordered ? config.value.size + config.value.borderWidth * 2 : config.value.size)
 
 const containerClass = computed(() => [
     'x-qrcode',
     {
-        'x-qrcode-bordered': props.bordered,
+        'x-qrcode-bordered': config.value.bordered,
         'x-qrcode-loading': loading.value,
         'x-qrcode-error': error.value
     }
@@ -128,9 +201,9 @@ const containerStyle = computed(() => ({
 }))
 
 const canvasStyle = computed(() => ({
-    width: `${props.size}px`,
-    height: `${props.size}px`,
-    border: props.bordered ? `${props.borderWidth}px solid ${props.borderColor}` : 'none',
+    width: `${config.value.size}px`,
+    height: `${config.value.size}px`,
+    border: config.value.bordered ? `${config.value.borderWidth}px solid ${config.value.borderColor}` : 'none',
     borderRadius: '4px'
 }))
 
@@ -144,9 +217,11 @@ async function generateQRCode(value: string, size: number): Promise<void> {
             throw new Error('Canvas not found')
         }
 
+        const cfg = config.value
+
         // 配置二维码选项
         const options = {
-            errorCorrectionLevel: props.errorCorrectionLevel,
+            errorCorrectionLevel: cfg.errorCorrectionLevel,
             margin: 1
         }
 
@@ -154,16 +229,16 @@ async function generateQRCode(value: string, size: number): Promise<void> {
         const qrData = QRCode.create(value, options)
         
         // 根据type类型渲染不同风格
-        if (props.type === 'normal') {
+        if (cfg.type === 'normal') {
             // 使用默认渲染
             await QRCode.toCanvas(canvas, value, {
                 width: size,
                 margin: 1,
                 color: {
-                    dark: props.foregroundColor.startsWith('gradient') ? '#000000' : props.foregroundColor,
-                    light: props.backgroundColor
+                    dark: cfg.foregroundColor.startsWith('gradient') ? '#000000' : cfg.foregroundColor,
+                    light: cfg.backgroundColor
                 },
-                errorCorrectionLevel: props.errorCorrectionLevel
+                errorCorrectionLevel: cfg.errorCorrectionLevel
             })
         } else {
             // 自定义渲染风格化二维码
@@ -179,6 +254,7 @@ function renderStyledQRCode(qrData: any, canvas: HTMLCanvasElement, size: number
     const ctx = canvas.getContext('2d')
     if (!ctx) return
 
+    const cfg = config.value
     const modules = qrData.modules
     const moduleCount = modules.size
     const margin = 1
@@ -186,11 +262,11 @@ function renderStyledQRCode(qrData: any, canvas: HTMLCanvasElement, size: number
     const moduleSize = size / totalModules
 
     // 清空并填充背景
-    ctx.fillStyle = props.backgroundColor
+    ctx.fillStyle = cfg.backgroundColor
     ctx.fillRect(0, 0, size, size)
 
     // 设置前景色
-    ctx.fillStyle = props.foregroundColor
+    ctx.fillStyle = cfg.foregroundColor
 
     // 遍历每个模块
     for (let row = 0; row < moduleCount; row++) {
@@ -201,7 +277,7 @@ function renderStyledQRCode(qrData: any, canvas: HTMLCanvasElement, size: number
                 const x = (col + margin) * moduleSize
                 const y = (row + margin) * moduleSize
 
-                if (props.type === 'dots') {
+                if (cfg.type === 'dots') {
                     // 点状粒子风格 - 绘制圆点
                     ctx.beginPath()
                     ctx.arc(
@@ -212,7 +288,7 @@ function renderStyledQRCode(qrData: any, canvas: HTMLCanvasElement, size: number
                         Math.PI * 2
                     )
                     ctx.fill()
-                } else if (props.type === 'rounded') {
+                } else if (cfg.type === 'rounded') {
                     // 圆角方块风格
                     const radius = Math.min(moduleSize * 0.28, 3) // 圆角半径
                     const padding = moduleSize * 0.03
@@ -250,7 +326,7 @@ async function createQRCode() {
     error.value = false
 
     try {
-        await generateQRCode(props.value, props.size)
+        await generateQRCode(props.value, config.value.size)
         loading.value = false
         emit('success')
     } catch (err) {
@@ -262,7 +338,7 @@ async function createQRCode() {
 
 // 监听属性变化
 watch(
-  () => [props.value, props.size, props.backgroundColor, props.foregroundColor, props.logo, props.logoSize, props.type],
+  () => [props.value, props.options, props.size, props.backgroundColor, props.foregroundColor, props.logo, props.logoSize, props.type],
   () => {
     nextTick(() => {
       createQRCode()

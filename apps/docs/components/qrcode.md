@@ -311,6 +311,118 @@ const qrValue = ref('代码写出来是给人看的')
 
 :::
 
+## 使用 Options 对象配置
+
+可以使用 `options` 对象统一配置二维码的所有属性，这种方式更加灵活和简洁。
+
+:::demo
+
+```vue
+<template>
+  <div class="flex gap-4">
+    <div class="text-center">
+      <XQrcode 
+        value="代码写出来是给人看的"
+        :options="{
+          size: 180,
+          type: 'dots',
+          foregroundColor: '#1890ff',
+          backgroundColor: '#f0f8ff'
+        }"
+      />
+      <p class="mt-2 text-sm text-gray-600">内联 options</p>
+    </div>
+    <div class="text-center">
+      <XQrcode 
+        value="代码写出来是给人看的"
+        :options="qrcodeOptions"
+      />
+      <p class="mt-2 text-sm text-gray-600">响应式 options</p>
+    </div>
+    <div class="text-center">
+      <XButton @click="changeStyle" class="mb-2">切换风格</XButton>
+      <XQrcode 
+        value="代码写出来是给人看的"
+        :options="dynamicOptions"
+      />
+    </div>
+  </div>
+</template>
+
+<script setup>
+import { ref } from 'vue'
+
+const qrcodeOptions = ref({
+  size: 180,
+  type: 'rounded',
+  foregroundColor: '#52c41a',
+  backgroundColor: '#f6ffed'
+})
+
+const dynamicOptions = ref({
+  size: 180,
+  type: 'normal',
+  foregroundColor: '#1a1a1a'
+})
+
+const styles = [
+  { type: 'normal', foregroundColor: '#1a1a1a' },
+  { type: 'rounded', foregroundColor: '#ff6b35' },
+  { type: 'dots', foregroundColor: '#8b5cf6' }
+]
+
+let currentIndex = 0
+
+function changeStyle() {
+  currentIndex = (currentIndex + 1) % styles.length
+  dynamicOptions.value = {
+    size: 180,
+    ...styles[currentIndex]
+  }
+}
+</script>
+```
+
+:::
+
+## Options 优先级
+
+当同时使用 `options` 对象和单独的 props 时，`options` 中的配置优先级更高。
+
+:::demo
+
+```vue
+<template>
+  <div class="flex gap-4">
+    <div class="text-center">
+      <XQrcode 
+        value="代码写出来是给人看的"
+        type="normal"
+        foreground-color="#000000"
+        :options="{
+          type: 'dots',
+          foregroundColor: '#ff4757'
+        }"
+      />
+      <p class="mt-2 text-sm text-gray-600">options 优先</p>
+      <p class="mt-1 text-xs text-gray-500">实际使用 dots + 红色</p>
+    </div>
+    <div class="text-center">
+      <XQrcode 
+        value="代码写出来是给人看的"
+        :size="180"
+        type="rounded"
+        foreground-color="#52c41a"
+      />
+      <p class="mt-2 text-sm text-gray-600">仅使用 props</p>
+      <p class="mt-1 text-xs text-gray-500">正常使用 props 配置</p>
+    </div>
+  </div>
+</template>
+```
+
+:::
+
 ## 容错级别
 
 二维码支持四种容错级别，级别越高，容错能力越强，但二维码密度也越高。
@@ -377,140 +489,6 @@ const errorLevelOptions = [
   { label: 'H - 最高 (~30%)', value: 'H' }
 ]
 </script>
-```
-
-:::
-
-## 文本图标
-
-可以在二维码中心添加文本图标，支持emoji和普通文本。
-
-:::demo
-
-```vue
-<template>
-  <div class="flex gap-4">
-    <div class="text-center">
-      <XQrcode 
-        value="代码写出来是给人看的" 
-        text-icon="🚀"
-        :icon-size="30"
-        :size="150"
-      />
-      <p class="mt-2 text-sm text-gray-600">Emoji图标</p>
-    </div>
-    <div class="text-center">
-      <XQrcode 
-        value="代码写出来是给人看的" 
-        text-icon="LOGO"
-        :icon-size="25"
-        :size="150"
-      />
-      <p class="mt-2 text-sm text-gray-600">文本图标</p>
-    </div>
-    <div class="text-center">
-      <XQrcode 
-        value="代码写出来是给人看的" 
-        text-icon="⭐"
-        icon-color="#ff6b35"
-        :icon-size="30"
-        :size="150"
-      />
-      <p class="mt-2 text-sm text-gray-600">彩色文本图标</p>
-    </div>
-  </div>
-</template>
-```
-
-:::
-```
-
-:::
-
-## 图标尺寸
-
-可以自定义图标的尺寸大小。
-
-:::demo
-
-```vue
-<template>
-  <div class="flex gap-4">
-    <div class="text-center">
-      <XQrcode 
-        value="代码写出来是给人看的" 
-        text-icon="⭐"
-        :icon-size="20"
-        :size="150"
-      />
-      <p class="mt-2 text-sm text-gray-600">小图标 (20px)</p>
-    </div>
-    <div class="text-center">
-      <XQrcode 
-        value="代码写出来是给人看的" 
-        text-icon="⭐"
-        :icon-size="40"
-        :size="150"
-      />
-      <p class="mt-2 text-sm text-gray-600">中图标 (40px)</p>
-    </div>
-    <div class="text-center">
-      <XQrcode 
-        value="代码写出来是给人看的" 
-        text-icon="⭐"
-        :icon-size="60"
-        :size="150"
-      />
-      <p class="mt-2 text-sm text-gray-600">大图标 (60px)</p>
-    </div>
-  </div>
-</template>
-```
-
-:::
-
-## 图标颜色
-
-可以自定义文本图标的颜色，emoji图标不受影响。
-
-:::demo
-
-```vue
-<template>
-  <div class="flex gap-4">
-    <div class="text-center">
-      <XQrcode 
-        value="代码写出来是给人看的" 
-        text-icon="LOGO"
-        icon-color="#ff6b35"
-        :icon-size="25"
-        :size="150"
-      />
-      <p class="mt-2 text-sm text-gray-600">橙色文本</p>
-    </div>
-    <div class="text-center">
-      <XQrcode 
-        value="代码写出来是给人看的" 
-        text-icon="LOGO"
-        icon-color="#10b981"
-        :icon-size="25"
-        :size="150"
-      />
-      <p class="mt-2 text-sm text-gray-600">绿色文本</p>
-    </div>
-    <div class="text-center">
-      <XQrcode 
-        value="代码写出来是给人看的" 
-        text-icon="LOGO"
-        icon-color="#8b5cf6"
-        :icon-size="25"
-        :size="150"
-      />
-      <p class="mt-2 text-sm text-gray-600">紫色文本</p>
-    </div>
-  </div>
-</template>
-```
 
 :::
 
@@ -521,6 +499,7 @@ const errorLevelOptions = [
 | 参数 | 说明 | 类型 | 默认值 |
 | --- | --- | --- | --- |
 | value | 二维码内容 | `string` | - |
+| options | 二维码配置选项对象（优先级高于单独的 props） | `QrcodeOptions` | - |
 | logo | Logo图片URL（仅支持图片） | `string` | - |
 | logoSize | Logo尺寸 | `number` | `40` |
 | size | 二维码尺寸 | `number` | `200` |
@@ -528,6 +507,25 @@ const errorLevelOptions = [
 | foregroundColor | 前景色 | `string` | `#1a1a1a` |
 | type | 二维码样式类型 | `'normal' \| 'rounded' \| 'dots'` | `'normal'` |
 | errorCorrectionLevel | 容错级别 | `'L' \| 'M' \| 'Q' \| 'H'` | `'H'` |
+| bordered | 是否显示边框 | `boolean` | `true` |
+| borderColor | 边框颜色 | `string` | `#d9d9d9` |
+| borderWidth | 边框宽度 | `number` | `1` |
+| loadingText | 加载文本 | `string` | `'生成中...'` |
+| errorText | 错误文本 | `string` | `'生成失败'` |
+
+### QrcodeOptions
+
+`options` 对象支持的属性：
+
+| 属性 | 说明 | 类型 | 默认值 |
+| --- | --- | --- | --- |
+| size | 二维码尺寸 | `number` | `200` |
+| backgroundColor | 背景色 | `string` | `#ffffff` |
+| foregroundColor | 前景色 | `string` | `#1a1a1a` |
+| errorCorrectionLevel | 容错级别 | `'L' \| 'M' \| 'Q' \| 'H'` | `'H'` |
+| type | 二维码样式类型 | `'normal' \| 'rounded' \| 'dots'` | `'normal'` |
+| logo | Logo图片URL | `string` | - |
+| logoSize | Logo尺寸 | `number` | `40` |
 | bordered | 是否显示边框 | `boolean` | `true` |
 | borderColor | 边框颜色 | `string` | `#d9d9d9` |
 | borderWidth | 边框宽度 | `number` | `1` |
