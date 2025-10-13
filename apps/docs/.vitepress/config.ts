@@ -34,7 +34,6 @@ export default defineConfig({
     nav: [
       { text: '指南', link: '/guide/introduction' },
       { text: '组件', link: '/components/button' },
-      { text: 'Composables', link: '/composables/' },
       { 
         text: '资源',
         items: [

@@ -35,5 +35,20 @@ features:
   - icon: 📖
     title: 实时预览
     details: 文档中可实时预览组件效果，支持展开查看源代码
+  - icon: ⚡
+    title: 高性能
+    details: 使用 Vue3 Composition API，轻量级设计，性能优异
+  - icon: 🎯
+    title: 开箱即用
+    details: 零配置快速上手，丰富的示例代码，降低学习成本
+  - icon: 🌈
+    title: 主题定制
+    details: 支持自定义主题色，灵活的样式覆盖，满足个性化需求
+  - icon: 🔧
+    title: 工具函数
+    details: 内置时间处理、消息提示等实用工具，提升开发效率
+  - icon: 🎭
+    title: 动画效果
+    details: 精心设计的过渡动画，流畅的交互体验，提升用户满意度
 ---
 

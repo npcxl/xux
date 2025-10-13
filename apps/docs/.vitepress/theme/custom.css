@@ -136,17 +136,97 @@
 .VPFeature {
   border: 1px solid var(--vp-c-border);
   border-radius: 12px;
-  transition: all 0.3s ease;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  overflow: hidden;
+  min-width: 320px; /* 固定卡片最小宽度，避免跳动 */
+  max-width: 320px; /* 保持所有卡片一致宽度，保证无缝 */
+  flex-shrink: 0;
 }
 
 .VPFeature:hover {
-  border-color: var(--vp-c-brand-1);
-  box-shadow: 0 8px 24px rgba(26, 26, 26, 0.1);
-  transform: translateY(-2px);
+
+  box-shadow: 0 12px 32px rgba(26, 26, 26, 0.12);
+  transform: translateY(-4px) scale(1.02);
 }
 
 .dark .VPFeature:hover {
-  box-shadow: 0 8px 24px rgba(255, 255, 255, 0.05);
+  box-shadow: 0 12px 32px rgba(255, 255, 255, 0.08);
+}
+
+/* 跑马灯双行容器 */
+.VPHome .VPFeatures {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  overflow: hidden;
+  padding: 40px 0;
+}
+
+/* 跑马灯行 */
+.marquee-row {
+  display: flex;
+  gap: 20px;
+  overflow: hidden;
+  will-change: transform;
+  transform: translateZ(0);
+  mask-image: linear-gradient(
+    to right,
+    transparent 0%,
+    black 5%,
+    black 95%,
+    transparent 100%
+  );
+  -webkit-mask-image: linear-gradient(
+    to right,
+    transparent 0%,
+    black 5%,
+    black 95%,
+    transparent 100%
+  );
+}
+
+/* 跑马灯动画容器 */
+.marquee-container {
+  display: flex;
+  gap: 20px;
+  width: max-content;
+  will-change: transform;
+  transform: translate3d(0,0,0);
+  backface-visibility: hidden;
+}
+
+/* 第一行向左 - 慢速滚动 */
+.marquee-row:nth-child(1) .marquee-container {
+  animation: marqueeLeft 120s linear infinite;
+}
+
+/* 第二行向右 - 慢速滚动 */
+.marquee-row:nth-child(2) .marquee-container {
+  animation: marqueeRight 120s linear infinite;
+}
+
+/* 向左滚动动画 - 因为复制了3次，所以移动1/3 */
+@keyframes marqueeLeft {
+  0% {
+    transform: translate3d(0,0,0);
+  }
+  100% {
+    transform: translate3d(-25%,0,0);
+  }
+}
+
+/* 向右滚动动画 - 因为复制了3次，所以移动1/3 */
+@keyframes marqueeRight {
+  0% {
+    transform: translate3d(-25%,0,0);
+  }
+  100% {
+    transform: translate3d(0,0,0);
+  }
+}
+
+.marquee-container:hover {
+  animation-play-state: paused;
 }
 
 /* 代码块优化 */
@@ -291,6 +371,198 @@ tr:hover {
   background: var(--vp-c-brand-1);
 }
 
+/* 首页网格背景 */
+.VPHome {
+  position: relative;
+  overflow: hidden;
+}
+
+.VPHome::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: 100%;
+  height: 100%;
+  --color: rgba(114, 114, 114, 0.14);
+  background-color: transparent;
+  background-image: 
+    linear-gradient(0deg, transparent 24%, var(--color) 25%, var(--color) 26%, transparent 27%, transparent 74%, var(--color) 75%, var(--color) 76%, transparent 77%, transparent),
+    linear-gradient(90deg, transparent 24%, var(--color) 25%, var(--color) 26%, transparent 27%, transparent 74%, var(--color) 75%, var(--color) 76%, transparent 77%, transparent);
+  background-size: 55px 55px;
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0.5;
+  animation: gridBreathing 8s ease-in-out infinite;
+}
+
+.dark .VPHome::before {
+  --color: rgba(114, 114, 114, 0.3);
+  background-color: transparent;
+  opacity: 0.3;
+}
+
+/* 网格背景呼吸动画 */
+@keyframes gridBreathing {
+  0%, 100% {
+    opacity: 0.5;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.7;
+    transform: scale(1.01);
+  }
+}
+
+/* 暗色模式的呼吸动画 */
+.dark .VPHome::before {
+  animation: gridBreathingDark 8s ease-in-out infinite;
+}
+
+@keyframes gridBreathingDark {
+  0%, 100% {
+    opacity: 0.3;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.45;
+    transform: scale(1.01);
+  }
+}
+
+
+/* 确保内容在背景之上 */
+.VPHome .VPHero,
+.VPHome .VPFeatures {
+  position: relative;
+  z-index: 1;
+}
+
+/* Hero 区域增强动画 */
+.VPHero {
+  animation: fadeInUp 1s ease-out;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Logo 旋转动画 */
+.VPHero .VPImage {
+  animation: float 3s ease-in-out infinite;
+  transition: transform 0.3s ease;
+}
+
+.VPHero .VPImage:hover {
+  animation-play-state: paused;
+  transform: scale(1.05) rotate(5deg);
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+/* 特性卡片效果 */
+.VPFeature {
+  position: relative;
+}
+
+/* 悬停时的渐变背景 */
+.VPFeature::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 12px;
+  background: linear-gradient(135deg, transparent 0%, rgba(59, 130, 246, 0.05) 100%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+  z-index: -1;
+}
+
+.VPFeature:hover::after {
+  opacity: 1;
+}
+
+.dark .VPFeature:hover::after {
+  background: linear-gradient(135deg, transparent 0%, rgba(255, 255, 255, 0.03) 100%);
+}
+
+/* 图标弹跳旋转效果 */
+.VPFeature .icon {
+  display: inline-block;
+  transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.VPFeature:hover .icon {
+  transform: scale(1.15) rotate(8deg);
+  animation: iconBounce 0.6s ease;
+}
+
+@keyframes iconBounce {
+  0%, 100% {
+    transform: scale(1.15) rotate(8deg);
+  }
+  50% {
+    transform: scale(1.25) rotate(-8deg);
+  }
+}
+
+/* 按钮发光效果 */
+.VPButton.brand {
+  position: relative;
+  overflow: hidden;
+}
+
+.VPButton.brand::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: linear-gradient(
+    45deg,
+    transparent,
+    rgba(255, 255, 255, 0.3),
+    transparent
+  );
+  transform: rotate(45deg);
+  animation: buttonShine 3s infinite;
+}
+
+@keyframes buttonShine {
+  0% {
+    transform: translateX(-100%) translateY(-100%) rotate(45deg);
+  }
+  100% {
+    transform: translateX(100%) translateY(100%) rotate(45deg);
+  }
+}
+
+@keyframes gradientShift {
+  0%, 100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+}
+
 /* 响应式优化 */
 @media (max-width: 768px) {
   .demo-container {
@@ -315,5 +587,38 @@ tr:hover {
   .VPHero .image-container {
     max-width: 240px !important;
     max-height: 240px !important;
+  }
+  
+  /* 移动端减弱动画效果 */
+  .VPHome::after {
+    animation-duration: 10s;
+    opacity: 0.5;
+  }
+  
+  .VPHero .VPImage {
+    animation: none;
+  }
+  
+  .VPButton.brand::before {
+    animation: none;
+  }
+  
+  /* 移动端优化 */
+  .VPFeature {
+    min-width: 250px;
+  }
+  
+  /* 移动端跑马灯速度 */
+  .marquee-row:nth-child(1) .marquee-container {
+    animation-duration: 80s;
+  }
+  
+  .marquee-row:nth-child(2) .marquee-container {
+    animation-duration: 80s;
+  }
+  
+  /* 移动端流光速度 */
+  .VPHome::after {
+    animation-duration: 10s;
   }
 }

@@ -89,7 +89,7 @@
             }"
             @click="selectDate(calendarDate)"
           >
-            {{ calendarDate.date.date() }}
+            <span class="date-number">{{ calendarDate.date.date() }}</span>
           </div>
         </div>
       </div>
@@ -726,60 +726,167 @@ export interface DateTimePickerProps {
   font-size: 0.8125rem;
   color: #374151;
   cursor: pointer;
-  border-radius: 0.5rem;
-  transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+  border-radius: 0.25rem;
   font-weight: 500;
   position: relative;
+  background-color: transparent;
+  transition: color 0.2s ease, background-color 0.2s ease;
+  overflow: hidden;
+}
+
+/* 日期数字 */
+.date-number {
+  position: relative;
+  z-index: 1;
+  pointer-events: none;
+}
+
+/* Windows 10 风格 - 动画边框盒子 */
+.date-cell::before,
+.date-cell::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 0.25rem;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+/* 外层边框 */
+.date-cell::before {
+  border: 2px solid transparent;
+  z-index: 0;
+}
+
+/* 内层背景 */
+.date-cell::after {
+  background-color: #f3f4f6;
+  z-index: 0;
+}
+
+/* 悬停时的动画边框效果 */
+.date-cell:hover:not(.date-disabled):not(.date-selected)::before {
+  opacity: 1;
+  border-color: #9ca3af;
+  animation: borderSweep 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.date-cell:hover:not(.date-disabled):not(.date-selected)::after {
+  opacity: 1;
+  animation: backgroundFade 0.3s ease;
 }
 
 .date-cell:hover:not(.date-disabled):not(.date-selected) {
-  background-color: #f9fafb;
   color: #1a1a1a;
-  transform: scale(1.05);
+}
+
+/* 边框扫入动画 */
+@keyframes borderSweep {
+  0% {
+    clip-path: polygon(0 0, 0 0, 0 100%, 0 100%);
+  }
+  25% {
+    clip-path: polygon(0 0, 100% 0, 100% 0, 0 0);
+  }
+  50% {
+    clip-path: polygon(0 0, 100% 0, 100% 100%, 100% 100%);
+  }
+  75% {
+    clip-path: polygon(100% 100%, 100% 100%, 0 100%, 100% 100%);
+  }
+  100% {
+    clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+  }
+}
+
+/* 背景淡入动画 */
+@keyframes backgroundFade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 
 .date-other-month {
   color: #d1d5db;
 }
 
+/* 今天的日期 */
 .date-today {
-  background-color: #fef3c7;
-  color: #92400e;
+  color: #3b82f6;
   font-weight: 600;
+  position: relative;
 }
 
-.date-today::after {
-  content: '';
-  position: absolute;
-  bottom: 0.25rem;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 0.25rem;
-  height: 0.25rem;
-  border-radius: 50%;
-  background-color: #f59e0b;
+.date-today::before {
+  border: 2px solid #3b82f6;
+  opacity: 1;
 }
 
+/* 今天的日期悬停效果 */
+.date-today:hover:not(.date-selected)::before {
+  border-color: #3b82f6;
+  animation: borderSweep 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.date-today:hover:not(.date-selected)::after {
+  background-color: #eff6ff;
+  opacity: 1;
+  animation: backgroundFade 0.3s ease;
+}
+
+/* 选中的日期 - Windows 10 风格 */
 .date-selected {
-  background-color: #1a1a1a;
   color: #ffffff;
   font-weight: 600;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-.date-selected:hover {
-  transform: scale(1.05);
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.15);
+.date-selected::before {
+  border: 2px solid #3b82f6;
+  opacity: 1;
+  box-shadow: 0 0 0 1px rgba(59, 130, 246, 0.1);
 }
 
+.date-selected::after {
+  background-color: #3b82f6;
+  opacity: 1;
+  box-shadow: 0 2px 4px rgba(59, 130, 246, 0.3);
+}
+
+/* 选中日期的悬停效果 */
+.date-selected:hover::before {
+  border-color: #2563eb;
+  animation: borderPulse 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.date-selected:hover::after {
+  background-color: #2563eb;
+  box-shadow: 0 4px 8px rgba(59, 130, 246, 0.4);
+}
+
+/* 选中状态的边框脉冲动画 */
+@keyframes borderPulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+}
+
+/* 禁用状态 */
 .date-disabled {
   color: #e5e7eb;
   cursor: not-allowed;
+  opacity: 0.5;
 }
 
-.date-disabled:hover {
-  background-color: transparent;
-  transform: none;
+.date-disabled::before,
+.date-disabled::after {
+  display: none;
 }
 
 /* 时间选择器 */
@@ -999,3 +1106,4 @@ export interface DateTimePickerProps {
   }
 }
 </style>
+
