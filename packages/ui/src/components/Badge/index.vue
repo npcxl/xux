@@ -11,8 +11,6 @@
             :style="badgeStyle"
         >
             <span v-if="!dot" class="x-badge__text">{{ displayValue }}</span>
-            <!-- 心跳扩散动画效果 -->
-            <div class="x-badge__ping"></div>
         </div>
     </div>
 </template>
@@ -53,7 +51,7 @@ const badgeStyle = computed(() => {
 })
 </script>
 
-<style scoped>
+<style  scoped>
 .x-badge {
     position: relative;
     display: inline-block;
@@ -103,18 +101,15 @@ const badgeStyle = computed(() => {
     display: none;
 }
 
-/* 动画效果 */
+/* 平滑入场动画（只执行一次） */
 .x-badge__content {
-    animation: badge-pulse 0.3s ease-out;
+    animation: badge-fade-in 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
 }
 
-@keyframes badge-pulse {
+@keyframes badge-fade-in {
     0% {
-        transform: translate(50%, -50%) scale(0.8);
+        transform: translate(50%, -50%) scale(0.3);
         opacity: 0;
-    }
-    50% {
-        transform: translate(50%, -50%) scale(1.1);
     }
     100% {
         transform: translate(50%, -50%) scale(1);
@@ -122,25 +117,22 @@ const badgeStyle = computed(() => {
     }
 }
 
-/* 心跳扩散动画样式 */
-.x-badge__ping {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    border-radius: inherit;
-    background-color: inherit;
-    animation: badge-ping 1s cubic-bezier(0, 0, 0.2, 1) infinite;
-    pointer-events: none;
+/* 小红点模式的入场动画 */
+.x-badge__content--dot {
+    animation: badge-dot-fade-in 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
 }
 
-@keyframes badge-ping {
-    75%, 100% {
-        transform: scale(2);
+@keyframes badge-dot-fade-in {
+    0% {
+        transform: translate(50%, -50%) scale(0);
         opacity: 0;
     }
+    100% {
+        transform: translate(50%, -50%) scale(1);
+        opacity: 1;
+    }
 }
+
 
 /* 响应式设计 */
 @media (max-width: 768px) {
