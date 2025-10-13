@@ -71,6 +71,7 @@ export default defineConfig({
         {
           text: '表单',
           items: [
+            { text: 'Form 表单', link: '/components/form' },
             { text: 'Input 输入框', link: '/components/input' },
             { text: 'Select 选择器', link: '/components/select' },
             { text: 'Checkboxes 多选框', link: '/components/checkboxes' },
@@ -90,6 +91,7 @@ export default defineConfig({
             { text: 'ThumbnailContainer 缩略图容器', link: '/components/thumbnail-container' },
             { text: 'Score 评分', link: '/components/score' },
             { text:'Qrcode 二维码',link:'/components/qrcode'},
+            { text: 'Segmented 分段控制器', link: '/components/segmented' },
           ]
         },
         {

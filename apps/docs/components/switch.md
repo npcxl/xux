@@ -459,6 +459,117 @@ const handleErrorChange = async (value) => {
 
 :::
 
+## 主题开关 基于cssbuttons 
+
+### 主题切换开关 (Theme)
+
+主题开关带有日夜切换的动画效果，非常适合用于暗黑模式切换。
+
+:::demo
+
+```vue
+<template>
+  <div class="flex flex-col gap-6">
+    <div class="flex flex-col gap-4">
+      <h4 class="font-medium">不同尺寸</h4>
+      <div class="flex gap-4 items-center">
+        <XSwitch v-model="themeValue" variant="theme" size="small" />
+        <XSwitch v-model="themeValue" variant="theme" size="medium" />
+        <XSwitch v-model="themeValue" variant="theme" size="large" />
+      </div>
+    </div>
+    
+    <div class="flex flex-col gap-4">
+      <h4 class="font-medium">禁用状态</h4>
+      <div class="flex gap-4 items-center">
+        <XSwitch v-model="themeValue" variant="theme" />
+        <XSwitch v-model="themeValue" variant="theme" disabled />
+      </div>
+    </div>
+    
+    <div class="flex flex-col gap-4">
+      <h4 class="font-medium">加载状态</h4>
+      <div class="flex gap-4 items-center">
+        <XSwitch v-model="themeLoading" variant="theme" :loading="isThemeLoading" @change="handleThemeChange" />
+        <span>{{ themeLoading ? '暗黑模式' : '明亮模式' }}</span>
+      </div>
+    </div>
+  </div>
+</template>
+
+<script setup>
+import { ref } from 'vue'
+
+const themeValue = ref(false)
+const themeLoading = ref(false)
+const isThemeLoading = ref(false)
+
+const handleThemeChange = async (value) => {
+  isThemeLoading.value = true
+  try {
+    await new Promise(resolve => setTimeout(resolve, 1500))
+    themeLoading.value = value
+  } catch (error) {
+    themeLoading.value = !value
+  } finally {
+    isThemeLoading.value = false
+  }
+}
+</script>
+```
+
+:::
+
+### 实际应用场景
+
+将主题开关应用到实际的设置场景中。
+
+:::demo
+
+```vue
+<template>
+  <div class="flex flex-col gap-6 p-4 bg-gray-50 rounded-lg">
+    <h3 class="text-lg font-semibold">外观设置</h3>
+    
+    <div class="flex flex-col gap-4">
+      <div class="flex items-center justify-between">
+        <div>
+          <div class="font-medium">暗黑模式</div>
+          <div class="text-sm text-gray-500">切换到暗黑主题</div>
+        </div>
+        <XSwitch v-model="darkMode" variant="theme" />
+      </div>
+      
+      <div class="flex items-center justify-between">
+        <div>
+          <div class="font-medium">自动切换</div>
+          <div class="text-sm text-gray-500">根据系统时间自动切换主题</div>
+        </div>
+        <XSwitch v-model="autoTheme" variant="theme" />
+      </div>
+      
+      <div class="flex items-center justify-between">
+        <div>
+          <div class="font-medium">高性能模式</div>
+          <div class="text-sm text-gray-500">减少动画效果，提升性能</div>
+        </div>
+        <XSwitch v-model="performance" />
+      </div>
+    </div>
+  </div>
+</template>
+
+<script setup>
+import { ref } from 'vue'
+
+const darkMode = ref(false)
+const autoTheme = ref(false)
+const performance = ref(false)
+</script>
+```
+
+:::
+
 ## 异步设置场景
 
 在实际应用中，异步开关常用于需要与服务器同步的设置项。
@@ -601,9 +712,10 @@ const handleRecommendChange = async (value) => {
 | modelValue | 开关状态 | `boolean` | `false` |
 | disabled | 是否禁用 | `boolean` | `false` |
 | size | 开关尺寸 | `'small' \| 'medium' \| 'large'` | `'medium'` |
-| color | 激活状态边框颜色 | `string` | `'#1a1a1a'` |
-| shadowColor | 阴影和光晕颜色 | `string` | `'#1a1a1a'` |
-| thumbColor | 滑块颜色 | `string` | `'#ffffff'` |
+| variant | 开关样式变体 | `'default' \| 'theme'` | `'default'` |
+| color | 激活状态边框颜色（仅 default 变体） | `string` | `'#1a1a1a'` |
+| shadowColor | 阴影和光晕颜色（仅 default 变体） | `string` | `'#1a1a1a'` |
+| thumbColor | 滑块颜色（仅 default 变体） | `string` | `'#ffffff'` |
 | loading | 是否处于加载状态 | `boolean` | `false` |
 
 ### Events
@@ -618,6 +730,40 @@ const handleRecommendChange = async (value) => {
 | 插槽名 | 说明 |
 | --- | --- |
 | - | 无插槽 |
+
+## 变体说明
+
+Switch 组件提供了两种样式变体，可以通过 `variant` 属性进行切换：
+
+### default（默认）
+标准的开关样式，简洁实用，支持自定义颜色。
+
+```vue
+<XSwitch v-model="value" variant="default" color="#10b981" />
+```
+
+**适用场景：**
+- 常规开关需求
+- 需要自定义颜色的场景
+- 简洁风格的应用
+
+### theme（主题）
+日夜主题切换样式的开关，非常适合暗黑模式切换。开关包含太阳/月亮图标、云朵和星星动画，切换时有平滑的过渡效果。
+
+```vue
+<XSwitch v-model="darkMode" variant="theme" />
+```
+
+**适用场景：**
+- 暗黑模式切换
+- 主题切换功能
+- 日夜模式设置
+
+### 注意事项
+
+1. **颜色自定义**：`color`、`shadowColor` 和 `thumbColor` 属性仅对 `default` 变体生效
+2. **尺寸支持**：所有变体都支持 `small`、`medium`、`large` 三种尺寸，并保持统一的大小比例
+3. **功能完整**：所有变体都支持 `disabled`、`loading` 状态和异步操作
 
 ## 异步模式说明
 
@@ -662,6 +808,16 @@ const handleChange = async (newValue) => {
   }
 }
 </script>
+```
+
+### 异步模式适用于所有变体
+
+```vue
+<!-- 默认样式 + 异步 -->
+<XSwitch v-model="value1" variant="default" :loading="loading1" @change="handleChange1" />
+
+<!-- 主题样式 + 异步 -->
+<XSwitch v-model="value2" variant="theme" :loading="loading2" @change="handleChange2" />
 ```
 
 ## 贡献者
