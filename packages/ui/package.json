@@ -49,6 +49,7 @@
     "url": "https://gitee.com/leheya/xux/issues"
   },
   "dependencies": {
+    "@iconify/vue": "^4.1.1",
     "axios": "^1.12.2",
     "dayjs": "^1.11.10",
     "element-china-area-data": "^6.1.0",

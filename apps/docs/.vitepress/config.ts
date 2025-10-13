@@ -92,6 +92,7 @@ export default defineConfig({
             { text: 'Score 评分', link: '/components/score' },
             { text:'Qrcode 二维码',link:'/components/qrcode'},
             { text: 'Segmented 分段控制器', link: '/components/segmented' },
+            { text: 'Badge 徽标', link: '/components/badge' },
           ]
         },
         {
