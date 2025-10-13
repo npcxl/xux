@@ -150,6 +150,7 @@ onMounted(() => {
 .x-segmented.direction-horizontal {
   flex-direction: row;
   min-width: fit-content;
+  /* 高度由各个尺寸变体设置，默认 medium 为 56px */
 }
 
 /* 块级元素 */
@@ -186,6 +187,7 @@ onMounted(() => {
   gap: 6px;
   padding: 8px 20px;
   min-height: auto;
+  height: 100%; /* 填满父容器高度 */
 }
 
 /* 横向布局只有图标时的样式 */
@@ -335,6 +337,7 @@ onMounted(() => {
 
 .x-segmented.size-small.direction-horizontal {
   min-height: auto;
+  height: 48px; /* small 尺寸固定高度 */
 }
 
 .x-segmented.size-small.direction-vertical label {
@@ -375,6 +378,7 @@ onMounted(() => {
 
 .x-segmented.size-medium.direction-horizontal {
   min-height: auto;
+  height: 56px; /* medium 尺寸固定高度 */
 }
 
 .x-segmented.size-medium.direction-vertical label {
@@ -415,6 +419,7 @@ onMounted(() => {
 
 .x-segmented.size-large.direction-horizontal {
   min-height: auto;
+  height: 68px; /* large 尺寸固定高度 */
 }
 
 .x-segmented.size-large.direction-vertical label {
@@ -449,22 +454,41 @@ onMounted(() => {
 
 /* 响应式 */
 @media (max-width: 768px) {
+  /* 横向布局在移动端保持横向，但优化显示 */
   .x-segmented.direction-horizontal {
-    flex-direction: column;
-    min-width: auto;
-  }
-  
-  .x-segmented.direction-horizontal .selection {
-    top: auto;
-    bottom: auto;
-    left: 6px;
-    right: 6px;
-    width: auto;
-    height: calc((100% - 12px - (var(--option-count, 3) - 1) * 4px) / var(--option-count, 3));
+    width: 100%;
+    min-width: 100%;
   }
   
   .x-segmented.direction-horizontal label {
-    flex-direction: column;
+    flex: 1;
+    min-width: 0;
+    padding: 8px 12px;
+  }
+  
+  .x-segmented.direction-horizontal label .label {
+    font-size: 12px;
+  }
+  
+  .x-segmented.direction-horizontal label .icon {
+    font-size: 18px;
+    width: 24px;
+    height: 24px;
+  }
+  
+  /* 纵向布局在移动端保持不变，但确保宽度 */
+  .x-segmented.direction-vertical {
+    width: 100%;
+    max-width: 100%;
+  }
+  
+  .x-segmented.direction-vertical label {
+    width: 100%;
+  }
+  
+  /* 块级元素在移动端全宽 */
+  .x-segmented.block {
+    width: 100%;
   }
 }
 </style>

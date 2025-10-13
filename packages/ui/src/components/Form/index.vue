@@ -190,6 +190,17 @@ defineExpose({
   display: flex;
   flex-wrap: wrap;
   gap: 16px;
+  align-items: flex-start;
+}
+
+.x-form--inline :deep(.x-form-item) {
+  margin-bottom: 0;
+}
+
+.x-form--inline :deep(.x-button),
+.x-form--inline :deep(button) {
+  margin-top: 0;
+  vertical-align: top;
 }
 
 .x-form--label-left :deep(.x-form-item__label) {

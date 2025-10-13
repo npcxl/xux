@@ -80,6 +80,7 @@ export default defineConfig({
             { text: 'RegionCascader 地区级联', link: '/components/region-cascader' },
             { text: 'Switch 开关', link: '/components/switch' },
             { text: 'DateTimePicker 日期时间选择器', link: '/components/datetime-picker' },
+            { text: 'Color 颜色选择器', link: '/components/color' },
             { text: 'Qrcode 二维码', link: '/components/qrcode' },
           ]
         },
@@ -173,6 +174,11 @@ export default defineConfig({
   },
 
   vite: {
+    server: {
+      host: '0.0.0.0', // 允许外部访问
+      port: 1234, // 自定义端口
+      strictPort: false, // 如果端口被占用，自动尝试下一个可用端口
+    },
     plugins: [
       UnoCSS(),
       demoblockVitePlugin(),

@@ -4,7 +4,8 @@
     :class="{
       'x-form-item--error': hasError,
       'x-form-item--required': isRequired,
-      'x-form-item--validating': validating
+      'x-form-item--validating': validating,
+      'x-form-item--inline': formContext?.props.inline
     }"
   >
     <label 
@@ -130,6 +131,30 @@ defineExpose({
   transition: all 0.3s ease;
 }
 
+/* 行内表单样式 */
+.x-form-item--inline {
+  display: inline-flex !important;
+  margin-right: 0;
+  margin-bottom: 0;
+  vertical-align: top;
+  flex-wrap: nowrap;
+  align-items: center;
+}
+
+.x-form-item--inline .x-form-item__label {
+  white-space: nowrap;
+  padding-top: 0;
+  padding-bottom: 0;
+  text-align: right;
+  min-width: auto;
+}
+
+.x-form-item--inline .x-form-item__content {
+  flex: 0 0 auto;
+  width: auto;
+  min-width: 0;
+}
+
 .x-form-item__label {
   flex-shrink: 0;
   padding-right: 12px;
@@ -139,6 +164,7 @@ defineExpose({
   line-height: 1.5;
   font-weight: 500;
   position: relative;
+  text-align: right; /* 桌面端默认右对齐 */
 }
 
 .x-form-item__asterisk {
@@ -238,14 +264,30 @@ defineExpose({
 
 /* 响应式 */
 @media (max-width: 768px) {
-  .x-form-item {
+  .x-form-item:not(.x-form-item--inline) {
     flex-direction: column;
     margin-bottom: 20px;
+    align-items: stretch;
   }
   
-  .x-form-item__label {
+  .x-form-item:not(.x-form-item--inline) .x-form-item__label {
     width: 100% !important;
     padding: 0 0 8px 0;
+    text-align: left !important; /* 移动端强制左对齐 */
+  }
+  
+  .x-form-item:not(.x-form-item--inline) .x-form-item__content {
+    width: 100%;
+  }
+  
+  .x-form-item__error {
+    font-size: 12px;
+    margin-top: 4px;
+  }
+  
+  /* 行内表单在移动端的样式调整 */
+  .x-form-item--inline {
+    margin-bottom: 12px;
   }
 }
 </style>
