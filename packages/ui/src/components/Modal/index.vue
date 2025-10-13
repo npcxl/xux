@@ -36,16 +36,14 @@
               <slot name="header">
                 <h3 class="modal-title">{{ title }}</h3>
               </slot>
-              <XButton
+              <button
                 v-if="showClose"
-                size="small"
                 class="modal-close"
-                icon="mdi:close"
                 @click="handleClose"
                 aria-label="关闭"
               >
-                <Icon icon="mdi:close" />
-              </XButton>
+              <Icon icon="mdi:close" />
+              </button>
             </div>
 
             <!-- 内容 -->

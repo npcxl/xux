@@ -102,6 +102,7 @@ export default defineConfig({
             { text: 'Modal 弹窗', link: '/components/modal' },
             { text: 'Msg 消息提示', link: '/components/msg' },
             { text: 'Tooltips 提示框', link: '/components/tooltips' },
+            { text: 'Chat 聊天', link: '/components/chat' },
           ]
         },
         {

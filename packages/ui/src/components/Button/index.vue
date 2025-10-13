@@ -24,8 +24,8 @@
       <Icon icon="eos-icons:loading" />
     </span>
     
-    <!-- 按钮内容 -->
-    <span class="x-btn-content ">
+    <!-- 按钮内容 如果没有内容，则不显示-->
+    <span v-if="$slots.default && !loading" class="x-btn-content">
       <slot />
     </span>
     
