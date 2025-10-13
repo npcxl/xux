@@ -191,6 +191,66 @@ const handleAvatarSend = (content) => {
 
 :::
 
+## 随机头像示例
+
+使用随机头像服务快速生成用户/客服头像，便于联调与演示。
+
+::::demo
+
+```vue
+<template>
+  <XChat
+    :messages="messages"
+    service-name="小明客服"
+    :service-avatar="serviceAvatar"
+    :service-online="true"
+    :show-header="true"
+    height="420px"
+  />
+</template>
+
+<script setup>
+import { ref } from 'vue'
+
+// 这里使用 i.pravatar.cc / picsum.photos 作为随机头像/图片源
+const userAvatar = `https://i.pravatar.cc/100?u=user-${Date.now()}`
+const serviceAvatar = `https://i.pravatar.cc/100?u=service-${Date.now()}`
+
+const messages = ref([
+  {
+    id: 1,
+    type: 'service',
+    content: '您好～我是您的专属客服，请问要咨询什么？',
+    timestamp: Date.now() - 120000,
+    avatar: serviceAvatar
+  },
+  {
+    id: 2,
+    type: 'user',
+    content: '想看看这件衣服的上身效果图',
+    timestamp: Date.now() - 60000,
+    avatar: userAvatar
+  },
+  {
+    id: 3,
+    type: 'service',
+    content: '好的，我这边给您找一下实拍图～',
+    timestamp: Date.now() - 30000,
+    avatar: serviceAvatar
+  },
+  {
+    id: 4,
+    type: 'service',
+    image: `https://picsum.photos/seed/${Date.now() % 1000}/300/200`,
+    timestamp: Date.now(),
+    avatar: serviceAvatar
+  }
+])
+</script>
+```
+
+::::
+
 ## 图片消息
 
 支持发送和显示图片消息。
@@ -202,6 +262,7 @@ const handleAvatarSend = (content) => {
   <XChat
     :messages="imageMessages"
     height="450px"
+    :enable-image="true"
     @send-message="handleImageSend"
     @send-image="handleSendImage"
     @click-image="handleClickImage"
@@ -279,8 +340,10 @@ const handleClickImage = (imageUrl) => {
   <XChat
     :messages="productMessages"
     :enable-product="true"
+    :product-provider="pickProduct"
     height="450px"
     @send-message="handleProductSend"
+    @send-product="handleSendProduct"
     @click-product="handleClickProduct"
   />
 </template>
@@ -325,6 +388,22 @@ const handleProductSend = (content) => {
 
 const handleClickProduct = (product) => {
   alert(`查看商品：${product.name}`)
+}
+
+const handleSendProduct = (product) => {
+  productMessages.value.push({
+    id: Date.now(),
+    type: 'user',
+    product,
+    timestamp: Date.now(),
+    status: 'sent'
+  })
+}
+
+// 可选：演示如何通过接口获取商品数据
+const pickProduct = async () => {
+  const res = await fetch('https://dummyjson.com/products/2').then(r => r.json())
+  return { id: res.id, name: res.title, price: res.price, image: res.thumbnail }
 }
 </script>
 ```
@@ -736,8 +815,6 @@ interface ChatMessage {
 5. 图片消息点击可放大查看
 6. 商品卡片点击触发 `click-product` 事件
 7. 发送失败的消息可以点击重新发送
-
-## 贡献者
 
 ## 贡献者
 

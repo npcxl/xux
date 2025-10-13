@@ -1,133 +1,133 @@
 {
-  "hash": "8649d211",
-  "configHash": "b9342246",
-  "lockfileHash": "1367bf84",
-  "browserHash": "171ee640",
+  "hash": "22de40e0",
+  "configHash": "64d737b0",
+  "lockfileHash": "fe2e5f99",
+  "browserHash": "46cf0573",
   "optimized": {
     "vue": {
       "src": "../../../../../node_modules/.pnpm/vue@3.5.22_typescript@5.9.3/node_modules/vue/dist/vue.runtime.esm-bundler.js",
       "file": "vue.js",
-      "fileHash": "6902c312",
+      "fileHash": "d3dee23c",
       "needsInterop": false
     },
     "vitepress > @vue/devtools-api": {
       "src": "../../../../../node_modules/.pnpm/@vue+devtools-api@7.7.7/node_modules/@vue/devtools-api/dist/index.js",
       "file": "vitepress___@vue_devtools-api.js",
-      "fileHash": "3d1377d6",
+      "fileHash": "016d732a",
       "needsInterop": false
     },
     "vitepress > @vueuse/core": {
       "src": "../../../../../node_modules/.pnpm/@vueuse+core@12.8.2_typescript@5.9.3/node_modules/@vueuse/core/index.mjs",
       "file": "vitepress___@vueuse_core.js",
-      "fileHash": "d022bfe0",
+      "fileHash": "76cc87dd",
       "needsInterop": false
     },
     "vitepress > @vueuse/integrations/useFocusTrap": {
       "src": "../../../../../node_modules/.pnpm/@vueuse+integrations@12.8.2_bc52d8e47d3d42ec50799ccdac3557e0/node_modules/@vueuse/integrations/useFocusTrap.mjs",
       "file": "vitepress___@vueuse_integrations_useFocusTrap.js",
-      "fileHash": "aa9dc4c9",
+      "fileHash": "85fa5004",
       "needsInterop": false
     },
     "vitepress > mark.js/src/vanilla.js": {
       "src": "../../../../../node_modules/.pnpm/mark.js@8.11.1/node_modules/mark.js/src/vanilla.js",
       "file": "vitepress___mark__js_src_vanilla__js.js",
-      "fileHash": "57b37405",
+      "fileHash": "9211709f",
       "needsInterop": false
     },
     "vitepress > minisearch": {
       "src": "../../../../../node_modules/.pnpm/minisearch@7.2.0/node_modules/minisearch/dist/es/index.js",
       "file": "vitepress___minisearch.js",
-      "fileHash": "ddff9933",
+      "fileHash": "174dcd5d",
       "needsInterop": false
     },
     "@iconify/vue": {
       "src": "../../../../../node_modules/.pnpm/@iconify+vue@4.3.0_vue@3.5.22_typescript@5.9.3_/node_modules/@iconify/vue/dist/iconify.mjs",
       "file": "@iconify_vue.js",
-      "fileHash": "df96b99e",
+      "fileHash": "6300f969",
       "needsInterop": false
     },
     "qrcode": {
       "src": "../../../../../node_modules/.pnpm/qrcode@1.5.4/node_modules/qrcode/lib/browser.js",
       "file": "qrcode.js",
-      "fileHash": "0fa4073d",
+      "fileHash": "260a6cc4",
       "needsInterop": true
     },
     "dayjs": {
       "src": "../../../../../node_modules/.pnpm/dayjs@1.11.18/node_modules/dayjs/dayjs.min.js",
       "file": "dayjs.js",
-      "fileHash": "1a6c69f7",
+      "fileHash": "1f615efc",
       "needsInterop": true
     },
     "dayjs/plugin/utc": {
       "src": "../../../../../node_modules/.pnpm/dayjs@1.11.18/node_modules/dayjs/plugin/utc.js",
       "file": "dayjs_plugin_utc.js",
-      "fileHash": "ea8ea755",
+      "fileHash": "4e639b58",
       "needsInterop": true
     },
     "dayjs/plugin/timezone": {
       "src": "../../../../../node_modules/.pnpm/dayjs@1.11.18/node_modules/dayjs/plugin/timezone.js",
       "file": "dayjs_plugin_timezone.js",
-      "fileHash": "356b2873",
+      "fileHash": "b0e43842",
       "needsInterop": true
     },
     "dayjs/plugin/relativeTime": {
       "src": "../../../../../node_modules/.pnpm/dayjs@1.11.18/node_modules/dayjs/plugin/relativeTime.js",
       "file": "dayjs_plugin_relativeTime.js",
-      "fileHash": "7fdb4224",
+      "fileHash": "af081108",
       "needsInterop": true
     },
     "dayjs/plugin/duration": {
       "src": "../../../../../node_modules/.pnpm/dayjs@1.11.18/node_modules/dayjs/plugin/duration.js",
       "file": "dayjs_plugin_duration.js",
-      "fileHash": "1250665f",
+      "fileHash": "3294cb3d",
       "needsInterop": true
     },
     "dayjs/plugin/isSameOrAfter": {
       "src": "../../../../../node_modules/.pnpm/dayjs@1.11.18/node_modules/dayjs/plugin/isSameOrAfter.js",
       "file": "dayjs_plugin_isSameOrAfter.js",
-      "fileHash": "8051d9c9",
+      "fileHash": "298f1a04",
       "needsInterop": true
     },
     "dayjs/plugin/isSameOrBefore": {
       "src": "../../../../../node_modules/.pnpm/dayjs@1.11.18/node_modules/dayjs/plugin/isSameOrBefore.js",
       "file": "dayjs_plugin_isSameOrBefore.js",
-      "fileHash": "b5a2ec45",
+      "fileHash": "049304e7",
       "needsInterop": true
     },
     "dayjs/plugin/isBetween": {
       "src": "../../../../../node_modules/.pnpm/dayjs@1.11.18/node_modules/dayjs/plugin/isBetween.js",
       "file": "dayjs_plugin_isBetween.js",
-      "fileHash": "dda4b41e",
+      "fileHash": "7674d4cf",
       "needsInterop": true
     },
     "dayjs/plugin/weekOfYear": {
       "src": "../../../../../node_modules/.pnpm/dayjs@1.11.18/node_modules/dayjs/plugin/weekOfYear.js",
       "file": "dayjs_plugin_weekOfYear.js",
-      "fileHash": "cff55d2d",
+      "fileHash": "7441bbb2",
       "needsInterop": true
     },
     "dayjs/plugin/isoWeek": {
       "src": "../../../../../node_modules/.pnpm/dayjs@1.11.18/node_modules/dayjs/plugin/isoWeek.js",
       "file": "dayjs_plugin_isoWeek.js",
-      "fileHash": "249b33ea",
+      "fileHash": "cb0a3995",
       "needsInterop": true
     },
     "dayjs/plugin/customParseFormat": {
       "src": "../../../../../node_modules/.pnpm/dayjs@1.11.18/node_modules/dayjs/plugin/customParseFormat.js",
       "file": "dayjs_plugin_customParseFormat.js",
-      "fileHash": "d967146b",
+      "fileHash": "4f6f15f9",
       "needsInterop": true
     },
     "dayjs/plugin/advancedFormat": {
       "src": "../../../../../node_modules/.pnpm/dayjs@1.11.18/node_modules/dayjs/plugin/advancedFormat.js",
       "file": "dayjs_plugin_advancedFormat.js",
-      "fileHash": "fcfffb6c",
+      "fileHash": "4c8dee52",
       "needsInterop": true
     },
     "dayjs/locale/zh-cn": {
       "src": "../../../../../node_modules/.pnpm/dayjs@1.11.18/node_modules/dayjs/locale/zh-cn.js",
       "file": "dayjs_locale_zh-cn.js",
-      "fileHash": "c1fc4d88",
+      "fileHash": "3f60c748",
       "needsInterop": true
     }
   },

@@ -27,6 +27,7 @@
   },
   "dependencies": {
     "dayjs": "^1.11.18",
-    "qrcode": "^1.5.4"
+    "qrcode": "^1.5.4",
+    "sass": "^1.93.2"
   }
 }

@@ -662,23 +662,91 @@ const handleReset = () => {
 | validator | 自定义验证函数 | `(value: any) => boolean \| Promise<boolean>` | - |
 | trigger | 验证触发时机 | `'blur' \| 'change' \| 'submit'` | `'blur'` |
 
-## 动画效果说明
 
-表单组件内置了流畅的交互动画：
+## 贡献者
 
-- **必填项标记**：红色星号标记，简洁明了
-- **验证错误提示**：错误信息平滑滑入，带有缩放效果，输入框边框平滑过渡为红色
-- **聚焦状态**：输入框聚焦时显示淡色阴影，视觉反馈明确
-- **验证中状态**：输入框边框变为蓝色，提示用户正在验证
+<div class="contributors">
+  <div class="contributor-item">
+    <a href="https://gitee.com/leheya" target="_blank" rel="noopener noreferrer">
+      <img 
+        src="https://foruda.gitee.com/avatar/1751620424517657404/10604783_leheya_1751620424.png!avatar200" 
+        alt="leheya"
+        class="contributor-avatar"
+      />
+      <span class="contributor-name">无敌暴龙神</span>
+    </a>
+  </div>
+  <!-- <div class="contributor-item">
+    <a href="https://gitee.com/haijun-li" target="_blank" rel="noopener noreferrer">
+      <img 
+        src="https://p3.itc.cn/images01/20230307/e9d72e3788844ed1a9259e442899e1bd.png" 
+        alt="lihaijun"
+        class="contributor-avatar"
+      />
+      <span class="contributor-name">lihaijun</span>
+    </a>
+  </div> -->
+</div>
 
-所有动画使用 `cubic-bezier` 缓动函数，确保视觉体验流畅自然。
+<style scoped>
+.contributors {
+  display: flex;
+  gap: 24px;
+  margin: 24px 0;
+  flex-wrap: wrap;
+}
 
-## 注意事项
+.contributor-item a {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-decoration: none;
+  color: inherit;
+  transition: transform 0.2s ease;
+}
 
-1. **prop 属性**：FormItem 的 `prop` 属性必须与 Form 的 `model` 中的字段名对应
-2. **验证规则**：规则可以定义在 Form 的 `rules` 属性中，也可以定义在 FormItem 的 `rules` 属性中
-3. **必填标记**：设置 `required` 属性或在规则中定义 `required: true` 都会显示必填标记
-4. **触发时机**：默认在 `blur` 时触发验证，可通过 `trigger` 属性自定义
-5. **响应式**：表单在移动端会自动切换为垂直布局
-6. **性能**：验证采用异步方式，支持 Promise，不会阻塞 UI
+.contributor-item a:hover {
+  transform: translateY(-2px);
+}
+
+.contributor-avatar {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  border: 3px solid var(--vp-c-border);
+  transition: border-color 0.2s ease;
+  object-fit: cover;
+}
+
+.contributor-item a:hover .contributor-avatar {
+  border-color: var(--vp-c-brand-1);
+}
+
+.contributor-name {
+  margin-top: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--vp-c-text-2);
+  transition: color 0.2s ease;
+}
+
+.contributor-item a:hover .contributor-name {
+  color: var(--vp-c-brand-1);
+}
+
+@media (max-width: 768px) {
+  .contributors {
+    gap: 16px;
+  }
+  
+  .contributor-avatar {
+    width: 60px;
+    height: 60px;
+  }
+  
+  .contributor-name {
+    font-size: 12px;
+  }
+}
+</style>
 

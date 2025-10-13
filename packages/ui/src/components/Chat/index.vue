@@ -136,7 +136,7 @@
           >
             <Icon icon="mdi:emoticon-happy-outline" />
           </button>
-          <button class="x-chat-tool-btn" @click="handleImageUpload" title="发送图片">
+          <button v-if="enableImage" class="x-chat-tool-btn" @click="handleImageUpload" title="发送图片">
             <Icon icon="mdi:image-outline" />
           </button>
           <button v-if="enableProduct" class="x-chat-tool-btn" @click="handleProductSelect" title="发送商品">
@@ -272,6 +272,14 @@ export interface ChatProps {
   userAvatar?: string
   /** 输入框自动增高的最大高度，超过后出现滚动条（单位：px） */
   inputMaxHeight?: number
+  /**
+   * 商品选择与数据提供器：点击工具栏“发送商品”时调用
+   * 你可以在此函数内弹出自定义选择弹窗，并通过接口返回选中的商品
+   * 返回 null/undefined 代表取消
+   */
+  productProvider?: () => Promise<ChatMessage['product'] | null | undefined>
+  /** 是否启用发送图片按钮 */
+  enableImage?: boolean
 }
 
 const props = withDefaults(defineProps<ChatProps>(), {
@@ -288,20 +296,22 @@ const props = withDefaults(defineProps<ChatProps>(), {
   showWordCount: false,
   sendOnEnter: true,
   showToolbar: true,
-  enableProduct: true,
+  enableProduct: false,
   isTyping: false,
   quickReplies: () => [],
   showQuickReplies: true,
   emptyText: '暂无消息',
   compact: false,
   userAvatar: '',
-  inputMaxHeight: 200
+  inputMaxHeight: 200,
+  enableImage: false
 })
 
 const emit = defineEmits<{
   'send-message': [content: string]
   'send-image': [file: File]
   'select-product': []
+  'send-product': [product: ChatMessage['product']]
   'click-product': [product: ChatMessage['product']]
   'click-image': [image: string]
   'resend': [message: ChatMessage]
@@ -439,8 +449,31 @@ const handleFileChange = (e: Event) => {
   }
 }
 
-const handleProductSelect = () => {
+const handleProductSelect = async () => {
+  // 发出选择事件（可用于打开外部弹窗等）
   emit('select-product')
+  
+  // 若提供了 productProvider，则调用以获取商品数据（可内含接口请求与选择逻辑）
+  if (props.productProvider) {
+    try {
+      const product = await props.productProvider()
+      if (product) {
+        emit('send-product', product)
+      }
+    } catch (err) {
+      // 忽略错误交给上层处理
+    }
+    return
+  }
+  
+  // 未提供 productProvider 时，仍回退到内置演示数据，便于快速测试
+  const demoProduct = {
+    id: Date.now(),
+    name: '示例商品 · 舒适棉质T恤',
+    price: 199,
+    image: `https://picsum.photos/seed/${Date.now() % 1000}/200/200`
+  }
+  emit('send-product', demoProduct)
 }
 
 const handleQuickReply = (reply: string) => {

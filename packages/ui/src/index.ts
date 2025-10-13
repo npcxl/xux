@@ -21,6 +21,9 @@ export { default as XRegionCascader } from './components/RegionCascader/index.vu
 //烟花动画
 export { default as XFirework } from './components/SpecialEffects/fireworks.vue'
 export { default as XGButton } from './components/SpecialEffects/glow.vue'
+export { default as XAdvancedGrid } from './components/DynamicMech/index.vue'
+export { default as XDynamicMech } from './components/DynamicMech/index.vue'
+export { default as XGrid } from './components/Grid/index.vue'
 
 export { default as XQrcode } from './components/Qrcode/index.vue'
 export { default as XSegmented } from './components/Segmented/index.vue'
@@ -29,6 +32,7 @@ export { default as XFormItem } from './components/FormItem/index.vue'
 export { default as XColor } from './components/Color/index.vue'
 export { default as XBadge } from './components/Badge/index.vue'
 export { default as XChat } from './components/Chat/index.vue'
+export { default as XImage } from './components/Image/index.vue'
 // 导出 Composables
 export { xlMsg, default as useMsg } from './composables/Msg'
 export { xlAlert, default as useAlert } from './composables/Alert'
@@ -55,6 +59,8 @@ export type { FormItemProps } from './components/FormItem/index.vue'
 export type { ColorProps } from './components/Color/index.vue'
 export type { BadgeProps } from './types/badge'
 export type { ChatMessage, ChatProps } from './components/Chat/index.vue'
+export type { ImageProps } from './components/Image/index.vue'
+export type { GridProps } from './components/Grid/index.vue'
 export type { DateTimeOptions, DateRange, CalendarDate } from './composables/DateTime'
 
 

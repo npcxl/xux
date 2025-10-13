@@ -14,19 +14,19 @@ export default defineConfig({
   },
   
   head: [
-    ['link', { rel: 'icon', href: '/logo.PNG' }],
+    ['link', { rel: 'icon', href: '/logo.png' }],
     ['meta', { name: 'theme-color', content: '#1a1a1a' }],
     ['meta', { name: 'keywords', content: 'Vue3, 组件库, UI, 电商, TypeScript, XUX' }],
     ['meta', { property: 'og:type', content: 'website' }],
     ['meta', { property: 'og:title', content: 'XUX - Vue3 电商组件库' }],
     ['meta', { property: 'og:description', content: '专为电商平台打造的现代化 UI 组件库' }],
-    ['meta', { property: 'og:image', content: '/logo.PNG' }],
+    ['meta', { property: 'og:image', content: '/logo.png' }],
   ],
 
   themeConfig: {
     logo: {
-      light: '/logo.PNG',
-      dark: '/logo.PNG',
+      light: '/logo.png',
+      dark: '/logo.png',
       alt: 'XUX'
     },
     siteTitle: 'XUX-UI',
@@ -65,6 +65,7 @@ export default defineConfig({
           text: '布局',
           items: [
             { text: 'Card 卡片', link: '/components/card' },
+            { text: '高级布局渲染组件', link: '/components/advanced-grid' },
           ]
         },
         {
@@ -93,6 +94,8 @@ export default defineConfig({
             { text:'Qrcode 二维码',link:'/components/qrcode'},
             { text: 'Segmented 分段控制器', link: '/components/segmented' },
             { text: 'Badge 徽标', link: '/components/badge' },
+            { text: 'Grid 网格布局', link: '/components/grid' },
+            { text: 'Image 图片', link: '/components/image' },
           ]
         },
         {
@@ -109,6 +112,12 @@ export default defineConfig({
           text: '时间函数',
           items: [
             { text: '时间处理函数', link: '/components/datetime-functions' },
+          ]
+        },
+        {
+          text: '高级布局组件',
+          items: [
+            { text: 'DynamicMech 动画网格', link: '/components/dynamic-mech' },
           ]
         },
         {

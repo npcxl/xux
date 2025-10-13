@@ -6,7 +6,7 @@ hero:
   text: Vue3 电商组件库
   tagline: 专为电商平台打造的现代化 UI 组件库
   image:
-    src: /logo.PNG
+    src: /logo.png
     alt: XUX Logo
   actions:
     - theme: brand
