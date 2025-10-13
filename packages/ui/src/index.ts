@@ -27,6 +27,7 @@ export { default as XSegmented } from './components/Segmented/index.vue'
 export { default as XForm } from './components/Form/index.vue'
 export { default as XFormItem } from './components/FormItem/index.vue'
 export { default as XColor } from './components/Color/index.vue'
+export { default as XBadge } from './components/Badge/index.vue'
 // 导出 Composables
 export { xlMsg, default as useMsg } from './composables/Msg'
 export { xlAlert, default as useAlert } from './composables/Alert'
@@ -51,6 +52,7 @@ export type { SegmentedOption, SegmentedProps } from './components/Segmented/ind
 export type { FormProps, FormRule, FormRules } from './components/Form/index.vue'
 export type { FormItemProps } from './components/FormItem/index.vue'
 export type { ColorProps } from './components/Color/index.vue'
+export type { BadgeProps } from './types/badge'
 export type { DateTimeOptions, DateRange, CalendarDate } from './composables/DateTime'
 
 
