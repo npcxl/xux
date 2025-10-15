@@ -1,5 +1,5 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://你的域名.vercel.app/sitemap.xml
+Sitemap: https://xux.xlcig.cn/sitemap.xml
 

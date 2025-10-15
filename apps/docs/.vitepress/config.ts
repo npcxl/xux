@@ -15,12 +15,29 @@ export default defineConfig({
   
   head: [
     ['link', { rel: 'icon', href: '/logo.png' }],
+    ['link', { rel: 'canonical', href: 'https://xux.xlcig.cn' }],
     ['meta', { name: 'theme-color', content: '#1a1a1a' }],
-    ['meta', { name: 'keywords', content: 'Vue3, 组件库, UI, 电商, TypeScript, XUX' }],
+    ['meta', { name: 'author', content: 'XUX Team' }],
+    ['meta', { name: 'keywords', content: 'Vue3, 组件库, UI组件库, 电商, TypeScript, XUX, Vue UI, 前端组件, 开源组件库, VitePress' }],
+    ['meta', { name: 'robots', content: 'index, follow' }],
+    ['meta', { name: 'googlebot', content: 'index, follow' }],
+    
+    // Open Graph
     ['meta', { property: 'og:type', content: 'website' }],
+    ['meta', { property: 'og:url', content: 'https://xux.xlcig.cn' }],
+    ['meta', { property: 'og:site_name', content: 'XUX' }],
     ['meta', { property: 'og:title', content: 'XUX - Vue3 电商组件库' }],
-    ['meta', { property: 'og:description', content: '专为电商平台打造的现代化 UI 组件库' }],
-    ['meta', { property: 'og:image', content: '/logo.png' }],
+    ['meta', { property: 'og:description', content: '专为电商平台打造的现代化 UI 组件库，提供丰富的 Vue3 组件和完善的文档' }],
+    ['meta', { property: 'og:image', content: 'https://xux.xlcig.cn/logo.png' }],
+    
+    // Twitter Card
+    ['meta', { name: 'twitter:card', content: 'summary_large_image' }],
+    ['meta', { name: 'twitter:title', content: 'XUX - Vue3 电商组件库' }],
+    ['meta', { name: 'twitter:description', content: '专为电商平台打造的现代化 UI 组件库' }],
+    ['meta', { name: 'twitter:image', content: 'https://xux.xlcig.cn/logo.png' }],
+    
+    // Baidu verification (如果需要百度收录)
+    // ['meta', { name: 'baidu-site-verification', content: 'your-verification-code' }],
   ],
 
   themeConfig: {
@@ -59,12 +76,14 @@ export default defineConfig({
           text: '通用',
           items: [
             { text: 'Button 按钮', link: '/components/button' },
+            { text: 'Tag 标签', link: '/components/tag' },
           ]
         },
         {
           text: '布局',
           items: [
             { text: 'Card 卡片', link: '/components/card' },
+            { text: 'Divider 分割线', link: '/components/divider' },
             { text: '高级布局渲染组件', link: '/components/advanced-grid' },
           ]
         },
@@ -96,6 +115,7 @@ export default defineConfig({
             { text: 'Badge 徽标', link: '/components/badge' },
             { text: 'Grid 网格布局', link: '/components/grid' },
             { text: 'Image 图片', link: '/components/image' },
+            { text: 'DragSort 拖拽排序', link: '/components/drag-sort' },
           ]
         },
         {
@@ -105,6 +125,8 @@ export default defineConfig({
             { text: 'Modal 弹窗', link: '/components/modal' },
             { text: 'Msg 消息提示', link: '/components/msg' },
             { text: 'Tooltips 提示框', link: '/components/tooltips' },
+            { text: 'Popconfirm 气泡确认框', link: '/components/popconfirm' },
+            { text: 'Result 结果', link: '/components/result' },
             { text: 'Chat 聊天', link: '/components/chat' },
           ]
         },

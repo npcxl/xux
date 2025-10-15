@@ -33,10 +33,24 @@ export { default as XColor } from './components/Color/index.vue'
 export { default as XBadge } from './components/Badge/index.vue'
 export { default as XChat } from './components/Chat/index.vue'
 export { default as XImage } from './components/Image/index.vue'
+export { default as XDragSort } from './components/DragSort/index.vue'
+export { default as XTag } from './components/Tag/index.vue'
+export { default as XDivider } from './components/Divider/index.vue'
+export { default as XPopconfirm } from './components/Popconfirm/index.vue'
+export { default as XResult } from './components/Result/index.vue'
 // 导出 Composables
 export { xlMsg, default as useMsg } from './composables/Msg'
 export { xlAlert, default as useAlert } from './composables/Alert'
 export { useDateTime, useDateRange, useCountdown, default as useDateTimeDefault } from './composables/DateTime'
+
+// 导出便捷 API（预初始化实例）
+import { xlMsg } from './composables/Msg'
+import { xlAlert } from './composables/Alert'
+import { useDateTime } from './composables/DateTime'
+
+export const Msg = xlMsg()
+export const Alert = xlAlert()
+export const DateTime = useDateTime()
 
 // 导出类型定义
 export type { Country, CountrySelectProps } from './components/CountrySelect/index.vue'
@@ -61,6 +75,11 @@ export type { BadgeProps } from './types/badge'
 export type { ChatMessage, ChatProps } from './components/Chat/index.vue'
 export type { ImageProps } from './components/Image/index.vue'
 export type { GridProps } from './components/Grid/index.vue'
+export type { DragSortProps, DragSortItem } from './components/DragSort/index.vue'
+export type { TagProps } from './components/Tag/index.vue'
+export type { DividerProps } from './components/Divider/index.vue'
+export type { PopconfirmProps } from './components/Popconfirm/index.vue'
+export type { ResultProps } from './components/Result/index.vue'
 export type { DateTimeOptions, DateRange, CalendarDate } from './composables/DateTime'
 
 

@@ -3,7 +3,7 @@
  * @displayName XMsg
  */
 
-interface ConfirmOptions {
+export interface ConfirmOptions {
     title: string
     content: string
     confirmText?: string
@@ -14,7 +14,7 @@ interface ConfirmOptions {
     duration?: number
 }
 
-interface MessageOptions {
+export interface MessageOptions {
     title: string
     content?: string
     type?: 'success' | 'error' | 'warning' | 'info'

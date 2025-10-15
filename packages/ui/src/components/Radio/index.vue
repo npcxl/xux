@@ -54,7 +54,7 @@
     </p>
     
   <label
-      v-for="option in paymentOptions"
+      v-for="option in computedPaymentOptions"
       :key="option.value"
       class="payment-option"
       :class="{ 'payment-option-checked': modelValue === option.value }"
@@ -79,6 +79,7 @@
 </template>
 
 <script setup lang="ts">
+import { computed } from 'vue'
 import { Icon } from '@iconify/vue'
 export interface RadioOption {
   /** 选项值 */
@@ -111,7 +112,9 @@ export interface RadioProps {
   /** 组件变体 */
   variant?: 'standard' | 'payment'
   /** 显示模式 */
-  mode?: 'default' | 'list'
+  mode?: 'default' | 'list',
+  /** 支付选项 */
+  paymentOptions?:RadioOption[]
 }
 
 const props = withDefaults(defineProps<RadioProps>(), {
@@ -123,7 +126,8 @@ const props = withDefaults(defineProps<RadioProps>(), {
   name: 'radio-group',
   direction: 'vertical',
   variant: 'standard',
-  mode: 'default'
+  mode: 'default',
+  paymentOptions: () => []
 })
 
 const emit = defineEmits<{
@@ -131,8 +135,8 @@ const emit = defineEmits<{
   change: [value: string | number]
 }>()
 
-// 支付选项配置
-const paymentOptions = [
+// 默认支付选项配置
+const defaultPaymentOptions: RadioOption[] = [
   {
     value: 'google',
     label: 'Google Pay',
@@ -154,6 +158,13 @@ const paymentOptions = [
     icon: 'logos:visa'
   }
 ]
+
+// 计算属性：使用传入的或默认的支付选项
+const computedPaymentOptions = computed(() => {
+  return props.paymentOptions && props.paymentOptions.length > 0 
+    ? props.paymentOptions 
+    : defaultPaymentOptions
+})
 
 // 处理选项变化
 const handleChange = (value: string | number) => {
@@ -517,7 +528,7 @@ const handleChange = (value: string | number) => {
 .payment-highlight {
   font-weight: 800;
   text-decoration: underline;
-  color: #3b82f6;
+  color: #1a1a1a;
 }
 
 .payment-option {
@@ -538,18 +549,18 @@ const handleChange = (value: string | number) => {
 }
 
 .payment-option:hover {
-  background: rgba(240, 249, 255, 0.9);
-  border-color: rgba(59, 130, 246, 0.3);
+  background: rgba(249, 250, 251, 0.9);
+  border-color: rgba(26, 26, 26, 0.3);
   transform: translateY(-1px);
-  box-shadow: 0 4px 12px 0 rgba(59, 130, 246, 0.15);
+  box-shadow: 0 4px 12px 0 rgba(26, 26, 26, 0.15);
 }
 
 .payment-option.payment-option-checked {
-  border-color: #3b82f6;
-  color: #1e40af;
-  background: linear-gradient(135deg, rgba(59, 130, 246, 0.1) 0%, rgba(147, 197, 253, 0.1) 100%);
+  border-color: #1a1a1a;
+  color: #1a1a1a;
+  background: linear-gradient(135deg, rgba(26, 26, 26, 0.08) 0%, rgba(26, 26, 26, 0.04) 100%);
   font-weight: 700;
-  box-shadow: 0 4px 16px 0 rgba(59, 130, 246, 0.25);
+  box-shadow: 0 4px 16px 0 rgba(26, 26, 26, 0.25);
   transform: translateY(-1px);
 }
 
@@ -575,7 +586,7 @@ const handleChange = (value: string | number) => {
 }
 
 .payment-option.payment-option-checked .payment-icon {
-  background: rgba(59, 130, 246, 0.1);
+  background: rgba(26, 26, 26, 0.08);
   transform: scale(1.05);
 }
 
@@ -601,7 +612,7 @@ const handleChange = (value: string | number) => {
 }
 
 .payment-input {
-  color: #3b82f6;
+  accent-color: #1a1a1a;
   outline: none;
   box-shadow: none;
 }
@@ -609,6 +620,10 @@ const handleChange = (value: string | number) => {
 .payment-input:focus {
   outline: none;
   box-shadow: none;
+}
+
+.payment-input:checked {
+  accent-color: #1a1a1a;
 }
 
 /* 支付图标组件样式 */

@@ -52,9 +52,13 @@ const basicOptions = [
 
 :::
 
-## 电商支付版本
 
-专门为电商场景设计的支付方式选择组件，使用 `:has()` 伪类实现动画效果。
+
+
+
+## 自定义支付选项
+
+可以通过 `paymentOptions` 属性自定义支付方式选项。
 
 :::demo
 
@@ -62,12 +66,13 @@ const basicOptions = [
 <template>
   <div class="flex flex-col gap-4">
     <XRadio 
-      v-model="selectedPayment" 
+      v-model="customPayment" 
       variant="payment"
-      @change="handlePaymentChange"
+      :payment-options="customPaymentOptions"
+      @change="handleCustomPaymentChange"
     />
     <div class="text-sm text-gray-600">
-      当前选择: {{ selectedPayment }}
+      当前选择: {{ customPayment }}
     </div>
   </div>
 </template>
@@ -75,10 +80,32 @@ const basicOptions = [
 <script setup>
 import { ref } from 'vue'
 
-const selectedPayment = ref('')
+const customPayment = ref('alipay')
+const customPaymentOptions = [
+  {
+    value: 'Alipay',
+    label: '支付宝',
+    icon: 'simple-icons:alipay'
+  },
+  {
+    value: 'Wechat',
+    label: '微信支付',
+    icon: 'simple-icons:wechat'
+  },
+  {
+    value: 'VISA',
+    label: 'Visa',
+    icon: 'logos:visa'
+  },
+  {
+    value: 'paypal',
+    label: 'PayPal',
+    icon: 'logos:paypal'
+  }
+]
 
-const handlePaymentChange = (value) => {
-  console.log('支付方式变更:', value)
+const handleCustomPaymentChange = (value) => {
+  console.log('自定义支付方式变更:', value)
 }
 </script>
 ```
@@ -414,6 +441,7 @@ const customOptions = [
 | direction | 布局方向 | `string` | `horizontal` / `vertical` | `vertical` |
 | variant | 组件变体 | `string` | `standard` / `payment` | `standard` |
 | mode | 显示模式 | `string` | `default` / `list` | `default` |
+| paymentOptions | 支付选项列表（仅 payment 变体生效） | `RadioOption[]` | — | `[]`（使用默认支付选项） |
 
 ### RadioOption
 

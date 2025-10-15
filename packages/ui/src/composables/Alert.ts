@@ -3,7 +3,7 @@
  * 居中显示，支持自动关闭和手动关闭
  */
 
-interface AlertOptions {
+export interface AlertOptions {
     title?: string
     content: string
     type?: 'success' | 'error' | 'warning' | 'info'
