@@ -107,6 +107,8 @@ export default defineConfig({
         {
           text: '数据展示',
           items: [
+            { text: 'Timeline 时间轴', link: '/components/timeline' },
+            { text: 'Tree 树形控件', link: '/components/tree' },
             { text: 'Accordion 手风琴', link: '/components/accordion' },
             { text: 'Skeleton 骨架屏', link: '/components/skeleton' },
             { text: 'ThumbnailContainer 缩略图容器', link: '/components/thumbnail-container' },
@@ -124,6 +126,7 @@ export default defineConfig({
           items: [
             { text: 'Alert 警告提示', link: '/components/alert' },
             { text: 'Modal 弹窗', link: '/components/modal' },
+            { text: 'Drawer 抽屉', link: '/components/drawer' },
             { text: 'Msg 消息提示', link: '/components/msg' },
             { text: 'Tooltips 提示框', link: '/components/tooltips' },
             { text: 'Dropdown 下拉容器', link: '/components/dropdown' },
