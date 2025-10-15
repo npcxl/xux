@@ -680,7 +680,7 @@ tr:hover {
 /* 文档内容 - 设置合适的宽度 */
 .vp-doc {
   margin:0 auto;
-  max-width: 800px;
+  max-width: 60%;
 }
 
 @media (max-width: 1440px) {
