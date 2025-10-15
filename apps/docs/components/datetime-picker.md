@@ -8,7 +8,7 @@
 
 ```vue
 <template>
-  <div class="demo-container h-[600px]">
+  <div class="demo-container">
     <div class="demo-item">
       <h4>日期时间选择</h4>
       <XDateTimePicker v-model="datetime" mode="datetime" />

@@ -10,6 +10,7 @@
 
 ```vue
 <template>
+<div class="flex gap-3 h-[40px] ">
   <XPopconfirm
     title="确定要删除吗？"
     @confirm="handleConfirm"
@@ -19,6 +20,7 @@
       <XButton type="danger">删除</XButton>
     </template>
   </XPopconfirm>
+  </div>
 </template>
 
 <script setup>
@@ -51,7 +53,7 @@ const handleCancel = () => {
 
 ```vue
 <template>
-  <div class="flex gap-3 flex-wrap">
+  <div class="flex gap-3 h-[40px] ">
     <XPopconfirm
       title="确定要执行此操作吗？"
       icon="warning"
@@ -120,7 +122,7 @@ const handleDelete = () => {
 
 ```vue
 <template>
-  <div class="flex gap-3">
+  <div style="display: flex; gap: 12px; flex-wrap: wrap;">
     <XPopconfirm
       title="确定要提交吗？"
       ok-text="提交"
@@ -154,7 +156,7 @@ const handleDelete = () => {
 
 ```vue
 <template>
-  <div class="flex flex-col items-center gap-4">
+  <div style="display: flex; flex-direction: column; align-items: center; gap: 16px; padding: 20px 0;">
     <div>
       <XPopconfirm
         title="顶部提示"
@@ -166,7 +168,7 @@ const handleDelete = () => {
       </XPopconfirm>
     </div>
     
-    <div class="flex gap-4">
+    <div style="display: flex; gap: 80px;">
       <XPopconfirm
         title="左侧提示"
         placement="left"
@@ -231,15 +233,15 @@ const handleDelete = () => {
 
 ```vue
 <template>
-  <div class="space-y-4">
+  <div style="display: flex; flex-direction: column; gap: 16px;">
     <!-- 列表操作 -->
-    <div class="bg-white p-4 rounded-lg border">
-      <div class="flex items-center justify-between mb-3">
+    <div style="background: #ffffff; padding: 16px; border-radius: 8px; border: 1px solid #e5e7eb;">
+      <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px;">
         <div>
-          <h4 class="font-medium">重要文件.pdf</h4>
-          <p class="text-sm text-gray-600">2.5 MB · 2024-10-15</p>
+          <h4 style="font-weight: 500; margin: 0 0 4px 0;">重要文件.pdf</h4>
+          <p style="font-size: 13px; color: #6b7280; margin: 0;">2.5 MB · 2024-10-15</p>
         </div>
-        <div class="flex gap-2">
+        <div style="display: flex; gap: 8px;">
           <XButton size="small">下载</XButton>
           <XPopconfirm
             title="确定要删除这个文件吗？"
@@ -257,21 +259,21 @@ const handleDelete = () => {
     </div>
     
     <!-- 表格操作 -->
-    <div class="bg-white rounded-lg border overflow-hidden">
-      <table class="w-full text-sm">
-        <thead class="bg-gray-50">
+    <div style="background: #ffffff; border-radius: 8px; border: 1px solid #e5e7eb; overflow: hidden;">
+      <table style="width: 100%; font-size: 13px; border-collapse: collapse;">
+        <thead style="background: #f9fafb;">
           <tr>
-            <th class="px-4 py-2 text-left">姓名</th>
-            <th class="px-4 py-2 text-left">邮箱</th>
-            <th class="px-4 py-2 text-left">操作</th>
+            <th style="padding: 8px 16px; text-align: left; font-weight: 500;">姓名</th>
+            <th style="padding: 8px 16px; text-align: left; font-weight: 500;">邮箱</th>
+            <th style="padding: 8px 16px; text-align: left; font-weight: 500;">操作</th>
           </tr>
         </thead>
         <tbody>
-          <tr class="border-t">
-            <td class="px-4 py-2">张三</td>
-            <td class="px-4 py-2">zhangsan@example.com</td>
-            <td class="px-4 py-2">
-              <div class="flex gap-2">
+          <tr style="border-top: 1px solid #e5e7eb;">
+            <td style="padding: 8px 16px;">张三</td>
+            <td style="padding: 8px 16px;">zhangsan@example.com</td>
+            <td style="padding: 8px 16px;">
+              <div style="display: flex; gap: 8px;">
                 <XButton size="small">编辑</XButton>
                 <XPopconfirm
                   title="确定要删除用户 张三 吗？"

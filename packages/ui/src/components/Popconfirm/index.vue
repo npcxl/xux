@@ -1,6 +1,6 @@
 <template>
   <div class="x-popconfirm" ref="popconfirmRef">
-    <div @click="handleTriggerClick" ref="triggerRef">
+    <div class="x-popconfirm-trigger" @click="handleTriggerClick" ref="triggerRef">
       <slot name="trigger"></slot>
     </div>
     
@@ -198,6 +198,11 @@ onBeforeUnmount(() => {
 .x-popconfirm {
   display: inline-block;
   position: relative;
+}
+
+.x-popconfirm-trigger {
+  display: inline-block;
+  cursor: pointer;
 }
 
 .popconfirm-overlay {

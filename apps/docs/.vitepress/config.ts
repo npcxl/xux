@@ -77,6 +77,7 @@ export default defineConfig({
           items: [
             { text: 'Button 按钮', link: '/components/button' },
             { text: 'Tag 标签', link: '/components/tag' },
+            { text: 'Search 搜索', link: '/components/search' },
           ]
         },
         {
@@ -84,7 +85,7 @@ export default defineConfig({
           items: [
             { text: 'Card 卡片', link: '/components/card' },
             { text: 'Divider 分割线', link: '/components/divider' },
-            { text: '高级布局渲染组件', link: '/components/advanced-grid' },
+         
           ]
         },
         {
@@ -125,6 +126,7 @@ export default defineConfig({
             { text: 'Modal 弹窗', link: '/components/modal' },
             { text: 'Msg 消息提示', link: '/components/msg' },
             { text: 'Tooltips 提示框', link: '/components/tooltips' },
+            { text: 'Dropdown 下拉容器', link: '/components/dropdown' },
             { text: 'Popconfirm 气泡确认框', link: '/components/popconfirm' },
             { text: 'Result 结果', link: '/components/result' },
             { text: 'Chat 聊天', link: '/components/chat' },

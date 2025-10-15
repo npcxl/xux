@@ -3,7 +3,7 @@
  * 主题色: #1a1a1a
  */
 
-:root {
+ :root {
   /* 品牌色 - 使用 #1a1a1a 作为主色调 */
   --vp-c-brand-1: #1a1a1a;
   --vp-c-brand-2: #2a2a2a;
@@ -621,4 +621,443 @@ tr:hover {
   .VPHome::after {
     animation-duration: 10s;
   }
+}
+
+
+
+/* 让布局占满宽度 */
+:root {
+  /* 可选：把全局最大宽度变量放大或直接全宽 */
+  --vp-layout-max-width: 100%;
+}
+
+/* 关闭文档内容区的 max-width 限制，并去掉两侧内边距 */
+.VPContent,
+.VPDoc .container,
+.VPDoc .content,
+.VPDoc .content-container {
+  max-width: none !important;
+  width: 100% !important;
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+}
+
+/* 搜索栏居中 */
+.VPNavBarSearch{
+
+}
+/* 有侧边栏时也铺满（根据需要保留/删除） */
+.VPDoc.has-aside .content {
+  max-width: none !important;
+}
+
+/**
+ * XUX 文档自定义样式
+ */
+
+/* ==================== 导航栏对齐优化 ==================== */
+
+/* 导航栏与侧边栏对齐，去除左右空隙 */
+.VPNav .container {
+  max-width: none !important;
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+}
+
+.VPNavBar {
+  padding-left: 24px !important;
+  padding-right: 24px !important;
+}
+
+/* ==================== 内容区域居中优化 ==================== */
+
+/* 文档容器 - 在左右侧边栏之间居中 */
+/* .VPDoc .content-container {
+  justify-content: center;
+  align-items: flex-start;
+} */
+
+/* 文档内容 - 设置合适的宽度 */
+.vp-doc {
+  margin:0 auto;
+  max-width: 800px;
+}
+
+@media (max-width: 1440px) {
+  .vp-doc {
+    max-width: 900px;
+    padding: 32px 40px !important;
+  }
+}
+
+@media (max-width: 1200px) {
+  .vp-doc {
+    max-width: 700px;
+    padding: 24px 32px !important;
+  }
+}
+
+@media (max-width: 960px) {
+  .vp-doc {
+    max-width: none;
+    padding: 24px 24px !important;
+  }
+}
+
+@media (max-width: 768px) {
+  .vp-doc {
+    padding: 20px 16px !important;
+  }
+}
+
+
+/* ==================== 左侧导航栏优化 ==================== */
+
+/* 左侧导航链接基础样式 */
+.VPSidebarItem > .item > .link {
+  padding-left: 12px !important;
+  padding-top: 6px !important;
+  padding-bottom: 6px !important;
+  padding-right: 12px !important;
+  transition: all 0.3s ease;
+}
+
+/* 左侧导航激活状态 */
+.VPSidebarItem.is-active > .item > .link {
+  background-color: #1a1a1a !important;
+  color: #ffffff !important;
+  border-radius: 6px;
+  font-weight: 600;
+  padding-left: 16px !important;
+  padding-top: 8px !important;
+  padding-bottom: 8px !important;
+  padding-right: 12px !important;
+  margin-left: 4px;
+  transition: all 0.3s ease;
+}
+
+/* 左侧导航激活状态（亮色主题） */
+.VPSidebarItem.is-active > .item > .link .text {
+  color: #ffffff !important;
+}
+
+/* 左侧导航激活状态图标 */
+.VPSidebarItem.is-active > .item > .link .VPLink {
+  color: #ffffff !important;
+}
+
+/* 左侧导航悬停效果 */
+.VPSidebarItem:not(.is-active) > .item > .link:hover {
+  background-color: rgba(26, 26, 26, 0.08);
+  border-radius: 6px;
+  color: #1a1a1a !important;
+  padding-left: 16px !important;
+  padding-top: 8px !important;
+  padding-bottom: 8px !important;
+  padding-right: 12px !important;
+  margin-left: 4px;
+  transition: all 0.2s ease;
+}
+
+/* 左侧导航分组标题 */
+.VPSidebarItem.level-0 > .item {
+  padding-top: 8px;
+  margin-top: 12px;
+}
+
+.VPSidebarItem.level-0 > .item > .link .text {
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: 0.3px;
+}
+
+/* 暗色模式下的左侧导航 */
+.dark .VPSidebarItem.is-active > .item > .link {
+  background-color: #ffffff !important;
+  color: #1a1a1a !important;
+}
+
+.dark .VPSidebarItem.is-active > .item > .link .text {
+  color: #1a1a1a !important;
+}
+
+.dark .VPSidebarItem:not(.is-active) > .item > .link:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+/* ==================== 右侧锚点导航优化 ==================== */
+
+/* 右侧大纲容器 */
+.VPDocAside {
+  padding-left: 24px !important;
+  padding-right: 24px !important;
+}
+
+.VPDocAsideOutline {
+  position: sticky;
+  top: 80px;
+}
+
+/* 大纲标题 */
+.VPDocAsideOutline .outline-title {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--vp-c-text-1);
+  margin-bottom: 12px;
+  padding-left: 12px;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+
+/* 锚点链接 */
+.VPDocOutlineItem {
+  transition: all 0.2s ease;
+}
+
+.VPDocOutlineItem.root {
+  padding-left: 12px;
+}
+
+.VPDocOutlineItem.nested {
+  padding-left: 24px;
+}
+
+.VPDocOutlineItem a {
+  display: block;
+  padding: 6px 12px;
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--vp-c-text-2);
+  border-left: 2px solid transparent;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+}
+
+.VPDocOutlineItem a:hover {
+  color: var(--vp-c-brand-1);
+  background-color: var(--vp-c-bg-soft);
+  border-left-color: var(--vp-c-brand-1);
+  transform: translateX(2px);
+}
+
+/* 激活的锚点 */
+.VPDocOutlineItem.active a {
+  color: #ffffff !important;
+  background-color: #1a1a1a !important;
+  border-left-color: #1a1a1a;
+  font-weight: 600;
+}
+
+.dark .VPDocOutlineItem.active a {
+  color: #1a1a1a !important;
+  background-color: #ffffff !important;
+  border-left-color: #ffffff;
+}
+
+/* 响应式 */
+@media (max-width: 1440px) {
+  .VPDocAside {
+    padding-left: 20px !important;
+    padding-right: 20px !important;
+  }
+}
+
+@media (max-width: 1280px) {
+  .VPDocAside {
+    padding-left: 16px !important;
+    padding-right: 16px !important;
+  }
+}
+
+/* ==================== 允许溢出 ==================== */
+
+.VPDoc .container,
+.VPDoc .content,
+.VPContent,
+.vp-doc,
+.demoblock-custom,
+.vp-demo,
+.demo-block,
+[class*="demo"],
+.vp-doc div[class*="language-"],
+.vp-doc .vp-code-group,
+.vp-doc pre {
+  overflow: visible !important;
+}
+
+/* ==================== 层级管理（关键）==================== */
+
+/* 
+ * 正确的层级关系：
+ * - 文档内容: 不设置或 z-index: auto
+ * - 弹出层: z-index: 1050+ (参考 antdv)
+ */
+
+/* 重置所有容器层级为默认 */
+.vp-doc,
+.vp-doc > *,
+.demoblock-custom,
+.demo-block,
+.vp-demo {
+  position: relative;
+  z-index: auto;
+}
+
+/* ==================== 弹出层统一高层级 ==================== */
+
+/* 
+ * 参考 Ant Design Vue 的 z-index 设计：
+ * - 弹出层基础值: 1050
+ * - Modal: 1000
+ */
+
+/* 所有弹出层使用统一的高 z-index */
+.datetime-panel,
+.datetime-panel.panel-top,
+.datetime-panel.panel-bottom,
+.x-dropdown__menu,
+.x-search__results,
+.x-tooltips,
+.popconfirm-popup,
+[class*="__menu"],
+[class*="__dropdown"],
+[class*="__results"],
+[class*="__popup"],
+[class*="__popover"],
+[class*="__panel"] {
+  position: absolute !important;
+  z-index: 1050 !important;
+}
+
+/* Modal 更高 */
+.x-modal {
+  z-index: 1060 !important;
+}
+
+/* ==================== 弹出层背景（完全不透明）==================== */
+
+/* 日期选择器 */
+.datetime-panel,
+.datetime-panel.panel-top,
+.datetime-panel.panel-bottom {
+  background: #ffffff !important;
+  background-color: #ffffff !important;
+  opacity: 1 !important;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15) !important;
+  border: 1px solid #e5e7eb !important;
+}
+
+/* 移除透明效果 */
+.datetime-panel {
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+/* 内部容器背景 */
+.datetime-header,
+.datetime-mode-switch,
+.datetime-date-picker,
+.datetime-time-picker {
+  background: #ffffff !important;
+}
+
+/* 下拉菜单 */
+.x-dropdown__menu {
+  background: #ffffff !important;
+  background-color: #ffffff !important;
+  opacity: 1 !important;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15) !important;
+}
+
+/* 搜索结果 */
+.x-search__results {
+  background: #ffffff !important;
+  background-color: #ffffff !important;
+  opacity: 1 !important;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15) !important;
+}
+
+.x-search__result-item {
+  background: #ffffff !important;
+}
+
+/* ==================== 底部分页导航优化 ==================== */
+
+/* 分页导航容器 */
+.VPDocFooter {
+  margin-top: 64px;
+  padding-top: 32px;
+  border-top: 1px solid var(--vp-c-divider);
+}
+
+/* 分页导航布局 */
+.VPDocFooter .pager {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 16px;
+  max-width: 100%;
+}
+
+/* 上一页/下一页链接 */
+.VPDocFooter .pager-link {
+  flex: 0 1 auto;
+  max-width: 280px;
+  padding: 16px 20px;
+  border: 1px solid var(--vp-c-divider);
+  border-radius: 8px;
+  background: var(--vp-c-bg);
+  transition: all 0.3s ease;
+  text-decoration: none;
+}
+
+.VPDocFooter .pager-link:hover {
+  border-color: var(--vp-c-brand-1);
+  background: var(--vp-c-bg-soft);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+/* 链接文字样式 */
+.VPDocFooter .pager-link .desc {
+  font-size: 13px;
+  color: var(--vp-c-text-2);
+  margin-bottom: 4px;
+}
+
+.VPDocFooter .pager-link .title {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--vp-c-text-1);
+  line-height: 1.5;
+}
+
+/* 响应式 */
+@media (max-width: 768px) {
+  .VPDocFooter .pager {
+    flex-direction: column;
+    gap: 12px;
+  }
+  
+  .VPDocFooter .pager-link {
+    max-width: 100%;
+    width: 100%;
+  }
+}
+
+/* ==================== 暗色模式 ==================== */
+
+.dark .datetime-panel,
+.dark .datetime-panel.panel-top,
+.dark .datetime-panel.panel-bottom,
+.dark .datetime-header,
+.dark .datetime-mode-switch,
+.dark .datetime-date-picker,
+.dark .datetime-time-picker,
+.dark .x-dropdown__menu,
+.dark .x-search__results,
+.dark .x-search__result-item {
+  background: #1a1a1a !important;
+  background-color: #1a1a1a !important;
+  border-color: #333 !important;
 }

@@ -38,6 +38,8 @@ export { default as XTag } from './components/Tag/index.vue'
 export { default as XDivider } from './components/Divider/index.vue'
 export { default as XPopconfirm } from './components/Popconfirm/index.vue'
 export { default as XResult } from './components/Result/index.vue'
+export { default as XDropdown } from './components/Dropdown/index.vue'
+export { default as XSearch } from './components/Search/index.vue'
 // 导出 Composables
 export { xlMsg, default as useMsg } from './composables/Msg'
 export { xlAlert, default as useAlert } from './composables/Alert'
@@ -80,6 +82,8 @@ export type { TagProps } from './components/Tag/index.vue'
 export type { DividerProps } from './components/Divider/index.vue'
 export type { PopconfirmProps } from './components/Popconfirm/index.vue'
 export type { ResultProps } from './components/Result/index.vue'
+export type { DropdownProps } from './components/Dropdown/index.vue'
+export type { SearchProps } from './components/Search/index.vue'
 export type { DateTimeOptions, DateRange, CalendarDate } from './composables/DateTime'
 
 
