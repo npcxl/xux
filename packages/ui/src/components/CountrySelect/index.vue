@@ -3,58 +3,143 @@
       <div 
         @click="toggleDropdown"
         :class="[
-          'w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#1a1a1a] focus:border-[#1a1a1a] transition-colors duration-200 cursor-pointer bg-white flex items-center justify-between',
+          'w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#1a1a1a] focus:border-[#1a1a1a] transition-colors duration-200 cursor-pointer bg-white',
           customClass,
-          { 'opacity-60 cursor-not-allowed': disabled }
+          { 'opacity-60 cursor-not-allowed': disabled },
+          multiple ? 'min-h-[2.5rem]' : ''
         ]"
         :tabindex="disabled ? -1 : 0"
         @keydown.enter="toggleDropdown"
         @keydown.space="toggleDropdown"
         @keydown.escape="closeDropdown"
       >
-        <div class="flex items-center gap-2">
-          <img 
-            v-if="selectedCountry"
-            :src="selectedCountry.flagSvg"
-            :alt="selectedCountry.name"
-            class="w-5 h-4 object-cover rounded-sm"
-            @error="handleFlagError"
-          />
-          <span :class="{ 'text-gray-500': !selectedCountry && placeholder }">
-            {{ selectedCountry ? selectedCountry.name : (placeholder || '选择国家') }}
-          </span>
+        <!-- 单选模式 -->
+        <div v-if="!multiple" class="flex items-center justify-between">
+          <div class="flex items-center gap-2">
+            <img 
+              v-if="selectedCountry"
+              :src="selectedCountry.flagSvg"
+              :alt="selectedCountry.name"
+              class="w-5 h-4 object-cover rounded-sm"
+              @error="handleFlagError"
+            />
+            <span :class="{ 'text-gray-500': !selectedCountry && placeholder }">
+              {{ selectedCountry ? selectedCountry.name : (placeholder || '选择国家') }}
+            </span>
+          </div>
+          <svg 
+            class="w-5 h-5 text-gray-400 transition-transform duration-200"
+            :class="{ 'rotate-180': isOpen }"
+            fill="none" 
+            stroke="currentColor" 
+            viewBox="0 0 24 24"
+          >
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+          </svg>
         </div>
-        <svg 
-          class="w-5 h-5 text-gray-400 transition-transform duration-200"
-          :class="{ 'rotate-180': isOpen }"
-          fill="none" 
-          stroke="currentColor" 
-          viewBox="0 0 24 24"
-        >
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
-        </svg>
+
+        <!-- 多选模式 -->
+        <div v-else class="flex items-start justify-between gap-2">
+          <div class="flex-1 flex flex-wrap gap-1.5 min-h-[1.5rem]">
+            <template v-if="selectedCountries.length > 0">
+              <div 
+                v-for="country in selectedCountries" 
+                :key="country.code"
+                class="inline-flex items-center gap-1.5 px-2 py-0.5 bg-gray-100 hover:bg-gray-200 rounded text-sm transition-colors"
+                @click.stop
+              >
+                <img 
+                  :src="country.flagSvg"
+                  :alt="country.name"
+                  class="w-4 h-3 object-cover rounded-sm"
+                  @error="(e) => handleFlagError(e, country)"
+                />
+                <span>{{ country.name }}</span>
+                <svg 
+                  @click="removeCountry(country)"
+                  class="w-3.5 h-3.5 text-gray-500 hover:text-gray-700 cursor-pointer"
+                  fill="none" 
+                  stroke="currentColor" 
+                  viewBox="0 0 24 24"
+                >
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                </svg>
+              </div>
+            </template>
+            <span v-else class="text-gray-500 self-center">
+              {{ placeholder || '选择国家' }}
+            </span>
+          </div>
+          <svg 
+            class="w-5 h-5 text-gray-400 transition-transform duration-200 flex-shrink-0 mt-0.5"
+            :class="{ 'rotate-180': isOpen }"
+            fill="none" 
+            stroke="currentColor" 
+            viewBox="0 0 24 24"
+          >
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+          </svg>
+        </div>
       </div>
   
       <!-- Dropdown -->
       <div 
         v-if="isOpen && !disabled"
-        class="absolute z-[9999] w-full mt-1 bg-white border border-gray-300 rounded-md shadow-lg max-h-60 overflow-y-auto"
+        class="absolute z-[9999] w-full mt-1 bg-white border border-gray-300 rounded-md shadow-lg overflow-hidden"
         style="position: absolute;"
       >
-        <div 
-          v-for="country in sortedCountries" 
-          :key="country.code"
-          @click="selectCountry(country)"
-          class="px-3 py-2 hover:bg-gray-50 cursor-pointer flex items-center gap-2 transition-colors"
-          :class="{ 'bg-gray-100': selectedCountry?.code === country.code }"
-        >
-          <img 
-            :src="country.flagSvg"
-            :alt="country.name"
-            class="w-5 h-4 object-cover rounded-sm flex-shrink-0"
-            @error="(e) => handleFlagError(e, country)"
-          />
-          <span>{{ country.name }}</span>
+        <!-- 多选模式：操作栏 -->
+        <div v-if="multiple && selectedCountries.length > 0" class="px-3 py-2 bg-gray-50 border-b border-gray-200 flex items-center justify-between">
+          <span class="text-xs text-gray-600">
+            已选择 {{ selectedCountries.length }} 个国家
+            <span v-if="maxSelection > 0"> / {{ maxSelection }}</span>
+          </span>
+          <button 
+            @click.stop="clearAll"
+            class="text-xs text-red-500 hover:text-red-700 transition-colors"
+          >
+            清除全部
+          </button>
+        </div>
+
+        <!-- 国家列表 -->
+        <div class="max-h-60 overflow-y-auto">
+          <div 
+            v-for="country in sortedCountries" 
+            :key="country.code"
+            @click="selectCountry(country)"
+            class="px-3 py-2 hover:bg-gray-50 cursor-pointer flex items-center gap-2 transition-colors"
+            :class="{ 
+              'bg-blue-50': isCountrySelected(country),
+              'opacity-50 cursor-not-allowed': multiple && maxSelection > 0 && !isCountrySelected(country) && selectedCountries.length >= maxSelection
+            }"
+          >
+            <!-- 多选模式：复选框 -->
+            <div v-if="multiple" class="flex items-center">
+              <div 
+                class="w-4 h-4 border-2 rounded flex items-center justify-center transition-all"
+                :class="isCountrySelected(country) ? 'bg-blue-500 border-blue-500' : 'border-gray-300'"
+              >
+                <svg 
+                  v-if="isCountrySelected(country)"
+                  class="w-3 h-3 text-white"
+                  fill="none" 
+                  stroke="currentColor" 
+                  viewBox="0 0 24 24"
+                >
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/>
+                </svg>
+              </div>
+            </div>
+
+            <img 
+              :src="country.flagSvg"
+              :alt="country.name"
+              class="w-5 h-4 object-cover rounded-sm flex-shrink-0"
+              @error="(e) => handleFlagError(e, country)"
+            />
+            <span>{{ country.name }}</span>
+          </div>
         </div>
       </div>
   
@@ -84,7 +169,7 @@
   }
   
   export interface CountrySelectProps {
-    modelValue?: string
+    modelValue?: string | string[]
     placeholder?: string
     disabled?: boolean
     required?: boolean
@@ -96,10 +181,11 @@
     ipDetectMethod?: 'GET' | 'POST' // 请求方法
     ipDetectHeaders?: Record<string, string> // 自定义请求头
     ipDetectResponseParser?: (data: any) => string // 自定义响应解析函数，返回国家代码
+    multiple?: boolean // 是否支持多选
+    maxSelection?: number // 最大选择数量，0表示无限制
   }
   
   const props = withDefaults(defineProps<CountrySelectProps>(), {
-    modelValue: '',
     placeholder: '',
     disabled: false,
     required: false,
@@ -108,12 +194,14 @@
     returnType: 'name',
     priorityCountries: () => ['US', 'CA', 'GB', 'DE', 'FR', 'JP', 'CN', 'AU'],
     ipDetectUrl: 'https://ipinfo.io/json',
-    ipDetectMethod: 'GET'
+    ipDetectMethod: 'GET',
+    multiple: false,
+    maxSelection: 0
   })
   
   const emit = defineEmits<{
-    'update:modelValue': [value: string]
-    'change': [value: string, country: Country]
+    'update:modelValue': [value: string | string[]]
+    'change': [value: string | string[], country: Country | Country[]]
     'ip-detect-start': [] // IP检测开始
     'ip-detect-success': [countryCode: string] // IP检测成功
     'ip-detect-error': [error: Error] // IP检测失败
@@ -128,10 +216,29 @@
   // 当前选中的国家
   const selectedCountry = computed(() => {
     if (!props.modelValue) return null
+    if (props.multiple) return null // 多选模式不使用此属性
+    const value = props.modelValue as string
     return allCountries.value.find(country => 
-      props.returnType === 'code' ? country.code === props.modelValue : country.name === props.modelValue
+      props.returnType === 'code' ? country.code === value : country.name === value
     )
   })
+
+  // 多选模式下选中的国家列表
+  const selectedCountries = computed(() => {
+    if (!props.multiple || !props.modelValue) return []
+    const values = Array.isArray(props.modelValue) ? props.modelValue : [props.modelValue]
+    return allCountries.value.filter(country => 
+      values.includes(props.returnType === 'code' ? country.code : country.name)
+    )
+  })
+
+  // 检查国家是否已选中
+  const isCountrySelected = (country: Country) => {
+    if (!props.multiple) {
+      return selectedCountry.value?.code === country.code
+    }
+    return selectedCountries.value.some(c => c.code === country.code)
+  }
   
   // 排序后的国家列表（优先国家在前）
   const sortedCountries = computed(() => {
@@ -166,14 +273,64 @@
   }
   
   const selectCountry = (country: Country | null) => {
-    if (country) {
-      const value = props.returnType === 'code' ? country.code : country.name
-      emit('update:modelValue', value)
-      emit('change', value, country)
-    } else {
-      emit('update:modelValue', '')
+    if (!country) {
+      emit('update:modelValue', props.multiple ? [] : '')
+      closeDropdown()
+      return
     }
-    closeDropdown()
+
+    const countryValue = props.returnType === 'code' ? country.code : country.name
+
+    if (!props.multiple) {
+      // 单选模式
+      emit('update:modelValue', countryValue)
+      emit('change', countryValue, country)
+      closeDropdown()
+    } else {
+      // 多选模式
+      const currentValues = Array.isArray(props.modelValue) ? [...props.modelValue] : []
+      const index = currentValues.indexOf(countryValue)
+      
+      if (index > -1) {
+        // 已选中，取消选择
+        currentValues.splice(index, 1)
+      } else {
+        // 未选中，添加选择
+        if (props.maxSelection === 0 || currentValues.length < props.maxSelection) {
+          currentValues.push(countryValue)
+        } else {
+          // 达到最大选择数
+          return
+        }
+      }
+      
+      emit('update:modelValue', currentValues)
+      emit('change', currentValues, selectedCountries.value)
+      // 多选模式不关闭下拉框
+    }
+  }
+
+  // 清除所有选择
+  const clearAll = () => {
+    emit('update:modelValue', props.multiple ? [] : '')
+    if (!props.multiple) {
+      closeDropdown()
+    }
+  }
+
+  // 移除单个已选国家
+  const removeCountry = (country: Country) => {
+    if (!props.multiple) return
+    
+    const currentValues = Array.isArray(props.modelValue) ? [...props.modelValue] : []
+    const countryValue = props.returnType === 'code' ? country.code : country.name
+    const index = currentValues.indexOf(countryValue)
+    
+    if (index > -1) {
+      currentValues.splice(index, 1)
+      emit('update:modelValue', currentValues)
+      emit('change', currentValues, selectedCountries.value)
+    }
   }
   
   // 图片错误处理：SVG失败时切换到PNG
@@ -303,8 +460,10 @@
   // 暴露方法给父组件
   defineExpose({
     detectCountryFromIp,
+    clearAll,
     allCountries: readonly(allCountries),
-    sortedCountries: readonly(sortedCountries)
+    sortedCountries: readonly(sortedCountries),
+    selectedCountries: readonly(selectedCountries)
   })
   </script>
   
