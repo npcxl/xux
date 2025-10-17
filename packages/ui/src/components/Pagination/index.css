@@ -1,0 +1,89 @@
+/* Pagination 分页器样式 */
+.x-pagination-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 20px;
+  background-color: #fff;
+  border-radius: 12px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+}
+
+/* 左侧信息 */
+.x-pagination-info {
+  font-size: 14px;
+  color: #6b7280;
+}
+
+.x-pagination-info-number {
+  font-weight: 600;
+  color: #111827;
+}
+
+/* 右侧控制区 */
+.x-pagination-controls {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* 页码区域 */
+.x-pagination-pages {
+  display: flex;
+  gap: 6px;
+  margin: 0 4px;
+}
+
+/* 分隔线 */
+.x-pagination-divider {
+  width: 1px;
+  height: 24px;
+  background-color: #e5e7eb;
+  margin: 0 8px;
+}
+
+/* 快速跳转区 */
+.x-pagination-jumper-label {
+  font-size: 14px;
+  color: #6b7280;
+}
+
+/* 跳转输入框 */
+.x-pagination-jump-input {
+  width: 64px;
+  height: 32px;
+  padding: 0 8px;
+  font-size: 14px;
+  text-align: center;
+  color: #1a1a1a;
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 6px;
+  outline: none;
+  transition: all 0.2s ease;
+}
+
+.x-pagination-jump-input:hover {
+  border-color: #1a1a1a;
+}
+
+.x-pagination-jump-input:focus {
+  border-color: #1a1a1a;
+  box-shadow: 0 0 0 3px rgba(26, 26, 26, 0.1);
+}
+
+.x-pagination-jump-input::placeholder {
+  color: #9ca3af;
+}
+
+/* 移除数字输入框的上下箭头 */
+.x-pagination-jump-input::-webkit-inner-spin-button,
+.x-pagination-jump-input::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.x-pagination-jump-input[type="number"] {
+  -moz-appearance: textfield;
+}
+

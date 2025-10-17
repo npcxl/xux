@@ -1,0 +1,152 @@
+/* Tree 树形控件样式 */
+.x-tree-container {
+  width: 100%;
+}
+
+/* TreeNode 节点样式 */
+.x-tree-node-row {
+  display: flex;
+  align-items: center;
+  padding: 4px 8px;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: background-color 0.2s;
+}
+
+.x-tree-node-row:hover {
+  background-color: #f3f4f6;
+}
+
+.x-tree-node-row.is-selected {
+  background-color: #eff6ff;
+}
+
+/* 暗黑模式支持 */
+:global(.dark) .x-tree-node-row:hover {
+  background-color: rgba(31, 41, 55, 0.8);
+}
+
+:global(.dark) .x-tree-node-row.is-selected {
+  background-color: rgba(30, 64, 175, 0.2);
+}
+
+/* 展开/收起图标容器 */
+.x-tree-expand-icon {
+  width: 16px;
+  height: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 4px;
+  flex-shrink: 0;
+  transition: transform 0.2s;
+}
+
+.x-tree-expand-icon.is-expanded {
+  transform: rotate(90deg);
+}
+
+.x-tree-expand-icon-placeholder {
+  width: 16px;
+  margin-right: 4px;
+  flex-shrink: 0;
+}
+
+/* 加载图标 */
+.x-tree-loading-icon {
+  color: #3b82f6;
+}
+
+/* 展开箭头图标 */
+.x-tree-chevron-icon {
+  color: #6b7280;
+  transition: transform 0.2s;
+}
+
+/* 复选框容器 */
+.x-tree-checkbox-wrapper {
+  display: flex;
+  align-items: center;
+  margin-right: 8px;
+  flex-shrink: 0;
+}
+
+/* 复选框 */
+.x-tree-checkbox {
+  width: 16px;
+  height: 16px;
+  border-radius: 4px;
+  border: 1px solid;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.15s;
+}
+
+.x-tree-checkbox.is-checked,
+.x-tree-checkbox.is-indeterminate {
+  border-color: #1a1a1a;
+}
+
+.x-tree-checkbox:not(.is-checked):not(.is-indeterminate) {
+  border-color: #d1d5db;
+  background-color: #fff;
+}
+
+/* 复选框图标 */
+.x-tree-checkbox-icon {
+  color: #1a1a1a;
+  font-size: 12px;
+  font-weight: bold;
+}
+
+/* 半选状态横线 */
+.x-tree-checkbox-minus {
+  width: 10px;
+  height: 2px;
+  background-color: #1a1a1a;
+  border-radius: 1px;
+}
+
+/* 节点图标 */
+.x-tree-node-icon {
+  width: 16px;
+  height: 16px;
+  margin-right: 8px;
+  color: #6b7280;
+}
+
+:global(.dark) .x-tree-node-icon {
+  color: #9ca3af;
+}
+
+/* 节点标题 */
+.x-tree-node-title {
+  font-size: 14px;
+  color: #111827;
+  flex: 1;
+}
+
+:global(.dark) .x-tree-node-title {
+  color: #f3f4f6;
+}
+
+/* 展开/收起动画 */
+.tree-expand-enter-active,
+.tree-expand-leave-active {
+  transition: all 0.2s ease;
+  overflow: hidden;
+}
+
+.tree-expand-enter-from,
+.tree-expand-leave-to {
+  opacity: 0;
+  max-height: 0;
+}
+
+.tree-expand-enter-to,
+.tree-expand-leave-from {
+  opacity: 1;
+  max-height: 1000px;
+}
+

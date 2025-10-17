@@ -1,5 +1,5 @@
 <template>
-  <div class="w-full">
+  <div class="x-tree-container">
     <TreeNode
       v-for="node in treeData"
       :key="node.key"
@@ -29,6 +29,7 @@
 </template>
 
 <script setup lang="ts">
+import './index.css'
 import { ref } from 'vue'
 // @ts-ignore - Vue SFC type inference issue
 import TreeNode from './TreeNode.vue'

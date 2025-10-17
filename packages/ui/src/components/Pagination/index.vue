@@ -1,15 +1,15 @@
 <template>
-  <div class="flex items-center justify-between px-5 py-4 bg-white rounded-xl shadow-sm">
+  <div class="x-pagination-container">
     <!-- 左侧信息 -->
-    <div class="text-sm text-gray-600">
+    <div class="x-pagination-info">
       <slot name="info">
-        共 <span class="font-semibold text-gray-900">{{ total }}</span> 条，
-        当前第 <span class="font-semibold text-gray-900">{{ current }}</span>/{{ totalPages }} 页
+        共 <span class="x-pagination-info-number">{{ total }}</span> 条，
+        当前第 <span class="x-pagination-info-number">{{ current }}</span>/{{ totalPages }} 页
       </slot>
     </div>
 
     <!-- 右侧控制 -->
-    <div class="flex items-center gap-2">
+    <div class="x-pagination-controls">
       <!-- 首页 -->
       <XButton
         size="small"
@@ -29,7 +29,7 @@
       </XButton>
       
       <!-- 页码 -->
-      <div class="flex gap-1.5 mx-1">
+      <div class="x-pagination-pages">
         <XButton
           v-for="page in pages"
           :key="page"
@@ -61,7 +61,7 @@
       </XButton>
 
       <!-- 分隔线 -->
-      <div class="w-px h-6 bg-gray-200 mx-2"></div>
+      <div class="x-pagination-divider"></div>
 
       <!-- 每页条数 -->
       <XSelect
@@ -73,18 +73,18 @@
       
       <!-- 快速跳转 -->
       <template v-if="showQuickJumper">
-        <div class="w-px h-6 bg-gray-200 mx-2"></div>
-        <span class="text-sm text-gray-600">跳至</span>
+        <div class="x-pagination-divider"></div>
+        <span class="x-pagination-jumper-label">跳至</span>
         <input
           v-model.number="jumpPage"
           type="number"
-          class="jump-input"
+          class="x-pagination-jump-input"
           placeholder="页码"
           :min="1"
           :max="totalPages"
           @keyup.enter="handleQuickJump"
         />
-        <span class="text-sm text-gray-600">页</span>
+        <span class="x-pagination-jumper-label">页</span>
         <XButton
           size="small"
           @click="handleQuickJump"
@@ -97,6 +97,7 @@
 </template>
 
 <script setup lang="ts">
+import './index.css'
 import { ref, computed, watch } from 'vue'
 import { Icon } from '@iconify/vue'
 import XButton from '../Button/index.vue'
@@ -205,42 +206,3 @@ watch(() => props.pageSize, (val) => {
   internalPageSize.value = val
 })
 </script>
-
-<style scoped>
-.jump-input {
-  width: 64px;
-  height: 32px;
-  padding: 0 8px;
-  font-size: 14px;
-  text-align: center;
-  color: #1a1a1a;
-  background: #fff;
-  border: 1px solid #e5e7eb;
-  border-radius: 6px;
-  outline: none;
-  transition: all 0.2s ease;
-}
-
-.jump-input:hover {
-  border-color: #1a1a1a;
-}
-
-.jump-input:focus {
-  border-color: #1a1a1a;
-  box-shadow: 0 0 0 3px rgba(26, 26, 26, 0.1);
-}
-
-.jump-input::placeholder {
-  color: #9ca3af;
-}
-
-.jump-input::-webkit-inner-spin-button,
-.jump-input::-webkit-outer-spin-button {
-  -webkit-appearance: none;
-  margin: 0;
-}
-
-.jump-input[type="number"] {
-  -moz-appearance: textfield;
-}
-</style>
