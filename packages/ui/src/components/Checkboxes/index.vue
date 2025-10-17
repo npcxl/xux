@@ -33,13 +33,18 @@
             </svg>
           </div>
         </div>
-        <span class="option-label">{{ option.label }}</span>
+        <div class="option-content">
+          <Icon v-if="option.icon" :icon="option.icon" class="option-icon" />
+          <span class="option-label">{{ option.label }}</span>
+        </div>
       </div>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
+import { Icon } from '@iconify/vue'
+
 /**
  * Checkboxes 多选框组件
  * @displayName XCheckboxes
@@ -48,6 +53,7 @@
 export interface CheckboxOption {
   value: string | number
   label: string
+  icon?: string
   disabled?: boolean
 }
 
@@ -504,6 +510,21 @@ defineExpose({
   animation: checkBounce 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) 0.1s;
 }
 
+.option-content {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex: 1;
+}
+
+.option-icon {
+  width: 16px;
+  height: 16px;
+  color: #6b7280;
+  transition: all 0.3s ease;
+  flex-shrink: 0;
+}
+
 .option-label {
   font-size: 14px;
   color: #374151;
@@ -517,8 +538,17 @@ defineExpose({
   font-weight: 600;
 }
 
+.option-selected .option-icon {
+  color: #1a1a1a;
+}
+
 .option-item:hover:not(.option-disabled) .option-label {
   color: #1a1a1a;
+}
+
+.option-item:hover:not(.option-disabled) .option-icon {
+  color: #1a1a1a;
+  transform: scale(1.1);
 }
 
 /* 响应式设计 */
