@@ -30,20 +30,20 @@
           <path d="M32 28v16M32 20v4" stroke="#3b82f6" stroke-width="3" stroke-linecap="round"/>
         </svg>
         
-        <!-- 404 Icon -->
-        <svg v-else-if="status === '404'" viewBox="0 0 120 64" width="120" height="64">
-          <text x="60" y="48" font-size="48" font-weight="bold" fill="#9ca3af" text-anchor="middle">404</text>
-        </svg>
+        <!-- 404 状态码 -->
+        <div v-else-if="status === '404'" class="result-status-code status-404">
+          404
+        </div>
         
-        <!-- 403 Icon -->
-        <svg v-else-if="status === '403'" viewBox="0 0 120 64" width="120" height="64">
-          <text x="60" y="48" font-size="48" font-weight="bold" fill="#9ca3af" text-anchor="middle">403</text>
-        </svg>
+        <!-- 403 状态码 -->
+        <div v-else-if="status === '403'" class="result-status-code status-403">
+          403
+        </div>
         
-        <!-- 500 Icon -->
-        <svg v-else-if="status === '500'" viewBox="0 0 120 64" width="120" height="64">
-          <text x="60" y="48" font-size="48" font-weight="bold" fill="#9ca3af" text-anchor="middle">500</text>
-        </svg>
+        <!-- 500 状态码 -->
+        <div v-else-if="status === '500'" class="result-status-code status-500">
+          500
+        </div>
       </slot>
     </div>
     
@@ -88,6 +88,25 @@ withDefaults(defineProps<ResultProps>(), {
     
     svg {
       display: block;
+    }
+    
+    .result-status-code {
+      font-size: 72px;
+      font-weight: 700;
+      line-height: 1;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    }
+    
+    .status-404 {
+      color: #6b7280;
+    }
+    
+    .status-403 {
+      color: #f59e0b;
+    }
+    
+    .status-500 {
+      color: #ef4444;
     }
   }
   

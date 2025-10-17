@@ -2,24 +2,37 @@
 
 按钮用于触发一个操作，是用户和系统交互的基础组件。
 
+<div style="columns: 2; column-gap: 32px; margin-top: 32px;">
+
+<div style="break-inside: avoid; margin-bottom: 24px;">
+
 ## 基础用法
 
-基本的按钮用法，包含默认、主要、成功、警告和危险五种类型。
+基本的按钮用法。
 
 :::demo
 
 ```vue
 <template>
-  <div class="flex gap-3 ">
-    <XButton  type="primary">主要按钮</XButton>
+  <XFlex gap="12" wrap="wrap">
+    <XButton>默认按钮</XButton>
+    <XButton type="primary">主要按钮</XButton>
     <XButton type="success">成功按钮</XButton>
     <XButton type="warning">警告按钮</XButton>
     <XButton type="danger">危险按钮</XButton>
-  </div>
+  </XFlex>
 </template>
+
+<script setup>
+import { XFlex, XButton } from '@xlui/xux-ui'
+</script>
 ```
 
 :::
+
+</div>
+
+<div style="break-inside: avoid; margin-bottom: 24px;">
 
 ## 带图标的按钮
 
@@ -29,17 +42,52 @@
 
 ```vue
 <template>
-  <div class="flex gap-3 flex-wrap">
+  <XFlex gap="12" wrap="wrap">
     <XButton type="primary" icon="mdi:cart">加入购物车</XButton>
     <XButton type="success" icon="mdi:check">确认</XButton>
     <XButton type="warning" icon="mdi:alert">警告</XButton>
     <XButton type="danger" icon="mdi:delete">删除</XButton>
     <XButton icon="mdi:search">搜索</XButton>
-  </div>
+  </XFlex>
 </template>
+
+<script setup>
+import { XFlex, XButton } from '@xlui/xux-ui'
+</script>
 ```
 
 :::
+
+</div>
+
+<div style="break-inside: avoid; margin-bottom: 24px;">
+
+## 幽灵按钮
+
+透明背景，只有边框和文字。
+
+:::demo
+
+```vue
+<template>
+  <XFlex gap="12" wrap="wrap">
+    <XButton type="primary" ghost>主要按钮</XButton>
+    <XButton type="success" ghost>成功按钮</XButton>
+    <XButton type="warning" ghost>警告按钮</XButton>
+    <XButton type="danger" ghost>危险按钮</XButton>
+  </XFlex>
+</template>
+
+<script setup>
+import { XFlex, XButton } from '@xlui/xux-ui'
+</script>
+```
+
+:::
+
+</div>
+
+<div style="break-inside: avoid; margin-bottom: 24px;">
 
 ## 右侧图标
 
@@ -49,144 +97,181 @@
 
 ```vue
 <template>
-  <div class="flex gap-3">
+  <XFlex gap="12" wrap="wrap">
     <XButton type="primary" icon-right="mdi:arrow-right">下一步</XButton>
     <XButton type="primary" icon-right="mdi:download">下载</XButton>
     <XButton icon-right="mdi:chevron-down">展开</XButton>
-  </div>
+  </XFlex>
 </template>
+
+<script setup>
+import { XFlex, XButton } from '@xlui/xux-ui'
+</script>
 ```
 
 :::
 
-## 幽灵按钮
+</div>
 
-幽灵按钮通过 `ghost` 属性来设置，背景透明，只有边框和文字，常用于页面中的次要操作。
+<div style="break-inside: avoid; margin-bottom: 24px;">
+
+## 文字按钮
+
+没有边框和背景色的按钮。
 
 :::demo
 
 ```vue
 <template>
-  <div class="flex gap-3">
-    <XButton type="primary" ghost>主要按钮</XButton>
-    <XButton type="success" ghost>成功按钮</XButton>
-    <XButton type="warning" ghost>警告按钮</XButton>
-    <XButton type="danger" ghost>危险按钮</XButton>
-  </div>
+  <XFlex gap="12">
+    <XButton type="text">文字按钮</XButton>
+    <XButton type="text" icon="mdi:link">链接</XButton>
+    <XButton type="text" disabled>禁用按钮</XButton>
+  </XFlex>
 </template>
+
+<script setup>
+import { XFlex, XButton } from '@xlui/xux-ui'
+</script>
 ```
 
 :::
+
+</div>
+
+<div style="break-inside: avoid; margin-bottom: 24px;">
 
 ## 圆角按钮
 
-通过 `round` 属性来设置圆角按钮。
+通过 `round` 属性设置圆角按钮。
 
 :::demo
 
 ```vue
 <template>
-  <div class="flex gap-3">
+  <XFlex gap="12" wrap="wrap">
     <XButton type="primary" round icon="mdi:heart">收藏</XButton>
     <XButton type="success" round>成功按钮</XButton>
     <XButton type="warning" round>警告按钮</XButton>
     <XButton type="danger" round>危险按钮</XButton>
-  </div>
+  </XFlex>
 </template>
+
+<script setup>
+import { XFlex, XButton } from '@xlui/xux-ui'
+</script>
 ```
 
 :::
 
-## 文字按钮
+</div>
 
-没有边框和背景色的按钮，通常用于弱化操作。
-
-:::demo
-
-```vue
-<template>
-  <div class="flex gap-3">
-    <XButton type="text">文字按钮</XButton>
-    <XButton type="text" icon="mdi:link">链接</XButton>
-    <XButton type="text" disabled>禁用按钮</XButton>
-  </div>
-</template>
-```
-
-:::
+<div style="break-inside: avoid; margin-bottom: 24px;">
 
 ## 禁用状态
 
-按钮的禁用状态，通过 `disabled` 属性实现。
+按钮的禁用状态。
 
 :::demo
 
 ```vue
 <template>
-  <div class="flex gap-3 flex-wrap">
+  <XFlex gap="12" wrap="wrap">
     <XButton disabled>默认按钮</XButton>
     <XButton type="primary" disabled>主要按钮</XButton>
     <XButton type="success" disabled>成功按钮</XButton>
     <XButton type="warning" disabled>警告按钮</XButton>
     <XButton type="danger" disabled>危险按钮</XButton>
-  </div>
+  </XFlex>
 </template>
+
+<script setup>
+import { XFlex, XButton } from '@xlui/xux-ui'
+</script>
 ```
 
 :::
+
+</div>
+
+<div style="break-inside: avoid; margin-bottom: 24px;">
 
 ## 加载状态
 
-点击按钮后进行数据加载操作，在按钮上显示加载状态。
+点击按钮后显示加载状态。
 
 :::demo
 
 ```vue
 <template>
-  <div class="flex gap-3">
+  <XFlex gap="12">
     <XButton type="primary" loading>加载中</XButton>
     <XButton type="success" loading>加载中</XButton>
     <XButton type="warning" loading>加载中</XButton>
-  </div>
+  </XFlex>
 </template>
+
+<script setup>
+import { XFlex, XButton } from '@xlui/xux-ui'
+</script>
 ```
 
 :::
+
+</div>
+
+<div style="break-inside: avoid; margin-bottom: 24px;">
 
 ## 不同尺寸
 
-Button 组件提供三种尺寸，可以在不同场景下使用。
+提供三种尺寸。
 
 :::demo
 
 ```vue
 <template>
-  <div class="flex gap-3 items-center">
-    <XButton type="primary" size="small" icon="mdi:cart">小型按钮</XButton>
-    <XButton type="primary" icon="mdi:cart">默认按钮</XButton>
-    <XButton type="primary" size="large" icon="mdi:cart">大型按钮</XButton>
-  </div>
+  <XFlex gap="12" align="center">
+    <XButton type="primary" size="small" icon="mdi:cart">小型</XButton>
+    <XButton type="primary" icon="mdi:cart">默认</XButton>
+    <XButton type="primary" size="large" icon="mdi:cart">大型</XButton>
+  </XFlex>
 </template>
+
+<script setup>
+import { XFlex, XButton } from '@xlui/xux-ui'
+</script>
 ```
 
 :::
+
+</div>
+
+<div style="break-inside: avoid; margin-bottom: 24px;">
 
 ## 块级按钮
 
-`block` 属性将使按钮适合其父宽度。
+`block` 属性使按钮适合父宽度。
 
 :::demo
 
 ```vue
 <template>
-  <div class="flex flex-col gap-3">
+  <XFlex vertical gap="12">
     <XButton type="primary" block icon="mdi:cart">立即购买</XButton>
     <XButton type="success" block icon="mdi:check">确认订单</XButton>
-  </div>
+  </XFlex>
 </template>
+
+<script setup>
+import { XFlex, XButton } from '@xlui/xux-ui'
+</script>
 ```
 
 :::
+
+</div>
+
+</div>
 
 ## 电商场景示例
 
@@ -196,20 +281,24 @@ Button 组件提供三种尺寸，可以在不同场景下使用。
 
 ```vue
 <template>
-  <div class="flex flex-col gap-4">
-    <div class="flex gap-3">
+  <XFlex vertical gap="16">
+    <XFlex gap="12">
       <XButton type="primary" icon="mdi:cart">加入购物车</XButton>
       <XButton type="danger" ghost icon="mdi:heart">收藏</XButton>
-    </div>
-    <div class="flex gap-3">
+    </XFlex>
+    <XFlex gap="12">
       <XButton type="primary" block icon="mdi:shopping">立即购买</XButton>
-    </div>
-    <div class="flex gap-3">
+    </XFlex>
+    <XFlex gap="12">
       <XButton type="success" icon="mdi:check-circle">确认付款</XButton>
       <XButton icon="mdi:close">取消</XButton>
-    </div>
-  </div>
+    </XFlex>
+  </XFlex>
 </template>
+
+<script setup>
+import { XFlex, XButton } from '@xlui/xux-ui'
+</script>
 ```
 
 :::
@@ -241,90 +330,3 @@ Button 组件提供三种尺寸，可以在不同场景下使用。
 | 插槽名 | 说明 |
 | --- | --- |
 | default | 按钮内容 |
-
-## 贡献者
-
-<div class="contributors">
-  <div class="contributor-item">
-    <a href="https://gitee.com/leheya" target="_blank" rel="noopener noreferrer">
-      <img 
-        src="https://foruda.gitee.com/avatar/1751620424517657404/10604783_leheya_1751620424.png!avatar200" 
-        alt="leheya"
-        class="contributor-avatar"
-      />
-      <span class="contributor-name">无敌暴龙神</span>
-    </a>
-  </div>
-  <!-- <div class="contributor-item">
-    <a href="https://gitee.com/haijun-li" target="_blank" rel="noopener noreferrer">
-      <img 
-        src="https://p3.itc.cn/images01/20230307/e9d72e3788844ed1a9259e442899e1bd.png" 
-        alt="lihaijun"
-        class="contributor-avatar"
-      />
-      <span class="contributor-name">lihaijun</span>
-    </a>
-  </div> -->
-</div>
-
-<style scoped>
-.contributors {
-  display: flex;
-  gap: 24px;
-  margin: 24px 0;
-  flex-wrap: wrap;
-}
-
-.contributor-item a {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  text-decoration: none;
-  color: inherit;
-  transition: transform 0.2s ease;
-}
-
-.contributor-item a:hover {
-  transform: translateY(-2px);
-}
-
-.contributor-avatar {
-  width: 80px;
-  height: 80px;
-  border-radius: 50%;
-  border: 3px solid var(--vp-c-border);
-  transition: border-color 0.2s ease;
-  object-fit: cover;
-}
-
-.contributor-item a:hover .contributor-avatar {
-  border-color: var(--vp-c-brand-1);
-}
-
-.contributor-name {
-  margin-top: 8px;
-  font-size: 14px;
-  font-weight: 500;
-  color: var(--vp-c-text-2);
-  transition: color 0.2s ease;
-}
-
-.contributor-item a:hover .contributor-name {
-  color: var(--vp-c-brand-1);
-}
-
-@media (max-width: 768px) {
-  .contributors {
-    gap: 16px;
-  }
-  
-  .contributor-avatar {
-    width: 60px;
-    height: 60px;
-  }
-  
-  .contributor-name {
-    font-size: 12px;
-  }
-}
-</style>

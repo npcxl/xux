@@ -196,8 +196,20 @@ const handleChange = (value: string | number) => {
   align-items: center;
   gap: 0.75rem;
   padding: 0.5rem 0;
-  transition: all 0.2s ease;
+  transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  animation: radioSlideIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) backwards;
 }
+
+.x-radio-item:nth-child(1) { animation-delay: 0.03s; }
+.x-radio-item:nth-child(2) { animation-delay: 0.06s; }
+.x-radio-item:nth-child(3) { animation-delay: 0.09s; }
+.x-radio-item:nth-child(4) { animation-delay: 0.12s; }
+.x-radio-item:nth-child(5) { animation-delay: 0.15s; }
+.x-radio-item:nth-child(6) { animation-delay: 0.18s; }
+.x-radio-item:nth-child(7) { animation-delay: 0.21s; }
+.x-radio-item:nth-child(8) { animation-delay: 0.24s; }
+.x-radio-item:nth-child(9) { animation-delay: 0.27s; }
+.x-radio-item:nth-child(10) { animation-delay: 0.30s; }
 
 /* 列表模式样式 */
 .radio-list .x-radio-item {
@@ -206,17 +218,35 @@ const handleChange = (value: string | number) => {
   padding: 1rem;
   background-color: #ffffff;
   margin-bottom: 0.5rem;
+  position: relative;
+  overflow: hidden;
+  
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(26, 26, 26, 0.02), transparent);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
 }
 
 .radio-list .x-radio-item:hover {
   border-color: #1a1a1a;
   background-color: #f9fafb;
+  transform: translateY(-2px) scale(1.01);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  
+  &::before {
+    opacity: 1;
+  }
 }
 
 .radio-list .x-radio-item.radio-item-checked {
   border-color: #1a1a1a;
-  background-color: #f3f4f6;
-  box-shadow: 0 0 0 1px #1a1a1a;
+  background: linear-gradient(135deg, #fafafa, #f3f4f6);
+  box-shadow: 0 0 0 2px rgba(26, 26, 26, 0.15), 0 4px 12px rgba(26, 26, 26, 0.1);
+  animation: radioPulse 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
 .radio-list .x-radio-item.radio-item-disabled {
@@ -229,19 +259,28 @@ const handleChange = (value: string | number) => {
 .radio-list .x-radio-item.radio-item-disabled:hover {
   border-color: #e5e7eb;
   background-color: #f9fafb;
+  transform: none;
+  box-shadow: none;
 }
 
 .x-radio-item:hover .radio-button {
   border-color: #1a1a1a;
+  transform: scale(1.15) rotate(10deg);
+  box-shadow: 0 0 0 4px rgba(26, 26, 26, 0.08);
 }
 
 .x-radio-item.radio-item-checked .radio-button {
   border-color: #1a1a1a;
+  background: linear-gradient(135deg, #1a1a1a, #333);
+  animation: radioBtnPop 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+  box-shadow: 0 0 0 4px rgba(26, 26, 26, 0.12), 0 2px 8px rgba(26, 26, 26, 0.15);
 }
 
 .x-radio-item.radio-item-checked .radio-button-inner {
-  background-color: #1a1a1a;
+  background-color: #ffffff;
   transform: translate(-50%, -50%) scale(1);
+  animation: radioDotBounce 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) 0.1s;
+  box-shadow: 0 0 4px rgba(255, 255, 255, 0.8);
 }
 
 .x-radio-item.radio-item-disabled {
@@ -251,6 +290,8 @@ const handleChange = (value: string | number) => {
 
 .x-radio-item.radio-item-disabled:hover .radio-button {
   border-color: #d1d5db;
+  transform: none;
+  box-shadow: none;
 }
 
 .radio-input {
@@ -266,8 +307,25 @@ const handleChange = (value: string | number) => {
   border: 2px solid #d1d5db;
   border-radius: 50%;
   background-color: #ffffff;
-  transition: all 0.2s ease;
+  transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
   flex-shrink: 0;
+  
+  &::before {
+    content: '';
+    position: absolute;
+    inset: -6px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(26, 26, 26, 0.1), transparent);
+    opacity: 0;
+    transform: scale(0);
+    transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+}
+
+.x-radio-item.radio-item-checked .radio-button::before {
+  opacity: 1;
+  transform: scale(1);
+  animation: radioRipple 0.6s ease-out;
 }
 
 .radio-button-inner {
@@ -279,7 +337,7 @@ const handleChange = (value: string | number) => {
   background-color: transparent;
   border-radius: 50%;
   transform: translate(-50%, -50%) scale(0);
-  transition: all 0.2s ease;
+  transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
 .radio-content {
@@ -296,11 +354,16 @@ const handleChange = (value: string | number) => {
   width: 1.5rem;
   height: 1.5rem;
   color: #6b7280;
-  transition: color 0.2s ease;
+  transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.x-radio-item:hover .radio-icon {
+  transform: scale(1.1) rotate(5deg);
 }
 
 .radio-item-checked .radio-icon {
   color: #1a1a1a;
+  animation: iconPop 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
 .radio-text {
@@ -311,14 +374,20 @@ const handleChange = (value: string | number) => {
 .radio-label {
   font-weight: 500;
   color: #1a1a1a;
-  transition: color 0.2s ease;
+  transition: all 0.3s ease;
   font-size: 0.875rem;
   line-height: 1.5;
+}
+
+.x-radio-item:hover .radio-label {
+  color: #1a1a1a;
+  transform: translateX(2px);
 }
 
 .radio-item-checked .radio-label {
   color: #1a1a1a;
   font-weight: 600;
+  transform: translateX(4px);
 }
 
 .radio-description {
@@ -326,11 +395,29 @@ const handleChange = (value: string | number) => {
   color: #6b7280;
   margin-top: 0.25rem;
   line-height: 1.4;
-  transition: color 0.2s ease;
+  transition: all 0.3s ease;
+}
+
+.x-radio-item:hover .radio-description {
+  color: #4b5563;
+  transform: translateX(2px);
 }
 
 .radio-item-checked .radio-description {
   color: #4b5563;
+  transform: translateX(4px);
+}
+
+@keyframes iconPop {
+  0% {
+    transform: scale(1) rotate(0);
+  }
+  50% {
+    transform: scale(1.3) rotate(10deg);
+  }
+  100% {
+    transform: scale(1) rotate(0);
+  }
 }
 
 /* 尺寸变体 */
@@ -631,5 +718,79 @@ const handleChange = (value: string | number) => {
   width: 1.5rem;
   height: 1.5rem;
   fill: currentColor;
+}
+
+/* ===== 动画关键帧 ===== */
+@keyframes radioSlideIn {
+  0% {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes radioBtnPop {
+  0% {
+    transform: scale(1);
+  }
+  30% {
+    transform: scale(1.25) rotate(-8deg);
+  }
+  50% {
+    transform: scale(0.9) rotate(5deg);
+  }
+  70% {
+    transform: scale(1.08) rotate(-3deg);
+  }
+  100% {
+    transform: scale(1) rotate(0);
+  }
+}
+
+@keyframes radioDotBounce {
+  0% {
+    transform: translate(-50%, -50%) scale(0) rotate(-180deg);
+  }
+  50% {
+    transform: translate(-50%, -50%) scale(1.3) rotate(20deg);
+  }
+  100% {
+    transform: translate(-50%, -50%) scale(1) rotate(0);
+  }
+}
+
+@keyframes radioRipple {
+  0% {
+    opacity: 0.8;
+    transform: scale(0);
+  }
+  50% {
+    opacity: 0.4;
+  }
+  100% {
+    opacity: 0;
+    transform: scale(2);
+  }
+}
+
+@keyframes radioPulse {
+  0% {
+    transform: scale(1);
+  }
+  30% {
+    transform: scale(1.03);
+  }
+  50% {
+    transform: scale(0.98);
+  }
+  70% {
+    transform: scale(1.01);
+  }
+  100% {
+    transform: scale(1);
+  }
 }
 </style>

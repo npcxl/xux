@@ -2,6 +2,10 @@
 
 一个优雅的颜色选择器组件，支持预设颜色和自定义颜色输入。
 
+<div style="columns: 2; column-gap: 32px; margin-top: 32px;">
+
+<div style="break-inside: avoid; margin-bottom: 24px;">
+
 ## 基础用法
 
 最简单的颜色选择器示例。
@@ -9,33 +13,44 @@
 :::demo
 
 ```vue
+<template>
+  <XFlex vertical gap="16" style="padding-top: 40px">
+    <XColor v-model="color" />
+    <div style="font-size: 14px; color: #666">选中的颜色：{{ color }}</div>
+  </XFlex>
+</template>
+
 <script setup>
 import { ref } from 'vue'
+import { XFlex, XColor } from '@xlui/xux-ui'
 
 const color = ref('#3b82f6')
 </script>
-
-<template>
-  <div>
-    <div class='pt-10'>
-    <XColor v-model="color" />
-    </div>
-    <div style="margin-top: 16px">选中的颜色：{{ color }}</div>
-  </div>
-</template>
 ```
 
 :::
 
+</div>
+
+<div style="break-inside: avoid; margin-bottom: 24px;">
+
 ## 自定义颜色列表
 
-通过 `colors` 属性可以自定义颜色列表。
+通过 `colors` 属性自定义颜色列表。
 
 :::demo
 
 ```vue
+<template>
+  <XFlex vertical gap="16" style="padding-top: 40px">
+    <XColor v-model="color" :colors="customColors" />
+    <div style="font-size: 14px; color: #666">选中的颜色：{{ color }}</div>
+  </XFlex>
+</template>
+
 <script setup>
 import { ref } from 'vue'
+import { XFlex, XColor } from '@xlui/xux-ui'
 
 const color = ref('#ff5733')
 
@@ -50,93 +65,113 @@ const customColors = [
   '#7b68ee'
 ]
 </script>
-
-<template>
-<div class='pt-10'>
-  <XColor v-model="color" :colors="customColors" />
-  </div>
-
-</template>
 ```
 
 :::
+
+</div>
+
+<div style="break-inside: avoid; margin-bottom: 24px;">
 
 ## 隐藏颜色输入框
 
-通过设置 `show-input` 为 `false` 可以隐藏原生颜色输入框。
+设置 `show-input` 为 `false` 可隐藏原生颜色输入框。
 
 :::demo
 
 ```vue
+<template>
+  <XFlex vertical gap="16" style="padding-top: 40px">
+    <XColor v-model="color" :show-input="false" />
+    <div style="font-size: 14px; color: #666">选中的颜色：{{ color }}</div>
+  </XFlex>
+</template>
+
 <script setup>
 import { ref } from 'vue'
+import { XFlex, XColor } from '@xlui/xux-ui'
 
 const color = ref('#8b5cf6')
 </script>
-
-<template>
-  <div class='pt-10'>
-  <XColor v-model="color" :show-input="false" />
-  </div>
-</template>
 ```
 
 :::
+
+</div>
+
+<div style="break-inside: avoid; margin-bottom: 24px;">
 
 ## 隐藏提示信息
 
-通过设置 `show-tooltips` 为 `false` 可以隐藏悬停时的颜色值提示。
+设置 `show-tooltips` 为 `false` 可隐藏悬停提示。
 
 :::demo
 
 ```vue
+<template>
+  <XFlex vertical gap="16" style="padding-top: 40px">
+    <XColor v-model="color" :show-tooltips="false" />
+    <div style="font-size: 14px; color: #666">选中的颜色：{{ color }}</div>
+  </XFlex>
+</template>
+
 <script setup>
 import { ref } from 'vue'
+import { XFlex, XColor } from '@xlui/xux-ui'
 
 const color = ref('#10b981')
 </script>
-
-<template>
-<div class='pt-10'>
-  <XColor v-model="color" :show-tooltips="false" />
-  </div>
-</template>
 ```
 
 :::
+
+</div>
+
+<div style="break-inside: avoid; margin-bottom: 24px;">
 
 ## 禁用状态
 
-通过 `disabled` 属性可以禁用颜色选择器。
+通过 `disabled` 属性禁用颜色选择器。
 
 :::demo
 
 ```vue
+<template>
+  <div style="padding-top: 40px">
+    <XColor v-model="color" disabled />
+  </div>
+</template>
+
 <script setup>
 import { ref } from 'vue'
+import { XColor } from '@xlui/xux-ui'
 
 const color = ref('#f472b6')
 </script>
-
-<template>
-    <div class='pt-10'>
-  <XColor v-model="color" disabled />
-  </div>
-</template>
 ```
 
 :::
 
+</div>
+
+<div style="break-inside: avoid; margin-bottom: 24px;">
+
 ## 事件监听
 
-颜色选择器支持 `change` 事件，在颜色变化时触发。
+支持 `change` 事件，在颜色变化时触发。
 
 :::demo
 
 ```vue
+<template>
+  <div style="padding-top: 40px">
+    <XColor v-model="color" @change="handleChange" />
+  </div>
+</template>
+
 <script setup>
 import { ref } from 'vue'
-import { xlMsg } from '@xlui/xux-ui'
+import { XColor, xlMsg } from '@xlui/xux-ui'
 
 const color = ref('#3b82f6')
 
@@ -147,25 +182,34 @@ const handleChange = (value) => {
   })
 }
 </script>
-
-<template>
-    <div class='pt-10'>
-  <XColor v-model="color" @change="handleChange" />
-  </div>
-</template>
 ```
 
 :::
 
-## 主题色配置示例
+</div>
+
+<div style="break-inside: avoid; margin-bottom: 24px;">
+
+## 主题色配置
 
 使用颜色选择器配置应用主题色。
 
 :::demo
 
 ```vue
+<template>
+  <XFlex vertical gap="16">
+    <div :style="themeStyle">
+      <h3 style="margin: 0 0 8px 0">当前主题色</h3>
+      <p style="margin: 0">{{ themeColor }}</p>
+    </div>
+    <XColor v-model="themeColor" :colors="themeColors" />
+  </XFlex>
+</template>
+
 <script setup>
 import { ref, computed } from 'vue'
+import { XFlex, XColor } from '@xlui/xux-ui'
 
 const themeColor = ref('#3b82f6')
 
@@ -185,33 +229,41 @@ const themeStyle = computed(() => ({
   padding: '20px',
   borderRadius: '8px',
   color: 'white',
-  textAlign: 'center',
-  marginBottom: '20px'
+  textAlign: 'center'
 }))
 </script>
-
-<template>
-  <div>
-    <div :style="themeStyle">
-      <h3 style="margin: 0 0 8px 0">当前主题色</h3>
-      <p style="margin: 0">{{ themeColor }}</p>
-    </div>
-    <XColor v-model="themeColor" :colors="themeColors" />
-  </div>
-</template>
 ```
 
 :::
 
-## 电商场景示例
+</div>
 
-颜色选择器在电商场景中的应用，比如商品颜色选择。
+<div style="break-inside: avoid; margin-bottom: 24px;">
+
+## 电商场景
+
+商品颜色选择应用。
 
 :::demo
 
 ```vue
+<template>
+  <XFlex vertical gap="16">
+    <div style="font-weight: 500">选择商品颜色</div>
+    <XColor 
+      v-model="productColor" 
+      :colors="productColors"
+      :show-input="false"
+    />
+    <div style="font-size: 14px; color: #666">
+      已选择：<span :style="{ color: productColor, fontWeight: 'bold' }">{{ productColor }}</span>
+    </div>
+  </XFlex>
+</template>
+
 <script setup>
 import { ref } from 'vue'
+import { XFlex, XColor } from '@xlui/xux-ui'
 
 const productColor = ref('#e11d48')
 
@@ -226,23 +278,13 @@ const productColors = [
   '#8b5cf6'  // 薰衣紫
 ]
 </script>
-
-<template>
-  <div>
-    <div style="margin-bottom: 12px; font-weight: 500;">选择商品颜色</div>
-    <XColor 
-      v-model="productColor" 
-      :colors="productColors"
-      :show-input="false"
-    />
-    <div style="margin-top: 16px; color: #666;">
-      已选择：<span :style="{ color: productColor, fontWeight: 'bold' }">{{ productColor }}</span>
-    </div>
-  </div>
-</template>
 ```
 
 :::
+
+</div>
+
+</div>
 
 ## API
 
@@ -282,80 +324,3 @@ const productColors = [
   '#a78bfa'  // 淡紫
 ]
 ```
-
-## 贡献者
-
-<div class="contributors">
-  <div class="contributor-item">
-    <a href="https://gitee.com/leheya" target="_blank" rel="noopener noreferrer">
-      <img 
-        src="https://foruda.gitee.com/avatar/1751620424517657404/10604783_leheya_1751620424.png!avatar200" 
-        alt="leheya"
-        class="contributor-avatar"
-      />
-      <span class="contributor-name">无敌暴龙神</span>
-    </a>
-  </div>
-</div>
-
-<style scoped>
-.contributors {
-  display: flex;
-  gap: 24px;
-  margin: 24px 0;
-  flex-wrap: wrap;
-}
-
-.contributor-item a {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  text-decoration: none;
-  color: inherit;
-  transition: transform 0.2s ease;
-}
-
-.contributor-item a:hover {
-  transform: translateY(-2px);
-}
-
-.contributor-avatar {
-  width: 80px;
-  height: 80px;
-  border-radius: 50%;
-  border: 3px solid var(--vp-c-border);
-  transition: border-color 0.2s ease;
-  object-fit: cover;
-}
-
-.contributor-item a:hover .contributor-avatar {
-  border-color: var(--vp-c-brand-1);
-}
-
-.contributor-name {
-  margin-top: 8px;
-  font-size: 14px;
-  font-weight: 500;
-  color: var(--vp-c-text-2);
-  transition: color 0.2s ease;
-}
-
-.contributor-item a:hover .contributor-name {
-  color: var(--vp-c-brand-1);
-}
-
-@media (max-width: 768px) {
-  .contributors {
-    gap: 16px;
-  }
-  
-  .contributor-avatar {
-    width: 60px;
-    height: 60px;
-  }
-  
-  .contributor-name {
-    font-size: 12px;
-  }
-}
-</style>

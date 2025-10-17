@@ -23,6 +23,67 @@ import { XDateTimePicker } from '@xlui/xux-ui'
 
 const datetime = ref(new Date())
 </script>
+
+<style scoped>
+.demo-item {
+  max-width: 400px;
+}
+</style>
+```
+
+:::
+
+## 快捷选择
+
+单选模式下显示"今天"快捷按钮，范围选择模式下显示"本周、本月、本年、今天"快捷按钮。
+
+:::demo
+
+```vue
+<template>
+  <div class="demo-container">
+    <div class="demo-item">
+      <h4>单选模式（只有今天）</h4>
+      <XDateTimePicker 
+        v-model="singleDate" 
+        mode="date"
+        placeholder="请选择日期"
+      />
+      <div class="demo-result">选择结果: {{ singleDate || '未选择' }}</div>
+    </div>
+    
+    <div class="demo-item">
+      <h4>范围选择模式（本周、本月、本年、今天）</h4>
+      <XDateTimePicker 
+        v-model="dateRange" 
+        mode="date" 
+        range
+        start-placeholder="开始日期"
+        end-placeholder="结束日期"
+      />
+      <div class="demo-result">
+        <p v-if="dateRange && Array.isArray(dateRange)">
+          选择结果: {{ dateRange[0] }} 至 {{ dateRange[1] }}
+        </p>
+        <p v-else>未选择</p>
+      </div>
+    </div>
+  </div>
+</template>
+
+<script setup>
+import { ref } from 'vue'
+import { XDateTimePicker } from '@xlui/xux-ui'
+
+const singleDate = ref(null)
+const dateRange = ref(null)
+</script>
+
+<style scoped>
+.demo-item {
+  max-width: 500px;
+}
+</style>
 ```
 
 :::
@@ -64,6 +125,12 @@ const date = ref(new Date())
 const time = ref(new Date())
 const datetime = ref(new Date())
 </script>
+
+<style scoped>
+.demo-item {
+  max-width: 400px;
+}
+</style>
 ```
 
 :::
@@ -102,13 +169,19 @@ const value1 = ref(new Date())
 const value2 = ref(new Date())
 const value3 = ref(new Date())
 </script>
+
+<style scoped>
+.demo-item {
+  max-width: 400px;
+}
+</style>
 ```
 
 :::
 
 ## 显示秒数
 
-时间选择器可以显示秒数选择。
+时间选择器可以显示秒数选择。输入框和滑块实时同步，滑块上方会一直显示当前值的 Tooltip。
 
 :::demo
 
@@ -118,11 +191,13 @@ const value3 = ref(new Date())
     <div class="demo-item">
       <h4>不显示秒数（默认）</h4>
       <XDateTimePicker v-model="time1" mode="time" />
+      <div class="demo-result">选择结果: {{ time1 }}</div>
     </div>
     
     <div class="demo-item">
       <h4>显示秒数</h4>
       <XDateTimePicker v-model="time2" mode="time" :show-seconds="true" />
+      <div class="demo-result">选择结果: {{ time2 }}</div>
     </div>
   </div>
 </template>
@@ -131,9 +206,15 @@ const value3 = ref(new Date())
 import { ref } from 'vue'
 import { XDateTimePicker } from '@xlui/xux-ui'
 
-const time1 = ref(new Date())
-const time2 = ref(new Date())
+const time1 = ref(null)
+const time2 = ref(null)
 </script>
+
+<style scoped>
+.demo-item {
+  max-width: 400px;
+}
+</style>
 ```
 
 :::
@@ -169,6 +250,12 @@ const date = ref(new Date())
 const minDate = new Date('2024-01-01')
 const maxDate = new Date('2024-12-31')
 </script>
+
+<style scoped>
+.demo-item {
+  max-width: 400px;
+}
+</style>
 ```
 
 :::
@@ -201,6 +288,12 @@ import { XDateTimePicker } from '@xlui/xux-ui'
 
 const datetime = ref(new Date())
 </script>
+
+<style scoped>
+.demo-item {
+  max-width: 400px;
+}
+</style>
 ```
 
 :::
@@ -227,6 +320,12 @@ import { XDateTimePicker } from '@xlui/xux-ui'
 
 const datetime = ref(new Date())
 </script>
+
+<style scoped>
+.demo-item {
+  max-width: 400px;
+}
+</style>
 ```
 
 :::
@@ -276,6 +375,12 @@ const handleChange = (value) => {
   eventLog.value = `值已改变: ${value}`
 }
 </script>
+
+<style scoped>
+.demo-item {
+  max-width: 400px;
+}
+</style>
 ```
 
 :::
@@ -304,6 +409,12 @@ import { XDateTimePicker } from '@xlui/xux-ui'
 
 const datetime = ref(new Date())
 </script>
+
+<style scoped>
+.demo-item {
+  max-width: 400px;
+}
+</style>
 ```
 
 :::
@@ -349,6 +460,12 @@ const isToday = computed(() => {
   return datetime.value ? isSame(datetime.value, new Date(), 'day') : false
 })
 </script>
+
+<style scoped>
+.demo-item {
+  max-width: 400px;
+}
+</style>
 ```
 
 :::
@@ -359,11 +476,14 @@ const isToday = computed(() => {
 
 | 参数 | 说明 | 类型 | 可选值 | 默认值 |
 |------|------|------|--------|--------|
-| modelValue | 绑定值 | `Date \| string \| null` | — | `null` |
+| modelValue | 绑定值 | `Date \| string \| null \| [Date, Date] \| [string, string]` | — | `null` |
 | mode | 选择模式 | `string` | `date` / `time` / `datetime` | `datetime` |
+| range | 是否为范围选择 | `boolean` | — | `false` |
 | size | 尺寸 | `string` | `small` / `medium` / `large` | `medium` |
 | disabled | 是否禁用 | `boolean` | — | `false` |
-| placeholder | 占位符 | `string` | — | `请选择日期时间` |
+| placeholder | 占位符（单选） | `string` | — | `请选择日期时间` |
+| startPlaceholder | 开始日期占位符（范围选择） | `string` | — | `开始日期` |
+| endPlaceholder | 结束日期占位符（范围选择） | `string` | — | `结束日期` |
 | title | 选择器标题 | `string` | — | `选择日期时间` |
 | showSeconds | 是否显示秒 | `boolean` | — | `false` |
 | minDate | 最小日期 | `Date \| string` | — | — |
@@ -373,13 +493,15 @@ const isToday = computed(() => {
 | showToday | 是否显示今天按钮 | `boolean` | — | `true` |
 | showClear | 是否显示清空按钮 | `boolean` | — | `true` |
 | locale | 语言 | `string` | `zh-CN` / `en-US` | `zh-CN` |
+| showShortcuts | 是否显示快捷选择 | `boolean` | — | `true` |
+| shortcuts | 自定义快捷选项 | `ShortcutOption[]` | — | 单选：今天；范围：本周、本月、本年、今天 |
 
 ### Events
 
 | 事件名 | 说明 | 回调参数 |
 |--------|------|----------|
-| update:modelValue | 值改变时触发 | `(value: Date \| null)` |
-| change | 值改变时触发 | `(value: Date \| null)` |
+| update:modelValue | 值改变时触发 | `(value: string \| null \| [string, string])` |
+| change | 值改变时触发 | `(value: string \| null \| [string, string])` |
 | open | 选择器打开时触发 | — |
 | close | 选择器关闭时触发 | — |
 

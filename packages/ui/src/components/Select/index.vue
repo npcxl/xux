@@ -39,7 +39,8 @@
               <span
                  v-for="option in selectedOptions"
                  :key="getOptionValue(option)"
-                 class="inline-flex items-center gap-1.5 px-2.5 py-1 text-xs bg-[#FFF] text-[#1a1a1a] rounded-full border border-[#1a1a1a]/50"
+                 class="inline-flex items-center gap-1.5 px-2.5 py-1 text-xs rounded-full border"
+                 style="background-color: var(--x-bg-color); color: var(--x-text-color-primary); border-color: var(--x-border-color-dark)"
                >
                  {{ getOptionLabel(option) }}
                  <button
@@ -47,7 +48,7 @@
                    class="rounded-full p-0.5 transition-colors duration-150"
                    type="button"
                  >
-                   <i class="bi bi-x text-xs text-[#1a1a1a]"></i>
+                   <i class="bi bi-x text-xs" style="color: var(--x-text-color-primary)"></i>
                  </button>
                </span>
             </template>

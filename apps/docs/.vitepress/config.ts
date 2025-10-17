@@ -51,6 +51,7 @@ export default defineConfig({
     nav: [
       { text: '指南', link: '/guide/introduction' },
       { text: '组件', link: '/components/button' },
+      { text: 'API 工具', link: '/api/' },
       { 
         text: '资源',
         items: [
@@ -71,6 +72,7 @@ export default defineConfig({
           ]
         }
       ],
+
       '/components/': [
         {
           text: '通用',
@@ -83,6 +85,8 @@ export default defineConfig({
         {
           text: '布局',
           items: [
+            { text: 'Flex 弹性布局', link: '/components/flex' },
+            { text: 'Grid 网格布局', link: '/components/grid' },
             { text: 'Card 卡片', link: '/components/card' },
             { text: 'Divider 分割线', link: '/components/divider' },
          
@@ -107,6 +111,7 @@ export default defineConfig({
         {
           text: '数据展示',
           items: [
+            { text: 'Carousel 走马灯', link: '/components/carousel' },
             { text: 'Timeline 时间轴', link: '/components/timeline' },
             { text: 'Tree 树形控件', link: '/components/tree' },
             { text: 'Accordion 手风琴', link: '/components/accordion' },
@@ -116,9 +121,9 @@ export default defineConfig({
             { text:'Qrcode 二维码',link:'/components/qrcode'},
             { text: 'Segmented 分段控制器', link: '/components/segmented' },
             { text: 'Badge 徽标', link: '/components/badge' },
-            { text: 'Grid 网格布局', link: '/components/grid' },
             { text: 'Image 图片', link: '/components/image' },
             { text: 'DragSort 拖拽排序', link: '/components/drag-sort' },
+            { text: 'Pagination 分页', link: '/components/pagination' },
           ]
         },
         {
@@ -136,12 +141,6 @@ export default defineConfig({
           ]
         },
         {
-          text: '时间函数',
-          items: [
-            { text: '时间处理函数', link: '/components/datetime-functions' },
-          ]
-        },
-        {
           text: '高级布局组件',
           items: [
             { text: 'DynamicMech 动画网格', link: '/components/dynamic-mech' },
@@ -151,6 +150,56 @@ export default defineConfig({
           text: '特殊效果',
           items: [
             { text: '特殊动画效果', link: '/components/special-effects' },
+          ]
+        },
+        {
+          text: '时间处理',
+          items: [
+            { text: '时间处理函数', link: '/components/datetime-functions' },
+          ]
+        }
+      ],
+
+      '/api/': [
+        {
+          text: 'API 工具',
+          items: [
+            { text: '工具函数总览', link: '/api/' },
+          ]
+        },
+        {
+          text: '基础工具',
+          items: [
+            { text: '验证工具', link: '/api/validate'},
+            { text: '类型检查', link: '/api/type' },
+            { text: '字符串工具', link: '/api/string' },
+            { text: '数组工具', link: '/api/array' },
+            { text: '对象工具', link: '/api/object' },
+          ]
+        },
+        {
+          text: '格式化工具',
+          items: [
+            { text: '格式化工具', link: '/api/format' },
+            { text: '数学工具', link: '/api/math' },
+            { text: '颜色工具', link: '/api/color' },
+          ]
+        },
+        {
+          text: '网络与存储',
+          items: [
+            { text: 'WebSocket 工具', link: '/api/websocket' },
+            { text: '存储工具', link: '/api/storage' },
+            { text: 'URL 工具', link: '/api/url' },
+          ]
+        },
+        {
+          text: '高级功能',
+          items: [
+            { text: '函数工具', link: '/api/function' },
+            { text: '树结构工具', link: '/api/tree' },
+            { text: '文件工具', link: '/api/file' },
+            { text: 'DOM 工具', link: '/api/dom' },
           ]
         }
       ]

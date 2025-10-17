@@ -101,10 +101,47 @@
   --x-font-size-xl: 20px;
   --x-font-size-2xl: 24px;
   --x-font-size-3xl: 30px;
+  
+  /* ========== 组件背景色 ========== */
+  --x-bg-color: #ffffff;
+  --x-bg-color-page: #f5f5f5;
+  --x-bg-color-overlay: #ffffff;
+  
+  /* ========== 文本颜色 ========== */
+  --x-text-color-primary: #1a1a1a;
+  --x-text-color-regular: #4a4a4a;
+  --x-text-color-secondary: #6a6a6a;
+  --x-text-color-placeholder: #aaaaaa;
+  --x-text-color-disabled: #cacaca;
+  
+  /* ========== 边框颜色 ========== */
+  --x-border-color: #e5e5e5;
+  --x-border-color-light: #f5f5f5;
+  --x-border-color-lighter: #fafafa;
+  --x-border-color-dark: #cacaca;
+  
+  /* ========== 填充颜色 ========== */
+  --x-fill-color: #f5f5f5;
+  --x-fill-color-light: #fafafa;
+  --x-fill-color-lighter: #ffffff;
+  --x-fill-color-dark: #e5e5e5;
+  
+  /* ========== 遮罩颜色 ========== */
+  --x-mask-color: rgba(0, 0, 0, 0.5);
+  --x-mask-color-light: rgba(0, 0, 0, 0.3);
 }
 
-/* ========== 暗色模式 ========== */
-.dark {
+/* ========== 暗色模式（手动切换） ========== */
+.dark,
+[data-theme="dark"] {
+  /* 主色调整（暗黑模式下使用浅色） */
+  --x-color-primary: #ffffff;
+  --x-color-primary-light: #e5e5e5;
+  --x-color-primary-lighter: #cacaca;
+  --x-color-primary-dark: #ffffff;
+  --x-color-primary-darker: #ffffff;
+  
+  /* 中性色反转 */
   --x-color-white: #1a1a1a;
   --x-color-black: #ffffff;
   --x-color-gray-100: #2a2a2a;
@@ -116,5 +153,110 @@
   --x-color-gray-700: #cacaca;
   --x-color-gray-800: #e5e5e5;
   --x-color-gray-900: #f5f5f5;
+  
+  /* 组件背景色 */
+  --x-bg-color: #1a1a1a;
+  --x-bg-color-page: #0d0d0d;
+  --x-bg-color-overlay: #2a2a2a;
+  
+  /* 文本颜色 */
+  --x-text-color-primary: #ffffff;
+  --x-text-color-regular: #e5e5e5;
+  --x-text-color-secondary: #cacaca;
+  --x-text-color-placeholder: #6a6a6a;
+  --x-text-color-disabled: #4a4a4a;
+  
+  /* 边框颜色 */
+  --x-border-color: #3a3a3a;
+  --x-border-color-light: #2a2a2a;
+  --x-border-color-lighter: #1a1a1a;
+  --x-border-color-dark: #4a4a4a;
+  
+  /* 填充颜色 */
+  --x-fill-color: #2a2a2a;
+  --x-fill-color-light: #1a1a1a;
+  --x-fill-color-lighter: #0d0d0d;
+  --x-fill-color-dark: #3a3a3a;
+  
+  /* 遮罩颜色 */
+  --x-mask-color: rgba(0, 0, 0, 0.7);
+  --x-mask-color-light: rgba(0, 0, 0, 0.5);
+  
+  /* 阴影（暗黑模式下使用更亮的阴影） */
+  --x-shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
+  --x-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+  --x-shadow-md: 0 4px 12px rgba(0, 0, 0, 0.5);
+  --x-shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.6);
+  --x-shadow-xl: 0 16px 48px rgba(0, 0, 0, 0.7);
+  
+  /* 渐变色（暗黑模式下反转） */
+  --x-gradient-primary: linear-gradient(135deg, #ffffff 0%, #e5e5e5 100%);
+  --x-gradient-primary-hover: linear-gradient(135deg, #e5e5e5 0%, #cacaca 100%);
+  --x-gradient-dark: linear-gradient(135deg, #2a2a2a 0%, #1a1a1a 100%);
+}
+
+/* ========== 自动暗色模式（根据系统偏好） ========== */
+@media (prefers-color-scheme: dark) {
+  :root:not(.light):not([data-theme="light"]) {
+    /* 主色调整 */
+    --x-color-primary: #ffffff;
+    --x-color-primary-light: #e5e5e5;
+    --x-color-primary-lighter: #cacaca;
+    --x-color-primary-dark: #ffffff;
+    --x-color-primary-darker: #ffffff;
+    
+    /* 中性色反转 */
+    --x-color-white: #1a1a1a;
+    --x-color-black: #ffffff;
+    --x-color-gray-100: #2a2a2a;
+    --x-color-gray-200: #3a3a3a;
+    --x-color-gray-300: #4a4a4a;
+    --x-color-gray-400: #6a6a6a;
+    --x-color-gray-500: #8a8a8a;
+    --x-color-gray-600: #aaaaaa;
+    --x-color-gray-700: #cacaca;
+    --x-color-gray-800: #e5e5e5;
+    --x-color-gray-900: #f5f5f5;
+    
+    /* 组件背景色 */
+    --x-bg-color: #1a1a1a;
+    --x-bg-color-page: #0d0d0d;
+    --x-bg-color-overlay: #2a2a2a;
+    
+    /* 文本颜色 */
+    --x-text-color-primary: #ffffff;
+    --x-text-color-regular: #e5e5e5;
+    --x-text-color-secondary: #cacaca;
+    --x-text-color-placeholder: #6a6a6a;
+    --x-text-color-disabled: #4a4a4a;
+    
+    /* 边框颜色 */
+    --x-border-color: #3a3a3a;
+    --x-border-color-light: #2a2a2a;
+    --x-border-color-lighter: #1a1a1a;
+    --x-border-color-dark: #4a4a4a;
+    
+    /* 填充颜色 */
+    --x-fill-color: #2a2a2a;
+    --x-fill-color-light: #1a1a1a;
+    --x-fill-color-lighter: #0d0d0d;
+    --x-fill-color-dark: #3a3a3a;
+    
+    /* 遮罩颜色 */
+    --x-mask-color: rgba(0, 0, 0, 0.7);
+    --x-mask-color-light: rgba(0, 0, 0, 0.5);
+    
+    /* 阴影 */
+    --x-shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
+    --x-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+    --x-shadow-md: 0 4px 12px rgba(0, 0, 0, 0.5);
+    --x-shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.6);
+    --x-shadow-xl: 0 16px 48px rgba(0, 0, 0, 0.7);
+    
+    /* 渐变色 */
+    --x-gradient-primary: linear-gradient(135deg, #ffffff 0%, #e5e5e5 100%);
+    --x-gradient-primary-hover: linear-gradient(135deg, #e5e5e5 0%, #cacaca 100%);
+    --x-gradient-dark: linear-gradient(135deg, #2a2a2a 0%, #1a1a1a 100%);
+  }
 }
 

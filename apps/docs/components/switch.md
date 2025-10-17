@@ -2,6 +2,10 @@
 
 开关用于在两种状态之间切换，常用于设置功能的开启或关闭。
 
+<div style="columns: 2; column-gap: 32px; margin-top: 32px;">
+
+<div style="break-inside: avoid; margin-bottom: 24px;">
+
 ## 基础用法
 
 基本的开关用法，通过 `v-model` 绑定开关状态。
@@ -10,77 +14,103 @@
 
 ```vue
 <template>
-  <div class="flex gap-3 items-center">
-    <XSwitch v-model="switchValue" />
-    <span>开关状态: {{ switchValue ? '开启' : '关闭' }}</span>
-  </div>
+  <XFlex vertical gap="16">
+    <XFlex align="center" gap="12">
+      <XSwitch v-model="switchValue" />
+      <span>开关状态: {{ switchValue ? '开启' : '关闭' }}</span>
+    </XFlex>
+    <XFlex align="center" gap="12">
+      <XSwitch v-model="switchValue2" />
+      <span>默认开启: {{ switchValue2 ? '开启' : '关闭' }}</span>
+    </XFlex>
+  </XFlex>
 </template>
 
 <script setup>
 import { ref } from 'vue'
+import { XFlex, XSwitch } from '@xlui/xux-ui'
 
 const switchValue = ref(false)
+const switchValue2 = ref(true)
 </script>
 ```
 
 :::
 
-## 默认开启
+</div>
 
-设置开关的默认状态为开启。
+<div style="break-inside: avoid; margin-bottom: 24px;">
+
+## 主题切换开关
+
+通过 `variant="theme"` 使用精美的主题切换样式，带有日夜动画效果。
 
 :::demo
 
 ```vue
 <template>
-  <div class="flex gap-3 items-center">
-    <XSwitch v-model="switchValue" />
-    <span>开关状态: {{ switchValue ? '开启' : '关闭' }}</span>
-  </div>
+  <XFlex vertical gap="16">
+    <XFlex align="center" gap="12">
+      <XSwitch v-model="isDark" variant="theme" />
+      <span>{{ isDark ? '夜间模式' : '日间模式' }}</span>
+    </XFlex>
+    <div style="padding: 12px; background: #f5f5f5; border-radius: 4px; font-size: 14px">
+      当前主题：{{ isDark ? '🌙 深色' : '☀️ 浅色' }}
+    </div>
+  </XFlex>
 </template>
 
 <script setup>
 import { ref } from 'vue'
+import { XFlex, XSwitch } from '@xlui/xux-ui'
 
-const switchValue = ref(true)
+const isDark = ref(false)
 </script>
 ```
 
 :::
+
+</div>
+
+<div style="break-inside: avoid; margin-bottom: 24px;">
 
 ## 状态变化监听
 
-监听开关状态的变化，执行相应的操作。
+监听开关状态的变化。
 
 :::demo
 
 ```vue
 <template>
-  <div class="flex flex-col gap-4">
-    <div class="flex items-center gap-3">
+  <XFlex vertical gap="16">
+    <XFlex align="center" gap="12">
       <XSwitch v-model="switchValue" @update:modelValue="handleChange" />
       <span>开关状态: {{ switchValue ? '开启' : '关闭' }}</span>
-    </div>
-    <div class="text-sm text-gray-600">
+    </XFlex>
+    <div style="font-size: 14px; color: #666">
       状态变化次数: {{ changeCount }}
     </div>
-  </div>
+  </XFlex>
 </template>
 
 <script setup>
 import { ref } from 'vue'
+import { XFlex, XSwitch } from '@xlui/xux-ui'
 
 const switchValue = ref(false)
 const changeCount = ref(0)
 
 const handleChange = (value) => {
   changeCount.value++
-  console.log('开关状态变化:', value)
 }
 </script>
 ```
 
 :::
+
+</div>
+
+<div style="break-inside: avoid; margin-bottom: 24px;">
 
 ## 禁用状态
 
@@ -90,15 +120,16 @@ const handleChange = (value) => {
 
 ```vue
 <template>
-  <div class="flex gap-3 items-center">
+  <XFlex gap="12" align="center">
     <XSwitch v-model="switchValue1" />
     <XSwitch v-model="switchValue2" disabled />
     <XSwitch v-model="switchValue3" disabled />
-  </div>
+  </XFlex>
 </template>
 
 <script setup>
 import { ref } from 'vue'
+import { XFlex, XSwitch } from '@xlui/xux-ui'
 
 const switchValue1 = ref(true)
 const switchValue2 = ref(false)
@@ -108,38 +139,47 @@ const switchValue3 = ref(true)
 
 :::
 
+</div>
+
+<div style="break-inside: avoid; margin-bottom: 24px;">
+
 ## 不同尺寸
 
-Switch 组件提供三种尺寸，可以在不同场景下使用。
+提供三种尺寸。
 
 :::demo
 
 ```vue
 <template>
-  <div class="flex flex-col gap-4">
-    <div class="flex gap-3 items-center">
+  <XFlex vertical gap="16">
+    <XFlex gap="12" align="center">
       <XSwitch v-model="switchValue" size="small" />
       <span>小尺寸</span>
-    </div>
-    <div class="flex gap-3 items-center">
+    </XFlex>
+    <XFlex gap="12" align="center">
       <XSwitch v-model="switchValue" size="medium" />
       <span>中等尺寸</span>
-    </div>
-    <div class="flex gap-3 items-center">
+    </XFlex>
+    <XFlex gap="12" align="center">
       <XSwitch v-model="switchValue" size="large" />
       <span>大尺寸</span>
-    </div>
-  </div>
+    </XFlex>
+  </XFlex>
 </template>
 
 <script setup>
 import { ref } from 'vue'
+import { XFlex, XSwitch } from '@xlui/xux-ui'
 
 const switchValue = ref(true)
 </script>
 ```
 
 :::
+
+</div>
+
+<div style="break-inside: avoid; margin-bottom: 24px;">
 
 ## 自定义颜色
 
@@ -149,28 +189,52 @@ const switchValue = ref(true)
 
 ```vue
 <template>
-  <div class="flex flex-col gap-4">
-    <div class="flex gap-3 items-center">
-      <XSwitch v-model="switchValue" color="#10b981" />
-      <span>绿色开关</span>
-    </div>
-    <div class="flex gap-3 items-center">
-      <XSwitch v-model="switchValue" color="#f59e0b" />
-      <span>橙色开关</span>
-    </div>
-    <div class="flex gap-3 items-center">
-      <XSwitch v-model="switchValue" color="#ef4444" />
-      <span>红色开关</span>
-    </div>
-    <div class="flex gap-3 items-center">
-      <XSwitch v-model="switchValue" color="#8b5cf6" />
-      <span>紫色开关</span>
-    </div>
-  </div>
+  <XFlex gap="12" align="center">
+    <XSwitch v-model="switch1" color="#52c41a" />
+    <XSwitch v-model="switch2" color="#1890ff" />
+    <XSwitch v-model="switch3" color="#722ed1" />
+    <XSwitch v-model="switch4" color="#eb2f96" />
+  </XFlex>
 </template>
 
 <script setup>
 import { ref } from 'vue'
+import { XFlex, XSwitch } from '@xlui/xux-ui'
+
+const switch1 = ref(true)
+const switch2 = ref(true)
+const switch3 = ref(true)
+const switch4 = ref(true)
+</script>
+```
+
+:::
+
+</div>
+
+<div style="break-inside: avoid; margin-bottom: 24px;">
+
+## 带文字的开关
+
+在开关内显示文字。
+
+:::demo
+
+```vue
+<template>
+  <XFlex gap="12" align="center">
+    <XSwitch 
+      v-model="switchValue" 
+      active-text="开"
+      inactive-text="关"
+    />
+    <span>状态: {{ switchValue ? '开启' : '关闭' }}</span>
+  </XFlex>
+</template>
+
+<script setup>
+import { ref } from 'vue'
+import { XFlex, XSwitch } from '@xlui/xux-ui'
 
 const switchValue = ref(true)
 </script>
@@ -178,61 +242,31 @@ const switchValue = ref(true)
 
 :::
 
-## 高级颜色自定义
+</div>
 
-可以分别自定义边框颜色、阴影颜色和滑块颜色
+<div style="break-inside: avoid; margin-bottom: 24px;">
+
+## 带图标的开关
+
+在开关内显示图标。
 
 :::demo
 
 ```vue
 <template>
-  <div class="flex flex-col gap-6">
-    <div class="flex flex-col gap-4">
-      <h4 class="font-medium">边框与阴影分离</h4>
-      <div class="flex gap-3 items-center">
-        <XSwitch v-model="switchValue" color="#3b82f6" shadowColor="#f59e0b" />
-        <span>蓝色边框 + 橙色阴影</span>
-      </div>
-    </div>
-    
-    <div class="flex flex-col gap-4">
-      <h4 class="font-medium">自定义滑块颜色</h4>
-      <div class="flex gap-3 items-center">
-        <XSwitch v-model="switchValue" color="#10b981" thumbColor="#fbbf24" />
-        <span>绿色边框 + 黄色滑块</span>
-      </div>
-    </div>
-    
-    <div class="flex flex-col gap-4">
-      <h4 class="font-medium">完全自定义</h4>
-      <div class="flex gap-3 items-center">
-        <XSwitch v-model="switchValue" color="#8b5cf6" shadowColor="#ec4899" thumbColor="#fbbf24" />
-        <span>紫色边框 + 粉色阴影 + 黄色滑块</span>
-      </div>
-    </div>
-    
-    <div class="flex flex-col gap-4">
-      <h4 class="font-medium">颜色调整</h4>
-      <div class="flex flex-col gap-3">
-        <div class="flex gap-3 items-center">
-          <XSwitch v-model="switchValue" color="#10b981" />
-          <span>绿色主题</span>
-        </div>
-        <div class="flex gap-3 items-center">
-          <XSwitch v-model="switchValue" color="#f59e0b" />
-          <span>橙色主题</span>
-        </div>
-        <div class="flex gap-3 items-center">
-          <XSwitch v-model="switchValue" color="#ef4444" />
-          <span>红色主题</span>
-        </div>
-      </div>
-    </div>
-  </div>
+  <XFlex gap="12" align="center">
+    <XSwitch 
+      v-model="switchValue" 
+      active-icon="mdi:check"
+      inactive-icon="mdi:close"
+    />
+    <span>状态: {{ switchValue ? '开启' : '关闭' }}</span>
+  </XFlex>
 </template>
 
 <script setup>
 import { ref } from 'vue'
+import { XFlex, XSwitch } from '@xlui/xux-ui'
 
 const switchValue = ref(true)
 </script>
@@ -240,670 +274,110 @@ const switchValue = ref(true)
 
 :::
 
-## 带标签的开关
+</div>
 
-配合标签文字使用，提供更好的用户体验。
+<div style="break-inside: avoid; margin-bottom: 24px;">
 
-:::demo
+## 加载状态
 
-```vue
-<template>
-  <div class="flex flex-col gap-4">
-    <div class="flex items-center gap-3">
-      <XSwitch v-model="notifications" />
-      <label>接收通知</label>
-    </div>
-    <div class="flex items-center gap-3">
-      <XSwitch v-model="darkMode" />
-      <label>深色模式</label>
-    </div>
-    <div class="flex items-center gap-3">
-      <XSwitch v-model="autoSave" />
-      <label>自动保存</label>
-    </div>
-  </div>
-</template>
-
-<script setup>
-import { ref } from 'vue'
-
-const notifications = ref(true)
-const darkMode = ref(false)
-const autoSave = ref(true)
-</script>
-```
-
-:::
-
-## 设置场景示例
-
-常见的设置页面开关使用场景。
+通过 `loading` 属性设置加载状态。
 
 :::demo
 
 ```vue
 <template>
-  <div class="flex flex-col gap-6 p-4 bg-gray-50 rounded-lg">
-    <h3 class="text-lg font-semibold">账户设置</h3>
-    
-    <div class="flex flex-col gap-4">
-      <div class="flex items-center justify-between">
-        <div>
-          <div class="font-medium">邮件通知</div>
-          <div class="text-sm text-gray-500">接收重要邮件通知</div>
-        </div>
-        <XSwitch v-model="emailNotification" />
-      </div>
-      
-      <div class="flex items-center justify-between">
-        <div>
-          <div class="font-medium">短信通知</div>
-          <div class="text-sm text-gray-500">接收短信验证码和重要通知</div>
-        </div>
-        <XSwitch v-model="smsNotification" />
-      </div>
-      
-      <div class="flex items-center justify-between">
-        <div>
-          <div class="font-medium">两步验证</div>
-          <div class="text-sm text-gray-500">为账户添加额外的安全保护</div>
-        </div>
-        <XSwitch v-model="twoFactorAuth" />
-      </div>
-      
-      <div class="flex items-center justify-between">
-        <div>
-          <div class="font-medium">隐私模式</div>
-          <div class="text-sm text-gray-500">隐藏在线状态和个人信息</div>
-        </div>
-        <XSwitch v-model="privacyMode" />
-      </div>
-    </div>
-  </div>
+  <XFlex vertical gap="16">
+    <XFlex gap="12" align="center">
+      <XSwitch v-model="switchValue" loading />
+      <span>加载中...</span>
+    </XFlex>
+    <XButton size="small" @click="switchValue = !switchValue">
+      切换状态
+    </XButton>
+  </XFlex>
 </template>
 
 <script setup>
 import { ref } from 'vue'
+import { XFlex, XButton, XSwitch } from '@xlui/xux-ui'
 
-const emailNotification = ref(true)
-const smsNotification = ref(false)
-const twoFactorAuth = ref(true)
-const privacyMode = ref(false)
+const switchValue = ref(false)
 </script>
 ```
 
 :::
 
-## 异步状态
+</div>
 
-Switch 组件支持异步操作，适用于需要网络请求或耗时操作的场景。
+<div style="break-inside: avoid; margin-bottom: 24px;">
+
+## 设置场景
+
+常见的设置功能场景。
 
 :::demo
 
 ```vue
 <template>
-  <div class="flex flex-col gap-6">
-    <div class="flex flex-col gap-4">
-      <h4 class="font-medium">基础异步用法</h4>
-      <div class="flex items-center gap-3">
-        <XSwitch 
-          v-model="asyncValue" 
-          :loading="isLoading"
-          @change="handleAsyncChange"
-        />
-        <span>异步开关状态: {{ asyncValue ? '开启' : '关闭' }}</span>
-        <span v-if="isLoading" class="text-sm text-blue-500">处理中...</span>
-      </div>
-    </div>
-    
-    <div class="flex flex-col gap-4">
-      <h4 class="font-medium">模拟网络请求</h4>
-      <div class="flex items-center gap-3">
-        <XSwitch 
-          v-model="networkValue" 
-          :loading="networkLoading"
-          @change="handleNetworkChange"
-        />
-        <span>网络设置: {{ networkValue ? '开启' : '关闭' }}</span>
-        <span v-if="networkLoading" class="text-sm text-orange-500">同步中...</span>
-      </div>
-    </div>
-    
-    <div class="flex flex-col gap-4">
-      <h4 class="font-medium">带错误处理的异步</h4>
-      <div class="flex items-center gap-3">
-        <XSwitch 
-          v-model="errorValue" 
-          :loading="errorLoading"
-          @change="handleErrorChange"
-        />
-        <span>可能失败的操作: {{ errorValue ? '开启' : '关闭' }}</span>
-        <span v-if="errorLoading" class="text-sm text-red-500">处理中...</span>
-        <span v-if="errorMessage" class="text-sm text-red-500">{{ errorMessage }}</span>
-      </div>
-    </div>
-  </div>
+  <XFlex vertical gap="16" style="max-width: 400px">
+    <XFlex justify="space-between" align="center">
+      <span>接收通知</span>
+      <XSwitch v-model="settings.notification" />
+    </XFlex>
+    <XFlex justify="space-between" align="center">
+      <span>自动播放</span>
+      <XSwitch v-model="settings.autoPlay" />
+    </XFlex>
+    <XFlex justify="space-between" align="center">
+      <span>夜间模式</span>
+      <XSwitch v-model="settings.darkMode" />
+    </XFlex>
+    <XFlex justify="space-between" align="center">
+      <span>省电模式</span>
+      <XSwitch v-model="settings.powerSaving" />
+    </XFlex>
+  </XFlex>
 </template>
 
 <script setup>
 import { ref } from 'vue'
+import { XFlex, XSwitch } from '@xlui/xux-ui'
 
-const asyncValue = ref(false)
-const isLoading = ref(false)
-
-const networkValue = ref(true)
-const networkLoading = ref(false)
-
-const errorValue = ref(false)
-const errorLoading = ref(false)
-const errorMessage = ref('')
-
-const handleAsyncChange = async (value) => {
-  isLoading.value = true
-  try {
-    // 模拟异步操作
-    await new Promise(resolve => setTimeout(resolve, 1000))
-    // 异步操作成功后才更新状态
-    asyncValue.value = value
-  } catch (error) {
-    console.error('操作失败:', error)
-    // 失败时恢复原状态
-    asyncValue.value = !value
-  } finally {
-    isLoading.value = false
-  }
-}
-
-const handleNetworkChange = async (value) => {
-  networkLoading.value = true
-  
-  try {
-    // 模拟网络请求
-    await new Promise(resolve => setTimeout(resolve, 2000))
-    // 异步操作成功后才更新状态
-    networkValue.value = value
-  } catch (error) {
-    console.error('网络请求失败:', error)
-    // 失败时恢复原状态
-    networkValue.value = !value
-  } finally {
-    networkLoading.value = false
-  }
-}
-
-const handleErrorChange = async (value) => {
-  errorLoading.value = true
-  errorMessage.value = ''
-  
-  try {
-    // 模拟网络请求
-    await new Promise(resolve => setTimeout(resolve, 1500))
-    
-    // 模拟随机失败
-    if (Math.random() > 0.5) {
-      throw new Error('网络请求失败')
-    }
-    
-    // 异步操作成功后才更新状态
-    errorValue.value = value
-  } catch (error) {
-    errorMessage.value = error.message
-    // 失败时恢复原状态
-    errorValue.value = !value
-  } finally {
-    errorLoading.value = false
-  }
-}
+const settings = ref({
+  notification: true,
+  autoPlay: false,
+  darkMode: false,
+  powerSaving: true
+})
 </script>
 ```
 
 :::
 
-## 主题开关 基于cssbuttons 
+</div>
 
-### 主题切换开关 (Theme)
-
-主题开关带有日夜切换的动画效果，非常适合用于暗黑模式切换。
-
-:::demo
-
-```vue
-<template>
-  <div class="flex flex-col gap-6">
-    <div class="flex flex-col gap-4">
-      <h4 class="font-medium">不同尺寸</h4>
-      <div class="flex gap-4 items-center">
-        <XSwitch v-model="themeValue" variant="theme" size="small" />
-        <XSwitch v-model="themeValue" variant="theme" size="medium" />
-        <XSwitch v-model="themeValue" variant="theme" size="large" />
-      </div>
-    </div>
-    
-    <div class="flex flex-col gap-4">
-      <h4 class="font-medium">禁用状态</h4>
-      <div class="flex gap-4 items-center">
-        <XSwitch v-model="themeValue" variant="theme" />
-        <XSwitch v-model="themeValue" variant="theme" disabled />
-      </div>
-    </div>
-    
-    <div class="flex flex-col gap-4">
-      <h4 class="font-medium">加载状态</h4>
-      <div class="flex gap-4 items-center">
-        <XSwitch v-model="themeLoading" variant="theme" :loading="isThemeLoading" @change="handleThemeChange" />
-        <span>{{ themeLoading ? '暗黑模式' : '明亮模式' }}</span>
-      </div>
-    </div>
-  </div>
-</template>
-
-<script setup>
-import { ref } from 'vue'
-
-const themeValue = ref(false)
-const themeLoading = ref(false)
-const isThemeLoading = ref(false)
-
-const handleThemeChange = async (value) => {
-  isThemeLoading.value = true
-  try {
-    await new Promise(resolve => setTimeout(resolve, 1500))
-    themeLoading.value = value
-  } catch (error) {
-    themeLoading.value = !value
-  } finally {
-    isThemeLoading.value = false
-  }
-}
-</script>
-```
-
-:::
-
-### 实际应用场景
-
-将主题开关应用到实际的设置场景中。
-
-:::demo
-
-```vue
-<template>
-  <div class="flex flex-col gap-6 p-4 bg-gray-50 rounded-lg">
-    <h3 class="text-lg font-semibold">外观设置</h3>
-    
-    <div class="flex flex-col gap-4">
-      <div class="flex items-center justify-between">
-        <div>
-          <div class="font-medium">暗黑模式</div>
-          <div class="text-sm text-gray-500">切换到暗黑主题</div>
-        </div>
-        <XSwitch v-model="darkMode" variant="theme" />
-      </div>
-      
-      <div class="flex items-center justify-between">
-        <div>
-          <div class="font-medium">自动切换</div>
-          <div class="text-sm text-gray-500">根据系统时间自动切换主题</div>
-        </div>
-        <XSwitch v-model="autoTheme" variant="theme" />
-      </div>
-      
-      <div class="flex items-center justify-between">
-        <div>
-          <div class="font-medium">高性能模式</div>
-          <div class="text-sm text-gray-500">减少动画效果，提升性能</div>
-        </div>
-        <XSwitch v-model="performance" />
-      </div>
-    </div>
-  </div>
-</template>
-
-<script setup>
-import { ref } from 'vue'
-
-const darkMode = ref(false)
-const autoTheme = ref(false)
-const performance = ref(false)
-</script>
-```
-
-:::
-
-## 异步设置场景
-
-在实际应用中，异步开关常用于需要与服务器同步的设置项。
-
-:::demo
-
-```vue
-<template>
-  <div class="flex flex-col gap-6 p-4 bg-gray-50 rounded-lg">
-    <h3 class="text-lg font-semibold">云端设置同步</h3>
-    
-    <div class="flex flex-col gap-4">
-      <div class="flex items-center justify-between">
-        <div>
-          <div class="font-medium">自动备份</div>
-          <div class="text-sm text-gray-500">每日自动备份数据到云端</div>
-        </div>
-        <XSwitch 
-          v-model="autoBackup" 
-          :loading="backupLoading"
-          @change="handleBackupChange"
-        />
-      </div>
-      
-      <div class="flex items-center justify-between">
-        <div>
-          <div class="font-medium">实时同步</div>
-          <div class="text-sm text-gray-500">实时同步设置到所有设备</div>
-        </div>
-        <XSwitch 
-          v-model="realTimeSync" 
-          :loading="syncLoading"
-          @change="handleSyncChange"
-        />
-      </div>
-      
-      <div class="flex items-center justify-between">
-        <div>
-          <div class="font-medium">智能推荐</div>
-          <div class="text-sm text-gray-500">基于使用习惯推荐内容</div>
-        </div>
-        <XSwitch 
-          v-model="smartRecommend" 
-          :loading="recommendLoading"
-          @change="handleRecommendChange"
-        />
-      </div>
-    </div>
-    
-    <div v-if="lastSyncTime" class="text-sm text-gray-500">
-      最后同步时间: {{ lastSyncTime }}
-    </div>
-  </div>
-</template>
-
-<script setup>
-import { ref } from 'vue'
-
-const autoBackup = ref(true)
-const backupLoading = ref(false)
-
-const realTimeSync = ref(false)
-const syncLoading = ref(false)
-
-const smartRecommend = ref(true)
-const recommendLoading = ref(false)
-
-const lastSyncTime = ref('')
-
-const simulateApiCall = async (setting, value) => {
-  // 模拟API调用
-  await new Promise(resolve => setTimeout(resolve, 1000 + Math.random() * 1000))
-  
-  // 模拟偶尔的失败
-  if (Math.random() < 0.1) {
-    throw new Error('网络连接失败')
-  }
-  
-  return { success: true, timestamp: new Date().toLocaleString() }
-}
-
-const handleBackupChange = async (value) => {
-  backupLoading.value = true
-  try {
-    await simulateApiCall('autoBackup', value)
-    // 异步操作成功后才更新状态
-    autoBackup.value = value
-    lastSyncTime.value = new Date().toLocaleString()
-  } catch (error) {
-    console.error('备份设置更新失败:', error)
-    // 失败时恢复原状态
-    autoBackup.value = !value
-  } finally {
-    backupLoading.value = false
-  }
-}
-
-const handleSyncChange = async (value) => {
-  syncLoading.value = true
-  try {
-    await simulateApiCall('realTimeSync', value)
-    // 异步操作成功后才更新状态
-    realTimeSync.value = value
-    lastSyncTime.value = new Date().toLocaleString()
-  } catch (error) {
-    console.error('同步设置更新失败:', error)
-    // 失败时恢复原状态
-    realTimeSync.value = !value
-  } finally {
-    syncLoading.value = false
-  }
-}
-
-const handleRecommendChange = async (value) => {
-  recommendLoading.value = true
-  try {
-    await simulateApiCall('smartRecommend', value)
-    // 异步操作成功后才更新状态
-    smartRecommend.value = value
-    lastSyncTime.value = new Date().toLocaleString()
-  } catch (error) {
-    console.error('推荐设置更新失败:', error)
-    // 失败时恢复原状态
-    smartRecommend.value = !value
-  } finally {
-    recommendLoading.value = false
-  }
-}
-</script>
-```
-
-:::
+</div>
 
 ## API
 
 ### Props
 
 | 属性名 | 说明 | 类型 | 默认值 |
-| --- | --- | --- | --- |
-| modelValue | 开关状态 | `boolean` | `false` |
-| disabled | 是否禁用 | `boolean` | `false` |
-| size | 开关尺寸 | `'small' \| 'medium' \| 'large'` | `'medium'` |
+|--------|------|------|--------|
+| modelValue | 绑定值 | `boolean` | `false` |
 | variant | 开关样式变体 | `'default' \| 'theme'` | `'default'` |
-| color | 激活状态边框颜色（仅 default 变体） | `string` | `'#1a1a1a'` |
-| shadowColor | 阴影和光晕颜色（仅 default 变体） | `string` | `'#1a1a1a'` |
-| thumbColor | 滑块颜色（仅 default 变体） | `string` | `'#ffffff'` |
-| loading | 是否处于加载状态 | `boolean` | `false` |
+| size | 尺寸 | `'small' \| 'medium' \| 'large'` | `'medium'` |
+| color | 激活时的颜色（仅 default 变体） | `string` | `'#1a1a1a'` |
+| disabled | 是否禁用 | `boolean` | `false` |
+| loading | 是否加载中 | `boolean` | `false` |
+| active-text | 开启时的文字（仅 default 变体） | `string` | `''` |
+| inactive-text | 关闭时的文字（仅 default 变体） | `string` | `''` |
+| active-icon | 开启时的图标（仅 default 变体） | `string` | `''` |
+| inactive-icon | 关闭时的图标（仅 default 变体） | `string` | `''` |
 
 ### Events
 
 | 事件名 | 说明 | 回调参数 |
-| --- | --- | --- |
-| update:modelValue | 开关状态改变时触发 | `(value: boolean)` |
-| change | 开关状态改变时触发，可用于异步处理 | `(value: boolean)` |
-
-### Slots
-
-| 插槽名 | 说明 |
-| --- | --- |
-| - | 无插槽 |
-
-## 变体说明
-
-Switch 组件提供了两种样式变体，可以通过 `variant` 属性进行切换：
-
-### default（默认）
-标准的开关样式，简洁实用，支持自定义颜色。
-
-```vue
-<XSwitch v-model="value" variant="default" color="#10b981" />
-```
-
-**适用场景：**
-- 常规开关需求
-- 需要自定义颜色的场景
-- 简洁风格的应用
-
-### theme（主题）
-日夜主题切换样式的开关，非常适合暗黑模式切换。开关包含太阳/月亮图标、云朵和星星动画，切换时有平滑的过渡效果。
-
-```vue
-<XSwitch v-model="darkMode" variant="theme" />
-```
-
-**适用场景：**
-- 暗黑模式切换
-- 主题切换功能
-- 日夜模式设置
-
-### 注意事项
-
-1. **颜色自定义**：`color`、`shadowColor` 和 `thumbColor` 属性仅对 `default` 变体生效
-2. **尺寸支持**：所有变体都支持 `small`、`medium`、`large` 三种尺寸，并保持统一的大小比例
-3. **功能完整**：所有变体都支持 `disabled`、`loading` 状态和异步操作
-
-## 异步模式说明
-
-### 基础用法（同步模式）
-默认情况下，开关状态会立即更新，适用于本地状态管理：
-
-```vue
-<XSwitch v-model="value" />
-```
-
-### 异步模式
-当需要处理异步操作时，监听 `change` 事件并设置 `loading` 状态。**关键点：在异步失败时需要恢复原状态。**
-
-```vue
-<template>
-  <XSwitch 
-    v-model="value" 
-    :loading="isLoading"
-    @change="handleChange"
-  />
-</template>
-
-<script setup>
-import { ref } from 'vue'
-
-const value = ref(false)
-const isLoading = ref(false)
-
-const handleChange = async (newValue) => {
-  isLoading.value = true
-  try {
-    // 执行异步操作
-    await updateSetting(newValue)
-    // 成功后更新状态
-    value.value = newValue
-  } catch (error) {
-    console.error('操作失败:', error)
-    // 失败时恢复原状态（重要！）
-    value.value = !newValue
-  } finally {
-    isLoading.value = false
-  }
-}
-</script>
-```
-
-### 异步模式适用于所有变体
-
-```vue
-<!-- 默认样式 + 异步 -->
-<XSwitch v-model="value1" variant="default" :loading="loading1" @change="handleChange1" />
-
-<!-- 主题样式 + 异步 -->
-<XSwitch v-model="value2" variant="theme" :loading="loading2" @change="handleChange2" />
-```
-
-## 贡献者
-
-<div class="contributors">
-  <div class="contributor-item">
-    <a href="https://gitee.com/leheya" target="_blank" rel="noopener noreferrer">
-      <img 
-        src="https://foruda.gitee.com/avatar/1751620424517657404/10604783_leheya_1751620424.png!avatar200" 
-        alt="leheya"
-        class="contributor-avatar"
-      />
-      <span class="contributor-name">无敌暴龙神</span>
-    </a>
-  </div>
-  <div class="contributor-item">
-    <a href="https://gitee.com/haijun-li" target="_blank" rel="noopener noreferrer">
-      <img 
-        src="https://p3.itc.cn/images01/20230307/e9d72e3788844ed1a9259e442899e1bd.png" 
-        alt="lihaijun"
-        class="contributor-avatar"
-      />
-      <span class="contributor-name">lihaijun</span>
-    </a>
-  </div>
-</div>
-
-<style scoped>
-.contributors {
-  display: flex;
-  gap: 24px;
-  margin: 24px 0;
-  flex-wrap: wrap;
-}
-
-.contributor-item a {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  text-decoration: none;
-  color: inherit;
-  transition: transform 0.2s ease;
-}
-
-.contributor-item a:hover {
-  transform: translateY(-2px);
-}
-
-.contributor-avatar {
-  width: 80px;
-  height: 80px;
-  border-radius: 50%;
-  border: 3px solid var(--vp-c-border);
-  transition: border-color 0.2s ease;
-  object-fit: cover;
-}
-
-.contributor-item a:hover .contributor-avatar {
-  border-color: var(--vp-c-brand-1);
-}
-
-.contributor-name {
-  margin-top: 8px;
-  font-size: 14px;
-  font-weight: 500;
-  color: var(--vp-c-text-2);
-  transition: color 0.2s ease;
-}
-
-.contributor-item a:hover .contributor-name {
-  color: var(--vp-c-brand-1);
-}
-
-@media (max-width: 768px) {
-  .contributors {
-    gap: 16px;
-  }
-  
-  .contributor-avatar {
-    width: 60px;
-    height: 60px;
-  }
-  
-  .contributor-name {
-    font-size: 12px;
-  }
-}
-</style>
-
+|--------|------|----------|
+| update:modelValue | 状态变化时触发 | `(value: boolean)` |
+| change | 状态变化时触发 | `(value: boolean)` |

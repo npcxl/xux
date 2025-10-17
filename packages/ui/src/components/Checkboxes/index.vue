@@ -149,7 +149,7 @@ defineExpose({
 })
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 .x-checkboxes {
   width: 100%;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
@@ -180,16 +180,34 @@ defineExpose({
   align-items: center;
   gap: 6px;
   padding: 4px 8px;
-  background-color: #1a1a1a;
+  background: linear-gradient(135deg, #1a1a1a, #333);
   color: white;
   border-radius: 16px;
   font-size: 14px;
   font-weight: 500;
-  transition: all 0.2s ease;
+  transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  position: relative;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 16px;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), transparent);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
 }
 
 .tag-item:hover {
-  background-color: #333333;
+  background: linear-gradient(135deg, #333, #1a1a1a);
+  transform: translateY(-2px) scale(1.05);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+  
+  &::before {
+    opacity: 1;
+  }
 }
 
 .tag-text {
@@ -207,11 +225,30 @@ defineExpose({
   color: white;
   cursor: pointer;
   border-radius: 50%;
-  transition: background-color 0.2s ease;
+  transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  position: relative;
+  
+  &::before {
+    content: '';
+    position: absolute;
+    inset: -2px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.2);
+    transform: scale(0);
+    transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
 }
 
 .tag-remove:hover {
-  background-color: rgba(255, 255, 255, 0.2);
+  transform: scale(1.2) rotate(90deg);
+  
+  &::before {
+    transform: scale(1);
+  }
+}
+
+.tag-remove:active {
+  transform: scale(0.9) rotate(90deg);
 }
 
 .clear-all-btn {
@@ -225,12 +262,31 @@ defineExpose({
   color: #6c757d;
   cursor: pointer;
   border-radius: 6px;
-  transition: all 0.2s ease;
+  transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  position: relative;
+  
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 6px;
+    background: linear-gradient(135deg, #e9ecef, #f8f9fa);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
 }
 
 .clear-all-btn:hover {
-  background-color: #e9ecef;
   color: #495057;
+  transform: scale(1.1) rotate(15deg);
+  
+  &::before {
+    opacity: 1;
+  }
+}
+
+.clear-all-btn:active {
+  transform: scale(0.95) rotate(15deg);
 }
 
 /* 选项容器 */
@@ -281,10 +337,44 @@ defineExpose({
   gap: 12px;
   padding: 12px 16px;
   cursor: pointer;
-  transition: all var(--x-transition, 0.2s ease);
+  transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
   border-bottom: 1px solid var(--x-color-gray-100, #f8f9fa);
   user-select: none;
+  position: relative;
+  animation: slideInFade 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) backwards;
 }
+
+.options-container--vertical .option-item:nth-child(1) { animation-delay: 0.03s; }
+.options-container--vertical .option-item:nth-child(2) { animation-delay: 0.06s; }
+.options-container--vertical .option-item:nth-child(3) { animation-delay: 0.09s; }
+.options-container--vertical .option-item:nth-child(4) { animation-delay: 0.12s; }
+.options-container--vertical .option-item:nth-child(5) { animation-delay: 0.15s; }
+.options-container--vertical .option-item:nth-child(6) { animation-delay: 0.18s; }
+.options-container--vertical .option-item:nth-child(7) { animation-delay: 0.21s; }
+.options-container--vertical .option-item:nth-child(8) { animation-delay: 0.24s; }
+.options-container--vertical .option-item:nth-child(9) { animation-delay: 0.27s; }
+.options-container--vertical .option-item:nth-child(10) { animation-delay: 0.30s; }
+
+.options-container--horizontal .option-item:nth-child(1),
+.options-container--grid .option-item:nth-child(1) { animation-delay: 0.05s; }
+.options-container--horizontal .option-item:nth-child(2),
+.options-container--grid .option-item:nth-child(2) { animation-delay: 0.10s; }
+.options-container--horizontal .option-item:nth-child(3),
+.options-container--grid .option-item:nth-child(3) { animation-delay: 0.15s; }
+.options-container--horizontal .option-item:nth-child(4),
+.options-container--grid .option-item:nth-child(4) { animation-delay: 0.20s; }
+.options-container--horizontal .option-item:nth-child(5),
+.options-container--grid .option-item:nth-child(5) { animation-delay: 0.25s; }
+.options-container--horizontal .option-item:nth-child(6),
+.options-container--grid .option-item:nth-child(6) { animation-delay: 0.30s; }
+.options-container--horizontal .option-item:nth-child(7),
+.options-container--grid .option-item:nth-child(7) { animation-delay: 0.35s; }
+.options-container--horizontal .option-item:nth-child(8),
+.options-container--grid .option-item:nth-child(8) { animation-delay: 0.40s; }
+.options-container--horizontal .option-item:nth-child(9),
+.options-container--grid .option-item:nth-child(9) { animation-delay: 0.45s; }
+.options-container--horizontal .option-item:nth-child(10),
+.options-container--grid .option-item:nth-child(10) { animation-delay: 0.50s; }
 
 .options-container--vertical .option-item:last-child {
   border-bottom: none;
@@ -292,6 +382,8 @@ defineExpose({
 
 .option-item:hover:not(.option-disabled) {
   background-color: var(--x-color-gray-50, #f8f9fa);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
 }
 
 .option-selected {
@@ -300,6 +392,8 @@ defineExpose({
 
 .option-selected:hover:not(.option-disabled) {
   background-color: rgba(26, 26, 26, 0.08);
+  transform: translateY(-2px) scale(1.02);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
 }
 
 .option-disabled {
@@ -337,22 +431,55 @@ defineExpose({
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: all var(--x-transition-fast, 0.15s ease);
+  transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
   position: relative;
   flex-shrink: 0;
+  
+  &::before {
+    content: '';
+    position: absolute;
+    inset: -4px;
+    border-radius: 6px;
+    background: radial-gradient(circle, rgba(26, 26, 26, 0.1), transparent);
+    opacity: 0;
+    transform: scale(0);
+    transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+  
+  &::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: var(--x-radius-sm, 4px);
+    background: linear-gradient(135deg, rgba(26, 26, 26, 0.05), transparent);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
 }
 
 .option-item:hover:not(.option-disabled) .checkbox-custom {
   border-color: var(--x-color-gray-500, #9ca3af);
+  transform: scale(1.1) rotate(5deg);
+  
+  &::after {
+    opacity: 1;
+  }
 }
 
 .checkbox-input:checked + .checkbox-custom {
-  background-color: var(--x-color-primary, #1a1a1a);
+  background: linear-gradient(135deg, #1a1a1a, #333);
   border-color: var(--x-color-primary, #1a1a1a);
+  animation: checkboxPop 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+  
+  &::before {
+    opacity: 1;
+    transform: scale(1.5);
+    animation: rippleEffect 0.6s ease-out;
+  }
 }
 
 .checkbox-input:focus + .checkbox-custom {
-  box-shadow: 0 0 0 3px rgba(26, 26, 26, 0.1);
+  box-shadow: 0 0 0 4px rgba(26, 26, 26, 0.12), 0 2px 8px rgba(26, 26, 26, 0.15);
 }
 
 .checkbox-input:disabled + .checkbox-custom {
@@ -366,13 +493,15 @@ defineExpose({
   height: 14px;
   fill: white;
   opacity: 0;
-  transform: scale(0);
-  transition: all 0.2s ease;
+  transform: scale(0) rotate(-45deg);
+  transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.2));
 }
 
 .checkbox-input:checked + .checkbox-custom .check-icon {
   opacity: 1;
-  transform: scale(1);
+  transform: scale(1) rotate(0deg);
+  animation: checkBounce 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) 0.1s;
 }
 
 .option-label {
@@ -380,6 +509,16 @@ defineExpose({
   color: #374151;
   font-weight: 500;
   flex: 1;
+  transition: all 0.3s ease;
+}
+
+.option-selected .option-label {
+  color: #1a1a1a;
+  font-weight: 600;
+}
+
+.option-item:hover:not(.option-disabled) .option-label {
+  color: #1a1a1a;
 }
 
 /* 响应式设计 */
@@ -399,18 +538,76 @@ defineExpose({
 }
 
 /* 动画效果 */
-@keyframes fadeIn {
-  from {
-      opacity: 0;
-      transform: translateY(-4px);
+@keyframes slideInFade {
+  0% {
+    opacity: 0;
+    transform: translateX(-20px);
   }
-  to {
-      opacity: 1;
-      transform: translateY(0);
+  100% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes checkboxPop {
+  0% {
+    transform: scale(1);
+  }
+  30% {
+    transform: scale(1.2) rotate(-5deg);
+  }
+  50% {
+    transform: scale(0.9) rotate(3deg);
+  }
+  70% {
+    transform: scale(1.05) rotate(-2deg);
+  }
+  100% {
+    transform: scale(1) rotate(0);
+  }
+}
+
+@keyframes checkBounce {
+  0% {
+    transform: scale(0) rotate(-45deg);
+  }
+  50% {
+    transform: scale(1.2) rotate(5deg);
+  }
+  100% {
+    transform: scale(1) rotate(0);
+  }
+}
+
+@keyframes rippleEffect {
+  0% {
+    opacity: 0.8;
+    transform: scale(0);
+  }
+  50% {
+    opacity: 0.4;
+  }
+  100% {
+    opacity: 0;
+    transform: scale(2);
+  }
+}
+
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+    transform: translateY(-8px) scale(0.95);
+  }
+  50% {
+    transform: translateY(2px) scale(1.02);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
   }
 }
 
 .tag-item {
-  animation: fadeIn 0.2s ease;
+  animation: fadeIn 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 </style>

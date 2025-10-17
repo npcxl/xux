@@ -43,6 +43,9 @@ export { default as XSearch } from './components/Search/index.vue'
 export { default as XTimeline } from './components/Timeline/index.vue'
 export { default as XTree } from './components/Tree/index.vue'
 export { default as XDrawer } from './components/Drawer/index.vue'
+export { default as XPagination } from './components/Pagination/index.vue'
+export { default as XFlex } from './components/Flex/index.vue'
+export { default as XCarousel } from './components/Carousel/index.vue'
 // 导出 Composables
 export { xlMsg, default as useMsg } from './composables/Msg'
 export { xlAlert, default as useAlert } from './composables/Alert'
@@ -57,6 +60,9 @@ export const Msg = xlMsg()
 export const Alert = xlAlert()
 export const DateTime = useDateTime()
 
+// 导出工具函数
+export * from './utils'
+
 // 导出类型定义
 export type { Country, CountrySelectProps } from './components/CountrySelect/index.vue'
 export type { SelectOption, SelectProps } from './components/Select/index.vue'
@@ -69,7 +75,7 @@ export type { ModalProps } from './components/Modal/index.vue'
 export type { TooltipsProps } from './components/Tooltips/index.vue'
 export type { ScoreProps } from './components/Score/index.vue'
 export type { RadioOption, RadioProps } from './components/Radio/index.vue'
-export type { DateTimePickerProps } from './components/DateTimePicker/index.vue'
+export type { DateTimePickerProps, ShortcutOption } from './components/DateTimePicker/index.vue'
 export type { RegionCascaderProps } from './components/RegionCascader/index.vue'
 export type { QrcodeProps } from './components/Qrcode/index.vue'
 export type { SegmentedOption, SegmentedProps } from './components/Segmented/index.vue'
@@ -90,6 +96,9 @@ export type { SearchProps } from './components/Search/index.vue'
 export type { TimelineProps, TimelineItem } from './components/Timeline/index.vue'
 export type { TreeProps, TreeNodeData } from './components/Tree/index.vue'
 export type { DrawerProps } from './components/Drawer/index.vue'
+export type { PaginationProps } from './components/Pagination/index.vue'
+export type { FlexProps } from './components/Flex/index.vue'
+export type { CarouselProps, CarouselItem } from './components/Carousel/index.vue'
 export type { DateTimeOptions, DateRange, CalendarDate } from './composables/DateTime'
 
 

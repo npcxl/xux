@@ -2,15 +2,19 @@
 
 当用户悬停在元素上时，显示简短的说明文字或提示信息。
 
+<div style="columns: 2; column-gap: 32px; margin-top: 32px;">
+
+<div style="break-inside: avoid; margin-bottom: 24px;">
+
 ## 基础用法
 
-最简单的用法，支持上下左右四个方向。
+支持上下左右四个方向。
 
 :::demo
 
 ```vue
 <template>
-  <div class="flex gap-8 flex-wrap items-center justify-center p-20">
+  <XFlex gap="16" wrap="wrap" align="center" justify="center" style="padding: 40px">
     <XTooltips content="这是一个提示" placement="top">
       <XButton>上方提示</XButton>
     </XTooltips>
@@ -26,57 +30,19 @@
     <XTooltips content="这是一个提示" placement="right">
       <XButton>右侧提示</XButton>
     </XTooltips>
-  </div>
+  </XFlex>
 </template>
+
+<script setup>
+import { XFlex, XButton, XTooltips } from '@xlui/xux-ui'
+</script>
 ```
 
 :::
 
-## 丰富版本
+</div>
 
-基于 CSS Buttons 的丰富提示效果，带有动画和按钮样式转换。
-
-:::demo
-
-```vue
-<template>
-  <div class="flex gap-6 flex-wrap items-center justify-center p-20">
-    <XTooltips 
-      variant="rich" 
-      content="Tooltip" 
-      label="XUX" 
-      placement="top"
-      hover-text="Click Me"
-    />
-    
-    <XTooltips 
-      variant="rich" 
-      content="Tooltip" 
-      label="XUX" 
-      placement="bottom"
-      hover-text="Click Me"
-    />
-    
-    <XTooltips 
-      variant="rich" 
-      content="Tooltip" 
-      label="XUX" 
-      placement="left"
-      hover-text="Click Me"
-    />
-    
-    <XTooltips 
-      variant="rich" 
-      content="Tooltip" 
-      label="XUX" 
-      placement="right"
-      hover-text="Click Me"
-    />
-  </div>
-</template>
-```
-
-:::
+<div style="break-inside: avoid; margin-bottom: 24px;">
 
 ## 不同的提示内容
 
@@ -86,7 +52,7 @@
 
 ```vue
 <template>
-  <div class="flex gap-6 flex-wrap items-center justify-center p-10">
+  <XFlex gap="12" wrap="wrap" align="center" justify="center" style="padding: 20px">
     <XTooltips content="保存你的工作" placement="top">
       <XButton type="primary" icon="mdi:content-save">保存</XButton>
     </XTooltips>
@@ -102,21 +68,83 @@
     <XTooltips content="分享给朋友" placement="top">
       <XButton icon="mdi:share">分享</XButton>
     </XTooltips>
-  </div>
+  </XFlex>
 </template>
+
+<script setup>
+import { XFlex, XButton, XTooltips } from '@xlui/xux-ui'
+</script>
 ```
 
 :::
 
-## 丰富版本 - 上方提示
+</div>
 
-基于 CSS Buttons 的上方提示效果，悬停时会有震动动画。
+<div style="break-inside: avoid; margin-bottom: 24px;">
+
+## 丰富版本 - 基础
+
+基于 CSS Buttons 的丰富提示效果，带有动画和按钮样式转换。
 
 :::demo
 
 ```vue
 <template>
-  <div class="flex gap-6 flex-wrap items-center justify-center p-20">
+  <XFlex gap="16" wrap="wrap" align="center" justify="center" style="padding: 40px">
+    <XTooltips 
+      variant="rich" 
+      content="Tooltip" 
+      label="XUX" 
+      placement="top"
+      hover-text="Click Me"
+    />
+    
+    <XTooltips 
+      variant="rich" 
+      content="Tooltip" 
+      label="XUX" 
+      placement="bottom"
+      hover-text="Click Me"
+    />
+    
+    <XTooltips 
+      variant="rich" 
+      content="Tooltip" 
+      label="XUX" 
+      placement="left"
+      hover-text="Click Me"
+    />
+    
+    <XTooltips 
+      variant="rich" 
+      content="Tooltip" 
+      label="XUX" 
+      placement="right"
+      hover-text="Click Me"
+    />
+  </XFlex>
+</template>
+
+<script setup>
+import { XFlex, XTooltips } from '@xlui/xux-ui'
+</script>
+```
+
+:::
+
+</div>
+
+<div style="break-inside: avoid; margin-bottom: 24px;">
+
+## 丰富版本 - 自定义文字
+
+自定义按钮文字和悬停效果。
+
+:::demo
+
+```vue
+<template>
+  <XFlex gap="16" wrap="wrap" align="center" justify="center" style="padding: 40px">
     <XTooltips 
       variant="rich" 
       content="Button" 
@@ -132,173 +160,42 @@
       placement="top"
       hover-text="Nice!"
     />
-  </div>
-</template>
-```
-
-:::
-
-## 丰富版本 - 下方提示
-
-基于 CSS Buttons 的下方提示效果。
-
-:::demo
-
-```vue
-<template>
-  <div class="flex gap-6 flex-wrap items-center justify-center p-20">
-    <XTooltips 
-      variant="rich" 
-      content="Button" 
-      label="Info Below" 
-      placement="bottom"
-      hover-text="See Below"
-    />
     
     <XTooltips 
       variant="rich" 
-      content="Action" 
-      label="Action" 
+      content="Info" 
+      label="Learn More" 
       placement="bottom"
-      hover-text="Do It!"
+      hover-text="Great!"
     />
-  </div>
+  </XFlex>
 </template>
+
+<script setup>
+import { XFlex, XTooltips } from '@xlui/xux-ui'
+</script>
 ```
 
 :::
 
-## 丰富版本 - 左右提示
+</div>
 
-基于 CSS Buttons 的左右提示效果。
-
-:::demo
-
-```vue
-<template>
-  <div class="flex gap-6 flex-wrap items-center justify-center p-20">
-    <XTooltips 
-      variant="rich" 
-      content="Left" 
-      label="Look Left" 
-      placement="left"
-      hover-text="Left Side"
-    />
-    
-    <XTooltips 
-      variant="rich" 
-      content="Right" 
-      label="Look Right" 
-      placement="right"
-      hover-text="Right Side"
-    />
-  </div>
-</template>
-```
-
-:::
+</div>
 
 ## API
 
 ### Props
 
-| 属性 | 说明 | 类型 | 可选值 | 默认值 |
-| --- | --- | --- | --- | --- |
-| content | Tooltip 显示的内容 | `string` | — | — |
-| placement | Tooltip 的位置 | `string` | `top` / `bottom` / `left` / `right` | `top` |
-| variant | 变体类型 | `string` | `basic` / `rich` | `basic` |
-| label | 丰富版本的标签文字（仅 variant="rich" 时有效） | `string` | — | `'Hover'` |
-| hoverText | 丰富版本的悬停文字（仅 variant="rich" 时有效） | `string` | — | `''` |
+| 属性名 | 说明 | 类型 | 默认值 |
+|--------|------|------|--------|
+| content | 提示内容文字 | `string` | `''` |
+| placement | 提示框位置 | `'top' \| 'bottom' \| 'left' \| 'right'` | `'top'` |
+| variant | 提示框变体 | `'default' \| 'rich'` | `'default'` |
+| label | 按钮标签文字（rich 变体） | `string` | `''` |
+| hover-text | 悬停时的文字（rich 变体） | `string` | `''` |
 
 ### Slots
 
-| 名称 | 说明 |
-| --- | --- |
-| default | 触发 Tooltip 的元素（仅 variant="basic" 时有效） |
-
-## 贡献者
-
-<div class="contributors">
-  <div class="contributor-item">
-    <a href="https://gitee.com/leheya" target="_blank" rel="noopener noreferrer">
-      <img 
-        src="https://foruda.gitee.com/avatar/1751620424517657404/10604783_leheya_1751620424.png!avatar200" 
-        alt="leheya"
-        class="contributor-avatar"
-      />
-      <span class="contributor-name">无敌暴龙神</span>
-    </a>
-  </div>
-  <!-- <div class="contributor-item">
-    <a href="https://gitee.com/haijun-li" target="_blank" rel="noopener noreferrer">
-      <img 
-        src="https://p3.itc.cn/images01/20230307/e9d72e3788844ed1a9259e442899e1bd.png" 
-        alt="lihaijun"
-        class="contributor-avatar"
-      />
-      <span class="contributor-name">lihaijun</span>
-    </a>
-  </div> -->
-</div>
-
-<style scoped>
-.contributors {
-  display: flex;
-  gap: 24px;
-  margin: 24px 0;
-  flex-wrap: wrap;
-}
-
-.contributor-item a {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  text-decoration: none;
-  color: inherit;
-  transition: transform 0.2s ease;
-}
-
-.contributor-item a:hover {
-  transform: translateY(-2px);
-}
-
-.contributor-avatar {
-  width: 80px;
-  height: 80px;
-  border-radius: 50%;
-  border: 3px solid var(--vp-c-border);
-  transition: border-color 0.2s ease;
-  object-fit: cover;
-}
-
-.contributor-item a:hover .contributor-avatar {
-  border-color: var(--vp-c-brand-1);
-}
-
-.contributor-name {
-  margin-top: 8px;
-  font-size: 14px;
-  font-weight: 500;
-  color: var(--vp-c-text-2);
-  transition: color 0.2s ease;
-}
-
-.contributor-item a:hover .contributor-name {
-  color: var(--vp-c-brand-1);
-}
-
-@media (max-width: 768px) {
-  .contributors {
-    gap: 16px;
-  }
-  
-  .contributor-avatar {
-    width: 60px;
-    height: 60px;
-  }
-  
-  .contributor-name {
-    font-size: 12px;
-  }
-}
-</style>
+| 插槽名 | 说明 |
+|--------|------|
+| default | 触发提示的元素（default 变体） |

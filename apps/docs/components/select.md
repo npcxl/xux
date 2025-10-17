@@ -2,6 +2,10 @@
 
 下拉选择器组件，支持单选、多选、搜索等功能。
 
+<div style="columns: 2; column-gap: 32px; margin-top: 32px;">
+
+<div style="break-inside: avoid; margin-bottom: 24px;">
+
 ## 基础用法
 
 基本的单选功能。
@@ -10,21 +14,22 @@
 
 ```vue
 <template>
-  <div style="min-height: 250px;">
+  <XFlex vertical gap="16" style="min-height: 250px">
     <XSelect 
       v-model="selected" 
       :options="options"
       placeholder="请选择"
       width="200px"
     />
-    <div class="mt-4 text-sm text-gray-600">
+    <div style="font-size: 14px; color: #666">
       选中的值：{{ selected }}
     </div>
-  </div>
+  </XFlex>
 </template>
 
 <script setup>
 import { ref } from 'vue'
+import { XFlex, XSelect } from '@xlui/xux-ui'
 
 const selected = ref('')
 const options = [
@@ -38,15 +43,19 @@ const options = [
 
 :::
 
+</div>
+
+<div style="break-inside: avoid; margin-bottom: 24px;">
+
 ## 多选模式
 
-通过设置 `multiple` 属性启用多选，选中的值会以标签形式展示。
+设置 `multiple` 属性启用多选。
 
 :::demo
 
 ```vue
 <template>
-  <div style="min-height: 300px;">
+  <XFlex vertical gap="16" style="min-height: 300px">
     <XSelect 
       v-model="multiSelected" 
       :options="options"
@@ -54,14 +63,15 @@ const options = [
       placeholder="请选择多个选项"
       width="300px"
     />
-    <div class="mt-4 text-sm text-gray-600">
+    <div style="font-size: 14px; color: #666">
       选中的值：{{ multiSelected.join(', ') || '未选择' }}
     </div>
-  </div>
+  </XFlex>
 </template>
 
 <script setup>
 import { ref } from 'vue'
+import { XFlex, XSelect } from '@xlui/xux-ui'
 
 const multiSelected = ref([])
 const options = [
@@ -76,15 +86,19 @@ const options = [
 
 :::
 
+</div>
+
+<div style="break-inside: avoid; margin-bottom: 24px;">
+
 ## 可搜索
 
-启用 `searchable` 属性，可以在下拉列表中搜索选项。
+启用 `searchable` 属性，在下拉列表中搜索选项。
 
 :::demo
 
 ```vue
 <template>
-  <div style="min-height: 300px;">
+  <XFlex vertical gap="16" style="min-height: 300px">
     <XSelect 
       v-model="searchSelected" 
       :options="countries"
@@ -92,14 +106,15 @@ const options = [
       placeholder="搜索国家"
       width="250px"
     />
-    <div class="mt-4 text-sm text-gray-600">
+    <div style="font-size: 14px; color: #666">
       选中：{{ searchSelected }}
     </div>
-  </div>
+  </XFlex>
 </template>
 
 <script setup>
 import { ref } from 'vue'
+import { XFlex, XSelect } from '@xlui/xux-ui'
 
 const searchSelected = ref('')
 const countries = [
@@ -117,6 +132,10 @@ const countries = [
 
 :::
 
+</div>
+
+<div style="break-inside: avoid; margin-bottom: 24px;">
+
 ## 多选 + 搜索
 
 结合多选和搜索功能。
@@ -125,7 +144,7 @@ const countries = [
 
 ```vue
 <template>
-  <div style="min-height: 300px;">
+  <XFlex vertical gap="16" style="min-height: 300px">
     <XSelect 
       v-model="multiSearchSelected" 
       :options="fruits"
@@ -134,413 +153,158 @@ const countries = [
       placeholder="搜索并选择水果"
       width="320px"
     />
-    <div class="mt-4 p-3 bg-gray-100 rounded text-sm">
-      <div class="font-medium mb-2">已选择的水果：</div>
-      <div v-if="multiSearchSelected.length === 0" class="text-gray-500">未选择</div>
-      <div v-else>
-        <span 
-          v-for="(item, index) in multiSearchSelected" 
-          :key="item"
-          class="inline-block mr-2 mb-1"
-        >
-          {{ getFruitLabel(item) }}<span v-if="index < multiSearchSelected.length - 1">, </span>
-        </span>
+    <div style="padding: 12px; background: #f5f5f5; border-radius: 4px; font-size: 14px">
+      <div style="font-weight: 500; margin-bottom: 8px">已选择的水果：</div>
+      <div v-if="multiSearchSelected.length === 0" style="color: #999">未选择</div>
+      <div v-else style="color: #666">
+        {{ multiSearchSelected.join(', ') }}
       </div>
     </div>
-  </div>
+  </XFlex>
 </template>
 
 <script setup>
 import { ref } from 'vue'
+import { XFlex, XSelect } from '@xlui/xux-ui'
 
 const multiSearchSelected = ref([])
 const fruits = [
-  { label: '苹果 🍎', value: 'apple' },
-  { label: '香蕉 🍌', value: 'banana' },
-  { label: '橙子 🍊', value: 'orange' },
-  { label: '葡萄 🍇', value: 'grape' },
-  { label: '西瓜 🍉', value: 'watermelon' },
-  { label: '草莓 🍓', value: 'strawberry' },
-  { label: '芒果 🥭', value: 'mango' },
-  { label: '樱桃 🍒', value: 'cherry' }
+  { label: '苹果 Apple', value: 'apple' },
+  { label: '香蕉 Banana', value: 'banana' },
+  { label: '橙子 Orange', value: 'orange' },
+  { label: '葡萄 Grape', value: 'grape' },
+  { label: '芒果 Mango', value: 'mango' },
+  { label: '西瓜 Watermelon', value: 'watermelon' }
 ]
-
-const getFruitLabel = (value) => {
-  return fruits.find(f => f.value === value)?.label || value
-}
 </script>
 ```
 
 :::
 
+</div>
+
+<div style="break-inside: avoid; margin-bottom: 24px;">
+
 ## 禁用状态
 
-通过 `disabled` 属性禁用选择器。
+禁用整个选择器或单个选项。
 
 :::demo
 
 ```vue
 <template>
-  <div class="space-y-4" style="min-height: 200px;">
+  <XFlex vertical gap="16" style="min-height: 250px">
     <div>
-      <label class="block text-sm font-medium mb-2">正常状态</label>
+      <div style="font-size: 14px; font-weight: 500; margin-bottom: 8px">整体禁用</div>
       <XSelect 
-        v-model="normalValue" 
-        :options="options"
-        width="200px"
-      />
-    </div>
-    <div>
-      <label class="block text-sm font-medium mb-2">禁用状态</label>
-      <XSelect 
-        v-model="disabledValue" 
+        v-model="selected1" 
         :options="options"
         disabled
         width="200px"
       />
     </div>
-  </div>
-</template>
-
-<script setup>
-import { ref } from 'vue'
-
-const normalValue = ref('1')
-const disabledValue = ref('2')
-const options = [
-  { label: '选项一', value: '1' },
-  { label: '选项二', value: '2' },
-  { label: '选项三', value: '3' }
-]
-</script>
-```
-
-:::
-
-## 无边框模式
-
-设置 `borderless` 属性可以去除边框，适合特殊场景。
-
-:::demo
-
-```vue
-<template>
-  <div class="space-y-4" style="min-height: 250px;">
     <div>
-      <label class="block text-sm font-medium mb-2">默认样式</label>
+      <div style="font-size: 14px; font-weight: 500; margin-bottom: 8px">部分选项禁用</div>
       <XSelect 
-        v-model="value1" 
-        :options="options"
+        v-model="selected2" 
+        :options="optionsWithDisabled"
         width="200px"
       />
     </div>
-    <div>
-      <label class="block text-sm font-medium mb-2">无边框样式</label>
-      <XSelect 
-        v-model="value2" 
-        :options="options"
-        borderless
-        width="200px"
-      />
-    </div>
-  </div>
+  </XFlex>
 </template>
 
 <script setup>
 import { ref } from 'vue'
+import { XFlex, XSelect } from '@xlui/xux-ui'
 
-const value1 = ref('1')
-const value2 = ref('2')
+const selected1 = ref('1')
+const selected2 = ref('')
 const options = [
   { label: '选项一', value: '1' },
-  { label: '选项二', value: '2' },
-  { label: '选项三', value: '3' }
+  { label: '选项二', value: '2' }
+]
+const optionsWithDisabled = [
+  { label: '可选项', value: '1' },
+  { label: '禁用项', value: '2', disabled: true },
+  { label: '可选项', value: '3' }
 ]
 </script>
 ```
 
 :::
 
-## 自定义宽度
+</div>
 
-通过 `width` 属性自定义选择器宽度。
+<div style="break-inside: avoid; margin-bottom: 24px;">
 
-:::demo
+## 可清空
 
-```vue
-<template>
-  <div class="space-y-4" style="min-height: 300px;">
-    <div>
-      <label class="block text-sm font-medium mb-2">宽度: 150px</label>
-      <XSelect 
-        v-model="value1" 
-        :options="options"
-        width="150px"
-      />
-    </div>
-    <div>
-      <label class="block text-sm font-medium mb-2">宽度: 250px</label>
-      <XSelect 
-        v-model="value2" 
-        :options="options"
-        width="250px"
-      />
-    </div>
-    <div>
-      <label class="block text-sm font-medium mb-2">宽度: 100%</label>
-      <XSelect 
-        v-model="value3" 
-        :options="options"
-        width="100%"
-      />
-    </div>
-  </div>
-</template>
-
-<script setup>
-import { ref } from 'vue'
-
-const value1 = ref('')
-const value2 = ref('')
-const value3 = ref('')
-const options = [
-  { label: '短选项', value: '1' },
-  { label: '这是一个比较长的选项', value: '2' },
-  { label: '选项三', value: '3' }
-]
-</script>
-```
-
-:::
-
-## 自定义字段名
-
-使用 `label-key` 和 `value-key` 属性自定义数据字段。
+设置 `clearable` 属性显示清空按钮。
 
 :::demo
 
 ```vue
 <template>
-  <div style="min-height: 250px;">
+  <XFlex vertical gap="16" style="min-height: 250px">
     <XSelect 
-      v-model="selected" 
-      :options="customOptions"
-      label-key="name"
-      value-key="id"
-      placeholder="选择用户"
-      width="220px"
-    />
-    <div class="mt-4 text-sm text-gray-600">
-      选中的ID：{{ selected }}
-    </div>
-  </div>
-</template>
-
-<script setup>
-import { ref } from 'vue'
-
-const selected = ref('')
-const customOptions = [
-  { id: 1, name: '张三', role: 'Admin' },
-  { id: 2, name: '李四', role: 'User' },
-  { id: 3, name: '王五', role: 'Guest' },
-  { id: 4, name: '赵六', role: 'User' }
-]
-</script>
-```
-
-:::
-
-## 事件监听
-
-监听选择器的各种事件。
-
-:::demo
-
-```vue
-<template>
-  <div style="min-height: 300px;">
-    <XSelect 
-      v-model="selected" 
+      v-model="clearSelected" 
       :options="options"
-      @change="handleChange"
-      @open="handleOpen"
-      @close="handleClose"
+      clearable
+      placeholder="可清空的选择器"
       width="200px"
     />
-    <div class="mt-4 p-3 bg-gray-100 rounded text-sm space-y-1">
-      <div><strong>事件日志：</strong></div>
-      <div v-for="(log, index) in logs" :key="index" class="text-xs">
-        {{ log }}
-      </div>
+    <div style="font-size: 14px; color: #666">
+      选中的值：{{ clearSelected || '未选择' }}
     </div>
-  </div>
+  </XFlex>
 </template>
 
 <script setup>
 import { ref } from 'vue'
+import { XFlex, XSelect } from '@xlui/xux-ui'
 
-const selected = ref('')
-const logs = ref([])
+const clearSelected = ref('2')
 const options = [
   { label: '选项一', value: '1' },
   { label: '选项二', value: '2' },
   { label: '选项三', value: '3' }
 ]
-
-const addLog = (message) => {
-  const time = new Date().toLocaleTimeString()
-  logs.value.unshift(`[${time}] ${message}`)
-  if (logs.value.length > 5) {
-    logs.value.pop()
-  }
-}
-
-const handleChange = (value) => {
-  addLog(`值改变: ${value}`)
-}
-
-const handleOpen = () => {
-  addLog('下拉框打开')
-}
-
-const handleClose = () => {
-  addLog('下拉框关闭')
-}
 </script>
 ```
 
 :::
+
+</div>
+
+</div>
 
 ## API
 
 ### Props
 
-| 属性 | 说明 | 类型 | 默认值 |
-|------|------|------|--------|
-| modelValue / v-model | 绑定值 | `any \| any[]` | - |
-| options | 选项数据 | `SelectOption[]` | `[]` |
-| placeholder | 占位符文本 | `string` | `'请选择...'` |
+| 属性名 | 说明 | 类型 | 默认值 |
+|--------|------|------|--------|
+| modelValue | 绑定值 | `string \| number \| Array` | - |
+| options | 选项数据 | `Array<Option>` | `[]` |
+| placeholder | 占位文本 | `string` | `'请选择'` |
+| width | 选择器宽度 | `string` | `'200px'` |
 | multiple | 是否多选 | `boolean` | `false` |
 | searchable | 是否可搜索 | `boolean` | `false` |
+| clearable | 是否可清空 | `boolean` | `false` |
 | disabled | 是否禁用 | `boolean` | `false` |
-| labelKey | 选项标签字段名 | `string` | `'label'` |
-| valueKey | 选项值字段名 | `string` | `'value'` |
-| noOptionsText | 无选项时的提示文本 | `string` | `'暂无选项'` |
-| clearable | 是否可清空（暂未实现） | `boolean` | `false` |
-| borderless | 是否无边框 | `boolean` | `false` |
-| width | 选择器宽度 | `string` | `'200px'` |
+
+### Option
+
+| 属性名 | 说明 | 类型 |
+|--------|------|------|
+| label | 选项标签 | `string` |
+| value | 选项值 | `string \| number` |
+| disabled | 是否禁用（可选） | `boolean` |
 
 ### Events
 
 | 事件名 | 说明 | 回调参数 |
 |--------|------|----------|
-| update:modelValue | 值改变时触发 | `(value: any)` |
-| change | 选择选项时触发 | `(value: any)` |
-| open | 下拉框打开时触发 | `()` |
-| close | 下拉框关闭时触发 | `()` |
-
-### Exposed Methods
-
-| 方法名 | 说明 | 参数 |
-|--------|------|------|
-| open | 打开下拉框 | `()` |
-| close | 关闭下拉框 | `()` |
-| toggle | 切换下拉框状态 | `()` |
-
-### SelectOption 接口
-
-```typescript
-interface SelectOption {
-  label: string       // 选项显示文本
-  value: any         // 选项值
-  disabled?: boolean // 是否禁用（可选）
-  [key: string]: any // 支持自定义字段
-}
-```
-## 贡献者
-
-<div class="contributors">
-  <div class="contributor-item">
-    <a href="https://gitee.com/leheya" target="_blank" rel="noopener noreferrer">
-      <img 
-        src="https://foruda.gitee.com/avatar/1751620424517657404/10604783_leheya_1751620424.png!avatar200" 
-        alt="leheya"
-        class="contributor-avatar"
-      />
-      <span class="contributor-name">无敌暴龙神</span>
-    </a>
-  </div>
-  <!-- <div class="contributor-item">
-    <a href="https://gitee.com/haijun-li" target="_blank" rel="noopener noreferrer">
-      <img 
-        src="https://p3.itc.cn/images01/20230307/e9d72e3788844ed1a9259e442899e1bd.png" 
-        alt="lihaijun"
-        class="contributor-avatar"
-      />
-      <span class="contributor-name">lihaijun</span>
-    </a>
-  </div> -->
-</div>
-
-<style scoped>
-.contributors {
-  display: flex;
-  gap: 24px;
-  margin: 24px 0;
-  flex-wrap: wrap;
-}
-
-.contributor-item a {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  text-decoration: none;
-  color: inherit;
-  transition: transform 0.2s ease;
-}
-
-.contributor-item a:hover {
-  transform: translateY(-2px);
-}
-
-.contributor-avatar {
-  width: 80px;
-  height: 80px;
-  border-radius: 50%;
-  border: 3px solid var(--vp-c-border);
-  transition: border-color 0.2s ease;
-  object-fit: cover;
-}
-
-.contributor-item a:hover .contributor-avatar {
-  border-color: var(--vp-c-brand-1);
-}
-
-.contributor-name {
-  margin-top: 8px;
-  font-size: 14px;
-  font-weight: 500;
-  color: var(--vp-c-text-2);
-  transition: color 0.2s ease;
-}
-
-.contributor-item a:hover .contributor-name {
-  color: var(--vp-c-brand-1);
-}
-
-@media (max-width: 768px) {
-  .contributors {
-    gap: 16px;
-  }
-  
-  .contributor-avatar {
-    width: 60px;
-    height: 60px;
-  }
-  
-  .contributor-name {
-    font-size: 12px;
-  }
-}
-</style>
+| update:modelValue | 值变化时触发 | `(value: string \| number \| Array)` |
+| change | 值变化时触发 | `(value: string \| number \| Array)` |

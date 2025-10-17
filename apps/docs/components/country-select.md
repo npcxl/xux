@@ -2,6 +2,10 @@
 
 国家选择器组件，支持国旗显示、IP自动检测、自定义后端接口等功能。
 
+<div style="columns: 2; column-gap: 32px; margin-top: 32px;">
+
+<div style="break-inside: avoid; margin-bottom: 24px;">
+
 ## 基础用法
 
 默认显示国家选择器，支持搜索和选择功能。
@@ -10,16 +14,17 @@
 
 ```vue
 <template>
-  <div class="space-y-4" style="min-height: 300px;">
+  <XFlex vertical gap="16" style="min-height: 300px">
     <XCountrySelect v-model="selectedCountry" placeholder="请选择国家" />
-    <div class="mt-4 text-sm text-gray-600">
+    <div style="font-size: 14px; color: #666">
       选中的国家：{{ selectedCountry || '未选择' }}
     </div>
-  </div>
+  </XFlex>
 </template>
 
 <script setup>
 import { ref } from 'vue'
+import { XFlex, XCountrySelect } from '@xlui/xux-ui'
 
 const selectedCountry = ref('')
 </script>
@@ -27,112 +32,77 @@ const selectedCountry = ref('')
 
 :::
 
-## IP 自动检测（默认接口）
+</div>
 
-启用 `auto-detect-from-ip` 属性后，组件会自动根据用户 IP 检测所在国家。默认使用 ipinfo.io 接口。
+<div style="break-inside: avoid; margin-bottom: 24px;">
+
+## IP 自动检测
+
+启用 `auto-detect-from-ip` 属性后，组件会自动根据用户 IP 检测所在国家。
 
 :::demo
 
 ```vue
 <template>
-  <div style="min-height: 300px;">
+  <XFlex vertical gap="16" style="min-height: 300px">
     <XCountrySelect 
       v-model="country" 
       auto-detect-from-ip
       placeholder="自动检测中..."
-      @ip-detect-start="handleDetectStart"
       @ip-detect-success="handleDetectSuccess"
-      @ip-detect-error="handleDetectError"
     />
-    <div class="mt-4 p-3 bg-gray-100 rounded text-sm">
+    <div style="padding: 12px; background: #f5f5f5; border-radius: 4px; font-size: 14px">
       <div>检测状态：{{ detectStatus }}</div>
       <div v-if="country">当前国家：{{ country }}</div>
     </div>
-  </div>
+  </XFlex>
 </template>
 
 <script setup>
 import { ref } from 'vue'
+import { XFlex, XCountrySelect } from '@xlui/xux-ui'
 
 const country = ref('')
 const detectStatus = ref('准备中...')
 
-const handleDetectStart = () => {
-  detectStatus.value = '正在检测...'
-}
-
 const handleDetectSuccess = (countryCode) => {
   detectStatus.value = `检测成功：${countryCode}`
 }
-
-const handleDetectError = (error) => {
-  detectStatus.value = `检测失败：${error.message}`
-}
 </script>
 ```
 
 :::
 
-## 使用自定义后端接口
+</div>
 
-可以配置自定义的后端接口进行 IP 检测，支持自定义请求方法、请求头和响应解析。
-
-:::demo
-
-```vue
-<template>
-  <div style="min-height: 300px;">
-    <div class="mb-4 text-sm text-gray-600">
-      <p class="font-medium mb-2">配置示例（实际使用时替换为真实接口）：</p>
-      <code class="bg-gray-100 px-2 py-1 rounded">ip-detect-url="https://api.example.com/ip/location"</code>
-    </div>
-    
-    <XCountrySelect 
-      v-model="customCountry" 
-      auto-detect-from-ip
-      placeholder="使用自定义接口"
-    />
-    
-    <div class="mt-4 text-sm text-gray-600">
-      选中国家：{{ customCountry || '未选择' }}
-    </div>
-  </div>
-</template>
-
-<script setup>
-import { ref } from 'vue'
-
-const customCountry = ref('')
-</script>
-```
-
-:::
+<div style="break-inside: avoid; margin-bottom: 24px;">
 
 ## 返回类型
 
-通过 `return-type` 属性可以控制返回国家名称还是国家代码。
+通过 `return-type` 属性控制返回国家名称还是国家代码。
 
 :::demo
 
 ```vue
 <template>
-  <div class="space-y-4" style="min-height: 450px;">
-    <div style="min-height: 200px;">
-      <label class="block text-sm font-medium mb-2">返回国家名称（默认）</label>
+  <XFlex vertical gap="24" style="min-height: 450px">
+    <div style="min-height: 200px">
+      <div style="font-size: 14px; font-weight: 500; margin-bottom: 8px">返回国家名称（默认）</div>
       <XCountrySelect v-model="countryName" return-type="name" />
-      <div class="mt-2 text-sm text-gray-600">值：{{ countryName }}</div>
+      <div style="margin-top: 8px; font-size: 14px; color: #666">值：{{ countryName }}</div>
     </div>
     
-    <div style="min-height: 200px;">
-      <label class="block text-sm font-medium mb-2">返回国家代码</label>
+    <div style="min-height: 200px">
+      <div style="font-size: 14px; font-weight: 500; margin-bottom: 8px">返回国家代码</div>
       <XCountrySelect v-model="countryCode" return-type="code" />
-      <div class="mt-2 text-sm text-gray-600">值：{{ countryCode }}</div>
+      <div style="margin-top: 8px; font-size: 14px; color: #666">值：{{ countryCode }}</div>
     </div>
-  </div>
+  </XFlex>
 </template>
 
 <script setup>
 import { ref } from 'vue'
+import { XFlex, XCountrySelect } from '@xlui/xux-ui'
 
 const countryName = ref('')
 const countryCode = ref('')
@@ -141,34 +111,43 @@ const countryCode = ref('')
 
 :::
 
+</div>
+
+<div style="break-inside: avoid; margin-bottom: 24px;">
+
 ## 优先国家列表
 
-通过 `priority-countries` 属性可以将常用国家显示在列表前面。
+将常用国家显示在列表前面。
 
 :::demo
 
 ```vue
 <template>
-  <div style="min-height: 300px;">
+  <XFlex vertical gap="16" style="min-height: 300px">
     <XCountrySelect 
-      v-model="country" 
-      :priority-countries="['CN', 'US', 'GB', 'JP', 'DE']"
-      placeholder="常用国家优先"
+      v-model="priorityCountry" 
+      :priority-countries="['CN', 'US', 'JP', 'GB']"
+      placeholder="选择国家（常用国家优先）"
     />
-    <div class="mt-4 text-sm text-gray-600">
-      优先显示：中国、美国、英国、日本、德国
+    <div style="font-size: 14px; color: #666">
+      选中：{{ priorityCountry || '未选择' }}
     </div>
-  </div>
+  </XFlex>
 </template>
 
 <script setup>
 import { ref } from 'vue'
+import { XFlex, XCountrySelect } from '@xlui/xux-ui'
 
-const country = ref('')
+const priorityCountry = ref('')
 </script>
 ```
 
 :::
+
+</div>
+
+<div style="break-inside: avoid; margin-bottom: 24px;">
 
 ## 禁用状态
 
@@ -178,314 +157,87 @@ const country = ref('')
 
 ```vue
 <template>
-  <div class="space-y-4" style="min-height: 350px;">
-    <div style="min-height: 150px;">
-      <XCountrySelect v-model="country1" placeholder="正常状态" />
+  <XFlex vertical gap="16" style="min-height: 300px">
+    <XCountrySelect 
+      v-model="disabledCountry" 
+      disabled
+      placeholder="已禁用"
+    />
+    <div style="font-size: 14px; color: #666">
+      选中：{{ disabledCountry || '未选择' }}
     </div>
-    <div>
-      <XCountrySelect v-model="country2" placeholder="禁用状态" disabled />
-    </div>
-  </div>
+  </XFlex>
 </template>
 
 <script setup>
 import { ref } from 'vue'
+import { XFlex, XCountrySelect } from '@xlui/xux-ui'
 
-const country1 = ref('中国')
-const country2 = ref('美国')
+const disabledCountry = ref('CN')
 </script>
 ```
 
 :::
 
-## 自定义后端接口配置
+</div>
 
-完整的后端接口配置示例，展示如何对接自己的 IP 检测服务。
+<div style="break-inside: avoid; margin-bottom: 24px;">
+
+## 自定义宽度
+
+通过 `width` 属性自定义宽度。
 
 :::demo
 
 ```vue
 <template>
-  <div style="min-height: 350px;">
-    <div class="mb-4 p-4 bg-blue-50 rounded text-sm">
-      <p class="font-medium mb-2">配置说明：</p>
-      <ul class="list-disc list-inside space-y-1 text-gray-700">
-        <li>ip-detect-url: 后端接口地址</li>
-        <li>ip-detect-method: 请求方法（GET/POST）</li>
-        <li>ip-detect-headers: 自定义请求头（如 token）</li>
-        <li>ip-detect-response-parser: 响应解析函数</li>
-      </ul>
-    </div>
-
+  <XFlex vertical gap="16" style="min-height: 300px">
     <XCountrySelect 
-      v-model="country" 
-      auto-detect-from-ip
-      ip-detect-url="https://ipinfo.io/json"
-      ip-detect-method="GET"
-      :ip-detect-response-parser="parseResponse"
-      @ip-detect-success="handleSuccess"
+      v-model="widthCountry" 
+      width="100%"
+      placeholder="全宽度"
     />
-  </div>
+    <div style="font-size: 14px; color: #666">
+      选中：{{ widthCountry || '未选择' }}
+    </div>
+  </XFlex>
 </template>
 
 <script setup>
 import { ref } from 'vue'
+import { XFlex, XCountrySelect } from '@xlui/xux-ui'
 
-const country = ref('')
-
-// 自定义响应解析函数
-const parseResponse = (data) => {
-  // 根据你的后端接口返回格式解析
-  // 返回两位国家代码（如：CN, US）
-  return data.country || data.countryCode || data.country_code
-}
-
-const handleSuccess = (countryCode) => {
-  console.log('检测到国家代码：', countryCode)
-}
+const widthCountry = ref('')
 </script>
 ```
 
 :::
 
+</div>
+
+</div>
+
 ## API
 
 ### Props
 
-| 属性 | 说明 | 类型 | 默认值 |
-|------|------|------|--------|
-| modelValue / v-model | 绑定值 | `string` | `''` |
-| placeholder | 占位符文本 | `string` | `''` |
+| 属性名 | 说明 | 类型 | 默认值 |
+|--------|------|------|--------|
+| modelValue | 绑定值 | `string` | `''` |
+| placeholder | 占位文本 | `string` | `'请选择国家'` |
+| width | 选择器宽度 | `string` | `'280px'` |
+| return-type | 返回值类型 | `'name' \| 'code'` | `'name'` |
+| auto-detect-from-ip | 是否自动从 IP 检测国家 | `boolean` | `false` |
+| ip-detect-url | 自定义 IP 检测接口 URL | `string` | `''` |
+| priority-countries | 优先显示的国家代码列表 | `Array<string>` | `[]` |
 | disabled | 是否禁用 | `boolean` | `false` |
-| required | 是否必填 | `boolean` | `false` |
-| customClass | 自定义类名 | `string` | `''` |
-| autoDetectFromIp | 是否自动从 IP 检测国家 | `boolean` | `true` |
-| returnType | 返回类型：name（国家名）或 code（国家代码） | `'name' \| 'code'` | `'name'` |
-| priorityCountries | 优先显示的国家代码列表 | `string[]` | `['US', 'CA', 'GB', 'DE', 'FR', 'JP', 'CN', 'AU']` |
-| ipDetectUrl | IP 检测接口 URL | `string` | `'https://ipinfo.io/json'` |
-| ipDetectMethod | IP 检测请求方法 | `'GET' \| 'POST'` | `'GET'` |
-| ipDetectHeaders | IP 检测自定义请求头 | `Record<string, string>` | `{}` |
-| ipDetectResponseParser | IP 检测响应解析函数 | `(data: any) => string` | - |
 
 ### Events
 
 | 事件名 | 说明 | 回调参数 |
 |--------|------|----------|
-| update:modelValue | 值改变时触发 | `(value: string)` |
-| change | 选择国家时触发 | `(value: string, country: Country)` |
-| ip-detect-start | IP 检测开始时触发 | `()` |
-| ip-detect-success | IP 检测成功时触发 | `(countryCode: string)` |
-| ip-detect-error | IP 检测失败时触发 | `(error: Error)` |
-
-### Exposed Methods
-
-| 方法名 | 说明 | 参数 |
-|--------|------|------|
-| detectCountryFromIp | 手动触发 IP 检测 | `() => Promise<void>` |
-
-### Country 接口
-
-```typescript
-interface Country {
-  name: string        // 国家名称（中文）
-  code: string        // 两位国家代码（如：CN, US）
-  flagEmoji: string   // 国旗 Emoji
-  flagSvg: string     // 国旗 SVG 图片地址
-  flagPng: string     // 国旗 PNG 图片地址（备用）
-}
-```
-
-## 后端接口对接说明
-
-### 接口要求
-
-后端接口需要返回包含国家代码的 JSON 数据，支持以下字段名：
-- `country`
-- `countryCode`
-- `country_code`
-
-### 接口示例
-
-#### 1. 使用默认接口（ipinfo.io）
-
-```javascript
-// 默认配置，无需额外设置
-<XCountrySelect auto-detect-from-ip />
-```
-
-响应格式：
-```json
-{
-  "ip": "8.8.8.8",
-  "country": "US",
-  "region": "California",
-  "city": "Mountain View"
-}
-```
-
-#### 2. 使用自定义后端接口
-
-```vue
-<template>
-  <XCountrySelect 
-    auto-detect-from-ip
-    ip-detect-url="https://api.yourdomain.com/api/ip/location"
-    ip-detect-method="POST"
-    :ip-detect-headers="{
-      'Authorization': 'Bearer YOUR_TOKEN',
-      'X-API-Key': 'your-api-key'
-    }"
-    :ip-detect-response-parser="parseCustomResponse"
-  />
-</template>
-
-<script setup>
-// 自定义响应解析
-const parseCustomResponse = (data) => {
-  // 情况1: 后端返回 { data: { countryCode: 'CN' } }
-  if (data.data?.countryCode) {
-    return data.data.countryCode
-  }
-  
-  // 情况2: 后端返回 { result: { country: 'CN' } }
-  if (data.result?.country) {
-    return data.result.country
-  }
-  
-  // 情况3: 直接返回国家代码
-  return data.country || data.countryCode
-}
-</script>
-```
-
-### 后端接口实现参考
-
-#### Node.js + Express 示例
-
-```javascript
-// GET /api/ip/location
-app.get('/api/ip/location', async (req, res) => {
-  const clientIp = req.ip || req.headers['x-forwarded-for']
-  
-  // 调用 IP 定位服务或数据库查询
-  const location = await getLocationByIp(clientIp)
-  
-  res.json({
-    code: 200,
-    data: {
-      ip: clientIp,
-      countryCode: location.country, // 返回两位国家代码
-      region: location.region,
-      city: location.city
-    }
-  })
-})
-```
-
-#### Python + Flask 示例
-
-```python
-@app.route('/api/ip/location', methods=['GET'])
-def get_ip_location():
-    client_ip = request.headers.get('X-Forwarded-For', request.remote_addr)
-    
-    # 调用 IP 定位服务
-    location = get_location_by_ip(client_ip)
-    
-    return jsonify({
-        'code': 200,
-        'data': {
-            'ip': client_ip,
-            'countryCode': location['country'],
-            'region': location['region'],
-            'city': location['city']
-        }
-    })
-```
-
-## 贡献者
-
-<div class="contributors">
-  <div class="contributor-item">
-    <a href="https://gitee.com/leheya" target="_blank" rel="noopener noreferrer">
-      <img 
-        src="https://foruda.gitee.com/avatar/1751620424517657404/10604783_leheya_1751620424.png!avatar200" 
-        alt="leheya"
-        class="contributor-avatar"
-      />
-      <span class="contributor-name">无敌暴龙神</span>
-    </a>
-  </div>
-  <!-- <div class="contributor-item">
-    <a href="https://gitee.com/haijun-li" target="_blank" rel="noopener noreferrer">
-      <img 
-        src="https://p3.itc.cn/images01/20230307/e9d72e3788844ed1a9259e442899e1bd.png" 
-        alt="lihaijun"
-        class="contributor-avatar"
-      />
-      <span class="contributor-name">lihaijun</span>
-    </a>
-  </div> -->
-</div>
-
-<style scoped>
-.contributors {
-  display: flex;
-  gap: 24px;
-  margin: 24px 0;
-  flex-wrap: wrap;
-}
-
-.contributor-item a {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  text-decoration: none;
-  color: inherit;
-  transition: transform 0.2s ease;
-}
-
-.contributor-item a:hover {
-  transform: translateY(-2px);
-}
-
-.contributor-avatar {
-  width: 80px;
-  height: 80px;
-  border-radius: 50%;
-  border: 3px solid var(--vp-c-border);
-  transition: border-color 0.2s ease;
-  object-fit: cover;
-}
-
-.contributor-item a:hover .contributor-avatar {
-  border-color: var(--vp-c-brand-1);
-}
-
-.contributor-name {
-  margin-top: 8px;
-  font-size: 14px;
-  font-weight: 500;
-  color: var(--vp-c-text-2);
-  transition: color 0.2s ease;
-}
-
-.contributor-item a:hover .contributor-name {
-  color: var(--vp-c-brand-1);
-}
-
-@media (max-width: 768px) {
-  .contributors {
-    gap: 16px;
-  }
-  
-  .contributor-avatar {
-    width: 60px;
-    height: 60px;
-  }
-  
-  .contributor-name {
-    font-size: 12px;
-  }
-}
-</style>
+| update:modelValue | 值变化时触发 | `(value: string)` |
+| change | 值变化时触发 | `(value: string)` |
+| ip-detect-start | IP 检测开始 | - |
+| ip-detect-success | IP 检测成功 | `(countryCode: string)` |
+| ip-detect-error | IP 检测失败 | `(error: Error)` |

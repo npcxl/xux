@@ -631,24 +631,20 @@ tr:hover {
   --vp-layout-max-width: 100%;
 }
 
-/* 关闭文档内容区的 max-width 限制，并去掉两侧内边距 */
-.VPContent,
-.VPDoc .container,
-.VPDoc .content,
+/* 移除文档内容区的 max-width 限制 */
+.VPDoc .container {
+  max-width: none !important;
+}
+
+/* 确保内容容器正确布局 */
 .VPDoc .content-container {
   max-width: none !important;
-  width: 100% !important;
-  padding-left: 0 !important;
-  padding-right: 0 !important;
 }
 
-/* 搜索栏居中 */
-.VPNavBarSearch{
-
-}
-/* 有侧边栏时也铺满（根据需要保留/删除） */
-.VPDoc.has-aside .content {
+/* 内容区域占据剩余空间 */
+.VPDoc .content {
   max-width: none !important;
+  flex: 1;
 }
 
 /**
@@ -677,29 +673,42 @@ tr:hover {
   align-items: flex-start;
 } */
 
-/* 文档内容 - 设置合适的宽度 */
+/* 文档内容 - 让中间内容占据所有可用空间 */
 .vp-doc {
-  margin:0 auto;
-  max-width: 60%;
+  max-width: 100% !important;
+  width: 100%;
+  padding: 32px 48px !important;
+}
+
+/* 确保文档容器正确定位，不与侧边栏重叠 */
+.VPDoc {
+  position: relative;
+}
+
+.VPDoc .content {
+  position: relative;
+  z-index: 1;
+}
+
+.VPSidebar {
+  position: relative;
+  z-index: 0;
 }
 
 @media (max-width: 1440px) {
   .vp-doc {
-    max-width: 900px;
     padding: 32px 40px !important;
   }
 }
 
 @media (max-width: 1200px) {
   .vp-doc {
-    max-width: 700px;
     padding: 24px 32px !important;
   }
 }
 
 @media (max-width: 960px) {
   .vp-doc {
-    max-width: none;
     padding: 24px 24px !important;
   }
 }
