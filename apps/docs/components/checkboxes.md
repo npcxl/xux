@@ -253,7 +253,7 @@ const clearAll = () => {
 
 ## 带图标的选项
 
-为选项添加图标。
+为选项添加图标，支持 Iconify 图标库。
 
 :::demo
 
@@ -290,6 +290,48 @@ const options = [
 
 </div>
 
+<div style="break-inside: avoid; margin-bottom: 24px;">
+
+## 混合图标示例
+
+展示不同图标库和图标的混合使用。
+
+:::demo
+
+```vue
+<template>
+  <XFlex vertical gap="16">
+    <XCheckboxes 
+      v-model="selected" 
+      :options="options"
+      layout="horizontal"
+    />
+    <div style="font-size: 14px; color: #666">
+      已选择：{{ selected.join(', ') || '未选择' }}
+    </div>
+  </XFlex>
+</template>
+
+<script setup>
+import { ref } from 'vue'
+import { XFlex, XCheckboxes } from '@xlui/xux-ui'
+
+const selected = ref(['github', 'twitter'])
+const options = [
+  { label: 'GitHub', value: 'github', icon: 'mdi:github' },
+  { label: 'Twitter', value: 'twitter', icon: 'mdi:twitter' },
+  { label: 'LinkedIn', value: 'linkedin', icon: 'mdi:linkedin' },
+  { label: 'Facebook', value: 'facebook', icon: 'mdi:facebook' },
+  { label: 'Instagram', value: 'instagram', icon: 'mdi:instagram' },
+  { label: 'YouTube', value: 'youtube', icon: 'mdi:youtube' }
+]
+</script>
+```
+
+:::
+
+</div>
+
 </div>
 
 ## API
@@ -310,7 +352,7 @@ const options = [
 |--------|------|------|
 | label | 选项标签 | `string` |
 | value | 选项值 | `string \| number` |
-| icon | 图标（可选） | `string` |
+| icon | 图标名称（可选） | `string` |
 | disabled | 是否禁用（可选） | `boolean` |
 
 ### Events
