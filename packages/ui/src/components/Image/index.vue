@@ -13,8 +13,20 @@
       @error="onError"
       @click="handleOpenPreview"
     />
-    <div v-else class="x-image-fallback" @click="handleOpenPreview">
-      <slot name="error">图片加载失败</slot>
+    
+    <!-- Loading overlay -->
+    <div v-if="loading && !error" class="x-image-loading">
+      <slot name="loading">
+        <div class="x-image-spinner"></div>
+      </slot>
+    </div>
+    
+    <!-- Error fallback -->
+    <div v-if="error" class="x-image-fallback" @click="handleOpenPreview">
+      <slot name="error">
+        <div class="x-image-error-icon">⚠️</div>
+        <div class="x-image-error-text">图片加载失败</div>
+      </slot>
     </div>
 
     <!-- Preview Modal -->
@@ -51,7 +63,7 @@ export interface ImageProps {
 const props = withDefaults(defineProps<ImageProps>(), {
   alt: '',
   width: '100%',
-  height: 'auto',
+  height: '200px', // 改为默认200px，避免auto导致容器无高度
   radius: '8px',
   fit: 'cover',
   hoverZoom: true,
@@ -144,27 +156,71 @@ watch(() => props.previewIndex, (val) => {
   position: relative;
   display: inline-block;
   overflow: hidden;
+  min-height: 100px; /* 确保容器有最小高度 */
 }
 .x-image img {
   width: 100%;
   height: 100%;
   display: block;
-  transition: transform .25s ease;
+  opacity: 1;
+  transition: transform .25s ease, opacity .3s ease;
   cursor: default;
 }
+.x-image.is-loading img {
+  opacity: 0;
+}
+.x-image.is-error img {
+  display: none;
+}
 .x-image.can-preview img { cursor: zoom-in; }
-.x-image.hover-zoom img:hover {
+.x-image.hover-zoom:not(.is-loading) img:hover {
   transform: scale(1.06);
 }
-.x-image-fallback {
+
+/* Loading overlay */
+.x-image-loading {
+  position: absolute;
+  inset: 0;
   width: 100%;
   height: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
   background: #f3f4f6;
+  z-index: 1;
+}
+.x-image-spinner {
+  width: 32px;
+  height: 32px;
+  border: 3px solid #e5e7eb;
+  border-top-color: #3b82f6;
+  border-radius: 50%;
+  animation: x-image-spin 0.8s linear infinite;
+}
+@keyframes x-image-spin {
+  to { transform: rotate(360deg); }
+}
+.x-image-fallback {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: #f3f4f6;
   color: #666;
-  cursor: zoom-in;
+  cursor: default;
+  z-index: 2;
+}
+.x-image-error-icon {
+  font-size: 32px;
+  margin-bottom: 8px;
+}
+.x-image-error-text {
+  font-size: 14px;
+  color: #999;
 }
 
 /* Preview */

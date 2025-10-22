@@ -45,13 +45,13 @@ import { Icon } from '@iconify/vue'
  * @displayName XButton
  */
 
-type ButtonType = 'default' | 'primary' | 'success' | 'warning' | 'danger' | 'text'
+type ButtonType = 'default' | 'primary' | 'success' | 'warning' | 'danger' | 'text' | 'link'
 type ButtonSize = 'small' | 'medium' | 'large'
 
 interface Props {
   /**
    * 按钮类型
-   * @values default, primary, success, warning, danger, text
+   * @values default, primary, success, warning, danger, text, link
    */
   type?: ButtonType
   /**
@@ -338,6 +338,27 @@ function handleMouseDown(event: MouseEvent) {
 .x-btn-text:hover:not(.x-btn-disabled):not(.x-btn-loading) {
   background-color: var(--x-color-gray-100, #f5f5f5);
   color: var(--x-color-primary, #ff6b35);
+}
+
+/* 类型 - link */
+.x-btn-link {
+  background-color: transparent;
+  border-color: transparent;
+  color: var(--x-color-primary, #1a73e8);
+  box-shadow: none;
+  padding: 0;
+  height: auto;
+}
+
+.x-btn-link:hover:not(.x-btn-disabled):not(.x-btn-loading) {
+  color: var(--x-color-primary-hover, #1557b0);
+  text-decoration: underline;
+  transform: none;
+}
+
+.x-btn-link:active:not(.x-btn-disabled):not(.x-btn-loading) {
+  transform: none;
+  box-shadow: none;
 }
 
 /* 幽灵按钮 - Ghost Button */

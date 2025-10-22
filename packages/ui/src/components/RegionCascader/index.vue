@@ -1,25 +1,27 @@
 <template>
-  <div ref="containerRef" class="region-cascader-container relative">
+  <div ref="containerRef" class="x-region-cascader-container">
     <!-- 输入框 -->
     <div 
       @click="toggleDropdown"
       :class="[
-        'w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#1a1a1a] focus:border-[#1a1a1a] transition-colors duration-200 cursor-pointer bg-white flex items-center justify-between',
+        'x-region-input',
         customClass,
-        { 'opacity-60 cursor-not-allowed': disabled }
+        { 'is-disabled': disabled }
       ]"
       :tabindex="disabled ? -1 : 0"
       @keydown.enter="toggleDropdown"
       @keydown.space="toggleDropdown"
       @keydown.escape="closeDropdown"
     >
-      <div class="flex items-center gap-2 flex-1 overflow-hidden">
-        <span v-if="displayValue" class="truncate">{{ displayValue }}</span>
-        <span v-else class="text-gray-400">{{ placeholder }}</span>
+      <div class="x-region-input-content">
+        <span v-if="displayValue" class="x-region-input-value">{{ displayValue }}</span>
+        <span v-else class="x-region-input-placeholder">{{ placeholder }}</span>
       </div>
       <svg 
-        class="w-5 h-5 text-gray-400 transition-transform duration-200 flex-shrink-0"
-        :class="{ 'rotate-180': isOpen }"
+        :class="[
+          'x-region-input-arrow',
+          { 'is-open': isOpen }
+        ]"
         fill="none" 
         stroke="currentColor" 
         viewBox="0 0 24 24"
@@ -31,23 +33,22 @@
     <!-- 级联下拉框 -->
     <div 
       v-if="isOpen && !disabled"
-      class="absolute z-[9999] mt-1 bg-white border border-gray-300 rounded-md shadow-lg"
-      :style="{ minWidth: '100%', width: 'max-content' }"
+      class="x-region-dropdown"
     >
       <!-- 搜索框 -->
-      <div v-if="searchable" class="p-3 border-b border-gray-200">
-        <div class="relative">
+      <div v-if="searchable" class="x-region-search">
+        <div class="x-region-search-wrapper">
           <input
             ref="searchInputRef"
             v-model="searchKeyword"
             type="text"
             :placeholder="searchPlaceholder"
-            class="w-full px-3 py-2 pl-9 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#1a1a1a] focus:border-[#1a1a1a] transition-colors"
+            class="x-region-search-input"
             @input="handleSearch"
             @keydown.stop
           />
           <svg 
-            class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400"
+            class="x-region-search-icon"
             fill="none" 
             stroke="currentColor" 
             viewBox="0 0 24 24"
@@ -57,56 +58,58 @@
           <button
             v-if="searchKeyword"
             @click="clearSearch"
-            class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+            class="x-region-search-clear"
           >
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
             </svg>
           </button>
         </div>
         <!-- 当前选择路径提示 -->
-        <div v-if="currentPath" class="mt-2 text-xs text-gray-500 flex items-center gap-1">
+        <div v-if="currentPath" class="x-region-current-path">
           <span>当前：</span>
-          <span class="font-medium">{{ currentPath }}</span>
+          <span class="x-region-current-path-label">{{ currentPath }}</span>
         </div>
       </div>
 
       <!-- 全局搜索结果 -->
-      <div v-if="searchable && searchKeyword && searchResults.length > 0" class="max-h-80 overflow-y-auto" style="min-width: 600px;">
-        <div class="px-3 py-2 text-xs text-gray-500 bg-gray-50 sticky top-0">
+      <div v-if="searchable && searchKeyword && searchResults.length > 0" class="x-region-search-results">
+        <div class="x-region-search-header">
           找到 {{ searchResults.length }} 个结果（点击自动定位）
         </div>
         <div
           v-for="result in searchResults"
           :key="result.value"
           @click.stop="selectFromGlobalSearch(result)"
-          class="px-3 py-2 hover:bg-gray-50 cursor-pointer transition-colors border-b border-gray-100"
+          class="x-region-search-item"
         >
-          <div class="flex items-center justify-between">
-            <div class="flex-1">
-              <span v-html="highlightText(result.label, searchKeyword)" class="font-medium"></span>
-              <span class="ml-2 text-xs text-gray-400">
+          <div class="x-region-search-item-content">
+            <div class="x-region-search-item-main">
+              <span v-html="highlightText(result.label, searchKeyword)" class="x-region-search-item-label"></span>
+              <span class="x-region-search-item-level">
                 {{ ['', '省', '市', '区'][result.level || 0] }}
               </span>
             </div>
           </div>
-          <div v-if="result.pathLabels && result.pathLabels.length > 1" class="text-xs text-gray-500 mt-1">
+          <div v-if="result.pathLabels && result.pathLabels.length > 1" class="x-region-search-item-path">
             {{ result.pathLabels.slice(0, -1).join(' > ') }}
           </div>
         </div>
       </div>
 
       <!-- 级联列表 -->
-      <div v-if="!searchable || !searchKeyword || searchResults.length === 0" class="flex" style="min-width: 600px;">
+      <div v-if="!searchable || !searchKeyword || searchResults.length === 0" class="x-region-cascader-lists">
         <!-- 省份列表 -->
-        <div ref="provinceListRef" class="flex-1 border-r border-gray-200 max-h-60 overflow-y-auto min-w-[200px]">
+        <div ref="provinceListRef" class="x-region-list">
           <div
             v-for="province in filteredProvinces"
             :key="province.value"
             :ref="el => { if (selectedProvince?.value === province.value) selectedProvinceRef = el as HTMLElement }"
             @click.stop="selectProvince(province)"
-            class="px-3 py-2 hover:bg-gray-50 cursor-pointer transition-colors whitespace-nowrap"
-            :class="{ 'bg-blue-50 text-blue-600': selectedProvince?.value === province.value }"
+            :class="[
+              'x-region-list-item',
+              { 'is-selected': selectedProvince?.value === province.value }
+            ]"
             v-html="highlightText(province.label, searchKeyword)"
           >
           </div>
@@ -116,15 +119,17 @@
         <div 
           v-if="filteredCities.length > 0"
           ref="cityListRef"
-          class="flex-1 border-r border-gray-200 max-h-60 overflow-y-auto min-w-[200px]"
+          class="x-region-list"
         >
           <div
             v-for="city in filteredCities"
             :key="city.value"
             :ref="el => { if (selectedCity?.value === city.value) selectedCityRef = el as HTMLElement }"
             @click.stop="selectCity(city)"
-            class="px-3 py-2 hover:bg-gray-50 cursor-pointer transition-colors whitespace-nowrap"
-            :class="{ 'bg-blue-50 text-blue-600': selectedCity?.value === city.value }"
+            :class="[
+              'x-region-list-item',
+              { 'is-selected': selectedCity?.value === city.value }
+            ]"
             v-html="highlightText(city.label, searchKeyword)"
           >
           </div>
@@ -134,15 +139,17 @@
         <div 
           v-if="filteredDistricts.length > 0"
           ref="districtListRef"
-          class="flex-1 border-r border-gray-200 max-h-60 overflow-y-auto min-w-[200px]"
+          class="x-region-list"
         >
           <div
             v-for="district in filteredDistricts"
             :key="district.value"
             :ref="el => { if (selectedDistrict?.value === district.value) selectedDistrictRef = el as HTMLElement }"
             @click.stop="selectDistrict(district)"
-            class="px-3 py-2 hover:bg-gray-50 cursor-pointer transition-colors whitespace-nowrap"
-            :class="{ 'bg-blue-50 text-blue-600': selectedDistrict?.value === district.value }"
+            :class="[
+              'x-region-list-item',
+              { 'is-selected': selectedDistrict?.value === district.value }
+            ]"
             v-html="highlightText(district.label, searchKeyword)"
           >
           </div>
@@ -151,19 +158,19 @@
       </div>
       
       <!-- 数据加载提示 -->
-      <div v-if="!workerReady" class="px-4 py-8 text-center text-gray-400">
-        <div class="mb-2">正在初始化地区数据...</div>
-        <div class="text-xs">请稍候</div>
+      <div v-if="!workerReady" class="x-region-loading">
+        <div class="x-region-loading-text">正在初始化地区数据...</div>
+        <div class="x-region-loading-desc">请稍候</div>
       </div>
-      <div v-else-if="provinces.length === 0" class="px-4 py-8 text-center text-gray-400">
-        <div class="mb-2">暂无数据</div>
+      <div v-else-if="provinces.length === 0" class="x-region-empty">
+        <div class="x-region-empty-text">暂无数据</div>
       </div>
     </div>
 
     <!-- 遮罩层 -->
     <div 
       v-if="isOpen && !disabled"
-      class="fixed inset-0 z-[9998]"
+      class="x-region-backdrop"
       @click="closeDropdown"
     ></div>
   </div>
@@ -176,6 +183,7 @@
  */
 import { ref, computed, onMounted, onUnmounted, watch, nextTick } from 'vue'
 import chinaAreasData from './data/china-areas.full.json'
+import './index.css'
 
 interface AreaNode {
   value: string
@@ -298,7 +306,7 @@ function highlightText(text: string, keyword: string): string {
   
   const escapedKeyword = keyword.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
   const regex = new RegExp(`(${escapedKeyword})`, 'gi')
-  return text.replace(regex, '<span class="bg-yellow-200 font-semibold">$1</span>')
+  return text.replace(regex, '<span class="x-region-highlight">$1</span>')
 }
 
 // 从Worker获取子节点
@@ -843,28 +851,3 @@ defineExpose({
   clearCache: () => childrenCache.clear()
 })
 </script>
-
-<style scoped>
-.region-cascader-container {
-  position: relative;
-}
-
-/* 自定义滚动条样式 */
-.region-cascader-container ::-webkit-scrollbar {
-  width: 6px;
-}
-
-.region-cascader-container ::-webkit-scrollbar-track {
-  background: #f1f1f1;
-  border-radius: 3px;
-}
-
-.region-cascader-container ::-webkit-scrollbar-thumb {
-  background: #888;
-  border-radius: 3px;
-}
-
-.region-cascader-container ::-webkit-scrollbar-thumb:hover {
-  background: #555;
-}
-</style>

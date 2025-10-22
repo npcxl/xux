@@ -1,0 +1,292 @@
+/* RegionCascader 地区级联选择器样式 */
+
+/* 容器 */
+.x-region-cascader-container {
+  position: relative;
+}
+
+/* 输入框 */
+.x-region-input {
+  width: 100%;
+  padding: 8px 12px;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  background-color: #fff;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  transition: all 0.2s;
+  outline: none;
+}
+
+.x-region-input:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(26, 26, 26, 0.5);
+  border-color: #1a1a1a;
+}
+
+.x-region-input.is-disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.x-region-input-content {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex: 1;
+  overflow: hidden;
+}
+
+.x-region-input-value {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.x-region-input-placeholder {
+  color: #9ca3af;
+}
+
+.x-region-input-arrow {
+  width: 20px;
+  height: 20px;
+  color: #9ca3af;
+  transition: transform 0.2s;
+  flex-shrink: 0;
+}
+
+.x-region-input-arrow.is-open {
+  transform: rotate(180deg);
+}
+
+/* 下拉框 */
+.x-region-dropdown {
+  position: absolute;
+  z-index: 9999;
+  margin-top: 4px;
+  background-color: #fff;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  min-width: 100%;
+  width: max-content;
+}
+
+/* 搜索区域 */
+.x-region-search {
+  padding: 12px;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.x-region-search-wrapper {
+  position: relative;
+}
+
+.x-region-search-input {
+  width: 100%;
+  padding: 8px 12px 8px 36px;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  transition: all 0.2s;
+  outline: none;
+}
+
+.x-region-search-input:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(26, 26, 26, 0.5);
+  border-color: #1a1a1a;
+}
+
+.x-region-search-icon {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 16px;
+  height: 16px;
+  color: #9ca3af;
+}
+
+.x-region-search-clear {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #9ca3af;
+  cursor: pointer;
+  background: none;
+  border: none;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  transition: color 0.2s;
+}
+
+.x-region-search-clear:hover {
+  color: #6b7280;
+}
+
+.x-region-search-clear svg {
+  width: 16px;
+  height: 16px;
+}
+
+.x-region-current-path {
+  margin-top: 8px;
+  font-size: 12px;
+  color: #6b7280;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.x-region-current-path-label {
+  font-weight: 500;
+}
+
+/* 搜索结果 */
+.x-region-search-results {
+  max-height: 320px;
+  overflow-y: auto;
+  min-width: 600px;
+}
+
+.x-region-search-header {
+  padding: 8px 12px;
+  font-size: 12px;
+  color: #6b7280;
+  background-color: #f9fafb;
+  position: sticky;
+  top: 0;
+}
+
+.x-region-search-item {
+  padding: 8px 12px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  border-bottom: 1px solid #f3f4f6;
+}
+
+.x-region-search-item:hover {
+  background-color: #f9fafb;
+}
+
+.x-region-search-item-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.x-region-search-item-main {
+  flex: 1;
+}
+
+.x-region-search-item-label {
+  font-weight: 500;
+}
+
+.x-region-search-item-level {
+  margin-left: 8px;
+  font-size: 12px;
+  color: #9ca3af;
+}
+
+.x-region-search-item-path {
+  font-size: 12px;
+  color: #6b7280;
+  margin-top: 4px;
+}
+
+/* 级联列表 */
+.x-region-cascader-lists {
+  display: flex;
+  min-width: 600px;
+}
+
+.x-region-list {
+  flex: 1;
+  border-right: 1px solid #e5e7eb;
+  max-height: 240px;
+  overflow-y: auto;
+  min-width: 200px;
+}
+
+.x-region-list:last-child {
+  border-right: none;
+}
+
+.x-region-list-item {
+  padding: 8px 12px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  white-space: nowrap;
+}
+
+.x-region-list-item:hover {
+  background-color: #f9fafb;
+}
+
+.x-region-list-item.is-selected {
+  background-color: #eff6ff;
+  color: #2563eb;
+}
+
+/* 加载状态 */
+.x-region-loading {
+  padding: 32px 16px;
+  text-align: center;
+  color: #9ca3af;
+}
+
+.x-region-loading-text {
+  margin-bottom: 8px;
+}
+
+.x-region-loading-desc {
+  font-size: 12px;
+}
+
+.x-region-empty {
+  padding: 32px 16px;
+  text-align: center;
+  color: #9ca3af;
+}
+
+.x-region-empty-text {
+  margin-bottom: 8px;
+}
+
+/* 遮罩 */
+.x-region-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 9998;
+}
+
+/* 高亮文本 */
+.x-region-highlight {
+  background-color: #fef08a;
+  font-weight: 600;
+}
+
+/* 自定义滚动条 */
+.x-region-cascader-container ::-webkit-scrollbar {
+  width: 6px;
+}
+
+.x-region-cascader-container ::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 3px;
+}
+
+.x-region-cascader-container ::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 3px;
+}
+
+.x-region-cascader-container ::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+

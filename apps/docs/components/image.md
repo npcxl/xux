@@ -2,6 +2,10 @@
 
 支持悬停略放大，点击预览，大图预览支持上一张/下一张、Esc 关闭、键盘左右键切换。
 
+:::tip 提示
+示例中使用的是 Picsum Photos 随机图片服务，如果图片加载缓慢或失败，可能是网络问题。组件支持加载状态显示和错误处理。
+:::
+
 ## 基础用法（悬停略放大，默认不预览）
 
 :::::demo
@@ -64,11 +68,11 @@ const list = [
 | src | 图片地址 | `string` | - |
 | alt | 替代文本 | `string` | `''` |
 | width | 宽度 | `string` | `100%` |
-| height | 高度 | `string` | `auto` |
+| height | 高度 | `string` | `200px` |
 | radius | 圆角 | `string` | `8px` |
 | fit | 对齐方式（object-fit） | `'cover'\|'contain'\|'fill'\|'none'\|'scale-down'` | `cover` |
 | hoverZoom | 悬停略放大 | `boolean` | `true` |
-| preview | 是否启用点击预览 | `boolean` | `true` |
+| preview | 是否启用点击预览 | `boolean` | `false` |
 | previewList | 预览列表（开启后支持上下切换） | `string[]` | `[]` |
 | previewIndex | 当前索引（配合 previewList 使用） | `number` | `0` |
 

@@ -1,0 +1,33 @@
+/* Skeleton 骨架屏样式 */
+
+.x-skeleton {
+  background-color: #e5e7eb;
+}
+
+/* 动画 */
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+.x-skeleton.is-animated {
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+/* 形状 */
+.x-skeleton.shape-rectangle {
+  border-radius: 4px;
+}
+
+.x-skeleton.shape-rounded {
+  border-radius: 8px;
+}
+
+.x-skeleton.shape-circle {
+  border-radius: 9999px;
+}
+

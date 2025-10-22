@@ -1,0 +1,214 @@
+/* Drawer 抽屉样式 */
+
+/* 容器 */
+.x-drawer-container {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: flex;
+}
+
+.x-drawer-container.placement-right {
+  justify-content: flex-end;
+}
+
+.x-drawer-container.placement-left {
+  justify-content: flex-start;
+}
+
+.x-drawer-container.placement-bottom {
+  align-items: flex-end;
+  flex-direction: column;
+}
+
+.x-drawer-container.placement-top {
+  align-items: flex-start;
+  flex-direction: column;
+}
+
+/* 遮罩 */
+.x-drawer-mask {
+  position: absolute;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(4px);
+}
+
+/* 抽屉内容 */
+.x-drawer-content {
+  position: relative;
+  background-color: #fff;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  display: flex;
+  flex-direction: column;
+  z-index: 1;
+}
+
+.x-drawer-content.is-horizontal {
+  height: 100%;
+}
+
+.x-drawer-content.is-vertical {
+  width: 100%;
+}
+
+/* 暗色模式 */
+@media (prefers-color-scheme: dark) {
+  .x-drawer-content {
+    background-color: #111827;
+  }
+}
+
+/* 头部 */
+.x-drawer-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 24px;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+@media (prefers-color-scheme: dark) {
+  .x-drawer-header {
+    border-bottom-color: #374151;
+  }
+}
+
+.x-drawer-title {
+  font-size: 18px;
+  font-weight: 600;
+  color: #111827;
+}
+
+@media (prefers-color-scheme: dark) {
+  .x-drawer-title {
+    color: #f9fafb;
+  }
+}
+
+.x-drawer-close-btn {
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.x-drawer-close-btn:hover {
+  background-color: #f3f4f6;
+}
+
+@media (prefers-color-scheme: dark) {
+  .x-drawer-close-btn:hover {
+    background-color: #1f2937;
+  }
+}
+
+.x-drawer-close-icon {
+  width: 20px;
+  height: 20px;
+  color: #6b7280;
+}
+
+/* 主体内容 */
+.x-drawer-body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 16px 24px;
+}
+
+/* 底部 */
+.x-drawer-footer {
+  padding: 16px 24px;
+  border-top: 1px solid #e5e7eb;
+}
+
+@media (prefers-color-scheme: dark) {
+  .x-drawer-footer {
+    border-top-color: #374151;
+  }
+}
+
+/* 淡入淡出 */
+.drawer-fade-enter-active,
+.drawer-fade-leave-active {
+  transition: opacity 0.3s ease;
+}
+
+.drawer-fade-enter-from,
+.drawer-fade-leave-to {
+  opacity: 0;
+}
+
+/* 遮罩动画 */
+.drawer-mask-enter-active,
+.drawer-mask-leave-active {
+  transition: opacity 0.3s ease;
+}
+
+.drawer-mask-enter-from,
+.drawer-mask-leave-to {
+  opacity: 0;
+}
+
+/* 右侧滑入 */
+.drawer-slide-right-enter-active,
+.drawer-slide-right-leave-active {
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.drawer-slide-right-enter-from {
+  transform: translateX(100%);
+}
+
+.drawer-slide-right-leave-to {
+  transform: translateX(100%);
+}
+
+/* 左侧滑入 */
+.drawer-slide-left-enter-active,
+.drawer-slide-left-leave-active {
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.drawer-slide-left-enter-from {
+  transform: translateX(-100%);
+}
+
+.drawer-slide-left-leave-to {
+  transform: translateX(-100%);
+}
+
+/* 顶部滑入 */
+.drawer-slide-top-enter-active,
+.drawer-slide-top-leave-active {
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.drawer-slide-top-enter-from {
+  transform: translateY(-100%);
+}
+
+.drawer-slide-top-leave-to {
+  transform: translateY(-100%);
+}
+
+/* 底部滑入 */
+.drawer-slide-bottom-enter-active,
+.drawer-slide-bottom-leave-active {
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.drawer-slide-bottom-enter-from {
+  transform: translateY(100%);
+}
+
+.drawer-slide-bottom-leave-to {
+  transform: translateY(100%);
+}
+

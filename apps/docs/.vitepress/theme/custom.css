@@ -233,12 +233,32 @@
 div[class*='language-'] {
   border-radius: 8px;
   margin: 16px 0;
+  max-width: 100%;
+  overflow-x: auto;
 }
 
 div[class*='language-'] code {
   font-family: 'JetBrains Mono', 'Fira Code', Consolas, Monaco, 'Courier New', monospace;
   font-size: 14px;
   line-height: 1.7;
+}
+
+div[class*='language-'] pre {
+  max-width: 100%;
+  overflow-x: auto;
+}
+
+/* VitePress demo block 代码块优化 */
+.vp-demo,
+.demoblock-custom,
+[class*="demo"] div[class*='language-'] {
+  max-width: 100%;
+}
+
+.vp-demo pre,
+.demoblock-custom pre {
+  max-width: 100%;
+  overflow-x: auto;
 }
 
 /* 表格优化 */
@@ -1065,8 +1085,116 @@ tr:hover {
 .dark .datetime-time-picker,
 .dark .x-dropdown__menu,
 .dark .x-search__results,
-.dark .x-search__result-item {
+  .dark .x-search__result-item {
   background: #1a1a1a !important;
   background-color: #1a1a1a !important;
   border-color: #333 !important;
+}
+
+/* ==================== 贡献者区域样式 ==================== */
+
+.contributors {
+  display: flex;
+  gap: 24px;
+  margin: 24px 0;
+  flex-wrap: wrap;
+}
+
+.contributor-item a {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-decoration: none;
+  color: inherit;
+  transition: transform 0.2s ease;
+}
+
+.contributor-item a:hover {
+  transform: translateY(-2px);
+}
+
+.contributor-avatar {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  border: 3px solid var(--vp-c-border);
+  transition: border-color 0.2s ease;
+  object-fit: cover;
+}
+
+.contributor-item a:hover .contributor-avatar {
+  border-color: var(--vp-c-brand-1);
+}
+
+.contributor-name {
+  margin-top: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--vp-c-text-2);
+  transition: color 0.2s ease;
+}
+
+.contributor-item a:hover .contributor-name {
+  color: var(--vp-c-brand-1);
+}
+
+@media (max-width: 768px) {
+  .contributors {
+    gap: 16px;
+  }
+  
+  .contributor-avatar {
+    width: 60px;
+    height: 60px;
+  }
+  
+  .contributor-name {
+    font-size: 12px;
+  }
+}
+
+/* ==================== Demo 区域样式 ==================== */
+
+.demo-item {
+  max-width: 400px;
+  margin-bottom: 16px;
+}
+
+.demo-item h4 {
+  margin: 0 0 12px 0;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--vp-c-text-1);
+}
+
+.demo-result {
+  margin-top: 12px;
+  padding: 12px;
+  background-color: var(--vp-c-bg-soft);
+  border-radius: 4px;
+  font-size: 14px;
+  color: var(--vp-c-text-2);
+  border: 1px solid var(--vp-c-border);
+}
+
+.demo-result p {
+  margin: 4px 0;
+}
+
+/* 防止内容溢出 */
+.vp-doc img {
+  max-width: 100%;
+  height: auto;
+}
+
+.vp-doc pre code {
+  display: block;
+  max-width: 100%;
+}
+
+/* Grid 布局响应式优化 */
+@media (max-width: 1024px) {
+  [style*="display: grid"][style*="grid-template-columns: repeat(2"] {
+    grid-template-columns: 1fr !important;
+  }
 }

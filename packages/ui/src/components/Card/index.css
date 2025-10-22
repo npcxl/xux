@@ -1,0 +1,227 @@
+/* Card 卡片样式 */
+
+/* 基础卡片容器 */
+.x-card {
+  background: var(--x-color-white, #fff);
+  border-radius: var(--x-radius-lg, 12px);
+  overflow: hidden;
+  transition: all var(--x-transition, 0.3s);
+  box-shadow: var(--x-shadow-sm, 0 1px 2px 0 rgba(0, 0, 0, 0.05));
+  cursor: pointer;
+}
+
+.x-card:hover {
+  box-shadow: var(--x-shadow-md, 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06));
+  transform: translateY(-2px);
+}
+
+/* 图片容器包装 */
+.x-card-image-wrapper {
+  position: relative;
+  padding: 8px;
+}
+
+/* 图片容器 */
+.x-card-image {
+  position: relative;
+  overflow: hidden;
+  border-radius: 8px;
+  background-color: #f3f4f6;
+  aspect-ratio: 1 / 1;
+}
+
+.x-card-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s;
+}
+
+.x-card:hover .x-card-image img {
+  transform: scale(1.05);
+}
+
+/* 标签徽章 */
+.x-card-label {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  z-index: 2;
+}
+
+.x-card-badge {
+  display: inline-block;
+  background: var(--x-color-primary, #1a1a1a);
+  color: var(--x-color-white, #fff);
+  font-size: 12px;
+  padding: 4px 8px;
+  border-radius: var(--x-radius-sm, 4px);
+  font-weight: 500;
+}
+
+/* 卡片内容 */
+.x-card-content {
+  padding: 16px;
+}
+
+.x-card-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: #1f2937;
+  line-height: 1.5;
+  margin: 0 0 8px 0;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.x-card-description {
+  font-size: 14px;
+  color: #6b7280;
+  line-height: 1.6;
+  margin: 0 0 12px 0;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.x-card-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.x-card-price {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--x-color-primary, #1a1a1a);
+}
+
+/* 收藏按钮 */
+.x-card-like-btn {
+  min-width: 0 !important;
+  padding: 0.25rem !important;
+}
+
+.x-card-like-icon {
+  font-size: 20px;
+  transition: all 0.2s;
+}
+
+.x-card-like-icon.is-liked {
+  color: #ef4444;
+}
+
+.x-card-like-icon:not(.is-liked) {
+  color: #9ca3af;
+}
+
+.x-card-like-btn:hover .x-card-like-icon {
+  transform: scale(1.15);
+}
+
+/* 光效蒙版动画 */
+.x-card-light-effect {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    135deg,
+    transparent 0%,
+    transparent 30%,
+    rgba(255, 255, 255, 0.1) 50%,
+    rgba(255, 255, 255, 0.3) 60%,
+    rgba(255, 255, 255, 0.1) 70%,
+    transparent 100%
+  );
+  transform: translateX(-100%) translateY(-100%);
+  transition: transform 0.6s ease-out;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.x-card:hover .x-card-light-effect {
+  transform: translateX(100%) translateY(100%);
+}
+
+/* ========== 商品卡片 ========== */
+.x-card-product {
+  /* 商品卡片特定样式 */
+}
+
+.x-card-product .x-card-content {
+  padding: 12px 16px 16px;
+}
+
+/* ========== 信息卡片 ========== */
+.x-card-info {
+  display: flex;
+  gap: 16px;
+}
+
+.x-card-info .x-card-icon {
+  flex-shrink: 0;
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  color: var(--x-color-primary, #1a1a1a);
+  background: #f3f4f6;
+  border-radius: var(--x-radius-md, 8px);
+}
+
+.x-card-info .x-card-content {
+  flex: 1;
+  padding: 0;
+}
+
+.x-card-info .x-card-title {
+  font-size: 16px;
+  margin-bottom: 4px;
+}
+
+.x-card-info .x-card-description {
+  font-size: 13px;
+  margin-bottom: 8px;
+}
+
+.x-card-extra {
+  font-size: 12px;
+  color: #9ca3af;
+  margin-top: 8px;
+}
+
+/* ========== 基础卡片 ========== */
+.x-card-basic {
+  /* 基础卡片特定样式 */
+}
+
+.x-card-basic .x-card-body {
+  margin-top: 12px;
+}
+
+/* ========== 响应式 ========== */
+@media (min-width: 1024px) {
+  .x-card-title {
+    font-size: 18px;
+  }
+  
+  .x-card-description {
+    font-size: 15px;
+  }
+  
+  .x-card-price {
+    font-size: 20px;
+  }
+}
+

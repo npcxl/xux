@@ -2,7 +2,7 @@
 
 按钮用于触发一个操作，是用户和系统交互的基础组件。
 
-<div style="columns: 2; column-gap: 32px; margin-top: 32px;">
+<div style="columns: 2; column-gap: 32px; margin-top: 32px; align-items: start;">
 
 <div style="break-inside: avoid; margin-bottom: 24px;">
 
@@ -127,6 +127,32 @@ import { XFlex, XButton } from '@xlui/xux-ui'
     <XButton type="text">文字按钮</XButton>
     <XButton type="text" icon="mdi:link">链接</XButton>
     <XButton type="text" disabled>禁用按钮</XButton>
+  </XFlex>
+</template>
+
+<script setup>
+import { XFlex, XButton } from '@xlui/xux-ui'
+</script>
+```
+
+:::
+
+</div>
+
+<div style="break-inside: avoid; margin-bottom: 24px;">
+
+## 链接按钮
+
+链接样式的按钮，适用于导航和轻量级操作。
+
+:::demo
+
+```vue
+<template>
+  <XFlex gap="12">
+    <XButton type="link">链接按钮</XButton>
+    <XButton type="link" icon="mdi:open-in-new">外部链接</XButton>
+    <XButton type="link" disabled>禁用链接</XButton>
   </XFlex>
 </template>
 
@@ -309,7 +335,7 @@ import { XFlex, XButton } from '@xlui/xux-ui'
 
 | 属性名 | 说明 | 类型 | 默认值 |
 | --- | --- | --- | --- |
-| type | 按钮类型 | `default` \| `primary` \| `success` \| `warning` \| `danger` \| `text` | `default` |
+| type | 按钮类型 | `default` \| `primary` \| `success` \| `warning` \| `danger` \| `text` \| `link` | `default` |
 | size | 按钮尺寸 | `small` \| `medium` \| `large` | `medium` |
 | icon | 左侧图标（使用 iconify 图标名） | `string` | - |
 | iconRight | 右侧图标（使用 iconify 图标名） | `string` | - |

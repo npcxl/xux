@@ -46,6 +46,8 @@ export { default as XDrawer } from './components/Drawer/index.vue'
 export { default as XPagination } from './components/Pagination/index.vue'
 export { default as XFlex } from './components/Flex/index.vue'
 export { default as XCarousel } from './components/Carousel/index.vue'
+export { default as XTable } from './components/Table/index.vue'
+export { default as XIcon } from './components/Icon/index.vue'
 // 导出 Composables
 export { xlMsg, default as useMsg } from './composables/Msg'
 export { xlAlert, default as useAlert } from './composables/Alert'
@@ -99,6 +101,8 @@ export type { DrawerProps } from './components/Drawer/index.vue'
 export type { PaginationProps } from './components/Pagination/index.vue'
 export type { FlexProps } from './components/Flex/index.vue'
 export type { CarouselProps, CarouselItem } from './components/Carousel/index.vue'
+export type { TableProps, Column, TableSize, TableBorder } from './components/Table/index.vue'
+export type { IconProps } from './components/Icon/index.vue'
 export type { DateTimeOptions, DateRange, CalendarDate } from './composables/DateTime'
 
 

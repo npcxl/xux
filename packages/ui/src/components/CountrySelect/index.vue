@@ -16,26 +16,26 @@
         <!-- 单选模式 -->
         <div v-if="!multiple" class="country-select-single">
           <div class="country-select-content">
-            <img 
-              v-if="selectedCountry"
-              :src="selectedCountry.flagSvg"
-              :alt="selectedCountry.name"
+          <img 
+            v-if="selectedCountry"
+            :src="selectedCountry.flagSvg"
+            :alt="selectedCountry.name"
               class="country-flag"
-              @error="handleFlagError"
-            />
+            @error="handleFlagError"
+          />
             <span :class="{ 'is-placeholder': !selectedCountry && placeholder }">
-              {{ selectedCountry ? selectedCountry.name : (placeholder || '选择国家') }}
-            </span>
-          </div>
-          <svg 
+            {{ selectedCountry ? selectedCountry.name : (placeholder || '选择国家') }}
+          </span>
+        </div>
+        <svg 
             class="country-select-arrow"
             :class="{ 'is-open': isOpen }"
-            fill="none" 
-            stroke="currentColor" 
-            viewBox="0 0 24 24"
-          >
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
-          </svg>
+          fill="none" 
+          stroke="currentColor" 
+          viewBox="0 0 24 24"
+        >
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+        </svg>
         </div>
 
         <!-- 多选模式 -->
@@ -130,10 +130,10 @@
         <!-- 国家列表 -->
         <div class="country-select-list">
           <template v-if="sortedCountries.length > 0">
-            <div 
-              v-for="country in sortedCountries" 
-              :key="country.code"
-              @click="selectCountry(country)"
+        <div 
+          v-for="country in sortedCountries" 
+          :key="country.code"
+          @click="selectCountry(country)"
               :class="[
                 'country-select-item',
                 { 'is-selected': isCountrySelected(country) },
@@ -160,13 +160,13 @@
                 </div>
               </div>
 
-              <img 
-                :src="country.flagSvg"
-                :alt="country.name"
+          <img 
+            :src="country.flagSvg"
+            :alt="country.name"
                 class="country-flag"
-                @error="(e) => handleFlagError(e, country)"
-              />
-              <span>{{ country.name }}</span>
+            @error="(e) => handleFlagError(e, country)"
+          />
+          <span>{{ country.name }}</span>
             </div>
           </template>
           
@@ -375,7 +375,7 @@
   const clearAll = () => {
     emit('update:modelValue', props.multiple ? [] : '')
     if (!props.multiple) {
-      closeDropdown()
+    closeDropdown()
     }
   }
 
@@ -596,15 +596,13 @@
     display: inline-flex;
     align-items: center;
     gap: 6px;
-    padding: 2px 8px;
-    background-color: #f3f4f6;
-    border-radius: 4px;
-    font-size: 14px;
-    transition: background-color 0.2s;
-  }
-  
-  .country-tag:hover {
-    background-color: #e5e7eb;
+    padding: 4px 10px;
+    font-size: 12px;
+    border-radius: 9999px;
+    border: 1px solid;
+    background-color: var(--x-bg-color, #fff);
+    color: var(--x-text-color-primary, #1a1a1a);
+    border-color: var(--x-border-color-dark, rgba(26, 26, 26, 0.2));
   }
   
   .country-tag-flag {
@@ -620,16 +618,22 @@
   }
   
   .country-tag-close {
-    width: 14px;
-    height: 14px;
-    color: #6b7280;
+    border-radius: 9999px;
+    padding: 2px;
+    transition: all 0.15s;
+    background: none;
+    border: none;
     cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 16px;
+    height: 16px;
     flex-shrink: 0;
-    transition: color 0.2s;
   }
   
   .country-tag-close:hover {
-    color: #374151;
+    background-color: rgba(0, 0, 0, 0.05);
   }
   
   /* 占位符 */
@@ -800,23 +804,28 @@
   .country-checkbox {
     width: 16px;
     height: 16px;
-    border: 2px solid #d1d5db;
-    border-radius: 3px;
+    border-radius: 4px;
+    border: 1px solid;
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: all 0.2s;
+    transition: all 0.15s;
   }
   
   .country-checkbox.is-checked {
-    background-color: #3b82f6;
-    border-color: #3b82f6;
+    border-color: #1a1a1a;
+    background-color: transparent;
+  }
+  
+  .country-checkbox:not(.is-checked) {
+    border-color: #d1d5db;
+    background-color: #fff;
   }
   
   .country-checkbox-icon {
-    width: 12px;
-    height: 12px;
-    color: #fff;
+    color: #1a1a1a;
+    font-size: 12px;
+    font-weight: bold;
   }
   
   /* 背景遮罩 */

@@ -1,0 +1,28 @@
+<template>
+  <circle 
+    cx="12" 
+    cy="12" 
+    r="10" 
+    fill="none"
+    stroke="currentColor"
+    stroke-width="2"
+    opacity="0.25" 
+  />
+  <path 
+    d="M12 2a10 10 0 0 1 10 10" 
+    fill="none"
+    stroke="currentColor"
+    stroke-width="2"
+    stroke-linecap="round"
+  >
+    <animateTransform
+      attributeName="transform"
+      type="rotate"
+      from="0 12 12"
+      to="360 12 12"
+      dur="0.8s"
+      repeatCount="indefinite"
+    />
+  </path>
+</template>
+

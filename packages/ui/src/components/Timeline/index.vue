@@ -1,25 +1,23 @@
 <template>
-  <div :class="mode === 'vertical' ? 'flex flex-col py-5' : 'flex py-5 overflow-x-auto'">
+  <div :class="['x-timeline-container', mode === 'vertical' ? 'x-timeline-vertical' : 'x-timeline-horizontal']">
     <div
       v-for="(item, index) in items"
       :key="index"
-      :class="[
-        'relative',
-        mode === 'vertical' ? 'flex pb-6 last:pb-0' : 'flex flex-col items-center flex-1 min-w-30'
-      ]"
+      class="x-timeline-item"
     >
       <!-- 节点 -->
-      <div :class="mode === 'vertical' ? 'relative flex-shrink-0 w-8 flex justify-center z-2' : 'relative flex-shrink-0 h-8 flex items-center z-2'">
+      <div class="x-timeline-node-wrapper">
         <slot :name="`icon-${index}`" :item="item" :index="index" :is-current="currentStep === index">
           <div 
-            class="w-3 h-3 rounded-full flex items-center justify-center transition-all"
             :class="[
+              'x-timeline-node',
               getNodeClass(item.type || 'default', index),
-              currentStep === index ? 'scale-140 ring-2 ring-blue-300' : 'hover:scale-120'
+              { 'is-current': currentStep === index },
+              { 'is-active': currentStep === index && !item.type }
             ]"
             :style="item.color ? { backgroundColor: item.color, boxShadow: `0 0 0 4px ${item.color}20` } : {}"
           >
-            <Icon v-if="item.icon" :icon="item.icon" class="w-2 h-2 text-white" />
+            <Icon v-if="item.icon" :icon="item.icon" class="x-timeline-node-icon" />
           </div>
         </slot>
       </div>
@@ -27,29 +25,28 @@
       <!-- 连接线 -->
       <div 
         v-if="index < items.length - 1" 
-        :class="mode === 'vertical' 
-          ? 'absolute left-4 top-3 h-full w-0.5 bg-gray-200 dark:bg-gray-700 z-1'
-          : 'absolute left-1/2 top-4 right--50% h-0.5 bg-gray-200 dark:bg-gray-700 z-1'"
+        class="x-timeline-line"
       ></div>
 
       <!-- 内容 -->
       <div 
         :class="[
-          mode === 'vertical' ? 'flex-1 pl-4' : 'text-center pt-4 max-w-50',
-          'transition-opacity',
-          currentStep === index ? 'opacity-100' : 'opacity-60'
+          'x-timeline-content',
+          { 'is-current': currentStep === index }
         ]"
       >
         <slot :name="`content-${index}`" :item="item" :index="index" :is-current="currentStep === index">
-          <div v-if="item.time" class="text-xs text-gray-400 mb-1">{{ item.time }}</div>
+          <div v-if="item.time" class="x-timeline-time">{{ item.time }}</div>
           <div 
             v-if="item.title" 
-            class="text-sm font-600 mb-1 transition-colors"
-            :class="currentStep === index ? 'text-blue-600 dark:text-blue-400' : 'text-gray-900 dark:text-gray-100'"
+            :class="[
+              'x-timeline-title',
+              { 'is-current': currentStep === index }
+            ]"
           >
             {{ item.title }}
           </div>
-          <div v-if="item.description" class="text-xs text-gray-600 dark:text-gray-400 leading-relaxed">{{ item.description }}</div>
+          <div v-if="item.description" class="x-timeline-description">{{ item.description }}</div>
         </slot>
       </div>
     </div>
@@ -59,6 +56,7 @@
 <script setup lang="ts">
 import { ref, watch } from 'vue'
 import { Icon } from '@iconify/vue'
+import './index.css'
 
 export interface TimelineItem {
   /** 时间 */
@@ -102,13 +100,12 @@ watch(() => props.current, (val) => {
 })
 
 const getNodeClass = (type: string, index: number) => {
-  const isActive = currentStep.value === index
   const classes: Record<string, string> = {
-    default: isActive ? 'bg-blue-500' : 'bg-gray-300 dark:bg-gray-600',
-    primary: 'bg-blue-500 shadow-[0_0_0_4px_rgba(59,130,246,0.1)]',
-    success: 'bg-green-500 shadow-[0_0_0_4px_rgba(16,185,129,0.1)]',
-    warning: 'bg-orange-500 shadow-[0_0_0_4px_rgba(245,158,11,0.1)]',
-    danger: 'bg-red-500 shadow-[0_0_0_4px_rgba(239,68,68,0.1)]'
+    default: 'type-default',
+    primary: 'type-primary',
+    success: 'type-success',
+    warning: 'type-warning',
+    danger: 'type-danger'
   }
   return classes[type] || classes.default
 }

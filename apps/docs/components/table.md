@@ -1,0 +1,1588 @@
+# Table 表格
+
+企业级表格组件，提供强大且灵活的数据展示能力。支持固定表头、固定列、排序、行选择等功能，并具备优秀的无障碍支持和性能优化。
+
+## 💡 设计理念
+
+本表格组件使用 `<div>` 布局而非传统的 `<table>` 标签，这是基于以下考虑：
+
+**优势：**
+- ✅ **更灵活的布局** - 使用 Flexbox 实现，可以轻松控制列宽和对齐
+- ✅ **更好的性能** - 固定列使用 `position: sticky`，性能更优
+- ✅ **响应式友好** - 可以使用 CSS Grid、媒体查询等现代技术
+- ✅ **样式控制** - 更容易实现复杂的样式需求（渐变、阴影、动画等）
+
+**权衡：**
+- ⚠️ **语义性** - 失去了部分 HTML 语义，但通过 ARIA 属性补充
+- ⚠️ **兼容性** - 需要支持现代浏览器（但我们的目标就是现代化）
+
+使用 `<div>` 布局的优势：
+- 可以自由地拆分为多个独立区域（固定表头、滚动内容、固定列等）
+- 各区域可以独立控制滚动，而 `<table>` 一体结构很难同时实现固定头和固定列
+- 更容易实现复杂的交互效果和动画
+
+## 基础用法
+
+基础的表格展示。
+
+:::demo
+
+```vue
+<template>
+  <XTable 
+    :columns="columns" 
+    :dataSource="dataSource"
+    @row-click="handleRowClick"
+  />
+</template>
+
+<script setup>
+import { ref } from 'vue'
+
+const columns = ref([
+  { key: 'name', title: '姓名', dataIndex: 'name', width: '120px' },
+  { key: 'age', title: '年龄', dataIndex: 'age', width: '80px' },
+  { key: 'address', title: '地址', dataIndex: 'address', width: '200px' },
+  { key: 'email', title: '邮箱', dataIndex: 'email', width: '180px' },
+  { key: 'phone', title: '电话', dataIndex: 'phone', width: '130px' }
+])
+
+const dataSource = ref([
+  {
+    id: '1',
+    name: '张三',
+    age: 28,
+    address: '北京市朝阳区',
+    email: 'zhangsan@example.com',
+    phone: '13800138000'
+  },
+  {
+    id: '2',
+    name: '李四',
+    age: 32,
+    address: '上海市浦东新区',
+    email: 'lisi@example.com',
+    phone: '13800138001'
+  },
+  {
+    id: '3',
+    name: '王五',
+    age: 25,
+    address: '广州市天河区',
+    email: 'wangwu@example.com',
+    phone: '13800138002'
+  },
+  {
+    id: '4',
+    name: '赵六',
+    age: 30,
+    address: '深圳市南山区',
+    email: 'zhaoliu@example.com',
+    phone: '13800138003'
+  },
+  {
+    id: '5',
+    name: '钱七',
+    age: 27,
+    address: '杭州市西湖区',
+    email: 'qianqi@example.com',
+    phone: '13800138004'
+  }
+])
+
+const handleRowClick = (record, index) => {
+  console.log('点击行:', record, index)
+}
+</script>
+```
+
+:::
+
+## 固定表头
+
+设置 `height` 后表头会自动固定。
+
+:::demo
+
+```vue
+<template>
+  <XTable 
+    :columns="columns" 
+    :dataSource="longDataSource"
+    height="400px"
+  />
+</template>
+
+<script setup>
+import { ref } from 'vue'
+
+const columns = ref([
+  { key: 'id', title: 'ID', dataIndex: 'id', width: '80px' },
+  { key: 'name', title: '姓名', dataIndex: 'name', width: '120px' },
+  { key: 'department', title: '部门', dataIndex: 'department', width: '150px' },
+  { key: 'position', title: '职位', dataIndex: 'position', width: '150px' },
+  { key: 'salary', title: '薪资', dataIndex: 'salary', width: '100px' }
+])
+
+const longDataSource = ref(
+  Array.from({ length: 20 }, (_, i) => ({
+    id: `${i + 1}`,
+    name: `员工${i + 1}`,
+    department: ['技术部', '产品部', '设计部', '运营部'][i % 4],
+    position: ['工程师', '产品经理', '设计师', '运营专员'][i % 4],
+    salary: `¥${(10 + i) * 1000}`
+  }))
+)
+</script>
+```
+
+:::
+
+## 固定左侧列
+
+通过设置列的 `fixed: 'left'` 来固定左侧列。
+
+:::demo
+
+```vue
+<template>
+  <XTable 
+    :columns="fixedLeftColumns" 
+    :dataSource="dataSource"
+    height="400px"
+  />
+</template>
+
+<script setup>
+import { ref } from 'vue'
+
+const fixedLeftColumns = ref([
+  { key: 'name', title: '姓名', dataIndex: 'name', width: '120px', fixed: 'left' },
+  { key: 'age', title: '年龄', dataIndex: 'age', width: '80px' },
+  { key: 'address', title: '地址', dataIndex: 'address', width: '250px' },
+  { key: 'company', title: '公司', dataIndex: 'company', width: '200px' },
+  { key: 'email', title: '邮箱', dataIndex: 'email', width: '200px' },
+  { key: 'phone', title: '电话', dataIndex: 'phone', width: '150px' },
+  { key: 'department', title: '部门', dataIndex: 'department', width: '120px' }
+])
+
+const dataSource = ref([
+  {
+    id: '1',
+    name: '张三',
+    age: 28,
+    address: '北京市朝阳区建国路123号',
+    company: '科技有限公司',
+    email: 'zhangsan@example.com',
+    phone: '13800138000',
+    department: '技术部'
+  },
+  {
+    id: '2',
+    name: '李四',
+    age: 32,
+    address: '上海市浦东新区世纪大道456号',
+    company: '互联网公司',
+    email: 'lisi@example.com',
+    phone: '13800138001',
+    department: '产品部'
+  },
+  {
+    id: '3',
+    name: '王五',
+    age: 25,
+    address: '广州市天河区珠江新城789号',
+    company: '设计工作室',
+    email: 'wangwu@example.com',
+    phone: '13800138002',
+    department: '设计部'
+  },
+  {
+    id: '4',
+    name: '赵六',
+    age: 30,
+    address: '深圳市南山区科技园101号',
+    company: '金融科技公司',
+    email: 'zhaoliu@example.com',
+    phone: '13800138003',
+    department: '运营部'
+  },
+  {
+    id: '5',
+    name: '钱七',
+    age: 27,
+    address: '杭州市西湖区文三路202号',
+    company: '电商平台',
+    email: 'qianqi@example.com',
+    phone: '13800138004',
+    department: '市场部'
+  }
+])
+</script>
+```
+
+:::
+
+## 固定右侧列
+
+通过设置列的 `fixed: 'right'` 来固定右侧列。
+
+:::demo
+
+```vue
+<template>
+  <XTable 
+    :columns="fixedRightColumns" 
+    :dataSource="dataSource"
+    height="400px"
+  >
+    <template #action="{ record }">
+      <div style="display: flex; gap: 8px;">
+        <XButton size="small" type="text" @click="handleEdit(record)">编辑</XButton>
+        <XButton size="small" type="text" @click="handleDelete(record)">删除</XButton>
+      </div>
+    </template>
+  </XTable>
+</template>
+
+<script setup>
+import { ref } from 'vue'
+
+const fixedRightColumns = ref([
+  { key: 'name', title: '姓名', dataIndex: 'name', width: '120px' },
+  { key: 'age', title: '年龄', dataIndex: 'age', width: '80px' },
+  { key: 'address', title: '地址', dataIndex: 'address', width: '250px' },
+  { key: 'company', title: '公司', dataIndex: 'company', width: '200px' },
+  { key: 'email', title: '邮箱', dataIndex: 'email', width: '200px' },
+  { key: 'phone', title: '电话', dataIndex: 'phone', width: '150px' },
+  { key: 'action', title: '操作', dataIndex: 'action', width: '150px', fixed: 'right', slot: 'action' }
+])
+
+const dataSource = ref([
+  {
+    id: '1',
+    name: '张三',
+    age: 28,
+    address: '北京市朝阳区建国路123号',
+    company: '科技有限公司',
+    email: 'zhangsan@example.com',
+    phone: '13800138000'
+  },
+  {
+    id: '2',
+    name: '李四',
+    age: 32,
+    address: '上海市浦东新区世纪大道456号',
+    company: '互联网公司',
+    email: 'lisi@example.com',
+    phone: '13800138001'
+  },
+  {
+    id: '3',
+    name: '王五',
+    age: 25,
+    address: '广州市天河区珠江新城789号',
+    company: '设计工作室',
+    email: 'wangwu@example.com',
+    phone: '13800138002'
+  }
+])
+
+const handleEdit = (record) => {
+  console.log('编辑:', record)
+}
+
+const handleDelete = (record) => {
+  console.log('删除:', record)
+}
+</script>
+```
+
+:::
+
+## 固定左右列
+
+同时固定左右两侧的列。
+
+:::demo
+
+```vue
+<template>
+  <XTable 
+    :columns="fixedBothColumns" 
+    :dataSource="dataSource"
+    height="400px"
+  >
+    <template #status="{ value }">
+      <span 
+        :style="{
+          padding: '2px 8px',
+          borderRadius: '4px',
+          fontSize: '12px',
+          fontWeight: '500',
+          background: value === 'active' ? '#e8f5e9' : value === 'inactive' ? '#ffebee' : '#fff3e0',
+          color: value === 'active' ? '#2e7d32' : value === 'inactive' ? '#c62828' : '#ef6c00'
+        }"
+      >
+        {{ value === 'active' ? '在职' : value === 'inactive' ? '离职' : '待入职' }}
+      </span>
+    </template>
+
+    <template #action="{ record }">
+      <div style="display: flex; gap: 6px;">
+        <XButton size="small" type="text" @click="handleView(record)">查看</XButton>
+        <XButton size="small" type="text" @click="handleEdit(record)">编辑</XButton>
+      </div>
+    </template>
+  </XTable>
+</template>
+
+<script setup>
+import { ref } from 'vue'
+
+const fixedBothColumns = ref([
+  { key: 'id', title: 'ID', dataIndex: 'id', width: '80px', fixed: 'left' },
+  { key: 'name', title: '姓名', dataIndex: 'name', width: '120px', fixed: 'left' },
+  { key: 'age', title: '年龄', dataIndex: 'age', width: '80px' },
+  { key: 'address', title: '地址', dataIndex: 'address', width: '250px' },
+  { key: 'company', title: '公司', dataIndex: 'company', width: '200px' },
+  { key: 'email', title: '邮箱', dataIndex: 'email', width: '200px' },
+  { key: 'phone', title: '电话', dataIndex: 'phone', width: '150px' },
+  { key: 'department', title: '部门', dataIndex: 'department', width: '120px' },
+  { key: 'status', title: '状态', dataIndex: 'status', width: '100px', fixed: 'right', slot: 'status' },
+  { key: 'action', title: '操作', dataIndex: 'action', width: '150px', fixed: 'right', slot: 'action' }
+])
+
+const dataSource = ref(
+  Array.from({ length: 15 }, (_, i) => ({
+    id: `${i + 1}`,
+    name: `员工${i + 1}`,
+    age: 25 + (i % 10),
+    address: ['北京市朝阳区', '上海市浦东新区', '广州市天河区', '深圳市南山区'][i % 4] + '某某街道123号',
+    company: ['科技公司', '互联网公司', '金融公司', '设计公司'][i % 4],
+    email: `user${i + 1}@example.com`,
+    phone: `138001380${String(i).padStart(2, '0')}`,
+    department: ['技术部', '产品部', '设计部', '运营部'][i % 4],
+    status: i % 3 === 0 ? 'active' : i % 3 === 1 ? 'inactive' : 'pending'
+  }))
+)
+
+const handleView = (record) => {
+  console.log('查看:', record)
+}
+
+const handleEdit = (record) => {
+  console.log('编辑:', record)
+}
+</script>
+```
+
+:::
+
+## 加载状态
+
+显示加载状态的表格。
+
+:::demo
+
+```vue
+<template>
+  <div>
+    <div style="margin-bottom: 16px;">
+      <XButton @click="toggleLoading">切换加载状态</XButton>
+    </div>
+    <XTable 
+      :columns="columns" 
+      :dataSource="dataSource"
+      :loading="loading"
+      loadingText="数据加载中..."
+    />
+  </div>
+</template>
+
+<script setup>
+import { ref } from 'vue'
+
+const loading = ref(false)
+
+const columns = ref([
+  { key: 'name', title: '姓名', dataIndex: 'name', width: '120px' },
+  { key: 'age', title: '年龄', dataIndex: 'age', width: '80px' },
+  { key: 'address', title: '地址', dataIndex: 'address', width: '200px' },
+  { key: 'email', title: '邮箱', dataIndex: 'email', width: '180px' }
+])
+
+const dataSource = ref([
+  {
+    id: '1',
+    name: '张三',
+    age: 28,
+    address: '北京市朝阳区',
+    email: 'zhangsan@example.com'
+  },
+  {
+    id: '2',
+    name: '李四',
+    age: 32,
+    address: '上海市浦东新区',
+    email: 'lisi@example.com'
+  }
+])
+
+const toggleLoading = () => {
+  loading.value = !loading.value
+}
+</script>
+```
+
+:::
+
+## 空状态
+
+没有数据时显示的空状态。
+
+:::demo
+
+```vue
+<template>
+  <XTable 
+    :columns="columns" 
+    :dataSource="[]"
+    emptyText="暂无数据"
+  />
+</template>
+
+<script setup>
+import { ref } from 'vue'
+
+const columns = ref([
+  { key: 'name', title: '姓名', dataIndex: 'name', width: '120px' },
+  { key: 'age', title: '年龄', dataIndex: 'age', width: '80px' },
+  { key: 'address', title: '地址', dataIndex: 'address', width: '200px' }
+])
+</script>
+```
+
+:::
+
+## 自定义单元格
+
+通过插槽自定义单元格内容。
+
+:::demo
+
+```vue
+<template>
+  <XTable 
+    :columns="columns" 
+    :dataSource="dataSource"
+  >
+    <template #avatar="{ record }">
+      <div style="display: flex; align-items: center; gap: 8px;">
+        <div 
+          :style="{
+            width: '32px',
+            height: '32px',
+            borderRadius: '50%',
+            background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            color: 'white',
+            fontSize: '14px',
+            fontWeight: '600'
+          }"
+        >
+          {{ record.name.charAt(0) }}
+        </div>
+        <span style="font-weight: 500;">{{ record.name }}</span>
+      </div>
+    </template>
+
+    <template #progress="{ value }">
+      <div style="display: flex; align-items: center; gap: 8px;">
+        <div 
+          :style="{
+            flex: 1,
+            height: '6px',
+            background: '#f0f0f0',
+            borderRadius: '3px',
+            overflow: 'hidden'
+          }"
+        >
+          <div 
+            :style="{
+              width: value + '%',
+              height: '100%',
+              background: 'linear-gradient(90deg, #007aff 0%, #0051d5 100%)',
+              transition: 'width 0.3s ease',
+              borderRadius: '3px'
+            }"
+          ></div>
+        </div>
+        <span style="fontSize: '12px'; color: #666; minWidth: '35px;">{{ value }}%</span>
+      </div>
+    </template>
+
+    <template #tags="{ value }">
+      <div style="display: flex; gap: 4px; flexWrap: 'wrap';">
+        <span 
+          v-for="tag in value" 
+          :key="tag"
+          :style="{
+            padding: '2px 8px',
+            fontSize: '12px',
+            borderRadius: '4px',
+            background: '#f0f0f0',
+            color: '#333'
+          }"
+        >
+          {{ tag }}
+        </span>
+      </div>
+    </template>
+  </XTable>
+</template>
+
+<script setup>
+import { ref } from 'vue'
+
+const columns = ref([
+  { key: 'name', title: '成员', dataIndex: 'name', width: '180px', slot: 'avatar' },
+  { key: 'progress', title: '进度', dataIndex: 'progress', width: '200px', slot: 'progress' },
+  { key: 'tags', title: '标签', dataIndex: 'tags', width: '250px', slot: 'tags' },
+  { key: 'status', title: '状态', dataIndex: 'status', width: '100px' }
+])
+
+const dataSource = ref([
+  {
+    id: '1',
+    name: '张三',
+    progress: 85,
+    tags: ['前端', 'React', 'Vue'],
+    status: '进行中'
+  },
+  {
+    id: '2',
+    name: '李四',
+    progress: 60,
+    tags: ['后端', 'Node.js', 'Python'],
+    status: '进行中'
+  },
+  {
+    id: '3',
+    name: '王五',
+    progress: 95,
+    tags: ['设计', 'UI', 'UX'],
+    status: '已完成'
+  },
+  {
+    id: '4',
+    name: '赵六',
+    progress: 40,
+    tags: ['测试', '自动化'],
+    status: '进行中'
+  }
+])
+</script>
+```
+
+:::
+
+## 可编辑单元格
+
+双击单元格进行编辑，按回车保存或按ESC取消。
+
+:::demo
+
+```vue
+<template>
+  <XTable 
+    :columns="columns" 
+    :dataSource="dataSource"
+    @cell-edit="handleCellEdit"
+    height="400px"
+  />
+</template>
+
+<script setup>
+import { ref } from 'vue'
+
+const columns = ref([
+  { key: 'name', title: '姓名', dataIndex: 'name', editable: true, width: '120px' },
+  { key: 'age', title: '年龄', dataIndex: 'age', editable: true, width: '100px' },
+  { key: 'email', title: '邮箱', dataIndex: 'email', editable: true, width: '200px' },
+  { key: 'department', title: '部门', dataIndex: 'department', width: '120px' }
+])
+
+const dataSource = ref([
+  { id: '1', name: '张三', age: 28, email: 'zhangsan@example.com', department: '技术部' },
+  { id: '2', name: '李四', age: 32, email: 'lisi@example.com', department: '产品部' },
+  { id: '3', name: '王五', age: 25, email: 'wangwu@example.com', department: '设计部' },
+  { id: '4', name: '赵六', age: 30, email: 'zhaoliu@example.com', department: '技术部' },
+  { id: '5', name: '钱七', age: 27, email: 'qianqi@example.com', department: '产品部' }
+])
+
+const handleCellEdit = (record, column, value) => {
+  // 更新数据
+  record[column.dataIndex] = value
+  console.log('编辑完成:', { record, column: column.dataIndex, value })
+  xlMsg.success(`已更新 ${column.title} 为: ${value}`)
+}
+</script>
+```
+
+:::
+
+## API数据加载
+
+使用公开API加载真实数据，展示loading状态。
+
+:::demo
+
+```vue
+<template>
+  <div>
+    <div style="margin-bottom: 16px;">
+      <XButton type="primary" @click="loadData" :loading="loading">
+        {{ loading ? '加载中...' : '加载数据' }}
+      </XButton>
+      <XButton @click="clearData" style="margin-left: 8px;">清空数据</XButton>
+    </div>
+    <XTable 
+      :columns="columns" 
+      :dataSource="dataSource"
+      :loading="loading"
+      loading-text="正在加载用户数据..."
+      height="500px"
+    />
+  </div>
+</template>
+
+<script setup>
+import { ref } from 'vue'
+
+const columns = ref([
+  { key: 'name', title: '姓名', dataIndex: 'name', width: '120px' },
+  { key: 'email', title: '邮箱', dataIndex: 'email', width: '200px', editable: true },
+  { key: 'phone', title: '电话', dataIndex: 'phone', width: '150px' },
+  { key: 'company', title: '公司', dataIndex: 'company', width: '180px' },
+  { key: 'city', title: '城市', dataIndex: 'city', width: '120px' }
+])
+
+const dataSource = ref([])
+const loading = ref(false)
+
+const loadData = async () => {
+  loading.value = true
+  try {
+    // 使用 JSONPlaceholder 公开API
+    const response = await fetch('https://jsonplaceholder.typicode.com/users')
+    const users = await response.json()
+    
+    // 转换数据格式
+    dataSource.value = users.map(user => ({
+      id: String(user.id),
+      name: user.name,
+      email: user.email,
+      phone: user.phone,
+      company: user.company.name,
+      city: user.address.city
+    }))
+    
+    xlMsg.success(`成功加载 ${users.length} 条数据`)
+  } catch (error) {
+    console.error('加载失败:', error)
+    xlMsg.error('数据加载失败')
+  } finally {
+    loading.value = false
+  }
+}
+
+const clearData = () => {
+  dataSource.value = []
+  xlMsg.info('已清空数据')
+}
+
+// 自动加载数据
+loadData()
+</script>
+```
+
+:::
+
+## 表格尺寸
+
+通过 `size` 属性设置表格尺寸，支持 `large`、`default`、`small` 三种尺寸。
+
+:::demo
+
+```vue
+<template>
+  <div style="display: flex; flex-direction: column; gap: 20px;">
+    <div>
+      <h4>Large 大号</h4>
+      <XTable 
+        :columns="columns" 
+        :dataSource="dataSource"
+        size="large"
+        height="300px"
+      />
+    </div>
+    
+    <div>
+      <h4>Default 默认</h4>
+      <XTable 
+        :columns="columns" 
+        :dataSource="dataSource"
+        size="default"
+        height="300px"
+      />
+    </div>
+    
+    <div>
+      <h4>Small 紧凑</h4>
+      <XTable 
+        :columns="columns" 
+        :dataSource="dataSource"
+        size="small"
+        height="300px"
+      />
+    </div>
+  </div>
+</template>
+
+<script setup>
+import { ref } from 'vue'
+
+const columns = ref([
+  { key: 'name', title: '姓名', dataIndex: 'name' },
+  { key: 'age', title: '年龄', dataIndex: 'age' },
+  { key: 'address', title: '地址', dataIndex: 'address' }
+])
+
+const dataSource = ref([
+  { id: '1', name: '张三', age: 28, address: '北京市朝阳区' },
+  { id: '2', name: '李四', age: 32, address: '上海市浦东新区' },
+  { id: '3', name: '王五', age: 25, address: '广州市天河区' }
+])
+</script>
+```
+
+:::
+
+## 条纹表格
+
+设置 `stripe` 属性可以创建斑马纹表格，提升可读性。
+
+:::demo
+
+```vue
+<template>
+  <XTable 
+    :columns="columns" 
+    :dataSource="dataSource"
+    stripe
+    height="400px"
+  />
+</template>
+
+<script setup>
+import { ref } from 'vue'
+
+const columns = ref([
+  { key: 'id', title: 'ID', dataIndex: 'id' },
+  { key: 'name', title: '姓名', dataIndex: 'name' },
+  { key: 'department', title: '部门', dataIndex: 'department' },
+  { key: 'position', title: '职位', dataIndex: 'position' },
+  { key: 'salary', title: '薪资', dataIndex: 'salary' }
+])
+
+const dataSource = ref(
+  Array.from({ length: 15 }, (_, i) => ({
+    id: `${i + 1}`,
+    name: `员工${i + 1}`,
+    department: ['技术部', '产品部', '设计部', '运营部'][i % 4],
+    position: ['工程师', '产品经理', '设计师', '运营专员'][i % 4],
+    salary: `¥${(10 + i) * 1000}`
+  }))
+)
+</script>
+```
+
+:::
+
+## 边框样式
+
+通过 `border` 属性设置边框样式，支持 `none`、`horizontal`、`vertical`、`all`。
+
+:::demo
+
+```vue
+<template>
+  <div style="display: flex; flex-direction: column; gap: 20px;">
+    <div>
+      <h4>Horizontal 横向边框（默认）</h4>
+      <XTable 
+        :columns="columns" 
+        :dataSource="dataSource"
+        border="horizontal"
+      />
+    </div>
+    
+    <div>
+      <h4>Vertical 纵向边框</h4>
+      <XTable 
+        :columns="columns" 
+        :dataSource="dataSource"
+        border="vertical"
+      />
+    </div>
+    
+    <div>
+      <h4>All 全边框</h4>
+      <XTable 
+        :columns="columns" 
+        :dataSource="dataSource"
+        border="all"
+      />
+    </div>
+    
+    <div>
+      <h4>None 无边框</h4>
+      <XTable 
+        :columns="columns" 
+        :dataSource="dataSource"
+        border="none"
+      />
+    </div>
+  </div>
+</template>
+
+<script setup>
+import { ref } from 'vue'
+
+const columns = ref([
+  { key: 'name', title: '姓名', dataIndex: 'name' },
+  { key: 'age', title: '年龄', dataIndex: 'age' },
+  { key: 'address', title: '地址', dataIndex: 'address' }
+])
+
+const dataSource = ref([
+  { id: '1', name: '张三', age: 28, address: '北京市朝阳区' },
+  { id: '2', name: '李四', age: 32, address: '上海市浦东新区' }
+])
+</script>
+```
+
+:::
+
+## 行选择
+
+通过 `row-selection` 属性启用行选择功能。
+
+:::demo
+
+```vue
+<template>
+  <div>
+    <div style="margin-bottom: 16px;">
+      已选择: {{ selectedRowKeys.length }} 项
+      <XButton 
+        v-if="selectedRowKeys.length > 0" 
+        size="small" 
+        type="text" 
+        @click="handleClearSelection"
+        style="margin-left: 8px;"
+      >
+        清空选择
+      </XButton>
+    </div>
+    
+    <XTable 
+      :columns="columns" 
+      :dataSource="dataSource"
+      row-selection
+      :selected-row-keys="selectedRowKeys"
+      @selection-change="handleSelectionChange"
+      height="400px"
+    />
+  </div>
+</template>
+
+<script setup>
+import { ref } from 'vue'
+
+const columns = ref([
+  { key: 'name', title: '姓名', dataIndex: 'name' },
+  { key: 'age', title: '年龄', dataIndex: 'age' },
+  { key: 'department', title: '部门', dataIndex: 'department' },
+  { key: 'email', title: '邮箱', dataIndex: 'email' }
+])
+
+const dataSource = ref(
+  Array.from({ length: 10 }, (_, i) => ({
+    id: `${i + 1}`,
+    name: `员工${i + 1}`,
+    age: 25 + i,
+    department: ['技术部', '产品部', '设计部'][i % 3],
+    email: `user${i + 1}@example.com`
+  }))
+)
+
+const selectedRowKeys = ref([])
+
+const handleSelectionChange = (keys, rows) => {
+  selectedRowKeys.value = keys
+  console.log('选中的行:', rows)
+}
+
+const handleClearSelection = () => {
+  selectedRowKeys.value = []
+}
+</script>
+```
+
+:::
+
+## 排序功能
+
+在列配置中设置 `sortable: true` 启用排序功能。
+
+:::demo
+
+```vue
+<template>
+  <XTable 
+    :columns="columns" 
+    :dataSource="sortedData"
+    @sort-change="handleSortChange"
+    height="400px"
+  />
+</template>
+
+<script setup>
+import { ref, computed } from 'vue'
+
+const columns = ref([
+  { key: 'name', title: '姓名', dataIndex: 'name', sortable: true },
+  { key: 'age', title: '年龄', dataIndex: 'age', sortable: true },
+  { key: 'score', title: '分数', dataIndex: 'score', sortable: true },
+  { key: 'department', title: '部门', dataIndex: 'department' }
+])
+
+const dataSource = ref([
+  { id: '1', name: '张三', age: 28, score: 85, department: '技术部' },
+  { id: '2', name: '李四', age: 32, score: 92, department: '产品部' },
+  { id: '3', name: '王五', age: 25, score: 78, department: '设计部' },
+  { id: '4', name: '赵六', age: 30, score: 88, department: '技术部' },
+  { id: '5', name: '钱七', age: 27, score: 95, department: '产品部' },
+  { id: '6', name: '孙八', age: 29, score: 82, department: '设计部' }
+])
+
+const sortState = ref({ column: null, order: null })
+
+const sortedData = computed(() => {
+  if (!sortState.value.column || !sortState.value.order) {
+    return dataSource.value
+  }
+  
+  const { column, order } = sortState.value
+  const sorted = [...dataSource.value].sort((a, b) => {
+    const aVal = a[column.dataIndex]
+    const bVal = b[column.dataIndex]
+    
+    if (typeof aVal === 'number' && typeof bVal === 'number') {
+      return order === 'asc' ? aVal - bVal : bVal - aVal
+    }
+    
+    return order === 'asc' 
+      ? String(aVal).localeCompare(String(bVal))
+      : String(bVal).localeCompare(String(aVal))
+  })
+  
+  return sorted
+})
+
+const handleSortChange = (column, order) => {
+  sortState.value = { column, order }
+  console.log('排序:', column.title, order)
+}
+</script>
+```
+
+:::
+
+## 对齐方式
+
+通过列配置的 `align` 属性设置列的对齐方式。
+
+:::demo
+
+```vue
+<template>
+  <XTable 
+    :columns="columns" 
+    :dataSource="dataSource"
+  />
+</template>
+
+<script setup>
+import { ref } from 'vue'
+
+const columns = ref([
+  { key: 'name', title: '姓名', dataIndex: 'name', align: 'left' },
+  { key: 'age', title: '年龄', dataIndex: 'age', align: 'center' },
+  { key: 'score', title: '分数', dataIndex: 'score', align: 'center' },
+  { key: 'salary', title: '薪资', dataIndex: 'salary', align: 'right' }
+])
+
+const dataSource = ref([
+  { id: '1', name: '张三', age: 28, score: 85, salary: '¥10,000' },
+  { id: '2', name: '李四', age: 32, score: 92, salary: '¥15,000' },
+  { id: '3', name: '王五', age: 25, score: 78, salary: '¥8,000' }
+])
+</script>
+```
+
+:::
+
+## 无障碍支持
+
+表格组件完全支持无障碍访问，包括色盲模式和高对比度模式。
+
+:::demo
+
+```vue
+<template>
+  <div>
+    <div style="margin-bottom: 16px; display: flex; gap: 12px;">
+      <XButton 
+        size="small" 
+        :type="colorblindMode === null ? 'primary' : 'default'"
+        @click="colorblindMode = null"
+      >
+        正常模式
+      </XButton>
+      <XButton 
+        size="small" 
+        :type="colorblindMode === 'protanopia' ? 'primary' : 'default'"
+        @click="colorblindMode = 'protanopia'"
+      >
+        红色盲
+      </XButton>
+      <XButton 
+        size="small" 
+        :type="colorblindMode === 'deuteranopia' ? 'primary' : 'default'"
+        @click="colorblindMode = 'deuteranopia'"
+      >
+        绿色盲
+      </XButton>
+      <XButton 
+        size="small" 
+        :type="colorblindMode === 'tritanopia' ? 'primary' : 'default'"
+        @click="colorblindMode = 'tritanopia'"
+      >
+        蓝黄色盲
+      </XButton>
+      <XButton 
+        size="small" 
+        :type="contrastMode === 'high' ? 'primary' : 'default'"
+        @click="contrastMode = contrastMode === 'high' ? null : 'high'"
+      >
+        高对比度
+      </XButton>
+    </div>
+    
+    <div 
+      :data-colorblind="colorblindMode"
+      :data-contrast="contrastMode"
+    >
+      <XTable 
+        :columns="columns" 
+        :dataSource="dataSource"
+        row-selection
+        :selected-row-keys="selectedRowKeys"
+        @selection-change="(keys) => selectedRowKeys = keys"
+        height="400px"
+      />
+    </div>
+  </div>
+</template>
+
+<script setup>
+import { ref } from 'vue'
+
+const colorblindMode = ref(null)
+const contrastMode = ref(null)
+const selectedRowKeys = ref(['1', '3'])
+
+const columns = ref([
+  { key: 'name', title: '姓名', dataIndex: 'name' },
+  { key: 'status', title: '状态', dataIndex: 'status' },
+  { key: 'score', title: '分数', dataIndex: 'score' }
+])
+
+const dataSource = ref([
+  { id: '1', name: '张三', status: '活跃', score: 85 },
+  { id: '2', name: '李四', status: '正常', score: 92 },
+  { id: '3', name: '王五', status: '活跃', score: 78 },
+  { id: '4', name: '赵六', status: '正常', score: 88 }
+])
+</script>
+```
+
+:::
+
+## 实例方法
+
+通过 ref 可以访问表格实例方法，进行更灵活的控制。
+
+:::demo
+
+```vue
+<template>
+  <div>
+    <div style="margin-bottom: 16px; display: flex; gap: 12px;">
+      <XButton size="small" @click="handleClearSelection">清空选择</XButton>
+      <XButton size="small" @click="handleSelectFirst">选中前3项</XButton>
+      <XButton size="small" @click="handleScrollToTop">滚动到顶部</XButton>
+      <XButton size="small" @click="handleScrollToBottom">滚动到底部</XButton>
+      <XButton size="small" @click="handleRefresh">刷新表格</XButton>
+    </div>
+    
+    <XTable 
+      ref="tableRef"
+      :columns="columns" 
+      :dataSource="dataSource"
+      row-selection
+      :selected-row-keys="selectedRowKeys"
+      @selection-change="(keys) => selectedRowKeys = keys"
+      height="400px"
+    />
+  </div>
+</template>
+
+<script setup>
+import { ref } from 'vue'
+
+const tableRef = ref()
+const selectedRowKeys = ref([])
+
+const columns = ref([
+  { key: 'id', title: 'ID', dataIndex: 'id' },
+  { key: 'name', title: '姓名', dataIndex: 'name' },
+  { key: 'department', title: '部门', dataIndex: 'department' }
+])
+
+const dataSource = ref(
+  Array.from({ length: 20 }, (_, i) => ({
+    id: `${i + 1}`,
+    name: `员工${i + 1}`,
+    department: ['技术部', '产品部', '设计部'][i % 3]
+  }))
+)
+
+const handleClearSelection = () => {
+  tableRef.value?.clearSelection()
+}
+
+const handleSelectFirst = () => {
+  tableRef.value?.setSelectedRows(['1', '2', '3'])
+}
+
+const handleScrollToTop = () => {
+  tableRef.value?.scrollToTop()
+}
+
+const handleScrollToBottom = () => {
+  tableRef.value?.scrollToBottom()
+}
+
+const handleRefresh = () => {
+  tableRef.value?.refresh()
+}
+</script>
+```
+
+:::
+
+## API
+
+### Props
+
+| 属性 | 说明 | 类型 | 默认值 |
+|------|------|------|--------|
+| columns | 列配置 | `Column[]` | `[]` |
+| dataSource | 数据源 | `any[]` | `[]` |
+| rowKey | 行唯一键 | `string` | `'id'` |
+| height | 表格高度 | `string` | `'600px'` |
+| loading | 加载状态 | `boolean` | `false` |
+| loadingText | 加载提示文字 | `string` | `'加载中...'` |
+| emptyText | 空数据提示文字 | `string` | `'暂无数据'` |
+| size | 表格尺寸 | `'large' \| 'default' \| 'small'` | `'default'` |
+| stripe | 是否显示斑马纹 | `boolean` | `false` |
+| border | 边框样式 | `'none' \| 'horizontal' \| 'vertical' \| 'all'` | `'horizontal'` |
+| showHeader | 是否显示表头 | `boolean` | `true` |
+| rowSelection | 是否可选择行 | `boolean` | `false` |
+| selectedRowKeys | 已选择的行键 | `(string \| number)[]` | `[]` |
+| highlightHoverRow | 悬停行高亮 | `boolean` | `true` |
+
+### Column 配置
+
+| 属性 | 说明 | 类型 | 默认值 |
+|------|------|------|--------|
+| key | 列标识（必填） | `string` | - |
+| title | 列标题（必填） | `string` | - |
+| dataIndex | 数据字段名（必填） | `string` | - |
+| width | 列宽度 | `string` | - |
+| minWidth | 最小列宽 | `string` | `'100px'` |
+| fixed | 固定列 | `'left' \| 'right'` | - |
+| slot | 自定义插槽名称 | `string` | - |
+| headerClass | 表头自定义类名 | `string` | - |
+| cellClass | 单元格自定义类名 | `string` | - |
+| align | 对齐方式 | `'left' \| 'center' \| 'right'` | `'left'` |
+| sortable | 是否可排序 | `boolean` | `false` |
+| editable | 是否可编辑（双击单元格编辑） | `boolean` | `false` |
+| visible | 列是否可见 | `boolean` | `true` |
+| tooltip | 列提示信息 | `string` | - |
+
+### Events
+
+| 事件名 | 说明 | 回调参数 |
+|--------|------|----------|
+| row-click | 行点击事件 | `(record: any, index: number)` |
+| selection-change | 行选择变化事件 | `(selectedRowKeys: (string\|number)[], selectedRows: any[])` |
+| sort-change | 排序变化事件 | `(column: Column, order: 'asc'\|'desc'\|null)` |
+| select-all | 全选/取消全选事件 | `(selected: boolean)` |
+| cell-edit | 单元格编辑事件 | `(record: any, column: Column, value: any)` |
+
+### Slots
+
+| 插槽名 | 说明 | 参数 |
+|--------|------|------|
+| [columnSlot] | 自定义单元格内容 | `{ record, index, value }` |
+
+### 实例方法
+
+| 方法名 | 说明 | 参数 | 返回值 |
+|--------|------|------|--------|
+| clearSelection | 清空所有选择 | - | `void` |
+| setSelectedRows | 设置选中的行 | `keys: (string\|number)[]` | `void` |
+| scrollTo | 滚动到指定位置 | `options: { top?: number; left?: number; behavior?: ScrollBehavior }` | `void` |
+| scrollToTop | 滚动到顶部 | - | `void` |
+| scrollToBottom | 滚动到底部 | - | `void` |
+| getSelectedRowKeys | 获取当前选中的行键 | - | `(string\|number)[]` |
+| getSelectedRows | 获取当前选中的行数据 | - | `any[]` |
+| refresh | 刷新表格布局 | - | `void` |
+
+
+## 最佳实践
+
+### 1. 性能优化
+
+**大数据场景**
+```vue
+<template>
+  <!-- 使用固定高度 -->
+  <XTable 
+    :columns="columns" 
+    :dataSource="largeDataSource"
+    height="600px"
+  />
+</template>
+```
+
+**避免在 dataSource 中使用复杂对象**
+```javascript
+// ❌ 不推荐
+const dataSource = ref([
+  { id: 1, user: { profile: { name: 'John' } } }
+])
+
+// ✅ 推荐 - 扁平化数据
+const dataSource = ref([
+  { id: 1, userName: 'John' }
+])
+```
+
+### 2. 列宽设置
+
+**设置固定宽度以获得最佳性能**
+```javascript
+const columns = ref([
+  { key: 'id', title: 'ID', dataIndex: 'id', width: '80px' },
+  { key: 'name', title: '姓名', dataIndex: 'name', width: '120px' },
+  // 最后一列可以不设置宽度，自动填充
+  { key: 'address', title: '地址', dataIndex: 'address' }
+])
+```
+
+### 3. 自定义单元格
+
+**使用插槽自定义单元格内容**
+```vue
+<template>
+  <XTable :columns="columns" :dataSource="dataSource">
+    <template #status="{ value, record }">
+      <span :style="{ color: record.online ? '#52c41a' : '#999' }">
+        {{ value }}
+      </span>
+    </template>
+  </XTable>
+</template>
+```
+
+### 4. 行选择最佳实践
+
+**使用 v-model 简化选择逻辑**
+```vue
+<script setup>
+const selectedKeys = ref([])
+
+// 监听选择变化
+watch(selectedKeys, (keys) => {
+  console.log('当前选中:', keys)
+})
+</script>
+
+<template>
+  <XTable 
+    row-selection
+    :selected-row-keys="selectedKeys"
+    @selection-change="(keys) => selectedKeys = keys"
+  />
+</template>
+```
+
+### 5. 固定列使用建议
+
+```javascript
+// ✅ 推荐 - 固定列必须设置宽度
+const columns = [
+  { key: 'id', title: 'ID', dataIndex: 'id', fixed: 'left', width: '80px' },
+  { key: 'name', title: '姓名', dataIndex: 'name', width: '120px' },
+  { key: 'action', title: '操作', dataIndex: 'action', fixed: 'right', width: '150px' }
+]
+```
+
+## 常见问题 FAQ
+
+### 1. 表格宽度如何控制？
+
+**Q: 表格总是占满容器宽度？**
+
+A: 表格宽度由列宽度决定：
+- 如果所有列都设置了 `width`，表格宽度 = 所有列宽度之和
+- 如果部分列没有设置 `width`，这些列会根据内容自动计算宽度
+- 表格会使用 `inline-flex` 布局，只占据内容所需的宽度
+
+### 2. 固定列显示不正确？
+
+**Q: 固定列位置错乱或不显示？**
+
+A: 请检查：
+1. 固定列必须设置 `width` 属性
+2. 确保使用了 `height` 属性（固定功能需要在滚动场景下）
+3. 检查是否有 CSS 冲突
+
+```javascript
+// ✅ 正确
+{ key: 'id', fixed: 'left', width: '80px' }
+
+// ❌ 错误 - 缺少 width
+{ key: 'id', fixed: 'left' }
+```
+
+### 3. 如何实现单选？
+
+**Q: 表格只支持多选吗？**
+
+A: 可以通过监听选择事件实现单选：
+
+```vue
+<script setup>
+const selectedKeys = ref([])
+
+const handleSelectionChange = (keys) => {
+  // 只保留最后一个选中项
+  selectedKeys.value = keys.slice(-1)
+}
+</script>
+
+<template>
+  <XTable 
+    row-selection
+    :selected-row-keys="selectedKeys"
+    @selection-change="handleSelectionChange"
+  />
+</template>
+```
+
+### 4. 表格滚动卡顿？
+
+**Q: 大数据量时滚动不流畅？**
+
+A: 优化建议：
+1. 使用分页，避免一次渲染过多行
+2. 设置固定列宽，避免动态计算
+3. 减少自定义插槽的复杂度
+4. 考虑使用虚拟滚动（需要自行实现）
+
+### 5. 如何实现展开行？
+
+**Q: 支持展开行功能吗？**
+
+A: 可以通过自定义单元格实现：
+
+```vue
+<template>
+  <XTable :columns="columns" :dataSource="dataSource">
+    <template #expand="{ record }">
+      <div v-if="expandedRows.includes(record.id)" style="padding: 12px; background: #fafafa;">
+        {{ record.detail }}
+      </div>
+    </template>
+  </XTable>
+</template>
+```
+
+### 6. 排序如何实现？
+
+**Q: 点击排序后数据没有变化？**
+
+A: 排序需要自己处理数据：
+
+```vue
+<script setup>
+const handleSortChange = (column, order) => {
+  if (!order) {
+    // 取消排序，恢复原始数据
+    dataSource.value = originalData
+  } else {
+    // 排序数据
+    dataSource.value = [...dataSource.value].sort((a, b) => {
+      return order === 'asc' 
+        ? a[column.dataIndex] - b[column.dataIndex]
+        : b[column.dataIndex] - a[column.dataIndex]
+    })
+  }
+}
+</script>
+```
+
+### 7. 如何自定义空状态？
+
+**Q: 空状态可以自定义吗？**
+
+A: 使用 `emptyText` 属性：
+
+```vue
+<XTable 
+  :dataSource="[]"
+  emptyText="没有找到匹配的数据"
+/>
+```
+
+### 8. 表格高度自适应？
+
+**Q: 如何让表格高度自适应容器？**
+
+A: 使用 CSS 变量或计算属性：
+
+```vue
+<script setup>
+const tableHeight = computed(() => `${window.innerHeight - 200}px`)
+</script>
+
+<template>
+  <XTable :height="tableHeight" />
+</template>
+```
+
+## 贡献者
+
+<div class="contributors">
+  <div class="contributor-item">
+    <a href="https://gitee.com/leheya" target="_blank" rel="noopener noreferrer">
+      <img 
+        src="https://foruda.gitee.com/avatar/1751620424517657404/10604783_leheya_1751620424.png!avatar200" 
+        alt="leheya"
+        class="contributor-avatar"
+      />
+      <span class="contributor-name">无敌暴龙神</span>
+    </a>
+  </div>
+  <!-- <div class="contributor-item">
+    <a href="https://gitee.com/haijun-li" target="_blank" rel="noopener noreferrer">
+      <img 
+        src="https://p3.itc.cn/images01/20230307/e9d72e3788844ed1a9259e442899e1bd.png" 
+        alt="lihaijun"
+        class="contributor-avatar"
+      />
+      <span class="contributor-name">lihaijun</span>
+    </a>
+  </div> -->
+</div>
+
+<style scoped>
+.contributors {
+  display: flex;
+  gap: 24px;
+  margin: 24px 0;
+  flex-wrap: wrap;
+}
+
+.contributor-item a {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-decoration: none;
+  color: inherit;
+  transition: transform 0.2s ease;
+}
+
+.contributor-item a:hover {
+  transform: translateY(-2px);
+}
+
+.contributor-avatar {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  border: 3px solid var(--vp-c-border);
+  transition: border-color 0.2s ease;
+  object-fit: cover;
+}
+
+.contributor-item a:hover .contributor-avatar {
+  border-color: var(--vp-c-brand-1);
+}
+
+.contributor-name {
+  margin-top: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--vp-c-text-2);
+  transition: color 0.2s ease;
+}
+
+.contributor-item a:hover .contributor-name {
+  color: var(--vp-c-brand-1);
+}
+
+@media (max-width: 768px) {
+  .contributors {
+    gap: 16px;
+  }
+  
+  .contributor-avatar {
+    width: 60px;
+    height: 60px;
+  }
+  
+  .contributor-name {
+    font-size: 12px;
+  }
+}
+</style>

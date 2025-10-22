@@ -2,7 +2,7 @@
 
 用于标记和分类的标签组件。
 
-<div style="columns: 2; column-gap: 32px; margin-top: 32px;">
+<div style="columns: 2; column-gap: 32px; margin-top: 32px; align-items: start;">
 
 <div style="break-inside: avoid; margin-bottom: 24px;">
 
@@ -280,6 +280,7 @@ const addTag = () => {
 | size | 标签尺寸 | `'small' \| 'medium' \| 'large'` | `'medium'` |
 | closable | 是否可关闭 | `boolean` | `false` |
 | bordered | 是否带边框 | `boolean` | `false` |
+| cursor | 鼠标指针样式 | `string` | `'pointer'` |
 
 ### Events
 
@@ -292,3 +293,90 @@ const addTag = () => {
 | 插槽名 | 说明 |
 |--------|------|
 | default | 标签内容 |
+
+## 贡献者
+
+<div class="contributors">
+  <div class="contributor-item">
+    <a href="https://gitee.com/leheya" target="_blank" rel="noopener noreferrer">
+      <img 
+        src="https://foruda.gitee.com/avatar/1751620424517657404/10604783_leheya_1751620424.png!avatar200" 
+        alt="leheya"
+        class="contributor-avatar"
+      />
+      <span class="contributor-name">无敌暴龙神</span>
+    </a>
+  </div>
+  <!-- <div class="contributor-item">
+    <a href="https://gitee.com/haijun-li" target="_blank" rel="noopener noreferrer">
+      <img 
+        src="https://p3.itc.cn/images01/20230307/e9d72e3788844ed1a9259e442899e1bd.png" 
+        alt="lihaijun"
+        class="contributor-avatar"
+      />
+      <span class="contributor-name">lihaijun</span>
+    </a>
+  </div> -->
+</div>
+
+<style scoped>
+.contributors {
+  display: flex;
+  gap: 24px;
+  margin: 24px 0;
+  flex-wrap: wrap;
+}
+
+.contributor-item a {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-decoration: none;
+  color: inherit;
+  transition: transform 0.2s ease;
+}
+
+.contributor-item a:hover {
+  transform: translateY(-2px);
+}
+
+.contributor-avatar {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  border: 3px solid var(--vp-c-border);
+  transition: border-color 0.2s ease;
+  object-fit: cover;
+}
+
+.contributor-item a:hover .contributor-avatar {
+  border-color: var(--vp-c-brand-1);
+}
+
+.contributor-name {
+  margin-top: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--vp-c-text-2);
+  transition: color 0.2s ease;
+}
+
+.contributor-item a:hover .contributor-name {
+  color: var(--vp-c-brand-1);
+}
+
+@media (max-width: 768px) {
+  .contributors {
+    gap: 16px;
+  }
+  
+  .contributor-avatar {
+    width: 60px;
+    height: 60px;
+  }
+  
+  .contributor-name {
+    font-size: 12px;
+  }
+}
+</style>

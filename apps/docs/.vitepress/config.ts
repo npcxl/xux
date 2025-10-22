@@ -80,6 +80,8 @@ export default defineConfig({
             { text: 'Button 按钮', link: '/components/button' },
             { text: 'Tag 标签', link: '/components/tag' },
             { text: 'Search 搜索', link: '/components/search' },
+            { text: 'Table 表格(测试版)', link: '/components/table' },
+            { text: 'Icon 图标', link: '/components/icon' },
           ]
         },
         {
@@ -105,7 +107,6 @@ export default defineConfig({
             { text: 'Switch 开关', link: '/components/switch' },
             { text: 'DateTimePicker 日期时间选择器', link: '/components/datetime-picker' },
             { text: 'Color 颜色选择器', link: '/components/color' },
-            { text: 'Qrcode 二维码', link: '/components/qrcode' },
           ]
         },
         {

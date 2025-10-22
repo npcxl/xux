@@ -7,6 +7,7 @@
       { 'tag-closable': closable },
       { 'tag-bordered': bordered }
     ]"
+    :style="{ cursor }"
   >
     <slot></slot>
     <svg 
@@ -28,13 +29,15 @@ export interface TagProps {
   size?: 'small' | 'medium' | 'large'
   closable?: boolean
   bordered?: boolean
+  cursor?: string
 }
 
-const props = withDefaults(defineProps<TagProps>(), {
+withDefaults(defineProps<TagProps>(), {
   type: 'default',
   size: 'medium',
   closable: false,
-  bordered: false
+  bordered: false,
+  cursor: 'pointer'
 })
 
 const emit = defineEmits(['close'])
