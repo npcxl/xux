@@ -210,7 +210,31 @@ const colorfulColors: Record<string, string> = {
   'anchor': '#6b7280',
   'feather': '#ec4899',
   'key': '#f59e0b',
-  'power': '#ef4444'
+  'power': '#ef4444',
+  // 动漫风格图标
+  'sparkles': '#eab308',
+  'magic-wand': '#a855f7',
+  'moon-stars': '#8b5cf6',
+  'rocket': '#3b82f6',
+  'crown': '#eab308',
+  'gem': '#ec4899',
+  'diamond': '#06b6d4',
+  'fire': '#ef4444',
+  'snowflake': '#06b6d4',
+  'lightning': '#eab308',
+  'rainbow': '#ec4899',
+  'palette': '#8b5cf6',
+  'paint-brush': '#f59e0b',
+  'cherry': '#ef4444',
+  'leaf': '#10b981',
+  'flower': '#ec4899',
+  'tree': '#10b981',
+  'butterfly': '#ec4899',
+  'medal': '#eab308',
+  'wand': '#a855f7',
+  'gamepad': '#8b5cf6',
+  'cake': '#ec4899',
+  'ice-cream': '#06b6d4'
 }
 
 // 计算实际尺寸
