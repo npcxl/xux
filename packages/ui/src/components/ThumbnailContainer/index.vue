@@ -350,8 +350,8 @@ defineExpose({
   position: absolute;
   bottom: 0.25rem;
   left: 0.25rem;
-  background-color: rgba(0, 0, 0, 0.6);
-  color: white;
+  background-color: var(--x-fill-color-dark, rgba(0, 0, 0, 0.6));
+  color: var(--x-text-color-white, #ffffff);
   font-size: var(--x-font-size-xs, 12px);
   padding: 0.125rem 0.375rem;
   border-radius: var(--x-radius-sm, 4px);
@@ -369,8 +369,8 @@ defineExpose({
   justify-content: center;
   width: 40px;
   height: 40px;
-  background: rgba(255, 255, 255, 0.95);
-  border: 1px solid var(--x-color-gray-200, #e5e7eb);
+  background: var(--x-bg-color, #ffffff);
+  border: 1px solid var(--x-border-color, #e5e7eb);
   border-radius: 50%;
   cursor: pointer;
   transition: all var(--x-transition-fast, 0.15s ease);
@@ -386,7 +386,7 @@ defineExpose({
 /* 移除 active 状态的向下动画 */
 .scroll-arrow:active {
   /* 不再改变 transform，只改变背景色 */
-  background: var(--x-color-gray-100, #f3f4f6);
+  background: var(--x-fill-color-light, #f3f4f6);
 }
 
 .scroll-arrow:focus-visible {

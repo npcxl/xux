@@ -20,15 +20,16 @@ export const xlAlert = () => {
             container.id = 'xl-alert-container'
             container.style.cssText = `
                 position: fixed;
-                top: 5%;
+                top: 20px;
                 left: 50%;
-                transform: translate(-50%, -50%);
+                transform: translateX(-50%);
                 z-index: 10000;
                 display: flex;
                 flex-direction: column;
                 gap: 12px;
                 max-width: 90%;
-                width: 500px;
+                width: 420px;
+                pointer-events: none;
             `
             document.body.appendChild(container)
         }
@@ -110,18 +111,22 @@ export const xlAlert = () => {
         alert.id = alertId
         alert.setAttribute('role', 'alert')
         alert.style.cssText = `
-            background-color: ${dark ? styles.darkBgColor : styles.bgColor};
-            border-left: 4px solid ${dark ? styles.darkBorderColor : styles.borderColor};
-            color: ${dark ? styles.darkTextColor : styles.textColor};
-            padding: 16px;
-            border-radius: 12px;
+            background-color: ${dark ? styles.darkBgColor : '#ffffff'};
+            border: 1px solid ${dark ? styles.darkBorderColor : 'rgba(0, 0, 0, 0.08)'};
+            border-left: 3px solid ${styles.iconColor};
+            color: ${dark ? styles.darkTextColor : '#1a1a1a'};
+            padding: 14px 16px;
+            border-radius: 8px;
             display: flex;
-            align-items: center;
-            transition: all 0.3s ease-in-out;
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-            transform: scale(0.8);
+            align-items: flex-start;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08), 0 2px 4px rgba(0, 0, 0, 0.04);
+            transform: translateY(-20px) scale(0.95);
             opacity: 0;
             position: relative;
+            pointer-events: auto;
+            backdrop-filter: blur(10px);
+            min-width: 320px;
         `
 
         // 创建内容
@@ -171,7 +176,7 @@ export const xlAlert = () => {
 
         // 关闭函数
         const close = () => {
-            alert.style.transform = 'scale(0.8)'
+            alert.style.transform = 'translateY(-20px) scale(0.95)'
             alert.style.opacity = '0'
             setTimeout(() => {
                 if (alert.parentNode) {
@@ -196,7 +201,7 @@ export const xlAlert = () => {
 
         // 显示动画
         setTimeout(() => {
-            alert.style.transform = 'scale(1)'
+            alert.style.transform = 'translateY(0) scale(1)'
             alert.style.opacity = '1'
         }, 10)
 

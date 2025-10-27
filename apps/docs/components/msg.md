@@ -27,7 +27,7 @@
 </template>
 
 <script setup>
-import { xlMsg } from '@xux/ui'
+import { xlMsg } from '@xlui/xux-ui'
 
 const msg = xlMsg()
 
@@ -70,7 +70,7 @@ const showDanger = () => {
 </template>
 
 <script setup>
-import { xlMsg } from '@xux/ui'
+import { xlMsg } from '@xlui/xux-ui'
 
 const msg = xlMsg()
 
@@ -108,7 +108,7 @@ const showDetailSuccess = () => {
 </template>
 
 <script setup>
-import { xlMsg } from '@xux/ui'
+import { xlMsg } from '@xlui/xux-ui'
 
 const msg = xlMsg()
 
@@ -150,7 +150,7 @@ const showPermanent = () => {
 </template>
 
 <script setup>
-import { xlMsg } from '@xux/ui'
+import { xlMsg } from '@xlui/xux-ui'
 
 const msg = xlMsg()
 
@@ -207,7 +207,7 @@ const showWarningConfirm = () => {
 ### xlMsg 方法
 
 ```typescript
-import { xlMsg } from '@xux/ui'
+import { xlMsg } from '@xlui/xux-ui'
 
 const msg = xlMsg()
 ```

@@ -53,82 +53,82 @@ function handleClose(e: MouseEvent) {
   display: inline-flex;
   align-items: center;
   gap: 4px;
-  border-radius: 6px;
+  border-radius: var(--x-radius, 6px);
   font-weight: 500;
-  transition: all 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  transition: all var(--x-transition-fast, 0.2s cubic-bezier(0.4, 0, 0.2, 1));
   white-space: nowrap;
   
   /* 大小 */
   &.tag-small {
     padding: 2px 8px;
-    font-size: 12px;
+    font-size: var(--x-font-size-xs, 12px);
     line-height: 1.5;
   }
   
   &.tag-medium {
     padding: 4px 12px;
-    font-size: 14px;
+    font-size: var(--x-font-size-sm, 14px);
     line-height: 1.5;
   }
   
   &.tag-large {
     padding: 6px 16px;
-    font-size: 16px;
+    font-size: var(--x-font-size, 16px);
     line-height: 1.5;
   }
   
   /* 类型 - 默认 */
   &.tag-default {
-    background: #f3f4f6;
-    color: #1a1a1a;
+    background: var(--x-fill-color, #f3f4f6);
+    color: var(--x-text-color-primary, #1a1a1a);
     
     &.tag-bordered {
-      border: 1px solid #d1d5db;
-      background: #ffffff;
+      border: 1px solid var(--x-border-color-dark, #d1d5db);
+      background: var(--x-bg-color, #ffffff);
     }
   }
   
   /* 类型 - 主要 */
   &.tag-primary {
-    background: #eff6ff;
-    color: #1e40af;
+    background: var(--x-fill-color-primary-light, #eff6ff);
+    color: var(--x-color-primary-darker, #1e40af);
     
     &.tag-bordered {
-      border: 1px solid #93c5fd;
-      background: #ffffff;
+      border: 1px solid var(--x-color-primary-light, #93c5fd);
+      background: var(--x-bg-color, #ffffff);
     }
   }
   
   /* 类型 - 成功 */
   &.tag-success {
-    background: #f0fdf4;
-    color: #15803d;
+    background: var(--x-fill-color-success-lighter, #f0fdf4);
+    color: var(--x-color-success-darker, #15803d);
     
     &.tag-bordered {
-      border: 1px solid #86efac;
-      background: #ffffff;
+      border: 1px solid var(--x-color-success-light, #86efac);
+      background: var(--x-bg-color, #ffffff);
     }
   }
   
   /* 类型 - 警告 */
   &.tag-warning {
-    background: #fef3c7;
-    color: #92400e;
+    background: var(--x-fill-color-warning-lighter, #fef3c7);
+    color: var(--x-color-warning-darker, #92400e);
     
     &.tag-bordered {
-      border: 1px solid #fcd34d;
-      background: #ffffff;
+      border: 1px solid var(--x-color-warning-light, #fcd34d);
+      background: var(--x-bg-color, #ffffff);
     }
   }
   
   /* 类型 - 危险 */
   &.tag-danger {
-    background: #fee2e2;
-    color: #991b1b;
+    background: var(--x-fill-color-danger-lighter, #fee2e2);
+    color: var(--x-color-danger-darker, #991b1b);
     
     &.tag-bordered {
-      border: 1px solid #fca5a5;
-      background: #ffffff;
+      border: 1px solid var(--x-color-danger-light, #fca5a5);
+      background: var(--x-bg-color, #ffffff);
     }
   }
   
@@ -136,7 +136,7 @@ function handleClose(e: MouseEvent) {
   .tag-close {
     cursor: pointer;
     opacity: 0.6;
-    transition: opacity 0.2s ease;
+    transition: opacity var(--x-transition-fast, 0.2s ease);
     flex-shrink: 0;
     
     &:hover {

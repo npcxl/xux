@@ -213,10 +213,10 @@ const handleChange = (value: string | number) => {
 
 /* 列表模式样式 */
 .radio-list .x-radio-item {
-  border: 1px solid #e5e7eb;
+  border: 1px solid var(--x-border-color, #e5e7eb);
   border-radius: 0.5rem;
   padding: 1rem;
-  background-color: #ffffff;
+  background-color: var(--x-bg-color, #ffffff);
   margin-bottom: 0.5rem;
   position: relative;
   overflow: hidden;
@@ -232,8 +232,8 @@ const handleChange = (value: string | number) => {
 }
 
 .radio-list .x-radio-item:hover {
-  border-color: #1a1a1a;
-  background-color: #f9fafb;
+  border-color: var(--x-color-primary, #1a1a1a);
+  background-color: var(--x-fill-color-lighter, #f9fafb);
   transform: translateY(-2px) scale(1.01);
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
   
@@ -243,9 +243,9 @@ const handleChange = (value: string | number) => {
 }
 
 .radio-list .x-radio-item.radio-item-checked {
-  border-color: #1a1a1a;
-  background: linear-gradient(135deg, #fafafa, #f3f4f6);
-  box-shadow: 0 0 0 2px rgba(26, 26, 26, 0.15), 0 4px 12px rgba(26, 26, 26, 0.1);
+  border-color: var(--x-color-primary, #1a1a1a);
+  background: var(--x-gradient-bg-light, linear-gradient(135deg, #fafafa, #f3f4f6));
+  box-shadow: 0 0 0 2px var(--x-shadow-primary-light, rgba(26, 26, 26, 0.15)), 0 4px 12px var(--x-shadow-primary-lighter, rgba(26, 26, 26, 0.1));
   animation: radioPulse 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
@@ -289,7 +289,7 @@ const handleChange = (value: string | number) => {
 }
 
 .x-radio-item.radio-item-disabled:hover .radio-button {
-  border-color: #d1d5db;
+  border-color: var(--x-border-color-light, #d1d5db);
   transform: none;
   box-shadow: none;
 }
@@ -643,9 +643,9 @@ const handleChange = (value: string | number) => {
 }
 
 .payment-option.payment-option-checked {
-  border-color: #1a1a1a;
-  color: #1a1a1a;
-  background: linear-gradient(135deg, rgba(26, 26, 26, 0.08) 0%, rgba(26, 26, 26, 0.04) 100%);
+  border-color: var(--x-color-primary, #1a1a1a);
+  color: var(--x-color-primary, #1a1a1a);
+  background: var(--x-gradient-primary-lighter, linear-gradient(135deg, rgba(26, 26, 26, 0.08) 0%, rgba(26, 26, 26, 0.04) 100%));
   font-weight: 700;
   box-shadow: 0 4px 16px 0 rgba(26, 26, 26, 0.25);
   transform: translateY(-1px);

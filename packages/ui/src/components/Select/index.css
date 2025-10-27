@@ -1,6 +1,6 @@
 /* Select 选择器样式 */
 .x-select-container {
-  position: relative;
+  position: relative; /* 保留用于其他用途 */
 }
 
 /* 触发器 */
@@ -11,17 +11,17 @@
   width: 100%;
   padding: 6px 16px;
   font-size: 14px;
-  background-color: #fff;
+  background-color: var(--x-bg-color, #fff);
   border-radius: 6px;
   cursor: pointer;
   transition: all 0.2s;
-  border: 1px solid rgba(229, 231, 235, 0.6);
+  border: 1px solid var(--x-border-color-lighter, rgba(229, 231, 235, 0.6));
   outline: none;
 }
 
 .x-select-trigger:focus {
   outline: none;
-  box-shadow: 0 0 0 2px rgba(26, 26, 26, 0.5), 0 0 0 1px rgba(26, 26, 26, 0.5);
+  box-shadow: 0 0 0 2px var(--x-shadow-focus, rgba(26, 26, 26, 0.5)), 0 0 0 1px var(--x-shadow-focus, rgba(26, 26, 26, 0.5));
 }
 
 .x-select-trigger:not(.is-disabled):not(.is-borderless) {
@@ -29,32 +29,32 @@
 }
 
 .x-select-trigger:not(.is-disabled):not(.is-borderless):hover {
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-  border-color: rgba(209, 213, 219, 0.8);
+  box-shadow: var(--x-shadow-md, 0 4px 6px -1px rgba(0, 0, 0, 0.1));
+  border-color: var(--x-border-color-light-hover, rgba(209, 213, 219, 0.8));
 }
 
 .x-select-trigger:not(.is-disabled).is-borderless {
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+  box-shadow: var(--x-shadow-sm, 0 1px 2px rgba(0, 0, 0, 0.05));
   border: 1px solid transparent;
 }
 
 .x-select-trigger:not(.is-disabled).is-borderless:hover {
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  box-shadow: var(--x-shadow-md, 0 4px 6px -1px rgba(0, 0, 0, 0.1));
 }
 
 .x-select-trigger.is-disabled {
-  background-color: rgba(249, 250, 251, 0.5);
+  background-color: var(--x-fill-color-lighter, rgba(249, 250, 251, 0.5));
   cursor: not-allowed;
-  border-color: rgba(243, 244, 246, 1);
+  border-color: var(--x-border-color, rgba(243, 244, 246, 1));
 }
 
 .x-select-trigger.is-open:not(.is-borderless) {
-  box-shadow: 0 0 0 1px rgba(26, 26, 26, 0.5), 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-  border-color: rgba(26, 26, 26, 0.5);
+  box-shadow: 0 0 0 1px var(--x-color-primary, rgba(26, 26, 26, 0.5)), 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  border-color: var(--x-color-primary, rgba(26, 26, 26, 0.5));
 }
 
 .x-select-trigger.is-open.is-borderless {
-  box-shadow: 0 0 0 1px rgba(26, 26, 26, 0.5), 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 0 0 1px var(--x-color-primary, rgba(26, 26, 26, 0.5)), 0 4px 6px -1px rgba(0, 0, 0, 0.1);
 }
 
 /* 内容区 */
@@ -67,7 +67,7 @@
 }
 
 .x-select-placeholder {
-  color: #9ca3af;
+  color: var(--x-text-color-placeholder, #9ca3af);
 }
 
 .x-select-tags {
@@ -108,12 +108,12 @@
 }
 
 .x-select-single-value {
-  color: #111827;
+  color: var(--x-text-color-primary, #111827);
 }
 
 /* 箭头图标 */
 .x-select-arrow {
-  color: #9ca3af;
+  color: var(--x-text-color-placeholder, #9ca3af);
   transition: transform 0.3s ease-in-out;
   font-size: 18px;
   flex-shrink: 0;
@@ -123,41 +123,53 @@
   transform: rotate(180deg);
 }
 
+/* Element Plus Popover 样式 */
+.x-select-popper {
+  padding: 0 !important;
+  background: var(--x-bg-color, #ffffff) !important;
+  border: 1px solid var(--x-border-color, rgba(243, 244, 246, 0.5)) !important;
+  border-radius: 12px !important;
+  box-shadow: var(--x-shadow-xl, 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)) !important;
+  backdrop-filter: blur(4px);
+}
+
+.x-select-popper .el-popper__arrow {
+  display: none !important;
+}
+
+/* 暗色模式 */
+.dark .x-select-popper {
+  background: var(--x-bg-color-dark, #1a1a1a) !important;
+  border: 1px solid var(--x-border-color-dark, #333) !important;
+  box-shadow: var(--x-shadow-dark, 0 20px 25px -5px rgba(0, 0, 0, 0.3)) !important;
+}
+
 /* 下拉菜单 */
 .x-select-dropdown {
-  position: absolute;
-  z-index: 9999;
-  width: 100%;
-  margin-top: 8px;
-  background-color: #fff;
-  border-radius: 12px;
-  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-  border: 1px solid rgba(243, 244, 246, 0.5);
-  max-height: 240px;
+  min-width: 200px;
   overflow: auto;
-  backdrop-filter: blur(4px);
 }
 
 /* 搜索框 */
 .x-select-search {
   padding: 12px;
-  border-bottom: 1px solid rgba(249, 250, 251, 0.8);
+  border-bottom: 1px solid var(--x-border-color-lighter, rgba(249, 250, 251, 0.8));
 }
 
 .x-select-search-input {
   width: 100%;
   padding: 8px 12px;
   font-size: 14px;
-  background-color: rgba(249, 250, 251, 0.5);
-  border: 1px solid rgba(229, 231, 235, 0.6);
+  background-color: var(--x-fill-color-lighter, rgba(249, 250, 251, 0.5));
+  border: 1px solid var(--x-border-color-lighter, rgba(229, 231, 235, 0.6));
   border-radius: 8px;
   outline: none;
   transition: all 0.2s;
 }
 
 .x-select-search-input:focus {
-  border-color: rgba(26, 26, 26, 0.5);
-  box-shadow: 0 0 0 1px rgba(26, 26, 26, 0.5);
+  border-color: var(--x-color-primary, rgba(26, 26, 26, 0.5));
+  box-shadow: 0 0 0 1px var(--x-color-primary, rgba(26, 26, 26, 0.5));
 }
 
 /* 选项列表 */
@@ -168,7 +180,7 @@
 .x-select-empty {
   padding: 12px 16px;
   font-size: 14px;
-  color: #9ca3af;
+  color: var(--x-text-color-placeholder, #9ca3af);
   text-align: center;
 }
 
@@ -177,16 +189,16 @@
   font-size: 14px;
   cursor: pointer;
   transition: all 0.15s;
-  color: #374151;
+  color: var(--x-text-color-regular, #374151);
 }
 
 .x-select-option:hover:not(.is-selected) {
-  background-color: #f2f2f2;
+  background-color: var(--x-fill-color, #f2f2f2);
 }
 
 .x-select-option.is-selected {
-  background-color: #f2f2f2;
-  color: #1a1a1a;
+  background-color: var(--x-fill-color, #f2f2f2);
+  color: var(--x-color-primary, #1a1a1a);
   font-weight: 500;
 }
 
@@ -215,17 +227,17 @@
 }
 
 .x-select-checkbox.is-checked {
-  border-color: #1a1a1a;
+  border-color: var(--x-color-primary, #1a1a1a);
   background-color: transparent;
 }
 
 .x-select-checkbox:not(.is-checked) {
-  border-color: #d1d5db;
-  background-color: #fff;
+  border-color: var(--x-border-color-light, #d1d5db);
+  background-color: var(--x-bg-color, #fff);
 }
 
 .x-select-checkbox-icon {
-  color: #1a1a1a;
+  color: var(--x-color-primary, #1a1a1a);
   font-size: 12px;
   font-weight: bold;
 }
@@ -242,19 +254,19 @@
 }
 
 .x-select-radio.is-checked {
-  border-color: #1a1a1a;
-  background-color: #1a1a1a;
+  border-color: var(--x-color-primary, #1a1a1a);
+  background-color: var(--x-color-primary, #1a1a1a);
 }
 
 .x-select-radio:not(.is-checked) {
-  border-color: #d1d5db;
-  background-color: #fff;
+  border-color: var(--x-border-color-light, #d1d5db);
+  background-color: var(--x-bg-color, #fff);
 }
 
 .x-select-radio-dot {
   width: 6px;
   height: 6px;
-  background-color: #fff;
+  background-color: var(--x-color-white, #fff);
   border-radius: 50%;
 }
 

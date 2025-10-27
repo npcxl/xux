@@ -8,8 +8,7 @@
       { 'disabled': disabled }, 
       { 'loading': loading },
       { 'checked': modelValue }
-    ]" 
-    :style="colorStyle"
+    ]"
   >
     <input 
       :id="switchId"
@@ -79,9 +78,6 @@ interface Props {
   disabled?: boolean
   size?: 'small' | 'medium' | 'large'
   variant?: 'default' | 'theme'
-  color?: string
-  shadowColor?: string
-  thumbColor?: string
   loading?: boolean
 }
 
@@ -89,9 +85,6 @@ const props = withDefaults(defineProps<Props>(), {
   disabled: false,
   size: 'medium',
   variant: 'default',
-  color: '#1a1a1a',
-  shadowColor: '#1a1a1a',
-  thumbColor: '#ffffff',
   loading: false
 })
 
@@ -102,58 +95,6 @@ const emit = defineEmits<{
 
 // 生成唯一的 ID 避免冲突
 const switchId = computed(() => `switch-${Math.random().toString(36).substr(2, 9)}`)
-
-// 计算颜色相关的样式
-const colorStyle = computed(() => {
-  const color = props.color || '#0974f1'
-  const shadowColor = props.shadowColor || color
-  const thumbColor = props.thumbColor || '#ffffff'
-  
-  // 计算浅色背景
-  const lightBackgroundColor = lightenColor(color, 0.9)
-  // 计算激活状态的浅色版本
-  const activeColor = lightenColor(color, 0.2)
-  
-  return {
-    '--switch-color': color,
-    '--switch-color-rgb': hexToRgb(color),
-    '--switch-shadow-color': shadowColor,
-    '--switch-shadow-color-rgb': hexToRgb(shadowColor),
-    '--switch-thumb-color': thumbColor,
-    '--switch-bg-color': lightBackgroundColor,
-    '--switch-active-color': activeColor
-  }
-})
-
-// 将十六进制颜色转换为 RGB
-const hexToRgb = (hex: string) => {
-  const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex)
-  if (result) {
-    const r = parseInt(result[1], 16)
-    const g = parseInt(result[2], 16)
-    const b = parseInt(result[3], 16)
-    return `${r}, ${g}, ${b}`
-  }
-  return '26, 26, 26' // 默认深灰色 #1a1a1a
-}
-
-// 将颜色变浅
-const lightenColor = (hex: string, factor: number) => {
-  const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex)
-  if (result) {
-    const r = parseInt(result[1], 16)
-    const g = parseInt(result[2], 16)
-    const b = parseInt(result[3], 16)
-    
-    // 计算浅色版本
-    const lightR = Math.round(r + (255 - r) * factor)
-    const lightG = Math.round(g + (255 - g) * factor)
-    const lightB = Math.round(b + (255 - b) * factor)
-    
-    return `#${lightR.toString(16).padStart(2, '0')}${lightG.toString(16).padStart(2, '0')}${lightB.toString(16).padStart(2, '0')}`
-  }
-  return '#e5e7eb' // 默认浅灰色
-}
 
 const handleChange = () => {
   if (!props.disabled && !props.loading) {
@@ -178,17 +119,17 @@ const handleChange = () => {
   --container-width: 3.5em;
   --container-height: 2em;
   --container-radius: 6.25em;
-  --container-light-bg: #3D7EAE;
-  --container-night-bg: #1D1F2C;
+  --container-light-bg: var(--x-theme-switch-light-bg, #3D7EAE);
+  --container-night-bg: var(--x-theme-switch-night-bg, #1D1F2C);
   --circle-container-diameter: 2.7em;
   --sun-moon-diameter: 1.7em;
-  --sun-bg: #ECCA2F;
-  --moon-bg: #C4C9D1;
-  --spot-color: #959DB1;
+  --sun-bg: var(--x-theme-switch-sun-bg, #ECCA2F);
+  --moon-bg: var(--x-theme-switch-moon-bg, #C4C9D1);
+  --spot-color: var(--x-theme-switch-spot-color, #959DB1);
   --circle-container-offset: calc((var(--circle-container-diameter) - var(--container-height)) / 2 * -1);
-  --stars-color: #fff;
-  --clouds-color: #F3FDFF;
-  --back-clouds-color: #AACADF;
+  --stars-color: var(--x-theme-switch-stars-color, #fff);
+  --clouds-color: var(--x-theme-switch-clouds-color, #F3FDFF);
+  --back-clouds-color: var(--x-theme-switch-back-clouds-color, #AACADF);
   --transition: .5s cubic-bezier(0, -0.02, 0.4, 1.25);
   --circle-transition: .3s cubic-bezier(0, -0.02, 0.35, 1.17);
   position: relative;
@@ -468,7 +409,7 @@ const handleChange = () => {
   border: 2px solid transparent;
   border-radius: 50px;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  background-color: var(--switch-bg-color);
+  background-color: var(--x-switch-bg, #e5e7eb);
 }
 
 .slider:before {
@@ -478,16 +419,16 @@ const handleChange = () => {
   width: 1.4em;
   left: 0.2em;
   bottom: 0.2em;
-  background-color: var(--switch-thumb-color);
+  background-color: var(--x-switch-thumb, #ffffff);
   border-radius: inherit;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .switch input:checked + .slider {
-  box-shadow: 0 0 12px rgba(var(--switch-shadow-color-rgb), 0.5);
-  border-color: var(--switch-color);
-  background-color: var(--switch-color);
+  box-shadow: 0 0 12px var(--x-switch-shadow, rgba(26, 26, 26, 0.5));
+  border-color: var(--x-switch-active-border, var(--x-color-primary, #1a1a1a));
+  background-color: var(--x-switch-active-bg, var(--x-color-primary, #1a1a1a));
 }
 
 .switch input:checked + .slider:before {
@@ -550,12 +491,12 @@ const handleChange = () => {
 
 /* 悬停效果 */
 .switch:not(.disabled):not(.loading):hover .slider {
-  border-color: rgba(var(--switch-color-rgb), 0.4);
-  box-shadow: 0 0 8px rgba(var(--switch-shadow-color-rgb), 0.3);
+  border-color: var(--x-switch-hover-border, rgba(26, 26, 26, 0.4));
+  box-shadow: 0 0 8px var(--x-switch-hover-shadow, rgba(26, 26, 26, 0.3));
 }
 
 .switch:not(.disabled):not(.loading) input:checked + .slider:hover {
-  box-shadow: 0 0 16px rgba(var(--switch-shadow-color-rgb), 0.6);
+  box-shadow: 0 0 16px var(--x-switch-active-hover-shadow, rgba(26, 26, 26, 0.6));
 }
 
 /* 点击效果 */
@@ -574,12 +515,12 @@ const handleChange = () => {
 
 /* 焦点状态 */
 .switch input:focus-visible + .slider {
-  outline: 2px solid rgba(var(--switch-color-rgb), 0.5);
+  outline: 2px solid var(--x-switch-focus-outline, rgba(26, 26, 26, 0.5));
   outline-offset: 2px;
 }
 
 .switch input:checked:focus-visible + .slider {
-  outline: 2px solid rgba(var(--switch-color-rgb), 0.5);
+  outline: 2px solid var(--x-switch-focus-outline, rgba(26, 26, 26, 0.5));
   outline-offset: 2px;
 }
 
@@ -609,14 +550,14 @@ const handleChange = () => {
   width: 0.8em;
   height: 0.8em;
   border: 2px solid rgba(255, 255, 255, 0.3);
-  border-top-color: var(--switch-thumb-color);
+  border-top-color: var(--x-switch-thumb, #ffffff);
   border-radius: 50%;
   animation: spin 0.6s linear infinite;
 }
 
 .switch.checked .spinner-inner {
-  border-color: rgba(var(--switch-color-rgb), 0.3);
-  border-top-color: var(--switch-color);
+  border-color: var(--x-switch-loading-border, rgba(26, 26, 26, 0.3));
+  border-top-color: var(--x-switch-active-bg, var(--x-color-primary, #1a1a1a));
 }
 
 .switch.size-small .spinner-inner {
@@ -638,11 +579,11 @@ const handleChange = () => {
 }
 
 .switch.loading input:checked + .slider {
-  box-shadow: 0 0 12px rgba(var(--switch-shadow-color-rgb), 0.5);
+  box-shadow: 0 0 12px var(--x-switch-shadow, rgba(26, 26, 26, 0.5));
 }
 
 .switch.loading input:checked + .slider:hover {
-  box-shadow: 0 0 12px rgba(var(--switch-shadow-color-rgb), 0.5);
+  box-shadow: 0 0 12px var(--x-switch-shadow, rgba(26, 26, 26, 0.5));
 }
 
 @keyframes spin {

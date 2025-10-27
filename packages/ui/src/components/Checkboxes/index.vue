@@ -167,9 +167,9 @@ defineExpose({
   align-items: center;
   gap: 8px;
   padding: 12px 16px;
-  background-color: #f8f9fa;
-  border: 1px solid #e9ecef;
-  border-radius: 8px;
+  background-color: var(--x-fill-color, #f8f9fa);
+  border: 1px solid var(--x-border-color, #e9ecef);
+  border-radius: var(--x-radius-md, 8px);
   margin-bottom: 8px;
   min-height: 48px;
 }
@@ -186,14 +186,14 @@ defineExpose({
   align-items: center;
   gap: 6px;
   padding: 4px 8px;
-  background: linear-gradient(135deg, #1a1a1a, #333);
-  color: white;
-  border-radius: 16px;
-  font-size: 14px;
+  background: var(--x-gradient-primary, linear-gradient(135deg, #1a1a1a, #333));
+  color: var(--x-color-white, white);
+  border-radius: var(--x-radius-full, 16px);
+  font-size: var(--x-font-size-sm, 14px);
   font-weight: 500;
-  transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  transition: all var(--x-transition, 0.3s cubic-bezier(0.4, 0, 0.2, 1));
   position: relative;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  box-shadow: var(--x-shadow-sm, 0 2px 4px rgba(0, 0, 0, 0.1));
   
   &::before {
     content: '';
@@ -207,9 +207,9 @@ defineExpose({
 }
 
 .tag-item:hover {
-  background: linear-gradient(135deg, #333, #1a1a1a);
+  background: var(--x-gradient-primary-hover, linear-gradient(135deg, #333, #1a1a1a));
   transform: translateY(-2px) scale(1.05);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+  box-shadow: var(--x-shadow, 0 4px 8px rgba(0, 0, 0, 0.15));
   
   &::before {
     opacity: 1;
@@ -265,10 +265,10 @@ defineExpose({
   height: 32px;
   border: none;
   background: none;
-  color: #6c757d;
+  color: var(--x-text-color-secondary, #6c757d);
   cursor: pointer;
-  border-radius: 6px;
-  transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  border-radius: var(--x-radius, 6px);
+  transition: all var(--x-transition, 0.3s cubic-bezier(0.4, 0, 0.2, 1));
   position: relative;
   
   &::before {
@@ -283,7 +283,7 @@ defineExpose({
 }
 
 .clear-all-btn:hover {
-  color: #495057;
+  color: var(--x-text-color-regular, #495057);
   transform: scale(1.1) rotate(15deg);
   
   &::before {
@@ -343,8 +343,8 @@ defineExpose({
   gap: 12px;
   padding: 12px 16px;
   cursor: pointer;
-  transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-  border-bottom: 1px solid var(--x-color-gray-100, #f8f9fa);
+  transition: all var(--x-transition, 0.3s cubic-bezier(0.4, 0, 0.2, 1));
+  border-bottom: 1px solid var(--x-border-color-light, #f8f9fa);
   user-select: none;
   position: relative;
   animation: slideInFade 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) backwards;
@@ -387,19 +387,19 @@ defineExpose({
 }
 
 .option-item:hover:not(.option-disabled) {
-  background-color: var(--x-color-gray-50, #f8f9fa);
+  background-color: var(--x-fill-color, #f8f9fa);
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  box-shadow: var(--x-shadow-md, 0 4px 12px rgba(0, 0, 0, 0.08));
 }
 
 .option-selected {
-  background-color: rgba(26, 26, 26, 0.04);
+  background-color: var(--x-fill-color-dark, rgba(26, 26, 26, 0.04));
 }
 
 .option-selected:hover:not(.option-disabled) {
-  background-color: rgba(26, 26, 26, 0.08);
+  background-color: var(--x-fill-color-dark, rgba(26, 26, 26, 0.08));
   transform: translateY(-2px) scale(1.02);
-  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
+  box-shadow: var(--x-shadow-md, 0 6px 16px rgba(0, 0, 0, 0.12));
 }
 
 .option-disabled {
@@ -431,13 +431,13 @@ defineExpose({
 .checkbox-custom {
   width: 20px;
   height: 20px;
-  border: 2px solid var(--x-color-gray-400, #d1d5db);
+  border: 2px solid var(--x-border-color-dark, #d1d5db);
   border-radius: var(--x-radius-sm, 4px);
-  background-color: white;
+  background-color: var(--x-color-white, white);
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  transition: all var(--x-transition, 0.3s cubic-bezier(0.4, 0, 0.2, 1));
   position: relative;
   flex-shrink: 0;
   
@@ -473,7 +473,7 @@ defineExpose({
 }
 
 .checkbox-input:checked + .checkbox-custom {
-  background: linear-gradient(135deg, #1a1a1a, #333);
+  background: var(--x-gradient-primary, linear-gradient(135deg, #1a1a1a, #333));
   border-color: var(--x-color-primary, #1a1a1a);
   animation: checkboxPop 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
   
@@ -485,19 +485,19 @@ defineExpose({
 }
 
 .checkbox-input:focus + .checkbox-custom {
-  box-shadow: 0 0 0 4px rgba(26, 26, 26, 0.12), 0 2px 8px rgba(26, 26, 26, 0.15);
+  box-shadow: 0 0 0 4px rgba(26, 26, 26, 0.12), var(--x-shadow, 0 2px 8px rgba(26, 26, 26, 0.15));
 }
 
 .checkbox-input:disabled + .checkbox-custom {
-  background-color: var(--x-color-gray-100, #f3f4f6);
-  border-color: var(--x-color-gray-300, #d1d5db);
+  background-color: var(--x-fill-color, #f3f4f6);
+  border-color: var(--x-border-color, #d1d5db);
   cursor: not-allowed;
 }
 
 .check-icon {
   width: 14px;
   height: 14px;
-  fill: white;
+  fill: var(--x-color-white, white);
   opacity: 0;
   transform: scale(0) rotate(-45deg);
   transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
@@ -520,34 +520,34 @@ defineExpose({
 .option-icon {
   width: 16px;
   height: 16px;
-  color: #6b7280;
-  transition: all 0.3s ease;
+  color: var(--x-text-color-secondary, #6b7280);
+  transition: all var(--x-transition, 0.3s ease);
   flex-shrink: 0;
 }
 
 .option-label {
-  font-size: 14px;
-  color: #374151;
+  font-size: var(--x-font-size-sm, 14px);
+  color: var(--x-text-color-regular, #374151);
   font-weight: 500;
   flex: 1;
-  transition: all 0.3s ease;
+  transition: all var(--x-transition, 0.3s ease);
 }
 
 .option-selected .option-label {
-  color: #1a1a1a;
+  color: var(--x-text-color-primary, #1a1a1a);
   font-weight: 600;
 }
 
 .option-selected .option-icon {
-  color: #1a1a1a;
+  color: var(--x-text-color-primary, #1a1a1a);
 }
 
 .option-item:hover:not(.option-disabled) .option-label {
-  color: #1a1a1a;
+  color: var(--x-text-color-primary, #1a1a1a);
 }
 
 .option-item:hover:not(.option-disabled) .option-icon {
-  color: #1a1a1a;
+  color: var(--x-text-color-primary, #1a1a1a);
   transform: scale(1.1);
 }
 

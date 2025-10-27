@@ -98,29 +98,29 @@ withDefaults(defineProps<ResultProps>(), {
     }
     
     .status-404 {
-      color: #6b7280;
+      color: var(--x-text-color-secondary, #6b7280);
     }
     
     .status-403 {
-      color: #f59e0b;
+      color: var(--x-color-warning, #f59e0b);
     }
     
     .status-500 {
-      color: #ef4444;
+      color: var(--x-color-danger, #ef4444);
     }
   }
   
   .result-title {
     font-size: 20px;
     font-weight: 600;
-    color: #1a1a1a;
+    color: var(--x-color-primary, #1a1a1a);
     margin-bottom: 8px;
     line-height: 1.5;
   }
   
   .result-subtitle {
     font-size: 14px;
-    color: #6b7280;
+    color: var(--x-text-color-secondary, #6b7280);
     margin-bottom: 24px;
     line-height: 1.6;
     max-width: 500px;
@@ -135,25 +135,25 @@ withDefaults(defineProps<ResultProps>(), {
   
   /* 状态颜色 */
   &.result-success .result-title {
-    color: #10b981;
+    color: var(--x-color-success, #10b981);
   }
   
   &.result-error .result-title {
-    color: #ef4444;
+    color: var(--x-color-danger, #ef4444);
   }
   
   &.result-warning .result-title {
-    color: #f59e0b;
+    color: var(--x-color-warning, #f59e0b);
   }
   
   &.result-info .result-title {
-    color: #3b82f6;
+    color: var(--x-color-primary, #3b82f6);
   }
   
   &.result-404 .result-title,
   &.result-403 .result-title,
   &.result-500 .result-title {
-    color: #6b7280;
+    color: var(--x-text-color-secondary, #6b7280);
   }
 }
 </style>

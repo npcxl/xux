@@ -119,7 +119,7 @@ const getScoreText = () => {
 .rating {
   display: flex;
   gap: 0.3rem;
-  --stroke: #666;
+  --stroke: var(--x-text-color-secondary, #666);
   --fill: v-bind(color);
 }
 
@@ -236,13 +236,13 @@ const getScoreText = () => {
 /* 文字样式 */
 .score-text {
   font-size: 0.875rem;
-  color: #666;
+  color: var(--x-text-color-secondary, #666);
   font-weight: 500;
 }
 
 .score-value {
   font-size: 0.75rem;
-  color: #999;
+  color: var(--x-text-color-placeholder, #999);
   font-weight: 400;
 }
 

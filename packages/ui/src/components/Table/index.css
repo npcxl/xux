@@ -3,19 +3,19 @@
 /* ========== 基础容器 ========== */
 .x-table-container {
   position: relative;
-  background: #ffffff;
+  background: var(--x-bg-color, #ffffff);
   border-radius: 8px;
-  border: 1px solid #f0f0f0;
+  border: 1px solid var(--x-border-color-lighter, #f0f0f0);
   overflow: hidden;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  display: inline-flex;
+  display: flex;
   flex-direction: column;
-  max-width: 100%;
+  width: 100%;
 }
 
 .x-table-container:hover {
-  border-color: #e0e0e0;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  border-color: var(--x-border-color-light, #e0e0e0);
+  box-shadow: var(--x-shadow-sm, 0 2px 8px rgba(0, 0, 0, 0.06));
 }
 
 /* ========== 表头容器 ========== */
@@ -65,17 +65,17 @@
 
 /* ========== 表头样式 ========== */
 .x-table-header {
-  background: #fafafa;
+  background: var(--x-fill-color-lighter, #fafafa);
 }
 
 .x-table-row {
   display: flex;
-  min-width: 100%;
-  width: max-content;
+  width: 100%;
+  min-width: max-content;
 }
 
 .x-table-header-row {
-  background: #fafafa;
+  background: var(--x-fill-color-lighter, #fafafa);
 }
 
 .x-table-cell {
@@ -84,10 +84,19 @@
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  border-bottom: 1px solid #f0f0f0;
-  flex-shrink: 0;
-  flex-grow: 0;
+  border-bottom: 1px solid var(--x-border-color-lighter, #f0f0f0);
   box-sizing: border-box;
+}
+
+/* 有固定宽度的列 - 不伸缩 */
+.x-table-cell-has-width {
+  flex: 0 0 auto;
+}
+
+/* 没有固定宽度的列 - 自动平分剩余空间 */
+.x-table-cell-auto-width {
+  flex: 1 1 0;
+  min-width: 100px;
 }
 
 .x-table-cell-content {
@@ -109,8 +118,8 @@
 
 .x-table-header-cell {
   font-weight: 500;
-  color: rgba(0, 0, 0, 0.88);
-  background: #fafafa;
+  color: var(--x-text-color-primary, rgba(0, 0, 0, 0.88));
+  background: var(--x-fill-color-lighter, #fafafa);
   transition: all 0.2s ease;
   user-select: none;
 }
@@ -137,19 +146,19 @@
 }
 
 .x-table-sortable:hover {
-  background: rgba(0, 0, 0, 0.02);
+  background: var(--x-fill-color, rgba(0, 0, 0, 0.02));
 }
 
 .x-table-sortable:hover::after {
-  background: rgba(24, 144, 255, 0.2);
+  background: var(--x-color-primary-light, rgba(24, 144, 255, 0.2));
 }
 
 .x-table-sortable:active {
-  background: rgba(0, 0, 0, 0.04);
+  background: var(--x-fill-color-dark, rgba(0, 0, 0, 0.04));
 }
 
 .x-table-sorted::after {
-  background: #1890ff;
+  background: var(--x-color-primary, #1890ff);
 }
 
 /* 排序图标 */
@@ -168,17 +177,17 @@
 }
 
 .x-table-sort-icon svg {
-  color: rgba(0, 0, 0, 0.45);
+  color: var(--x-text-color-secondary, rgba(0, 0, 0, 0.45));
   transition: color 0.2s ease;
 }
 
 .x-table-sort-icon svg.active {
-  color: #1890ff;
+  color: var(--x-color-primary, #1890ff);
   opacity: 1;
 }
 
 .x-table-sorted {
-  background: rgba(24, 144, 255, 0.04);
+  background: var(--x-color-primary-lighter, rgba(24, 144, 255, 0.04));
 }
 
 /* ========== 表体样式 ========== */
@@ -189,7 +198,7 @@
 .x-table-body-row {
   transition: background-color 0.25s cubic-bezier(0.4, 0, 0.2, 1);
   cursor: pointer;
-  background: #ffffff;
+  background: var(--x-bg-color, #ffffff);
   position: relative;
 }
 
@@ -200,7 +209,7 @@
   top: 0;
   right: 0;
   bottom: 0;
-  background: linear-gradient(90deg, rgba(24, 144, 255, 0.03) 0%, transparent 100%);
+  background: var(--x-table-row-hover-gradient, linear-gradient(90deg, rgba(24, 144, 255, 0.03) 0%, transparent 100%));
   opacity: 0;
   transition: opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   pointer-events: none;
@@ -214,30 +223,30 @@
 
 .x-table-body-row:hover,
 .x-table-body-row.x-table-row-hover {
-  background: #fafafa;
+  background: var(--x-fill-color-lighter, #fafafa);
 }
 
 .x-table-body-row:active {
-  background: #f5f5f5;
+  background: var(--x-fill-color, #f5f5f5);
 }
 
 /* 选中行样式 */
 .x-table-body-row.x-table-row-selected {
-  background: #e6f7ff;
-  box-shadow: inset 3px 0 0 #1890ff;
+  background: var(--x-table-row-selected-bg, #e6f7ff);
+  box-shadow: inset 3px 0 0 var(--x-color-primary, #1890ff);
 }
 
 .x-table-body-row.x-table-row-selected::before {
-  background: linear-gradient(90deg, rgba(24, 144, 255, 0.08) 0%, transparent 100%);
+  background: var(--x-table-row-selected-gradient, linear-gradient(90deg, rgba(24, 144, 255, 0.08) 0%, transparent 100%));
   opacity: 1;
 }
 
 .x-table-body-row.x-table-row-selected:hover {
-  background: #bae7ff;
+  background: var(--x-table-row-selected-hover-bg, #bae7ff);
 }
 
 .x-table-body-cell {
-  color: rgba(0, 0, 0, 0.88);
+  color: var(--x-text-color-primary, rgba(0, 0, 0, 0.88));
   background: transparent;
   transition: background-color 0.2s ease;
 }
@@ -292,16 +301,16 @@
 
 /* 横向边框（默认） */
 .x-table-border-horizontal .x-table-cell {
-  border-bottom: 1px solid #f0f0f0;
+  border-bottom: 1px solid var(--x-border-color-lighter, #f0f0f0);
 }
 
 .x-table-border-horizontal .x-table-header-cell {
-  border-bottom: 1px solid #f0f0f0;
+  border-bottom: 1px solid var(--x-border-color-lighter, #f0f0f0);
 }
 
 /* 纵向边框 */
 .x-table-border-vertical .x-table-cell {
-  border-left: 1px solid #f0f0f0;
+  border-left: 1px solid var(--x-border-color-lighter, #f0f0f0);
   border-bottom: none;
 }
 
@@ -311,8 +320,8 @@
 
 /* 全边框 */
 .x-table-border-all .x-table-cell {
-  border-left: 1px solid #f0f0f0;
-  border-bottom: 1px solid #f0f0f0;
+  border-left: 1px solid var(--x-border-color-lighter, #f0f0f0);
+  border-bottom: 1px solid var(--x-border-color-lighter, #f0f0f0);
 }
 
 .x-table-border-all .x-table-cell:first-child {
@@ -321,19 +330,19 @@
 
 /* ========== 斑马纹 ========== */
 .x-table-stripe .x-table-body-row:nth-child(even) {
-  background: #fafafa;
+  background: var(--x-fill-color-lighter, #fafafa);
 }
 
 .x-table-stripe .x-table-body-row:nth-child(even):hover {
-  background: #f5f5f5;
+  background: var(--x-fill-color, #f5f5f5);
 }
 
 .x-table-stripe .x-table-body-row.x-table-row-selected:nth-child(even) {
-  background: #e6f7ff;
+  background: var(--x-table-row-selected-bg, #e6f7ff);
 }
 
 .x-table-stripe .x-table-body-row.x-table-row-selected:nth-child(even):hover {
-  background: #bae7ff;
+  background: var(--x-table-row-selected-hover-bg, #bae7ff);
 }
 
 /* ========== 选择列样式 ========== */
@@ -364,20 +373,20 @@
   cursor: pointer;
   appearance: none;
   -webkit-appearance: none;
-  border: 1px solid #d9d9d9;
+  border: 1px solid var(--x-border-color, #d9d9d9);
   border-radius: 2px;
-  background: #ffffff;
+  background: var(--x-bg-color, #ffffff);
   transition: all 0.2s ease;
   position: relative;
 }
 
 .x-table-checkbox:hover {
-  border-color: #1890ff;
+  border-color: var(--x-color-primary, #1890ff);
 }
 
 .x-table-checkbox:checked {
-  background: #1890ff;
-  border-color: #1890ff;
+  background: var(--x-color-primary, #1890ff);
+  border-color: var(--x-color-primary, #1890ff);
 }
 
 .x-table-checkbox:checked::after {
@@ -387,15 +396,15 @@
   top: 1px;
   width: 5px;
   height: 9px;
-  border: solid #ffffff;
+  border: solid var(--x-color-white, #ffffff);
   border-width: 0 2px 2px 0;
   transform: rotate(45deg);
 }
 
 /* 半选状态 */
 .x-table-checkbox.x-table-checkbox-indeterminate {
-  background: #1890ff;
-  border-color: #1890ff;
+  background: var(--x-color-primary, #1890ff);
+  border-color: var(--x-color-primary, #1890ff);
 }
 
 .x-table-checkbox.x-table-checkbox-indeterminate::after {
@@ -405,13 +414,13 @@
   top: 6px;
   width: 8px;
   height: 2px;
-  background: #ffffff;
+  background: var(--x-color-white, #ffffff);
   border: none;
   transform: none;
 }
 
 .x-table-checkbox:focus-visible {
-  outline: 2px solid #1890ff;
+  outline: 2px solid var(--x-color-primary, #1890ff);
   outline-offset: 2px;
 }
 
@@ -425,12 +434,12 @@
 .x-table-header-cell.x-table-cell-fixed-left,
 .x-table-header-cell.x-table-cell-fixed-right {
   z-index: 4;
-  background: #fafafa;
+  background: var(--x-fill-color-lighter, #fafafa);
 }
 
 .x-table-body-cell.x-table-cell-fixed-left,
 .x-table-body-cell.x-table-cell-fixed-right {
-  background: #ffffff;
+  background: var(--x-bg-color, #ffffff);
 }
 
 /* 悬停状态 */
@@ -438,29 +447,29 @@
 .x-table-body-row:hover .x-table-body-cell.x-table-cell-fixed-right,
 .x-table-body-row.x-table-row-hover .x-table-body-cell.x-table-cell-fixed-left,
 .x-table-body-row.x-table-row-hover .x-table-body-cell.x-table-cell-fixed-right {
-  background: #fafafa;
+  background: var(--x-fill-color-lighter, #fafafa);
 }
 
 /* 选中状态 */
 .x-table-body-row.x-table-row-selected .x-table-body-cell.x-table-cell-fixed-left,
 .x-table-body-row.x-table-row-selected .x-table-body-cell.x-table-cell-fixed-right {
-  background: #e6f7ff;
+  background: var(--x-table-row-selected-bg, #e6f7ff);
 }
 
 .x-table-body-row.x-table-row-selected:hover .x-table-body-cell.x-table-cell-fixed-left,
 .x-table-body-row.x-table-row-selected:hover .x-table-body-cell.x-table-cell-fixed-right {
-  background: #bae7ff;
+  background: var(--x-table-row-selected-hover-bg, #bae7ff);
 }
 
 /* 斑马纹 + 固定列 */
 .x-table-stripe .x-table-body-row:nth-child(even) .x-table-body-cell.x-table-cell-fixed-left,
 .x-table-stripe .x-table-body-row:nth-child(even) .x-table-body-cell.x-table-cell-fixed-right {
-  background: #fafafa;
+  background: var(--x-fill-color-lighter, #fafafa);
 }
 
 .x-table-stripe .x-table-body-row:nth-child(even):hover .x-table-body-cell.x-table-cell-fixed-left,
 .x-table-stripe .x-table-body-row:nth-child(even):hover .x-table-body-cell.x-table-cell-fixed-right {
-  background: #f5f5f5;
+  background: var(--x-fill-color, #f5f5f5);
 }
 
 /* 固定列分隔线 */
@@ -538,7 +547,7 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(255, 255, 255, 0.85);
+  background: var(--x-table-loading-bg, rgba(255, 255, 255, 0.85));
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
   display: flex;
@@ -559,7 +568,7 @@
   width: 8px;
   height: 8px;
   border-radius: 50%;
-  background: #1a1a1a;
+  background: var(--x-color-primary, #1a1a1a);
   animation: dotPulse 1.4s ease-in-out infinite;
 }
 
@@ -588,7 +597,7 @@
 
 .x-table-loading-text {
   font-size: 14px;
-  color: rgba(0, 0, 0, 0.65);
+  color: var(--x-text-color-regular, rgba(0, 0, 0, 0.65));
   font-weight: 400;
 }
 

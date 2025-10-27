@@ -76,60 +76,60 @@
 
 .x-timeline-node.is-current {
   transform: scale(1.4);
-  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.3);
+  box-shadow: 0 0 0 2px var(--x-timeline-node-shadow, rgba(59, 130, 246, 0.3));
 }
 
 /* 节点类型 */
 .x-timeline-node.type-default {
-  background-color: #d1d5db;
+  background-color: var(--x-border-color, #d1d5db);
 }
 
 @media (prefers-color-scheme: dark) {
   .x-timeline-node.type-default {
-    background-color: #4b5563;
+    background-color: var(--x-text-color-regular, #4b5563);
   }
 }
 
 .x-timeline-node.type-default.is-active {
-  background-color: #3b82f6;
+  background-color: var(--x-color-primary, #3b82f6);
 }
 
 .x-timeline-node.type-primary {
-  background-color: #3b82f6;
-  box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1);
+  background-color: var(--x-color-primary, #3b82f6);
+  box-shadow: 0 0 0 4px var(--x-shadow-focus, rgba(59, 130, 246, 0.1));
 }
 
 .x-timeline-node.type-success {
-  background-color: #10b981;
-  box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.1);
+  background-color: var(--x-color-success, #10b981);
+  box-shadow: 0 0 0 4px var(--x-shadow-focus, rgba(16, 185, 129, 0.1));
 }
 
 .x-timeline-node.type-warning {
-  background-color: #f59e0b;
-  box-shadow: 0 0 0 4px rgba(245, 158, 11, 0.1);
+  background-color: var(--x-color-warning, #f59e0b);
+  box-shadow: 0 0 0 4px var(--x-shadow-focus, rgba(245, 158, 11, 0.1));
 }
 
 .x-timeline-node.type-danger {
-  background-color: #ef4444;
-  box-shadow: 0 0 0 4px rgba(239, 68, 68, 0.1);
+  background-color: var(--x-color-danger, #ef4444);
+  box-shadow: 0 0 0 4px var(--x-shadow-focus, rgba(239, 68, 68, 0.1));
 }
 
 .x-timeline-node-icon {
   width: 8px;
   height: 8px;
-  color: #fff;
+  color: var(--x-text-color-white, #ffffff);
 }
 
 /* 连接线 */
 .x-timeline-line {
   position: absolute;
-  background-color: #e5e7eb;
+  background-color: var(--x-border-color, #e5e7eb);
   z-index: 1;
 }
 
 @media (prefers-color-scheme: dark) {
   .x-timeline-line {
-    background-color: #374151;
+    background-color: var(--x-text-color-regular, #374151);
   }
 }
 
@@ -173,7 +173,7 @@
 
 .x-timeline-time {
   font-size: 12px;
-  color: #9ca3af;
+  color: var(--x-text-color-placeholder, #9ca3af);
   margin-bottom: 4px;
 }
 
@@ -182,34 +182,34 @@
   font-weight: 600;
   margin-bottom: 4px;
   transition: color 0.2s;
-  color: #111827;
+  color: var(--x-text-color-regular, #111827);
 }
 
 @media (prefers-color-scheme: dark) {
   .x-timeline-title {
-    color: #f9fafb;
+    color: var(--x-text-color-white, #f9fafb);
   }
 }
 
 .x-timeline-title.is-current {
-  color: #2563eb;
+  color: var(--x-color-primary, #2563eb);
 }
 
 @media (prefers-color-scheme: dark) {
   .x-timeline-title.is-current {
-    color: #60a5fa;
+    color: var(--x-color-secondary, #60a5fa);
   }
 }
 
 .x-timeline-description {
   font-size: 12px;
-  color: #6b7280;
+  color: var(--x-text-color-secondary, #6b7280);
   line-height: 1.5;
 }
 
 @media (prefers-color-scheme: dark) {
   .x-timeline-description {
-    color: #9ca3af;
+    color: var(--x-text-color-placeholder, #9ca3af);
   }
 }
 

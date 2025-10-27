@@ -1,62 +1,69 @@
 <template>
-  <div class="x-datetime-picker" :class="[`datetime-${size}`, { 'datetime-disabled': disabled }]">
-    <!-- 输入框 -->
-    <div class="datetime-input-wrapper" @click="togglePicker">
-      <template v-if="range">
-        <input
-          ref="inputRef"
-          type="text"
-          :value="displayStartValue"
-          :placeholder="startPlaceholder"
-          :disabled="disabled"
-          readonly
-          class="datetime-input datetime-input-start"
-        />
-        <div class="datetime-separator">
-          <Icon icon="mdi:arrow-right" />
+  <ElPopover
+    v-model:visible="isOpen"
+    placement="bottom-start"
+    trigger="click"
+    :disabled="disabled"
+    :width="360"
+    :offset="8"
+    :show-arrow="false"
+    :teleported="true"
+    popper-class="x-datetime-picker-popper"
+    @show="emit('open')"
+    @hide="emit('close')"
+  >
+    <template #reference>
+      <div class="x-datetime-picker" :class="[`datetime-${size}`, { 'datetime-disabled': disabled }]">
+        <!-- 输入框 -->
+        <div class="datetime-input-wrapper">
+          <template v-if="range">
+            <input
+              ref="inputRef"
+              type="text"
+              :value="displayStartValue"
+              :placeholder="startPlaceholder"
+              :disabled="disabled"
+              readonly
+              class="datetime-input datetime-input-start"
+            />
+            <div class="datetime-separator">
+              <Icon icon="mdi:arrow-right" />
+            </div>
+            <input
+              type="text"
+              :value="displayEndValue"
+              :placeholder="endPlaceholder"
+              :disabled="disabled"
+              readonly
+              class="datetime-input datetime-input-end"
+            />
+          </template>
+          <template v-else>
+            <input
+              ref="inputRef"
+              type="text"
+              :value="displayValue"
+              :placeholder="placeholder"
+              :disabled="disabled"
+              readonly
+              class="datetime-input"
+            />
+          </template>
+          <div class="datetime-icon">
+            <Icon :icon="iconType" />
+          </div>
         </div>
-        <input
-          type="text"
-          :value="displayEndValue"
-          :placeholder="endPlaceholder"
-          :disabled="disabled"
-          readonly
-          class="datetime-input datetime-input-end"
-        />
-      </template>
-      <template v-else>
-        <input
-          ref="inputRef"
-          type="text"
-          :value="displayValue"
-          :placeholder="placeholder"
-          :disabled="disabled"
-          readonly
-          class="datetime-input"
-        />
-      </template>
-      <div class="datetime-icon">
-        <Icon :icon="iconType" />
       </div>
-    </div>
+    </template>
 
-    <!-- 选择器面板 -->
-    <Transition
-      enter-active-class="panel-enter-active"
-      enter-from-class="panel-enter-from"
-      enter-to-class="panel-enter-to"
-      leave-active-class="panel-leave-active"
-      leave-from-class="panel-leave-from"
-      leave-to-class="panel-leave-to"
-    >
-      <div v-if="isOpen" class="datetime-panel" :class="panelPosition">
+    <template #default>
+      <div class="datetime-panel">
       <!-- 头部 -->
       <div class="datetime-header">
         <div class="datetime-title">{{ title }}</div>
         <XButton icon="mdi:close" size="small" @click="closePicker">
         </XButton>
       </div>
-
       <!-- 模式切换 -->
       <div v-if="mode === 'datetime'" class="datetime-mode-switch">
         <XButton
@@ -245,15 +252,15 @@
           <span>确定</span>
         </XButton>
       </div>
-    </div>
-    </Transition>
-
-  </div>
+      </div>
+    </template>
+  </ElPopover>
 </template>
 
 <script setup lang="ts">
-import { ref, computed, watch, onMounted, onUnmounted } from 'vue'
+import { ref, computed, watch } from 'vue'
 import { Icon } from '@iconify/vue'
+import { ElPopover } from 'element-plus'
 import { useDateTime } from '../../composables/DateTime'
 export interface ShortcutOption {
   text: string
@@ -340,8 +347,6 @@ export interface DateTimePickerProps {
     const selectedHour = ref(0)
     const selectedMinute = ref(0)
     const selectedSecond = ref(0)
-    const isMobile = ref(false)
-    const panelPosition = ref('panel-bottom')
     
     // 引用
     const inputRef = ref<HTMLInputElement>()
@@ -503,20 +508,8 @@ export interface DateTimePickerProps {
     
     
     // 方法
-    const togglePicker = () => {
-      if (props.disabled) return
-      isOpen.value = !isOpen.value
-      if (isOpen.value) {
-        calculatePanelPosition()
-        emit('open')
-      } else {
-        emit('close')
-      }
-    }
-    
     const closePicker = () => {
       isOpen.value = false
-      emit('close')
     }
     
     const previousMonth = () => {
@@ -700,30 +693,6 @@ export interface DateTimePickerProps {
       }
     }
     
-    // 检测移动端
-    const checkMobile = () => {
-      isMobile.value = window.innerWidth <= 768
-    }
-    
-    // 计算面板位置
-    const calculatePanelPosition = () => {
-      if (!inputRef.value) return
-      
-      const rect = inputRef.value.getBoundingClientRect()
-      const viewportHeight = window.innerHeight
-      const spaceBelow = viewportHeight - rect.bottom
-      const spaceAbove = rect.top
-      
-      // 面板高度估算（大约400px）
-      const panelHeight = 400
-      
-      if (spaceBelow >= panelHeight || spaceBelow > spaceAbove) {
-        panelPosition.value = 'panel-bottom'
-      } else {
-        panelPosition.value = 'panel-top'
-      }
-    }
-    
     // 监听器
     watch(() => props.modelValue, (newValue) => {
       if (Array.isArray(newValue) && newValue.length === 2) {
@@ -762,26 +731,18 @@ export interface DateTimePickerProps {
         currentMode.value = newMode as 'date' | 'time'
       }
     }, { immediate: true })
-    
-    // 点击外部关闭
-    const handleClickOutside = (event: Event) => {
-      if (isOpen.value && !(event.target as Element)?.closest('.x-datetime-picker')) {
-        closePicker()
-      }
-    }
-    
-    // 生命周期
-    onMounted(() => {
-      checkMobile()
-      window.addEventListener('resize', checkMobile)
-      document.addEventListener('click', handleClickOutside)
-    })
-    
-    onUnmounted(() => {
-      window.removeEventListener('resize', checkMobile)
-      document.removeEventListener('click', handleClickOutside)
-    })
 </script>
+
+<style>
+/* 全局样式 - 自定义 Element Plus Popover */
+.x-datetime-picker-popper {
+  padding: 0 !important;
+}
+
+.x-datetime-picker-popper .el-popper__arrow {
+  display: none !important;
+}
+</style>
 
 <style scoped>
 /* 基础样式 */
@@ -795,22 +756,21 @@ export interface DateTimePickerProps {
   position: relative;
   display: flex;
   align-items: center;
-  border: 1px solid #e5e7eb;
+  border: 1px solid var(--x-border-color, #e5e7eb);
   border-radius: 0.5rem;
-  background-color: #ffffff;
+  background-color: var(--x-bg-color, #ffffff);
   transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
-  cursor: pointer;
-  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.03);
+  box-shadow: var(--x-shadow-sm, 0 1px 2px 0 rgba(0, 0, 0, 0.03));
 }
 
 .datetime-input-wrapper:hover {
-  border-color: #1a1a1a;
-  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.08);
+  border-color: var(--x-color-primary, #1a1a1a);
+  box-shadow: var(--x-shadow-md, 0 1px 3px 0 rgba(0, 0, 0, 0.08));
 }
 
 .datetime-input-wrapper:focus-within {
-  border-color: #1a1a1a;
-  box-shadow: 0 0 0 3px rgba(26, 26, 26, 0.08);
+  border-color: var(--x-color-primary, #1a1a1a);
+  box-shadow: 0 0 0 3px var(--x-shadow-focus, rgba(26, 26, 26, 0.08));
 }
 
 .datetime-input {
@@ -820,13 +780,13 @@ export interface DateTimePickerProps {
   outline: none;
   background: transparent;
   font-size: 0.875rem;
-  color: #1a1a1a;
+  color: var(--x-text-color-primary, #1a1a1a);
   cursor: pointer;
   line-height: 1.5;
 }
 
 .datetime-input::placeholder {
-  color: #9ca3af;
+  color: var(--x-text-color-placeholder, #9ca3af);
 }
 
 /* 范围选择输入框 */
@@ -842,7 +802,7 @@ export interface DateTimePickerProps {
   align-items: center;
   justify-content: center;
   padding: 0 0.5rem;
-  color: #9ca3af;
+  color: var(--x-text-color-placeholder, #9ca3af);
   font-size: 0.875rem;
 }
 
@@ -895,55 +855,10 @@ export interface DateTimePickerProps {
 
 /* 选择器面板 */
 .datetime-panel {
-  position: absolute;
-  left: 0;
-  right: 0;
-  z-index: 1000;
-  background: #ffffff;
-  border: 1px solid #e5e7eb;
+  background: var(--x-bg-color, #ffffff);
   border-radius: 0.75rem;
-  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
   overflow: hidden;
   min-width: 320px;
-}
-
-.panel-bottom {
-  top: 100%;
-  margin-top: 0.5rem;
-}
-
-.panel-top {
-  bottom: 100%;
-  margin-bottom: 0.5rem;
-}
-
-/* 面板动画 */
-.panel-enter-active {
-  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.panel-leave-active {
-  transition: all 0.15s cubic-bezier(0.4, 0, 1, 1);
-}
-
-.panel-enter-from {
-  opacity: 0;
-  transform: translateY(-8px) scale(0.96);
-}
-
-.panel-enter-to {
-  opacity: 1;
-  transform: translateY(0) scale(1);
-}
-
-.panel-leave-from {
-  opacity: 1;
-  transform: translateY(0) scale(1);
-}
-
-.panel-leave-to {
-  opacity: 0;
-  transform: translateY(-8px) scale(0.96);
 }
 
 /* 头部 */
@@ -952,13 +867,13 @@ export interface DateTimePickerProps {
   align-items: center;
   justify-content: space-between;
   padding: 0.875rem 1rem;
-  border-bottom: 1px solid #f3f4f6;
-  background: linear-gradient(to bottom, #fafafa, #ffffff);
+  border-bottom: 1px solid var(--x-border-color-lighter, #f3f4f6);
+  background: var(--x-gradient-bg-light, linear-gradient(to bottom, #fafafa, #ffffff));
 }
 
 .datetime-title {
   font-weight: 600;
-  color: #1a1a1a;
+  color: var(--x-text-color-primary, #1a1a1a);
   font-size: 0.9375rem;
   letter-spacing: -0.01em;
 }
@@ -971,15 +886,15 @@ export interface DateTimePickerProps {
   height: 2rem;
   border: none;
   background: none;
-  color: #6b7280;
+  color: var(--x-text-color-secondary, #6b7280);
   cursor: pointer;
   border-radius: 0.25rem;
   transition: all 0.2s ease;
 }
 
 .datetime-close:hover {
-  background-color: #e5e7eb;
-  color: #1a1a1a;
+  background-color: var(--x-fill-color, #e5e7eb);
+  color: var(--x-text-color-primary, #1a1a1a);
 }
 
 /* 模式切换 */
@@ -999,7 +914,7 @@ export interface DateTimePickerProps {
   padding: 0.5rem;
   border: none;
   background: none;
-  color: #6b7280;
+  color: var(--x-text-color-secondary, #6b7280);
   cursor: pointer;
   border-radius: 0.375rem;
   transition: all 0.2s ease;
@@ -1007,13 +922,13 @@ export interface DateTimePickerProps {
 }
 
 .mode-btn.active {
-  background-color: #1a1a1a;
-  color: #ffffff;
+  background-color: var(--x-color-primary, #1a1a1a);
+  color: var(--x-color-white, #ffffff);
 }
 
 .mode-btn:hover:not(.active) {
-  background-color: #e5e7eb;
-  color: #1a1a1a;
+  background-color: var(--x-fill-color, #e5e7eb);
+  color: var(--x-text-color-primary, #1a1a1a);
 }
 
 /* 日期选择器 */
@@ -1037,9 +952,9 @@ export interface DateTimePickerProps {
   justify-content: center;
   gap: 0.375rem;
   padding: 0.5rem 0.75rem;
-  border: 1px solid #e5e7eb;
-  background: #ffffff;
-  color: #6b7280;
+  border: 1px solid var(--x-border-color, #e5e7eb);
+  background: var(--x-bg-color, #ffffff);
+  color: var(--x-text-color-secondary, #6b7280);
   cursor: pointer;
   border-radius: 0.375rem;
   font-size: 0.75rem;
@@ -1048,9 +963,9 @@ export interface DateTimePickerProps {
 }
 
 .shortcut-btn:hover {
-  border-color: #1a1a1a;
-  background-color: #f9fafb;
-  color: #1a1a1a;
+  border-color: var(--x-color-primary, #1a1a1a);
+  background-color: var(--x-fill-color-lighter, #f9fafb);
+  color: var(--x-text-color-primary, #1a1a1a);
 }
 
 .shortcut-btn:active {
@@ -1077,20 +992,20 @@ export interface DateTimePickerProps {
   height: 2rem;
   border: none;
   background: none;
-  color: #6b7280;
+  color: var(--x-text-color-secondary, #6b7280);
   cursor: pointer;
   border-radius: 0.25rem;
   transition: all 0.2s ease;
 }
 
 .nav-btn:hover {
-  background-color: #e5e7eb;
-  color: #1a1a1a;
+  background-color: var(--x-fill-color, #e5e7eb);
+  color: var(--x-text-color-primary, #1a1a1a);
 }
 
 .current-month {
   font-weight: 600;
-  color: #1a1a1a;
+  color: var(--x-text-color-primary, #1a1a1a);
   font-size: 1rem;
 }
 
@@ -1123,7 +1038,7 @@ export interface DateTimePickerProps {
   justify-content: center;
   height: 2.25rem;
   font-size: 0.8125rem;
-  color: #374151;
+  color: var(--x-text-color-regular, #374151);
   cursor: pointer;
   border-radius: 0.25rem;
   font-weight: 500;
@@ -1227,32 +1142,32 @@ export interface DateTimePickerProps {
 
 /* 今天的日期悬停效果 */
 .date-today:hover:not(.date-selected)::before {
-  border-color: #3b82f6;
+  border-color: var(--x-color-primary, #3b82f6);
   animation: borderSweep 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .date-today:hover:not(.date-selected)::after {
-  background-color: #eff6ff;
+  background-color: var(--x-datetime-today-hover-bg, #eff6ff);
   opacity: 1;
   animation: backgroundFade 0.3s ease;
 }
 
 /* 选中的日期 - Windows 10 风格 */
 .date-selected {
-  color: #ffffff;
+  color: var(--x-color-white, #ffffff);
   font-weight: 600;
 }
 
 .date-selected::before {
-  border: 2px solid #3b82f6;
+  border: 2px solid var(--x-color-primary, #3b82f6);
   opacity: 1;
-  box-shadow: 0 0 0 1px rgba(59, 130, 246, 0.1);
+  box-shadow: 0 0 0 1px var(--x-datetime-selected-shadow, rgba(59, 130, 246, 0.1));
 }
 
 .date-selected::after {
-  background-color: #3b82f6;
+  background-color: var(--x-color-primary, #3b82f6);
   opacity: 1;
-  box-shadow: 0 2px 4px rgba(59, 130, 246, 0.3);
+  box-shadow: 0 2px 4px var(--x-datetime-selected-shadow-md, rgba(59, 130, 246, 0.3));
 }
 
 /* 选中日期的悬停效果 */
@@ -1529,22 +1444,6 @@ export interface DateTimePickerProps {
 @media (max-width: 768px) {
   .datetime-panel {
     max-height: 60vh;
-    width: 100vw;
-    left: 0;
-    right: 0;
-    border-radius: 0.75rem 0.75rem 0 0;
-  }
-  
-  .panel-bottom {
-    top: 100%;
-    margin-top: 0;
-    border-radius: 0.75rem 0.75rem 0 0;
-  }
-  
-  .panel-top {
-    bottom: 100%;
-    margin-bottom: 0;
-    border-radius: 0 0 0.75rem 0.75rem;
   }
   
   .date-cell {

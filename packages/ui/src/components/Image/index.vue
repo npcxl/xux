@@ -156,7 +156,6 @@ watch(() => props.previewIndex, (val) => {
   position: relative;
   display: inline-block;
   overflow: hidden;
-  min-height: 100px; /* 确保容器有最小高度 */
 }
 .x-image img {
   width: 100%;

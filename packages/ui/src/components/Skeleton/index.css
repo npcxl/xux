@@ -1,7 +1,7 @@
 /* Skeleton 骨架屏样式 */
 
 .x-skeleton {
-  background-color: #e5e7eb;
+  background-color: var(--x-skeleton-bg, #e5e7eb);
 }
 
 /* 动画 */

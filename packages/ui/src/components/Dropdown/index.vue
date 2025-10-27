@@ -1,46 +1,38 @@
 <template>
-  <div 
-    ref="dropdownRef" 
-    class="x-dropdown"
-    :class="{ 'x-dropdown--disabled': disabled }"
-    @mouseenter="trigger === 'hover' && handleOpen()"
-    @mouseleave="trigger === 'hover' && handleClose()"
+  <ElDropdown
+    ref="dropdownRef"
+    :trigger="trigger"
+    :disabled="disabled"
+    :placement="normalizedPlacement"
+    :popper-class="popperClass"
+    :popper-options="{ modifiers: [{ name: 'offset', options: { offset: [0, offset] } }] }"
+    :hide-on-click="closeOnClick"
+    :teleported="true"
+    @visible-change="handleVisibleChange"
   >
-    <!-- 触发器插槽 -->
-    <div 
-      class="x-dropdown__trigger"
-      @click="trigger === 'click' && handleToggle()"
-    >
+    <span class="x-dropdown-reference">
       <slot></slot>
-    </div>
-
-    <!-- 下拉内容 -->
-    <Transition name="x-dropdown-fade">
-      <div
-        v-if="isVisible"
-        ref="dropdownMenuRef"
-        class="x-dropdown__menu"
-        :class="[
-          `x-dropdown__menu--${placement}`,
-          { 'x-dropdown__menu--shadow': showShadow }
-        ]"
-        :style="menuStyle"
-        @click="closeOnClick && handleClose()"
+    </span>
+    <template #dropdown>
+      <div 
+        class="x-dropdown-content"
+        :style="contentStyle"
       >
         <slot name="dropdown"></slot>
       </div>
-    </Transition>
-  </div>
+    </template>
+  </ElDropdown>
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted, onBeforeUnmount, type CSSProperties } from 'vue'
+import { ref, computed, type CSSProperties, nextTick } from 'vue'
+import { ElDropdown } from 'element-plus'
 
 export interface DropdownProps {
   /** 触发方式 */
   trigger?: 'hover' | 'click'
   /** 下拉菜单位置 */
-  placement?: 'bottom-start' | 'bottom-end' | 'bottom-center' | 'top-start' | 'top-end' | 'top-center' | 'left' | 'right'
+  placement?: 'bottom-start' | 'bottom-end' | 'bottom-center' | 'top-start' | 'top-end' | 'top-center' | 'left' | 'right' | 'bottom' | 'top'
   /** 自定义宽度 */
   width?: string | number
   /** 最小宽度 */
@@ -76,244 +68,134 @@ const emit = defineEmits<{
   toggle: [visible: boolean]
 }>()
 
-const dropdownRef = ref<HTMLElement>()
-const dropdownMenuRef = ref<HTMLElement>()
+const dropdownRef = ref()
 const isVisible = ref(false)
 
-// 计算菜单样式
-const menuStyle = computed<CSSProperties>(() => {
-  const style: CSSProperties = {
-    '--dropdown-offset': `${props.offset}px`
+// 转换 placement
+const normalizedPlacement = computed(() => {
+  const map: Record<string, any> = {
+    'bottom-center': 'bottom',
+    'top-center': 'top',
   }
+  return map[props.placement] || props.placement
+})
+
+// 计算 popper class
+const popperClass = computed(() => {
+  let classes = 'x-dropdown-popper'
+  if (props.minWidth || props.maxWidth) {
+    // 通过类名应用样式
+  }
+  return classes
+})
+
+// 计算内容样式（用于宽度、高度）
+const contentStyle = computed<CSSProperties>(() => {
+  const style: CSSProperties = {}
   
   if (props.width) {
     style.width = typeof props.width === 'number' ? `${props.width}px` : props.width
   }
+  
   if (props.minWidth) {
     style.minWidth = typeof props.minWidth === 'number' ? `${props.minWidth}px` : props.minWidth
   }
+  
   if (props.maxWidth) {
     style.maxWidth = typeof props.maxWidth === 'number' ? `${props.maxWidth}px` : props.maxWidth
   }
+  
   if (props.height) {
     style.height = typeof props.height === 'number' ? `${props.height}px` : props.height
   }
+  
   if (props.maxHeight) {
     style.maxHeight = typeof props.maxHeight === 'number' ? `${props.maxHeight}px` : props.maxHeight
+    style.overflowY = 'auto'
   }
   
   return style
 })
 
+// 可见性变化
+function handleVisibleChange(visible: boolean) {
+  isVisible.value = visible
+  emit('toggle', visible)
+  if (visible) {
+    emit('open')
+  } else {
+    emit('close')
+  }
+}
+
 // 打开下拉菜单
-const handleOpen = () => {
-  if (props.disabled) return
-  isVisible.value = true
-  emit('open')
-  emit('toggle', true)
+async function openDropdown() {
+  if (dropdownRef.value && dropdownRef.value.handleOpen) {
+    await nextTick()
+    dropdownRef.value.handleOpen()
+  }
 }
 
 // 关闭下拉菜单
-const handleClose = () => {
-  isVisible.value = false
-  emit('close')
-  emit('toggle', false)
+async function closeDropdown() {
+  if (dropdownRef.value && dropdownRef.value.handleClose) {
+    await nextTick()
+    dropdownRef.value.handleClose()
+  }
 }
 
 // 切换下拉菜单
-const handleToggle = () => {
-  if (props.disabled) return
-  isVisible.value ? handleClose() : handleOpen()
-}
-
-// 点击外部关闭
-const handleClickOutside = (event: MouseEvent) => {
-  if (!dropdownRef.value || props.trigger !== 'click') return
-  
-  const target = event.target as Node
-  if (!dropdownRef.value.contains(target)) {
-    handleClose()
+async function toggleDropdown() {
+  if (isVisible.value) {
+    await closeDropdown()
+  } else {
+    await openDropdown()
   }
 }
 
 // 暴露方法
 defineExpose({
-  open: handleOpen,
-  close: handleClose,
-  toggle: handleToggle,
-  isVisible
-})
-
-onMounted(() => {
-  if (props.trigger === 'click') {
-    document.addEventListener('click', handleClickOutside)
-  }
-})
-
-onBeforeUnmount(() => {
-  if (props.trigger === 'click') {
-    document.removeEventListener('click', handleClickOutside)
-  }
+  isVisible,
+  open: openDropdown,
+  close: closeDropdown,
+  toggle: toggleDropdown
 })
 </script>
 
-<style scoped>
-.x-dropdown {
-  position: relative;
-  display: inline-block;
-}
-
-.x-dropdown--disabled {
-  cursor: not-allowed;
-  opacity: 0.6;
-}
-
-.x-dropdown__trigger {
-  cursor: pointer;
-  user-select: none;
-}
-
-.x-dropdown--disabled .x-dropdown__trigger {
-  cursor: not-allowed;
-}
-
-.x-dropdown__menu {
-  position: absolute;
-  z-index: 1000;
-  background: var(--dropdown-bg, #ffffff);
-  border: 1px solid var(--dropdown-border, #e5e7eb);
-  border-radius: 8px;
-  overflow: auto;
-  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.x-dropdown__menu--shadow {
+<style>
+/* 全局样式 - 自定义 Element Plus Dropdown */
+.x-dropdown-popper.el-popper {
+  padding: 0 !important;
+  background: #ffffff !important;
+  border: 1px solid #e5e7eb !important;
+  border-radius: 8px !important;
   box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 
-              0 2px 4px -1px rgba(0, 0, 0, 0.06);
+              0 2px 4px -1px rgba(0, 0, 0, 0.06) !important;
 }
 
-/* 位置定位 */
-.x-dropdown__menu--bottom-start,
-.x-dropdown__menu--bottom-center,
-.x-dropdown__menu--bottom-end {
-  top: calc(100% + var(--dropdown-offset, 8px));
+.x-dropdown-popper .el-dropdown-menu {
+  padding: 0 !important;
+  border: none !important;
+  box-shadow: none !important;
 }
 
-.x-dropdown__menu--top-start,
-.x-dropdown__menu--top-center,
-.x-dropdown__menu--top-end {
-  bottom: calc(100% + var(--dropdown-offset, 8px));
-}
-
-.x-dropdown__menu--bottom-start,
-.x-dropdown__menu--top-start {
-  left: 0;
-}
-
-.x-dropdown__menu--bottom-end,
-.x-dropdown__menu--top-end {
-  right: 0;
-}
-
-.x-dropdown__menu--bottom-center,
-.x-dropdown__menu--top-center {
-  left: 50%;
-  transform: translateX(-50%);
-}
-
-.x-dropdown__menu--left {
-  right: calc(100% + var(--dropdown-offset, 8px));
-  top: 0;
-}
-
-.x-dropdown__menu--right {
-  left: calc(100% + var(--dropdown-offset, 8px));
-  top: 0;
-}
-
-/* 过渡动画 */
-.x-dropdown-fade-enter-active,
-.x-dropdown-fade-leave-active {
-  transition: opacity 0.2s ease, transform 0.2s ease;
-}
-
-.x-dropdown-fade-enter-from {
-  opacity: 0;
-  transform: translateY(-8px);
-}
-
-.x-dropdown-fade-leave-to {
-  opacity: 0;
-  transform: translateY(-8px);
-}
-
-/* 从上方出现的动画 */
-.x-dropdown__menu--top-start.x-dropdown-fade-enter-from,
-.x-dropdown__menu--top-center.x-dropdown-fade-enter-from,
-.x-dropdown__menu--top-end.x-dropdown-fade-enter-from {
-  transform: translateY(8px);
-}
-
-.x-dropdown__menu--top-start.x-dropdown-fade-leave-to,
-.x-dropdown__menu--top-center.x-dropdown-fade-leave-to,
-.x-dropdown__menu--top-end.x-dropdown-fade-leave-to {
-  transform: translateY(8px);
-}
-
-/* 从左侧出现的动画 */
-.x-dropdown__menu--left.x-dropdown-fade-enter-from,
-.x-dropdown__menu--left.x-dropdown-fade-leave-to {
-  transform: translateX(8px);
-}
-
-/* 从右侧出现的动画 */
-.x-dropdown__menu--right.x-dropdown-fade-enter-from,
-.x-dropdown__menu--right.x-dropdown-fade-leave-to {
-  transform: translateX(-8px);
+.x-dropdown-popper .el-popper__arrow {
+  display: none !important;
 }
 
 /* 暗色模式 */
-@media (prefers-color-scheme: dark) {
-  .x-dropdown__menu {
-    --dropdown-bg: #1f2937;
-    --dropdown-border: #374151;
-  }
+.dark .x-dropdown-popper.el-popper {
+  background: #1a1a1a !important;
+  border: 1px solid #333 !important;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.32) !important;
 }
+</style>
 
-/* 滚动条样式 */
-.x-dropdown__menu::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
-}
-
-.x-dropdown__menu::-webkit-scrollbar-track {
-  background: transparent;
-}
-
-.x-dropdown__menu::-webkit-scrollbar-thumb {
-  background: rgba(0, 0, 0, 0.2);
-  border-radius: 3px;
-}
-
-.x-dropdown__menu::-webkit-scrollbar-thumb:hover {
-  background: rgba(0, 0, 0, 0.3);
-}
-
-@media (prefers-color-scheme: dark) {
-  .x-dropdown__menu::-webkit-scrollbar-thumb {
-    background: rgba(255, 255, 255, 0.2);
-  }
-  
-  .x-dropdown__menu::-webkit-scrollbar-thumb:hover {
-    background: rgba(255, 255, 255, 0.3);
-  }
-}
-
-/* 移动端适配 */
-@media (max-width: 768px) {
-  .x-dropdown__menu {
-    max-width: calc(100vw - 32px);
-  }
+<style scoped>
+/* 组件内部样式 */
+.x-dropdown-reference {
+  display: inline-block;
+  cursor: pointer;
 }
 </style>
 

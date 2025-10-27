@@ -1,75 +1,76 @@
 <template>
     <div class="x-select-container" :style="{ width: width }" ref="selectContainer">
-      <!-- 触发器 -->
-      <div
-        @click="toggleDropdown"
-        @keydown.enter="toggleDropdown"
-        @keydown.space="toggleDropdown"
-        @keydown.escape="closeDropdown"
-        :class="[
-          'x-select-trigger',
-          {
-            'is-disabled': disabled,
-            'is-borderless': borderless,
-            'is-open': isOpen
-          }
-        ]"
-        :tabindex="disabled ? -1 : 0"
-        role="combobox"
-        :aria-expanded="isOpen"
-        :aria-haspopup="true"
-        :aria-labelledby="labelId"
+      <ElPopover
+        v-model:visible="isOpen"
+        placement="bottom-start"
+        trigger="click"
+        :disabled="disabled"
+        :width="selectWidth"
+        :offset="8"
+        :show-arrow="false"
+        :teleported="true"
+        popper-class="x-select-popper"
       >
-        <div class="x-select-content">
-          <span v-if="placeholder && !hasSelection" class="x-select-placeholder">
-            {{ placeholder }}
-          </span>
-          <div v-else class="x-select-tags">
-            <!-- 单选显示 -->
-            <template v-if="!multiple">
-              <span v-if="selectedOption" class="x-select-single-value">
-                {{ getOptionLabel(selectedOption) }}
+        <template #reference>
+          <!-- 触发器 -->
+          <div
+            @keydown.enter="toggleDropdown"
+            @keydown.space="toggleDropdown"
+            @keydown.escape="closeDropdown"
+            :class="[
+              'x-select-trigger',
+              {
+                'is-disabled': disabled,
+                'is-borderless': borderless,
+                'is-open': isOpen
+              }
+            ]"
+            :tabindex="disabled ? -1 : 0"
+            role="combobox"
+            :aria-expanded="isOpen"
+            :aria-haspopup="true"
+            :aria-labelledby="labelId"
+          >
+            <div class="x-select-content">
+              <span v-if="placeholder && !hasSelection" class="x-select-placeholder">
+                {{ placeholder }}
               </span>
-            </template>
-            <!-- 多选显示 -->
-            <template v-else>
-              <span
-                 v-for="option in selectedOptions"
-                 :key="getOptionValue(option)"
-                 class="x-select-tag"
-               >
-                 {{ getOptionLabel(option) }}
-                 <button
-                   @click.stop="removeOption(option)"
-                   class="x-select-tag-close"
-                   type="button"
-                 >
-                   <i class="bi bi-x"></i>
-                 </button>
-               </span>
-            </template>
+              <div v-else class="x-select-tags">
+                <!-- 单选显示 -->
+                <template v-if="!multiple">
+                  <span v-if="selectedOption" class="x-select-single-value">
+                    {{ getOptionLabel(selectedOption) }}
+                  </span>
+                </template>
+                <!-- 多选显示 -->
+                <template v-else>
+                  <span
+                     v-for="option in selectedOptions"
+                     :key="getOptionValue(option)"
+                     class="x-select-tag"
+                   >
+                     {{ getOptionLabel(option) }}
+                     <button
+                       @click.stop="removeOption(option)"
+                       class="x-select-tag-close"
+                       type="button"
+                     >
+                       <i class="bi bi-x"></i>
+                     </button>
+                   </span>
+                </template>
+              </div>
+            </div>
+            <Icon
+              :class="['x-select-arrow', { 'is-open': isOpen }]"
+              icon="mdi:chevron-down"
+            ></Icon>
           </div>
-        </div>
-        <Icon
-          :class="['x-select-arrow', { 'is-open': isOpen }]"
-          icon="mdi:chevron-down"
-        ></Icon>
-      </div>
+        </template>
   
-      <!-- 下拉菜单 -->
-      <Transition
-        enter-active-class="x-select-dropdown-enter-active"
-        enter-from-class="x-select-dropdown-enter-from"
-        enter-to-class="x-select-dropdown-enter-to"
-        leave-active-class="x-select-dropdown-leave-active"
-        leave-from-class="x-select-dropdown-leave-from"
-        leave-to-class="x-select-dropdown-leave-to"
-      >
-        <div
-          v-if="isOpen"
-          class="x-select-dropdown"
-          role="listbox"
-        >
+        <template #default>
+          <!-- 下拉菜单 -->
+          <div class="x-select-dropdown" role="listbox">
           <!-- 搜索框 -->
           <div v-if="searchable" class="x-select-search">
             <input
@@ -139,13 +140,15 @@
             </div>
           </div>
         </div>
-      </Transition>
+        </template>
+      </ElPopover>
     </div>
   </template>
   
   <script setup lang="ts">
   import './index.css'
   import { Icon } from '@iconify/vue'
+  import { ElPopover } from 'element-plus'
 /**
  * Select 选择器组件
  * @displayName XSelect
@@ -200,6 +203,12 @@
   const isOpen = ref(false)
   const searchQuery = ref('')
   const selectContainer = ref<HTMLElement>()
+  
+  // 计算 select 容器宽度用于 popover
+  const selectWidth = computed(() => {
+    if (!selectContainer.value) return 200
+    return selectContainer.value.offsetWidth || 200
+  })
   const searchInput = ref<HTMLInputElement>()
   
   // 计算属性
@@ -323,13 +332,6 @@
     
   }
   
-  // 点击外部关闭下拉框
-  const handleClickOutside = (event: Event) => {
-    if (selectContainer.value && !selectContainer.value.contains(event.target as Node)) {
-      closeDropdown()
-    }
-  }
-  
   // 键盘导航
   const handleKeydown = (event: KeyboardEvent) => {
     if (!isOpen.value) return
@@ -358,12 +360,10 @@
   
   // 生命周期
   onMounted(() => {
-    document.addEventListener('click', handleClickOutside)
     document.addEventListener('keydown', handleKeydown)
   })
   
   onUnmounted(() => {
-    document.removeEventListener('click', handleClickOutside)
     document.removeEventListener('keydown', handleKeydown)
   })
   

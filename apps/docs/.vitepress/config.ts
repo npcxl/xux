@@ -37,7 +37,7 @@ export default defineConfig({
     ['meta', { name: 'twitter:image', content: 'https://xux.xlcig.cn/logo.png' }],
     
     // Baidu verification (如果需要百度收录)
-    // ['meta', { name: 'baidu-site-verification', content: 'your-verification-code' }],
+    ['meta', { name: 'baidu-site-verification', content: 'codeValue' }],
   ],
 
   themeConfig: {
@@ -75,6 +75,12 @@ export default defineConfig({
 
       '/components/': [
         {
+          text:"主题",
+          items: [
+            { text: '主题化配置', link: '/components/theme-config' },
+          ]
+        },
+        {
           text: '通用',
           items: [
             { text: 'Button 按钮', link: '/components/button' },
@@ -91,6 +97,7 @@ export default defineConfig({
             { text: 'Grid 网格布局', link: '/components/grid' },
             { text: 'Card 卡片', link: '/components/card' },
             { text: 'Divider 分割线', link: '/components/divider' },
+            { text: 'Menu 菜单', link: '/components/menu' },
          
           ]
         },
@@ -139,6 +146,7 @@ export default defineConfig({
             { text: 'Popconfirm 气泡确认框', link: '/components/popconfirm' },
             { text: 'Result 结果', link: '/components/result' },
             { text: 'Chat 聊天', link: '/components/chat' },
+            { text: 'Loading 加载中', link: '/components/loading' }
           ]
         },
         {
@@ -281,6 +289,9 @@ export default defineConfig({
     },
     optimizeDeps: {
       exclude: ['@xlui/xux-ui', '@xux/ui']
+    },
+    ssr: {
+      noExternal: ['element-plus']
     }
   },
 

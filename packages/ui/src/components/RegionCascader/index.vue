@@ -1,40 +1,44 @@
 <template>
-  <div ref="containerRef" class="x-region-cascader-container">
-    <!-- 输入框 -->
-    <div 
-      @click="toggleDropdown"
-      :class="[
-        'x-region-input',
-        customClass,
-        { 'is-disabled': disabled }
-      ]"
-      :tabindex="disabled ? -1 : 0"
-      @keydown.enter="toggleDropdown"
-      @keydown.space="toggleDropdown"
-      @keydown.escape="closeDropdown"
-    >
-      <div class="x-region-input-content">
-        <span v-if="displayValue" class="x-region-input-value">{{ displayValue }}</span>
-        <span v-else class="x-region-input-placeholder">{{ placeholder }}</span>
-      </div>
-      <svg 
+  <ElPopover
+    v-model:visible="isOpen"
+    placement="bottom-start"
+    trigger="click"
+    :disabled="disabled"
+    :width="480"
+    :offset="8"
+    :show-arrow="false"
+    :teleported="true"
+    popper-class="x-region-cascader-popper"
+  >
+    <template #reference>
+      <div 
         :class="[
-          'x-region-input-arrow',
-          { 'is-open': isOpen }
+          'x-region-input',
+          customClass,
+          { 'is-disabled': disabled }
         ]"
-        fill="none" 
-        stroke="currentColor" 
-        viewBox="0 0 24 24"
+        :tabindex="disabled ? -1 : 0"
       >
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
-      </svg>
-    </div>
+        <div class="x-region-input-content">
+          <span v-if="displayValue" class="x-region-input-value">{{ displayValue }}</span>
+          <span v-else class="x-region-input-placeholder">{{ placeholder }}</span>
+        </div>
+        <svg 
+          :class="[
+            'x-region-input-arrow',
+            { 'is-open': isOpen }
+          ]"
+          fill="none" 
+          stroke="currentColor" 
+          viewBox="0 0 24 24"
+        >
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+        </svg>
+      </div>
+    </template>
 
-    <!-- 级联下拉框 -->
-    <div 
-      v-if="isOpen && !disabled"
-      class="x-region-dropdown"
-    >
+    <template #default>
+      <div class="x-region-dropdown">
       <!-- 搜索框 -->
       <div v-if="searchable" class="x-region-search">
         <div class="x-region-search-wrapper">
@@ -165,15 +169,9 @@
       <div v-else-if="provinces.length === 0" class="x-region-empty">
         <div class="x-region-empty-text">暂无数据</div>
       </div>
-    </div>
-
-    <!-- 遮罩层 -->
-    <div 
-      v-if="isOpen && !disabled"
-      class="x-region-backdrop"
-      @click="closeDropdown"
-    ></div>
-  </div>
+      </div>
+    </template>
+  </ElPopover>
 </template>
 
 <script setup lang="ts">
@@ -181,7 +179,8 @@
  * RegionCascader 中国地区级联选择器（支持5级）
  * @displayName XRegionCascader
  */
-import { ref, computed, onMounted, onUnmounted, watch, nextTick } from 'vue'
+import { ref, computed, watch, nextTick } from 'vue'
+import { ElPopover } from 'element-plus'
 import chinaAreasData from './data/china-areas.full.json'
 import './index.css'
 
@@ -221,7 +220,6 @@ const emit = defineEmits<{
 
 // 下拉框状态
 const isOpen = ref(false)
-const containerRef = ref<HTMLElement>()
 const searchInputRef = ref<HTMLInputElement>()
 const provinceListRef = ref<HTMLElement>()
 const cityListRef = ref<HTMLElement>()
@@ -312,7 +310,13 @@ function highlightText(text: string, keyword: string): string {
 // 从Worker获取子节点
 function loadChildren(parentValue: string): Promise<AreaNode[]> {
   return new Promise((resolve) => {
-    if (!worker || !workerReady.value) {
+    // 如果Worker未就绪，检查缓存
+    if (!workerReady.value) {
+      console.log('[RegionCascader] Worker未就绪，检查缓存:', parentValue)
+      if (childrenCache.has(parentValue)) {
+        resolve(childrenCache.get(parentValue)!)
+        return
+      }
       resolve([])
       return
     }
@@ -323,76 +327,93 @@ function loadChildren(parentValue: string): Promise<AreaNode[]> {
       return
     }
 
-    const handler = (e: MessageEvent) => {
-      if (e.data?.type === 'children' && e.data.parent === parentValue) {
-        const list = e.data.list || []
-        childrenCache.set(parentValue, list)
-        resolve(list)
+    // 如果Worker存在，使用Worker
+    if (worker) {
+      const handler = (e: MessageEvent) => {
+        if (e.data?.type === 'children' && e.data.parent === parentValue) {
+          const list = e.data.list || []
+          childrenCache.set(parentValue, list)
+          resolve(list)
+          worker!.removeEventListener('message', handler)
+        }
+      }
+
+      worker.addEventListener('message', handler)
+      worker.postMessage({ type: 'children', payload: { parent: parentValue } })
+
+      // 超时处理
+      setTimeout(() => {
         worker!.removeEventListener('message', handler)
+        resolve([])
+      }, 5000)
+    } else {
+      // 如果没有Worker，检查缓存
+      if (childrenCache.has(parentValue)) {
+        resolve(childrenCache.get(parentValue)!)
+      } else {
+        resolve([])
       }
     }
-
-    worker.addEventListener('message', handler)
-    worker.postMessage({ type: 'children', payload: { parent: parentValue } })
-
-    // 超时处理
-    setTimeout(() => {
-      worker!.removeEventListener('message', handler)
-      resolve([])
-    }, 5000)
   })
 }
 
 // 加载根节点（省份）
 function loadRoots(): Promise<AreaNode[]> {
   return new Promise((resolve) => {
-    if (!worker || !workerReady.value) {
-      resolve([])
+    // 如果Worker未就绪，直接返回已加载的省份数据
+    if (!workerReady.value) {
+      console.log('[RegionCascader] Worker未就绪，返回已加载的省份数据:', provinces.value.length)
+      resolve(provinces.value)
       return
     }
 
-    const handler = (e: MessageEvent) => {
-      if (e.data?.type === 'roots') {
-        const list = e.data.list || []
-        resolve(list)
-        worker!.removeEventListener('message', handler)
+    // 如果Worker存在，使用Worker
+    if (worker) {
+      const handler = (e: MessageEvent) => {
+        if (e.data?.type === 'roots') {
+          const list = e.data.list || []
+          resolve(list)
+          worker!.removeEventListener('message', handler)
+        }
       }
+
+      worker.addEventListener('message', handler)
+      worker.postMessage({ type: 'roots' })
+
+      // 超时处理
+      setTimeout(() => {
+        worker!.removeEventListener('message', handler)
+        resolve([])
+      }, 5000)
+    } else {
+      // 如果没有Worker，返回已加载的省份数据
+      resolve(provinces.value)
     }
-
-    worker.addEventListener('message', handler)
-    worker.postMessage({ type: 'roots' })
-
-    // 超时处理
-    setTimeout(() => {
-      worker!.removeEventListener('message', handler)
-      resolve([])
-    }, 5000)
   })
 }
 
-// 切换下拉框
-const toggleDropdown = async () => {
-  if (!props.disabled) {
-    isOpen.value = !isOpen.value
-    
-    if (isOpen.value) {
-      // 打开时加载省份列表
-      if (provinces.value.length === 0) {
-        provinces.value = await loadRoots()
-      }
-      
-      // 恢复之前的选择状态
-      await restoreSelection()
-      
-      // 打开时聚焦搜索框（仅当启用搜索时）
-      if (props.searchable) {
-        setTimeout(() => {
-          searchInputRef.value?.focus()
-        }, 100)
-      }
+// 监听 isOpen 变化，当打开时加载数据
+watch(isOpen, async (open) => {
+  if (open) {
+    // 打开时加载省份列表
+    if (provinces.value.length === 0) {
+      provinces.value = await loadRoots()
     }
+    
+    // 恢复之前的选择状态
+    await restoreSelection()
+    
+    // 打开时聚焦搜索框（仅当启用搜索时）
+    if (props.searchable) {
+      setTimeout(() => {
+        searchInputRef.value?.focus()
+      }, 100)
+    }
+  } else {
+    // 关闭时清除搜索
+    searchKeyword.value = ''
   }
-}
+})
 
 // 恢复选择状态（关闭再打开时）
 const restoreSelection = async () => {
@@ -462,7 +483,6 @@ const scrollToSelectedDistrict = () => {
 
 const closeDropdown = () => {
   isOpen.value = false
-  searchKeyword.value = ''
 }
 
 // 搜索处理
@@ -715,16 +735,180 @@ const emitValue = () => {
 // 初始化Worker
 const initWorker = () => {
   try {
+    console.log('[RegionCascader] 开始初始化Worker...')
+    console.log('[RegionCascader] 数据大小:', JSON.stringify(chinaAreasData).length, 'bytes')
+    
+    // 创建内联 Worker
+    const workerCode = `
+      // Worker 代码
+      let indexByParent = {}
+      let rootNodes = []
+      let fullData = []
+      let globalIndex = new Map()
+
+      // 构建索引
+      function buildIndex(tree) {
+        indexByParent = {}
+        globalIndex = new Map()
+        
+        function traverse(nodes, parentValue = '', level = 1, path = [], pathLabels = []) {
+          nodes.forEach(node => {
+            const currentPath = [...path, node.value]
+            const currentPathLabels = [...pathLabels, node.label]
+            
+            const simpleNode = {
+              value: node.value,
+              label: node.label,
+              leaf: !node.children || node.children.length === 0
+            }
+            
+            // 构建全局索引
+            const nodeWithPath = {
+              value: node.value,
+              label: node.label,
+              leaf: simpleNode.leaf,
+              level,
+              path: currentPath,
+              pathLabels: currentPathLabels
+            }
+            globalIndex.set(node.value, nodeWithPath)
+            
+            if (parentValue === '') {
+              // 根节点（省份）
+              rootNodes.push(simpleNode)
+            } else {
+              // 子节点
+              if (!indexByParent[parentValue]) {
+                indexByParent[parentValue] = []
+              }
+              indexByParent[parentValue].push(simpleNode)
+            }
+            
+            // 递归处理子节点
+            if (node.children && node.children.length > 0) {
+              traverse(node.children, node.value, level + 1, currentPath, currentPathLabels)
+            }
+          })
+        }
+        
+        traverse(tree)
+      }
+
+      // 监听主线程消息
+      self.onmessage = (e) => {
+        const { type, payload } = e.data || {}
+        
+        switch (type) {
+          case 'init':
+            // 初始化：接收完整数据并建立索引
+            fullData = payload.root
+            rootNodes = []
+            buildIndex(fullData)
+            console.log('[Worker] 索引构建完成，根节点数:', rootNodes.length)
+            console.log('[Worker] 索引键数:', Object.keys(indexByParent).length)
+            self.postMessage({ type: 'ready' })
+            break
+            
+          case 'roots':
+            // 获取根节点（省份列表）
+            self.postMessage({ 
+              type: 'roots', 
+              list: rootNodes 
+            })
+            break
+            
+          case 'children':
+            // 获取指定父节点的子节点
+            const { parent } = payload
+            const children = indexByParent[parent] || []
+            self.postMessage({ 
+              type: 'children', 
+              parent, 
+              list: children 
+            })
+            break
+            
+          case 'search':
+            // 全局搜索功能（支持智能反填）
+            const { keyword, parentValue } = payload
+            if (!keyword || keyword.trim() === '') {
+              self.postMessage({ 
+                type: 'searchResults', 
+                keyword, 
+                results: [] 
+              })
+              break
+            }
+            
+            const searchKeyword = keyword.toLowerCase().trim()
+            const searchResults = []
+            
+            // 如果指定了父节点，只在该父节点的子节点中搜索
+            if (parentValue) {
+              const children = indexByParent[parentValue] || []
+              for (const node of children) {
+                if (node.label.toLowerCase().includes(searchKeyword) || 
+                    node.value.includes(searchKeyword)) {
+                  const nodeWithPath = globalIndex.get(node.value)
+                  if (nodeWithPath) {
+                    searchResults.push(nodeWithPath)
+                  }
+                }
+              }
+            } else {
+              // 全局搜索：在所有节点中搜索
+              for (const [code, node] of globalIndex.entries()) {
+                if (node.label.toLowerCase().includes(searchKeyword) || 
+                    code.includes(searchKeyword)) {
+                  searchResults.push(node)
+                  // 限制搜索结果数量
+                  if (searchResults.length >= 100) break
+                }
+              }
+            }
+            
+            // 按层级排序：省 > 市 > 区
+            searchResults.sort((a, b) => a.level - b.level)
+            
+            self.postMessage({ 
+              type: 'searchResults', 
+              keyword, 
+              results: searchResults 
+            })
+            break
+            
+          default:
+            console.warn('[Worker] Unknown message type:', type)
+        }
+      }
+
+      // 错误处理
+      self.onerror = (error) => {
+        console.error('[Worker] Error:', error)
+        const errorMessage = error instanceof ErrorEvent ? error.message : String(error)
+        self.postMessage({ 
+          type: 'error', 
+          error: errorMessage 
+        })
+      }
+    `
+    
+    // 创建 Blob URL
+    const blob = new Blob([workerCode], { type: 'application/javascript' })
+    const workerUrl = URL.createObjectURL(blob)
+    
+    console.log('[RegionCascader] 创建内联 Worker URL:', workerUrl)
+    
     // 创建Worker
-    worker = new Worker(
-      new URL('./areas.worker.ts', import.meta.url),
-      { type: 'module' }
-    )
+    worker = new Worker(workerUrl)
 
     worker.onmessage = (e: MessageEvent) => {
+      console.log('[RegionCascader] Worker消息:', e.data)
       if (e.data?.type === 'ready') {
         workerReady.value = true
         console.log('[RegionCascader] Worker初始化完成')
+        // 清理 Blob URL
+        URL.revokeObjectURL(workerUrl)
       } else if (e.data?.type === 'error') {
         console.error('[RegionCascader] Worker错误:', e.data.error)
       }
@@ -732,40 +916,88 @@ const initWorker = () => {
 
     worker.onerror = (error) => {
       console.error('[RegionCascader] Worker error:', error)
+      // 清理 Blob URL
+      URL.revokeObjectURL(workerUrl)
     }
 
     // 发送初始化数据
+    console.log('[RegionCascader] 发送初始化数据到Worker...')
     worker.postMessage({ 
       type: 'init', 
       payload: { root: chinaAreasData } 
     })
+
+    // 设置超时，如果 Worker 在 5 秒内没有响应，回退到同步处理
+    setTimeout(() => {
+      if (!workerReady.value) {
+        console.warn('[RegionCascader] Worker 初始化超时，回退到同步处理')
+        URL.revokeObjectURL(workerUrl)
+        fallbackToSync()
+      }
+    }, 5000)
   } catch (error) {
     console.error('[RegionCascader] Failed to create worker:', error)
+    // Worker 创建失败时回退到同步处理
+    fallbackToSync()
   }
 }
 
-// 点击外部关闭下拉框
-onMounted(async () => {
-  // 初始化Worker
-  initWorker()
-
-  const handleClickOutside = (event: Event) => {
-    if (containerRef.value && !containerRef.value.contains(event.target as Node)) {
-      closeDropdown()
-    }
+// 回退到同步处理
+const fallbackToSync = () => {
+  console.log('[RegionCascader] 回退到同步数据处理...')
+  
+  // 直接处理数据
+  const processData = (data: any[]) => {
+    const provincesList: AreaNode[] = []
+    const childrenCacheMap = new Map<string, AreaNode[]>()
+    
+    data.forEach(province => {
+      provincesList.push({
+        value: province.value,
+        label: province.label,
+        leaf: !province.children || province.children.length === 0
+      })
+      
+      if (province.children) {
+        childrenCacheMap.set(province.value, province.children.map((city: any) => ({
+          value: city.value,
+          label: city.label,
+          leaf: !city.children || city.children.length === 0
+        })))
+        
+        // 处理区县数据
+        province.children.forEach((city: any) => {
+          if (city.children) {
+            childrenCacheMap.set(city.value, city.children.map((district: any) => ({
+              value: district.value,
+              label: district.label,
+              leaf: true
+            })))
+          }
+        })
+      }
+    })
+    
+    return { provincesList, childrenCacheMap }
   }
-
-  document.addEventListener('click', handleClickOutside)
-
-  onUnmounted(() => {
-    document.removeEventListener('click', handleClickOutside)
-    // 清理Worker
-    if (worker) {
-      worker.terminate()
-      worker = null
-    }
+  
+  const { provincesList: processedProvinces, childrenCacheMap: processedCache } = processData(chinaAreasData)
+  
+  // 设置数据
+  provinces.value = processedProvinces
+  
+  // 更新缓存
+  childrenCache.clear()
+  processedCache.forEach((value, key) => {
+    childrenCache.set(key, value)
   })
-})
+  
+  workerReady.value = true
+  console.log('[RegionCascader] 同步数据处理完成，省份数量:', processedProvinces.length)
+}
+
+// 初始化 Worker（立即执行）
+initWorker()
 
 // 根据 modelValue 恢复选中状态
 async function restoreFromModelValue(codes: string[]) {

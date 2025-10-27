@@ -194,7 +194,7 @@ defineExpose({
   font-size: var(--x-font-size-sm, 14px);
   padding: 0.8em 1em;
   outline: none;
-  border: 2px solid var(--x-color-gray-300, rgb(200, 200, 200));
+  border: 2px solid var(--x-color-gray-300, #1a1a1a);
   background-color: transparent;
   border-radius: var(--x-radius-lg, 12px);
   transition: all var(--x-transition, 0.3s ease);
@@ -207,11 +207,11 @@ defineExpose({
 
 .x-input:focus {
   border-color: var(--x-color-primary, #1a1a1a);
-  box-shadow: 0 0 0 3px rgba(26, 26, 26, 0.1);
+  box-shadow: var(--x-shadow-focus-primary, 0 0 0 3px rgba(26, 26, 26, 0.1));
 }
 
 .x-input--disabled {
-  background-color: var(--x-color-gray-100, #f5f5f5);
+  background-color: var(--x-fill-color, #f5f5f5);
   cursor: not-allowed;
   opacity: 0.6;
 }
@@ -221,7 +221,7 @@ defineExpose({
 }
 
 .x-input--error:focus {
-  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1);
+  box-shadow: var(--x-shadow-focus-danger, 0 0 0 3px rgba(239, 68, 68, 0.1));
 }
 
 .x-input--clearable {
@@ -235,10 +235,10 @@ defineExpose({
   transform: translateY(-50%);
   padding: 0 0.4em;
   font-size: var(--x-font-size-sm, 14px);
-  color: var(--x-color-gray-500, rgb(100, 100, 100));
-  background-color: white;
+  color: var(--x-text-color-secondary, rgb(100, 100, 100));
+  background-color: var(--x-bg-color, white);
   pointer-events: none;
-  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: all var(--x-transition-fast, 0.25s cubic-bezier(0.4, 0, 0.2, 1));
   transform-origin: left center;
   white-space: nowrap;
   z-index: 1;
@@ -260,7 +260,7 @@ defineExpose({
 
 /* 禁用状态的 label */
 .x-input--disabled ~ .x-input-label {
-  color: var(--x-color-gray-400, #aaa);
+  color: var(--x-text-color-disabled, #aaa);
   opacity: 0.6;
 }
 
@@ -273,14 +273,14 @@ defineExpose({
   border: none;
   cursor: pointer;
   padding: 0.2em;
-  color: var(--x-color-gray-400, #aaa);
-  transition: color 0.2s;
+  color: var(--x-text-color-placeholder, #aaa);
+  transition: color var(--x-transition-fast, 0.2s);
   font-size: 1.2em;
   line-height: 1;
 }
 
 .x-input-clear:hover {
-  color: var(--x-color-gray-600, #666);
+  color: var(--x-text-color-regular, #666);
 }
 
 .x-input-count {
@@ -288,6 +288,6 @@ defineExpose({
   right: 0.8em;
   bottom: -1.5em;
   font-size: var(--x-font-size-xs, 12px);
-  color: var(--x-color-gray-500, #888);
+  color: var(--x-text-color-secondary, #888);
 }
 </style>

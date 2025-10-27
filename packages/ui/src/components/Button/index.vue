@@ -188,13 +188,13 @@ function handleMouseDown(event: MouseEvent) {
 
 .x-btn:active:not(.x-btn-disabled):not(.x-btn-loading) {
   transform: translateY(1px);
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  box-shadow: var(--x-shadow-sm, 0 2px 4px rgba(0, 0, 0, 0.1));
 }
 
 /* 波纹效果 */
 .x-btn-ripple {
   position: absolute;
-  border-radius: 50%;
+  border-radius: var(--x-radius-full, 50%);
   background-color: rgba(255, 255, 255, 0.4);
   width: 0;
   height: 0;
@@ -295,8 +295,8 @@ function handleMouseDown(event: MouseEvent) {
 }
 
 .x-btn-success:hover:not(.x-btn-disabled):not(.x-btn-loading) {
-  background: linear-gradient(135deg, var(--x-color-success-light, #34d399) 0%, var(--x-color-success, #10b981) 100%);
-  box-shadow: 0 6px 16px rgba(16, 185, 129, 0.4);
+  background: var(--x-gradient-success-hover, linear-gradient(135deg, var(--x-color-success-light, #34d399) 0%, var(--x-color-success, #10b981) 100%));
+  box-shadow: var(--x-shadow-success-lg, 0 6px 16px rgba(16, 185, 129, 0.4));
   transform: translateY(-2px);
 }
 
@@ -309,8 +309,8 @@ function handleMouseDown(event: MouseEvent) {
 }
 
 .x-btn-warning:hover:not(.x-btn-disabled):not(.x-btn-loading) {
-  background: linear-gradient(135deg, var(--x-color-warning-light, #fbbf24) 0%, var(--x-color-warning, #f59e0b) 100%);
-  box-shadow: 0 6px 16px rgba(245, 158, 11, 0.4);
+  background: var(--x-gradient-warning-hover, linear-gradient(135deg, var(--x-color-warning-light, #fbbf24) 0%, var(--x-color-warning, #f59e0b) 100%));
+  box-shadow: var(--x-shadow-warning-lg, 0 6px 16px rgba(245, 158, 11, 0.4));
   transform: translateY(-2px);
 }
 
@@ -323,8 +323,8 @@ function handleMouseDown(event: MouseEvent) {
 }
 
 .x-btn-danger:hover:not(.x-btn-disabled):not(.x-btn-loading) {
-  background: linear-gradient(135deg, var(--x-color-danger-light, #f87171) 0%, var(--x-color-danger, #ef4444) 100%);
-  box-shadow: 0 6px 16px rgba(239, 68, 68, 0.4);
+  background: var(--x-gradient-danger-hover, linear-gradient(135deg, var(--x-color-danger-light, #f87171) 0%, var(--x-color-danger, #ef4444) 100%));
+  box-shadow: var(--x-shadow-danger-lg, 0 6px 16px rgba(239, 68, 68, 0.4));
   transform: translateY(-2px);
 }
 
@@ -371,8 +371,8 @@ function handleMouseDown(event: MouseEvent) {
 }
 
 .x-btn-ghost.x-btn-default:hover:not(.x-btn-disabled):not(.x-btn-loading) {
-  background-color: rgba(26, 26, 26, 0.05);
-  background: rgba(26, 26, 26, 0.05);
+  background-color: var(--x-fill-color-lighter, rgba(26, 26, 26, 0.05));
+  background: var(--x-fill-color-lighter, rgba(26, 26, 26, 0.05));
   border-color: var(--x-color-gray-400, #a0a0a0);
 }
 
@@ -385,8 +385,8 @@ function handleMouseDown(event: MouseEvent) {
 }
 
 .x-btn-ghost.x-btn-primary:hover:not(.x-btn-disabled):not(.x-btn-loading) {
-  background-color: rgba(26, 26, 26, 0.1);
-  background: rgba(26, 26, 26, 0.1);
+  background-color: var(--x-fill-color-dark, rgba(26, 26, 26, 0.1));
+  background: var(--x-fill-color-dark, rgba(26, 26, 26, 0.1));
   border-color: var(--x-color-primary, #1a1a1a);
   box-shadow: none;
 }
@@ -400,8 +400,8 @@ function handleMouseDown(event: MouseEvent) {
 }
 
 .x-btn-ghost.x-btn-success:hover:not(.x-btn-disabled):not(.x-btn-loading) {
-  background-color: rgba(16, 185, 129, 0.1);
-  background: rgba(16, 185, 129, 0.1);
+  background-color: var(--x-fill-color-success-light, rgba(16, 185, 129, 0.1));
+  background: var(--x-fill-color-success-light, rgba(16, 185, 129, 0.1));
   border-color: var(--x-color-success, #10b981);
   box-shadow: none;
 }
@@ -415,8 +415,8 @@ function handleMouseDown(event: MouseEvent) {
 }
 
 .x-btn-ghost.x-btn-warning:hover:not(.x-btn-disabled):not(.x-btn-loading) {
-  background-color: rgba(245, 158, 11, 0.1);
-  background: rgba(245, 158, 11, 0.1);
+  background-color: var(--x-fill-color-warning-light, rgba(245, 158, 11, 0.1));
+  background: var(--x-fill-color-warning-light, rgba(245, 158, 11, 0.1));
   border-color: var(--x-color-warning, #f59e0b);
   box-shadow: none;
 }
@@ -430,44 +430,44 @@ function handleMouseDown(event: MouseEvent) {
 }
 
 .x-btn-ghost.x-btn-danger:hover:not(.x-btn-disabled):not(.x-btn-loading) {
-  background-color: rgba(239, 68, 68, 0.1);
-  background: rgba(239, 68, 68, 0.1);
+  background-color: var(--x-fill-color-danger-light, rgba(239, 68, 68, 0.1));
+  background: var(--x-fill-color-danger-light, rgba(239, 68, 68, 0.1));
   border-color: var(--x-color-danger, #ef4444);
   box-shadow: none;
 }
 
 /* 幽灵按钮波纹效果调整 */
 .x-btn-ghost .x-btn-ripple {
-  background-color: rgba(0, 0, 0, 0.08);
+  background-color: var(--x-ripple-color, rgba(0, 0, 0, 0.08));
 }
 
 .x-btn-ghost.x-btn-primary .x-btn-ripple {
-  background-color: rgba(255, 107, 53, 0.15);
+  background-color: var(--x-ripple-color-primary, rgba(26, 26, 26, 0.15));
 }
 
 .x-btn-ghost.x-btn-success .x-btn-ripple {
-  background-color: rgba(16, 185, 129, 0.15);
+  background-color: var(--x-ripple-color-success, rgba(16, 185, 129, 0.15));
 }
 
 .x-btn-ghost.x-btn-warning .x-btn-ripple {
-  background-color: rgba(245, 158, 11, 0.15);
+  background-color: var(--x-ripple-color-warning, rgba(245, 158, 11, 0.15));
 }
 
 .x-btn-ghost.x-btn-danger .x-btn-ripple {
-  background-color: rgba(239, 68, 68, 0.15);
+  background-color: var(--x-ripple-color-danger, rgba(239, 68, 68, 0.15));
 }
 
 /* 圆角按钮 */
 .x-btn-round.x-btn-small {
-  border-radius: 14px;
+  border-radius: var(--x-radius-full, 14px);
 }
 
 .x-btn-round.x-btn-medium {
-  border-radius: 18px;
+  border-radius: var(--x-radius-full, 18px);
 }
 
 .x-btn-round.x-btn-large {
-  border-radius: 22px;
+  border-radius: var(--x-radius-full, 22px);
 }
 
 /* 块级按钮 */

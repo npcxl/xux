@@ -1,0 +1,35 @@
+/**
+ * Z-Index 层级管理
+ * 统一管理所有组件的层级关系
+ */
+
+:root {
+  /* 基础层级 */
+  --z-index-base: 1;
+  --z-index-normal: 10;
+  --z-index-high: 100;
+  
+  /* 弹出层层级 */
+  --z-index-dropdown: 1050;
+  --z-index-popup: 1050;
+  --z-index-tooltip: 1050;
+  --z-index-popconfirm: 1050;
+  
+  /* 遮罩层 */
+  --z-index-mask: 1040;
+  
+  /* 模态框层级 */
+  --z-index-modal: 1060;
+  --z-index-drawer: 1060;
+  
+  /* 通知消息层级 */
+  --z-index-message: 2000;
+  --z-index-notification: 2000;
+  --z-index-loading: 2010;
+}
+
+/* 暗色模式保持一致 */
+.dark {
+  /* 层级在暗色模式下保持不变 */
+}
+

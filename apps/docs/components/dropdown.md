@@ -10,7 +10,7 @@
 
 ```vue
 <template>
-<div class="h-[200px]">
+<div >
   <XDropdown>
     <XButton>悬停显示菜单</XButton>
     <template #dropdown>
@@ -56,7 +56,7 @@ const handleAction = (action) => {
 
 ```vue
 <template>
-<div class="h-[200px]">
+<div >
   <XDropdown trigger="click">
     <XButton type="primary">点击显示菜单</XButton>
     <template #dropdown>
@@ -177,7 +177,7 @@ const handleAction = (action) => {
 
 ```vue
 <template>
-<div class="h-[200px]"> 
+<div > 
   <div style="display: flex; gap: 16px; flex-wrap: wrap;" >
     <XDropdown :width="300">
       <XButton>固定宽度 300px</XButton>
@@ -227,7 +227,7 @@ const handleAction = (action) => {
 
 ```vue
 <template>
-<div class="h-[200px]">
+<div >
   <XDropdown trigger="click" close-on-click>
     <XButton>点击项后自动关闭</XButton>
     <template #dropdown>

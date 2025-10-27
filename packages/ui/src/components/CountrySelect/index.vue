@@ -1,92 +1,102 @@
 <template>
     <div ref="containerRef" class="country-select-container">
-      <div 
-        @click="toggleDropdown"
-        :class="[
-          'country-select-input',
-          customClass,
-          { 'is-disabled': disabled },
-          { 'is-multiple': multiple }
-        ]"
-        :tabindex="disabled ? -1 : 0"
-        @keydown.enter="toggleDropdown"
-        @keydown.space="toggleDropdown"
-        @keydown.escape="closeDropdown"
+      <ElPopover
+        v-model:visible="isOpen"
+        placement="bottom-start"
+        trigger="click"
+        :disabled="disabled"
+        :width="dropdownWidth"
+        :offset="8"
+        :show-arrow="false"
+        :teleported="true"
+        popper-class="x-country-select-popper"
       >
-        <!-- 单选模式 -->
-        <div v-if="!multiple" class="country-select-single">
-          <div class="country-select-content">
-          <img 
-            v-if="selectedCountry"
-            :src="selectedCountry.flagSvg"
-            :alt="selectedCountry.name"
-              class="country-flag"
-            @error="handleFlagError"
-          />
-            <span :class="{ 'is-placeholder': !selectedCountry && placeholder }">
-            {{ selectedCountry ? selectedCountry.name : (placeholder || '选择国家') }}
-          </span>
-        </div>
-        <svg 
-            class="country-select-arrow"
-            :class="{ 'is-open': isOpen }"
-          fill="none" 
-          stroke="currentColor" 
-          viewBox="0 0 24 24"
-        >
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
-        </svg>
-        </div>
-
-        <!-- 多选模式 -->
-        <div v-else class="country-select-multiple">
-          <div class="country-select-tags">
-            <template v-if="selectedCountries.length > 0">
-              <div 
-                v-for="country in selectedCountries" 
-                :key="country.code"
-                class="country-tag"
-                @click.stop
-              >
-                <img 
-                  :src="country.flagSvg"
-                  :alt="country.name"
-                  class="country-tag-flag"
-                  @error="(e) => handleFlagError(e, country)"
-                />
-                <span>{{ country.name }}</span>
-                <svg 
-                  @click="removeCountry(country)"
-                  class="country-tag-close"
-                  fill="none" 
-                  stroke="currentColor" 
-                  viewBox="0 0 24 24"
-                >
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
-                </svg>
-              </div>
-            </template>
-            <span v-else class="country-select-placeholder">
-              {{ placeholder || '选择国家' }}
-            </span>
-          </div>
-          <svg 
-            class="country-select-arrow"
-            :class="{ 'is-open': isOpen }"
-            fill="none" 
-            stroke="currentColor" 
-            viewBox="0 0 24 24"
+        <template #reference>
+          <div 
+            :class="[
+              'country-select-input',
+              customClass,
+              { 'is-disabled': disabled },
+              { 'is-multiple': multiple }
+            ]"
+            :tabindex="disabled ? -1 : 0"
+            @keydown.enter="toggleDropdown"
+            @keydown.space="toggleDropdown"
+            @keydown.escape="closeDropdown"
           >
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
-          </svg>
-        </div>
-      </div>
-  
-      <!-- Dropdown -->
-      <div 
-        v-if="isOpen && !disabled"
-        class="country-select-dropdown"
-      >
+            <!-- 单选模式 -->
+            <div v-if="!multiple" class="country-select-single">
+              <div class="country-select-content">
+                <img 
+                  v-if="selectedCountry"
+                  :src="selectedCountry.flagSvg"
+                  :alt="selectedCountry.name"
+                  class="country-flag"
+                  @error="handleFlagError"
+                />
+                <span :class="{ 'is-placeholder': !selectedCountry && placeholder }">
+                  {{ selectedCountry ? selectedCountry.name : (placeholder || '选择国家') }}
+                </span>
+              </div>
+              <svg 
+                class="country-select-arrow"
+                :class="{ 'is-open': isOpen }"
+                fill="none" 
+                stroke="currentColor" 
+                viewBox="0 0 24 24"
+              >
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+              </svg>
+            </div>
+
+            <!-- 多选模式 -->
+            <div v-else class="country-select-multiple">
+              <div class="country-select-tags">
+                <template v-if="selectedCountries.length > 0">
+                  <div 
+                    v-for="country in selectedCountries" 
+                    :key="country.code"
+                    class="country-tag"
+                    @click.stop
+                  >
+                    <img 
+                      :src="country.flagSvg"
+                      :alt="country.name"
+                      class="country-tag-flag"
+                      @error="(e) => handleFlagError(e, country)"
+                    />
+                    <span>{{ country.name }}</span>
+                    <svg 
+                      @click="removeCountry(country)"
+                      class="country-tag-close"
+                      fill="none" 
+                      stroke="currentColor" 
+                      viewBox="0 0 24 24"
+                    >
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                    </svg>
+                  </div>
+                </template>
+                <span v-else class="country-select-placeholder">
+                  {{ placeholder || '选择国家' }}
+                </span>
+              </div>
+              <svg 
+                class="country-select-arrow"
+                :class="{ 'is-open': isOpen }"
+                fill="none" 
+                stroke="currentColor" 
+                viewBox="0 0 24 24"
+              >
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+              </svg>
+            </div>
+          </div>
+        </template>
+
+        <template #default>
+          <!-- Dropdown -->
+          <div class="country-select-dropdown">
         <!-- 搜索框 -->
         <div class="country-select-search">
           <svg class="country-search-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -178,15 +188,11 @@
             <div class="country-empty-text">未找到匹配的国家</div>
           </div>
         </div>
-      </div>
-  
-      <!-- Backdrop -->
-      <div 
-        v-if="isOpen && !disabled"
-        class="country-select-backdrop"
-        @click="closeDropdown"
-      ></div>
+          </div>
+        </template>
+      </ElPopover>
     </div>
+  
   </template>
   
   <script setup lang="ts">
@@ -195,7 +201,8 @@
    * @displayName XCountrySelect
    */
   import countriesData from './data/countries.json'
-  import { ref, computed, onMounted, onUnmounted, nextTick, readonly } from 'vue'
+  import { ref, computed, onMounted, nextTick, readonly } from 'vue'
+  import { ElPopover } from 'element-plus'
   
   export interface Country {
     name: string
@@ -246,6 +253,12 @@
   
   // 下拉框状态
   const isOpen = ref(false)
+  
+  // 计算下拉框宽度
+  const dropdownWidth = computed(() => {
+    if (!containerRef.value) return 250
+    return containerRef.value.offsetWidth || 250
+  })
   
   // 搜索关键词
   const searchKeyword = ref('')
@@ -503,19 +516,6 @@
     if (props.autoDetectFromIp && !props.modelValue) {
       await detectCountryFromIp()
     }
-    
-    // 设置点击外部关闭下拉框
-    const handleClickOutside = (event: Event) => {
-      if (containerRef.value && !containerRef.value.contains(event.target as Node)) {
-        closeDropdown()
-      }
-    }
-    
-    document.addEventListener('click', handleClickOutside)
-    
-    onUnmounted(() => {
-      document.removeEventListener('click', handleClickOutside)
-    })
   })
   
   // 暴露方法给父组件
@@ -539,17 +539,17 @@
   .country-select-input {
     width: 100%;
     padding: 8px 12px;
-    border: 1px solid #d1d5db;
+    border: 1px solid var(--x-border-color, #d1d5db);
     border-radius: 6px;
-    background-color: #fff;
+    background-color: var(--x-bg-color, #fff);
     cursor: pointer;
     transition: all 0.2s;
     outline: none;
   }
   
   .country-select-input:focus {
-    border-color: #1a1a1a;
-    box-shadow: 0 0 0 2px rgba(26, 26, 26, 0.1);
+    border-color: var(--x-color-primary, #1a1a1a);
+    box-shadow: 0 0 0 2px var(--x-shadow-focus, rgba(26, 26, 26, 0.1));
   }
   
   .country-select-input.is-disabled {
@@ -633,13 +633,13 @@
   }
   
   .country-tag-close:hover {
-    background-color: rgba(0, 0, 0, 0.05);
+    background-color: var(--x-fill-color-dark, rgba(0, 0, 0, 0.05));
   }
   
   /* 占位符 */
   .country-select-placeholder,
   .is-placeholder {
-    color: #9ca3af;
+    color: var(--x-text-color-placeholder, #9ca3af);
     align-self: center;
   }
   
@@ -647,7 +647,7 @@
   .country-select-arrow {
     width: 20px;
     height: 20px;
-    color: #9ca3af;
+    color: var(--x-text-color-placeholder, #9ca3af);
     flex-shrink: 0;
     transition: transform 0.2s;
   }
@@ -671,16 +671,10 @@
   
   /* 下拉菜单 */
   .country-select-dropdown {
-    position: absolute;
-    z-index: 9999;
     width: max-content;
-    min-width: 100%;
+    min-width: 250px;
     max-width: 320px;
-    margin-top: 4px;
-    background-color: #fff;
-    border: 1px solid #d1d5db;
-    border-radius: 6px;
-    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    background-color: var(--x-bg-color, #fff);
     overflow: hidden;
   }
   
@@ -688,7 +682,7 @@
   .country-select-search {
     position: relative;
     padding: 8px 12px;
-    border-bottom: 1px solid #e5e7eb;
+    border-bottom: 1px solid var(--x-border-color, #e5e7eb);
     display: flex;
     align-items: center;
     gap: 8px;
@@ -697,7 +691,7 @@
   .country-search-icon {
     width: 16px;
     height: 16px;
-    color: #9ca3af;
+    color: var(--x-text-color-placeholder, #9ca3af);
     flex-shrink: 0;
   }
   
@@ -708,31 +702,31 @@
     font-size: 14px;
     padding: 0;
     background: transparent;
-    color: #374151;
+    color: var(--x-text-color-regular, #374151);
   }
   
   .country-search-input::placeholder {
-    color: #9ca3af;
+    color: var(--x-text-color-placeholder, #9ca3af);
   }
   
   .country-search-clear {
     width: 16px;
     height: 16px;
-    color: #9ca3af;
+    color: var(--x-text-color-placeholder, #9ca3af);
     cursor: pointer;
     flex-shrink: 0;
     transition: color 0.2s;
   }
   
   .country-search-clear:hover {
-    color: #6b7280;
+    color: var(--x-text-color-secondary, #6b7280);
   }
   
   /* 工具栏 */
   .country-select-toolbar {
     padding: 8px 12px;
-    background-color: #f9fafb;
-    border-bottom: 1px solid #e5e7eb;
+    background-color: var(--x-fill-color, #f9fafb);
+    border-bottom: 1px solid var(--x-border-color, #e5e7eb);
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -740,12 +734,12 @@
   
   .country-select-count {
     font-size: 12px;
-    color: #6b7280;
+    color: var(--x-text-color-secondary, #6b7280);
   }
   
   .country-select-clear {
     font-size: 12px;
-    color: #ef4444;
+    color: var(--x-color-danger, #ef4444);
     background: none;
     border: none;
     cursor: pointer;
@@ -754,7 +748,7 @@
   }
   
   .country-select-clear:hover {
-    color: #dc2626;
+    color: var(--x-color-danger-dark, #dc2626);
   }
   
   /* 国家列表 */
@@ -773,11 +767,11 @@
   }
   
   .country-select-item:hover {
-    background-color: #f9fafb;
+    background-color: var(--x-fill-color, #f9fafb);
   }
   
   .country-select-item.is-selected {
-    background-color: #eff6ff;
+    background-color: var(--x-region-selected-bg, #eff6ff);
   }
   
   .country-select-item.is-disabled {
@@ -813,17 +807,17 @@
   }
   
   .country-checkbox.is-checked {
-    border-color: #1a1a1a;
+    border-color: var(--x-color-primary, #1a1a1a);
     background-color: transparent;
   }
   
   .country-checkbox:not(.is-checked) {
-    border-color: #d1d5db;
-    background-color: #fff;
+    border-color: var(--x-border-color, #d1d5db);
+    background-color: var(--x-bg-color, #fff);
   }
   
   .country-checkbox-icon {
-    color: #1a1a1a;
+    color: var(--x-color-primary, #1a1a1a);
     font-size: 12px;
     font-weight: bold;
   }
@@ -842,18 +836,36 @@
     align-items: center;
     justify-content: center;
     padding: 32px 16px;
-    color: #9ca3af;
+    color: var(--x-text-color-placeholder, #9ca3af);
   }
   
   .country-empty-icon {
     width: 48px;
     height: 48px;
     margin-bottom: 12px;
-    color: #d1d5db;
+    color: var(--x-border-color, #d1d5db);
   }
   
   .country-empty-text {
     font-size: 14px;
-    color: #6b7280;
+    color: var(--x-text-color-secondary, #6b7280);
+  }
+
+  /* 过渡动画 */
+  .country-select-dropdown-enter-active,
+  .country-select-dropdown-leave-active {
+    transition: opacity 0.2s ease, transform 0.2s ease;
+  }
+
+  .country-select-dropdown-enter-from,
+  .country-select-dropdown-leave-to {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+
+  .country-select-dropdown-enter-to,
+  .country-select-dropdown-leave-from {
+    opacity: 1;
+    transform: translateY(0);
   }
   </style> 

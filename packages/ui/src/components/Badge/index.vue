@@ -8,7 +8,6 @@
                 'x-badge__content--dot': dot,
                 'x-badge__content--number': !dot
             }"
-            :style="badgeStyle"
         >
             <span v-if="!dot" class="x-badge__text">{{ displayValue }}</span>
         </div>
@@ -25,7 +24,6 @@ const props = withDefaults(defineProps<Props>(), {
     value: 0,
     max: 99,
     dot: false,
-    color: '#ff4d4f',
     hidden: false,
 })
 
@@ -43,12 +41,6 @@ const displayValue = computed(() => {
     }
     return num.toString()
 })
-
-const badgeStyle = computed(() => {
-    return {
-        backgroundColor: props.color
-    }
-})
 </script>
 
 <style  scoped>
@@ -62,19 +54,20 @@ const badgeStyle = computed(() => {
     top: 0;
     right: 0;
     transform: translate(50%, -50%);
-    border-radius: 10px;
+    border-radius: var(--x-radius-full, 10px);
     min-width: 18px;
     height: 18px;
     padding: 0 6px;
-    font-size: 12px;
+    font-size: var(--x-font-size-xs, 12px);
     font-weight: 500;
     line-height: 18px;
-    color: #fff;
+    color: var(--x-color-white, #fff);
+    background-color: var(--x-badge-bg, var(--x-color-danger, #ff4d4f));
     text-align: center;
     white-space: nowrap;
     box-sizing: border-box;
     z-index: 1;
-    transition: all 0.3s ease;
+    transition: all var(--x-transition, 0.3s ease);
 }
 
 .x-badge__content--dot {
@@ -82,17 +75,17 @@ const badgeStyle = computed(() => {
     height: 8px;
     min-width: 8px;
     padding: 0;
-    border-radius: 50%;
+    border-radius: var(--x-radius-full, 50%);
     transform: translate(50%, -50%);
 }
 
 .x-badge__content--number {
-    border-radius: 10px;
+    border-radius: var(--x-radius-full, 10px);
 }
 
 .x-badge__text {
     display: inline-block;
-    font-size: 12px;
+    font-size: var(--x-font-size-xs, 12px);
     line-height: 1;
 }
 

@@ -60,8 +60,8 @@ withDefaults(defineProps<TooltipsProps>(), {
 
 .x-tooltip {
   position: absolute;
-  background-color: #1a1a1a;
-  color: #ffffff;
+  background-color: var(--x-color-primary, #1a1a1a);
+  color: var(--x-text-color-white, #ffffff);
   padding: 8px 12px;
   border-radius: 6px;
   font-size: 14px;
@@ -70,7 +70,7 @@ withDefaults(defineProps<TooltipsProps>(), {
   visibility: hidden;
   transition: opacity 0.3s ease, visibility 0.3s ease, transform 0.3s ease;
   z-index: 1000;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  box-shadow: var(--x-shadow-md, 0 4px 12px rgba(0, 0, 0, 0.15));
   pointer-events: none;
 }
 
@@ -78,7 +78,7 @@ withDefaults(defineProps<TooltipsProps>(), {
   position: absolute;
   width: 8px;
   height: 8px;
-  background-color: #1a1a1a;
+  background-color: var(--x-color-primary, #1a1a1a);
   transform: rotate(45deg);
 }
 
@@ -165,15 +165,15 @@ withDefaults(defineProps<TooltipsProps>(), {
 /* ===== 丰富版本样式 (基于 CSS Buttons) ===== */
 .x-tooltip-rich-wrapper {
   --background: #1a1a1a;
-  --color: #ffffff;
-  --border-color: #333333;
+  --color: var(--x-text-color-white, #ffffff);
+  --border-color: var(--x-border-color, #333333);
   position: relative;
   cursor: pointer;
   transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
   font-size: 18px;
   font-weight: 600;
-  color: #333333;
-  background-color: #ffffff;
+  color: var(--x-text-color-regular, #333333);
+  background-color: var(--x-bg-color, #ffffff);
   padding: 0.7em 1.8em;
   border-radius: 8px;
   text-transform: uppercase;
@@ -182,7 +182,7 @@ withDefaults(defineProps<TooltipsProps>(), {
   display: grid;
   place-items: center;
   border: 2px solid var(--border-color);
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  box-shadow: var(--x-shadow-sm, 0 2px 4px rgba(0, 0, 0, 0.1));
 }
 
 .tooltip-text {
@@ -197,7 +197,7 @@ withDefaults(defineProps<TooltipsProps>(), {
   transform: scale(1);
   transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
   z-index: 2;
-  color: #333333;
+  color: var(--x-text-color-regular, #333333);
 }
 
 .x-tooltip-rich-wrapper .tooltip-hover-text {
@@ -232,7 +232,7 @@ withDefaults(defineProps<TooltipsProps>(), {
   text-transform: capitalize;
   font-weight: 400;
   font-size: 16px;
-  box-shadow: rgba(0, 0, 0, 0.25) 0 8px 15px;
+  box-shadow: var(--x-shadow-lg, rgba(0, 0, 0, 0.25) 0 8px 15px);
 }
 
 .tooltip-label::before {
@@ -337,8 +337,8 @@ withDefaults(defineProps<TooltipsProps>(), {
 
 /* 丰富版本 - 悬停效果 */
 .x-tooltip-rich-wrapper:hover {
-  box-shadow: rgba(0, 0, 0, 0.25) 0 8px 15px;
-  color: white;
+  box-shadow: var(--x-shadow-lg, rgba(0, 0, 0, 0.25) 0 8px 15px);
+  color: var(--x-text-color-white, #ffffff);
   border-color: transparent;
 }
 

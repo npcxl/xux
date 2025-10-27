@@ -190,8 +190,8 @@ defineExpose({
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: rgba(0, 0, 0, 0.5);
-  z-index: 9998;
+  background-color: var(--x-modal-mask-bg, rgba(0, 0, 0, 0.5));
+  z-index: 99;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -200,7 +200,7 @@ defineExpose({
 
 .modal-container {
   position: relative;
-  background-color: white;
+  background-color: var(--x-bg-color, white);
   border-radius: var(--x-radius-lg, 12px);
   box-shadow: var(--x-shadow-xl, 0 20px 25px rgba(0, 0, 0, 0.15));
   max-width: 100%;
@@ -296,7 +296,7 @@ defineExpose({
 }
 
 .modal-btn--cancel {
-  background-color: white;
+  background-color: var(--x-bg-color, white);
   border-color: var(--x-color-gray-300, #d1d5db);
   color: var(--x-color-gray-700, #374151);
 }
@@ -325,7 +325,7 @@ defineExpose({
   width: 16px;
   height: 16px;
   border: 2px solid rgba(255, 255, 255, 0.3);
-  border-top-color: white;
+  border-top-color: var(--x-color-white, white);
   border-radius: 50%;
   animation: spin 0.6s linear infinite;
 }

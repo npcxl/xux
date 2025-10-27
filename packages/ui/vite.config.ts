@@ -13,8 +13,7 @@ export default defineConfig({
       rollupTypes: false,
       copyDtsFiles: false,
       cleanVueFileName: true,
-      staticImport: true,
-      skipDiagnostics: false
+      staticImport: true
     })
   ],
   worker: {
@@ -49,9 +48,19 @@ export default defineConfig({
         },
         assetFileNames: (assetInfo) => {
           if (assetInfo.name === 'style.css') return 'index.css'
+          // 保持 Worker 文件的原始名称
+          if (assetInfo.name?.includes('worker')) {
+            return assetInfo.name
+          }
           return assetInfo.name || ''
         },
-        chunkFileNames: 'assets/[name]-[hash].js',
+        chunkFileNames: (chunkInfo) => {
+          // 保持 Worker 文件的原始名称
+          if (chunkInfo.name?.includes('worker')) {
+            return chunkInfo.name + '.js'
+          }
+          return 'assets/[name]-[hash].js'
+        },
         exports: 'named',
         preserveModules: false
       }

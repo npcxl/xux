@@ -44,7 +44,9 @@
               { 'x-table-cell-fixed-left': col.fixed === 'left' },
               { 'x-table-cell-fixed-right': col.fixed === 'right' },
               { 'x-table-sortable': col.sortable },
-              { 'x-table-sorted': sortState.column?.key === col.key }
+              { 'x-table-sorted': sortState.column?.key === col.key },
+              { 'x-table-cell-has-width': !!col.width },
+              { 'x-table-cell-auto-width': !col.width }
             ]"
             :style="getCellStyle(col)"
             :title="col.tooltip"
@@ -122,7 +124,9 @@
               col.cellClass,
               `x-table-align-${col.align || 'left'}`,
               { 'x-table-cell-fixed-left': col.fixed === 'left' },
-              { 'x-table-cell-fixed-right': col.fixed === 'right' }
+              { 'x-table-cell-fixed-right': col.fixed === 'right' },
+              { 'x-table-cell-has-width': !!col.width },
+              { 'x-table-cell-auto-width': !col.width }
             ]"
             :style="getCellStyle(col)"
           >
@@ -388,10 +392,11 @@ const getCellStyle = (col: Column) => {
     style.width = col.width
     style.minWidth = col.width
     style.maxWidth = col.width
-  } else {
-    // 无固定宽度 - 自适应内容，但设置最小宽度
-    style.minWidth = col.minWidth || '100px'
+  } else if (col.minWidth) {
+    // 只设置了最小宽度的情况
+    style.minWidth = col.minWidth
   }
+  // 没有设置宽度的列会通过CSS的flex: 1自动平分空间
   
   // 处理固定列位置
   if (col.fixed === 'left') {

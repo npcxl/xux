@@ -165,7 +165,7 @@ const visible = ref(false)
 
 <script setup>
 import { ref } from 'vue'
-import { xlMsg } from '@xux/ui'
+import { xlMsg } from '@xlui/xux-ui'
 
 const visible = ref(false)
 const msg = xlMsg()
@@ -213,7 +213,7 @@ const handleCancel = () => {
 
 <script setup>
 import { ref } from 'vue'
-import { xlMsg } from '@xux/ui'
+import { xlMsg } from '@xlui/xux-ui'
 
 const visible = ref(false)
 const loading = ref(false)
@@ -353,7 +353,7 @@ const visibleContentOnly = ref(false)
 
 <script setup>
 import { ref } from 'vue'
-import { xlMsg } from '@xux/ui'
+import { xlMsg } from '@xlui/xux-ui'
 
 const visible = ref(false)
 const msg = xlMsg()

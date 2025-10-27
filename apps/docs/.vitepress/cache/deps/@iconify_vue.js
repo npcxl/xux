@@ -1,10 +1,10 @@
 import {
   defineComponent,
   h
-} from "./chunk-UXY5XHNK.js";
-import "./chunk-BUSYA2B4.js";
+} from "./chunk-7KXN4PTE.js";
+import "./chunk-5WRI5ZAA.js";
 
-// ../../packages/ui/node_modules/@iconify/vue/dist/iconify.mjs
+// ../../node_modules/.pnpm/@iconify+vue@4.3.0_vue@3.5.22_typescript@5.9.3_/node_modules/@iconify/vue/dist/iconify.mjs
 var matchIconName = /^[a-z0-9]+(-[a-z0-9]+)*$/;
 var stringToIcon = (value, validate, allowSimpleName, provider = "") => {
   const colonSeparated = value.split(":");

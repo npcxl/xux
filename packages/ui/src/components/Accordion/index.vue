@@ -221,8 +221,8 @@ defineExpose({
 }
 
 .accordion-item {
-  border-bottom: 1px solid var(--x-color-gray-100, #f1f5f9);
-  background: white;
+  border-bottom: 1px solid var(--x-border-color-light, #f1f5f9);
+  background: var(--x-bg-color, white);
   transition: all var(--x-transition, 0.2s ease);
 }
 
@@ -231,11 +231,11 @@ defineExpose({
 }
 
 .accordion-item:hover:not(.is-disabled) {
-  background: var(--x-color-gray-50, #fafbfc);
+  background: var(--x-fill-color-light, #fafbfc);
 }
 
 .accordion-item.is-open {
-  background: rgba(26, 26, 26, 0.02);
+  background: var(--x-fill-color-lighter, rgba(26, 26, 26, 0.02));
 }
 
 .accordion-item.is-disabled {
@@ -254,9 +254,9 @@ defineExpose({
   background: transparent;
   cursor: pointer;
   transition: all var(--x-transition, 0.2s ease);
-  font-size: var(--x-font-size-base, 15px);
+  font-size: var(--x-font-size, 15px);
   font-weight: 500;
-  color: var(--x-color-gray-900, #1e293b);
+  color: var(--x-text-color-primary, #1e293b);
   outline: none;
   user-select: none;
 }
@@ -282,27 +282,27 @@ defineExpose({
   justify-content: center;
   width: 32px;
   height: 32px;
-  border-radius: 50%;
-  background: var(--x-color-gray-100, #f1f5f9);
+  border-radius: var(--x-radius-full, 50%);
+  background: var(--x-fill-color, #f1f5f9);
   transition: all var(--x-transition, 0.3s ease);
-  color: var(--x-color-gray-500, #64748b);
+  color: var(--x-text-color-secondary, #64748b);
   flex-shrink: 0;
 }
 
 .accordion-item:hover:not(.is-disabled) .accordion-icon {
-  background: var(--x-color-gray-200, #e2e8f0);
-  color: var(--x-color-gray-600, #475569);
+  background: var(--x-fill-color-dark, #e2e8f0);
+  color: var(--x-text-color-regular, #475569);
 }
 
 .accordion-item.is-open .accordion-icon {
-  background: rgba(26, 26, 26, 0.08);
+  background: var(--x-fill-color-dark, rgba(26, 26, 26, 0.08));
   color: var(--x-color-primary, #1a1a1a);
 }
 
 .accordion-arrow {
   width: 20px;
   height: 20px;
-  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: transform var(--x-transition, 0.3s cubic-bezier(0.4, 0, 0.2, 1));
 }
 
 .accordion-arrow--rotate {
@@ -312,12 +312,12 @@ defineExpose({
 .accordion-content {
   overflow: hidden;
   transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-  background: rgba(26, 26, 26, 0.01);
+  background: var(--x-fill-color-lighter, rgba(26, 26, 26, 0.01));
 }
 
 .accordion-body {
   padding: 0 20px 20px 20px;
-  color: var(--x-color-gray-600, #64748b);
+  color: var(--x-text-color-regular, #64748b);
   line-height: 1.6;
   font-size: var(--x-font-size-sm, 14px);
 }
@@ -326,12 +326,12 @@ defineExpose({
 @media (max-width: 768px) {
     .accordion-header {
         padding: 16px 16px;
-        font-size: 14px;
+        font-size: var(--x-font-size-sm, 14px);
     }
     
     .accordion-body {
         padding: 0 16px 16px 16px;
-        font-size: 13px;
+        font-size: var(--x-font-size-xs, 13px);
     }
     
     .accordion-icon {

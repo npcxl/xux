@@ -144,11 +144,65 @@ const categories = [
 
 const copy = async (icon) => {
   const code = `<XIcon name="${icon}" ${colorful.value ? 'colorful ' : ''}/>`
+  const successCode = code + '\n复制成功，请粘贴到代码中'
   try {
-    await navigator.clipboard.writeText(code)
-    alert.success('✅ 复制成功: ' + code, { duration: 2000 })
-  } catch {
-    alert.warning('请手动复制: ' + code)
+    // 尝试使用现代 API
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      await navigator.clipboard.writeText(code)
+      
+      alert.success(successCode, { duration: 2000 })
+    } else {
+      // 备用方案：创建临时文本框
+      const textarea = document.createElement('textarea')
+      textarea.value = code
+      textarea.style.position = 'fixed'
+      textarea.style.left = '-999px'
+      textarea.style.top = '-999px'
+      document.body.appendChild(textarea)
+      textarea.focus()
+      textarea.select()
+      
+      try {
+        const successful = document.execCommand('copy')
+        if (successful) {
+          alert.success(successCode, { duration: 2000 })
+        } else {
+          throw new Error('复制失败')
+        }
+      } finally {
+        document.body.removeChild(textarea)
+      }
+    }
+  } catch (err) {
+    // 最终备用方案：显示可选择的文本
+    const textarea = document.createElement('textarea')
+    textarea.value = code
+    textarea.style.cssText = `
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      padding: 20px;
+      border: 2px solid #3b82f6;
+      border-radius: 8px;
+      background: white;
+      z-index: 10001;
+      font-family: monospace;
+      font-size: 14px;
+      width: 400px;
+      max-width: 90%;
+    `
+    textarea.readOnly = true
+    document.body.appendChild(textarea)
+    textarea.select()
+    
+    alert.info('请按 Ctrl+C (Mac: Cmd+C) 复制代码', { duration: 3000 })
+    
+    setTimeout(() => {
+      if (textarea.parentNode) {
+        document.body.removeChild(textarea)
+      }
+    }, 3000)
   }
 }
 </script>

@@ -2,6 +2,27 @@
 
 企业级表格组件，提供强大且灵活的数据展示能力。支持固定表头、固定列、排序、行选择等功能，并具备优秀的无障碍支持和性能优化。
 
+## 💡 宽度自适应说明
+
+**表格宽度：** 表格容器默认为 **100% 宽度**，会自动填满父容器。
+
+**列宽度策略：**
+- ✅ **设置了 `width` 的列**：保持固定宽度，不会伸缩
+- ✅ **未设置 `width` 的列**：自动平分剩余空间，实现响应式布局
+- ✅ **混合使用**：固定关键列宽度（如ID、操作列），让内容列自适应
+
+**最佳实践：**
+```javascript
+const columns = [
+  { key: 'id', title: 'ID', dataIndex: 'id', width: '60px' },  // 固定宽度
+  { key: 'name', title: '姓名', dataIndex: 'name', width: '100px' },  // 固定宽度
+  { key: 'description', title: '描述', dataIndex: 'description' },  // 自动铺满
+  { key: 'email', title: '邮箱', dataIndex: 'email' },  // 自动铺满
+  { key: 'action', title: '操作', dataIndex: 'action', width: '120px' }  // 固定宽度
+]
+// 描述和邮箱列会平分剩余空间
+```
+
 ## 💡 设计理念
 
 本表格组件使用 `<div>` 布局而非传统的 `<table>` 标签，这是基于以下考虑：
@@ -40,10 +61,10 @@
 import { ref } from 'vue'
 
 const columns = ref([
-  { key: 'name', title: '姓名', dataIndex: 'name', width: '120px' },
+  { key: 'name', title: '姓名', dataIndex: 'name', width: '100px' },
   { key: 'age', title: '年龄', dataIndex: 'age', width: '80px' },
-  { key: 'address', title: '地址', dataIndex: 'address', width: '200px' },
-  { key: 'email', title: '邮箱', dataIndex: 'email', width: '180px' },
+  { key: 'address', title: '地址', dataIndex: 'address' },  // 不设置宽度，自动铺满
+  { key: 'email', title: '邮箱', dataIndex: 'email' },  // 不设置宽度，自动铺满
   { key: 'phone', title: '电话', dataIndex: 'phone', width: '130px' }
 ])
 
@@ -117,10 +138,10 @@ const handleRowClick = (record, index) => {
 import { ref } from 'vue'
 
 const columns = ref([
-  { key: 'id', title: 'ID', dataIndex: 'id', width: '80px' },
-  { key: 'name', title: '姓名', dataIndex: 'name', width: '120px' },
-  { key: 'department', title: '部门', dataIndex: 'department', width: '150px' },
-  { key: 'position', title: '职位', dataIndex: 'position', width: '150px' },
+  { key: 'id', title: 'ID', dataIndex: 'id', width: '60px' },
+  { key: 'name', title: '姓名', dataIndex: 'name', width: '100px' },
+  { key: 'department', title: '部门', dataIndex: 'department' },  // 自动铺满
+  { key: 'position', title: '职位', dataIndex: 'position' },  // 自动铺满
   { key: 'salary', title: '薪资', dataIndex: 'salary', width: '100px' }
 ])
 
@@ -157,13 +178,13 @@ const longDataSource = ref(
 import { ref } from 'vue'
 
 const fixedLeftColumns = ref([
-  { key: 'name', title: '姓名', dataIndex: 'name', width: '120px', fixed: 'left' },
+  { key: 'name', title: '姓名', dataIndex: 'name', width: '100px', fixed: 'left' },
   { key: 'age', title: '年龄', dataIndex: 'age', width: '80px' },
-  { key: 'address', title: '地址', dataIndex: 'address', width: '250px' },
-  { key: 'company', title: '公司', dataIndex: 'company', width: '200px' },
-  { key: 'email', title: '邮箱', dataIndex: 'email', width: '200px' },
-  { key: 'phone', title: '电话', dataIndex: 'phone', width: '150px' },
-  { key: 'department', title: '部门', dataIndex: 'department', width: '120px' }
+  { key: 'address', title: '地址', dataIndex: 'address' },  // 自动铺满
+  { key: 'company', title: '公司', dataIndex: 'company' },  // 自动铺满
+  { key: 'email', title: '邮箱', dataIndex: 'email' },  // 自动铺满
+  { key: 'phone', title: '电话', dataIndex: 'phone', width: '130px' },
+  { key: 'department', title: '部门', dataIndex: 'department', width: '100px' }
 ])
 
 const dataSource = ref([
@@ -249,13 +270,13 @@ const dataSource = ref([
 import { ref } from 'vue'
 
 const fixedRightColumns = ref([
-  { key: 'name', title: '姓名', dataIndex: 'name', width: '120px' },
+  { key: 'name', title: '姓名', dataIndex: 'name', width: '100px' },
   { key: 'age', title: '年龄', dataIndex: 'age', width: '80px' },
-  { key: 'address', title: '地址', dataIndex: 'address', width: '250px' },
-  { key: 'company', title: '公司', dataIndex: 'company', width: '200px' },
-  { key: 'email', title: '邮箱', dataIndex: 'email', width: '200px' },
-  { key: 'phone', title: '电话', dataIndex: 'phone', width: '150px' },
-  { key: 'action', title: '操作', dataIndex: 'action', width: '150px', fixed: 'right', slot: 'action' }
+  { key: 'address', title: '地址', dataIndex: 'address' },  // 自动铺满
+  { key: 'company', title: '公司', dataIndex: 'company' },  // 自动铺满
+  { key: 'email', title: '邮箱', dataIndex: 'email' },  // 自动铺满
+  { key: 'phone', title: '电话', dataIndex: 'phone', width: '130px' },
+  { key: 'action', title: '操作', dataIndex: 'action', width: '120px', fixed: 'right', slot: 'action' }
 ])
 
 const dataSource = ref([
@@ -341,16 +362,16 @@ const handleDelete = (record) => {
 import { ref } from 'vue'
 
 const fixedBothColumns = ref([
-  { key: 'id', title: 'ID', dataIndex: 'id', width: '80px', fixed: 'left' },
-  { key: 'name', title: '姓名', dataIndex: 'name', width: '120px', fixed: 'left' },
+  { key: 'id', title: 'ID', dataIndex: 'id', width: '60px', fixed: 'left' },
+  { key: 'name', title: '姓名', dataIndex: 'name', width: '100px', fixed: 'left' },
   { key: 'age', title: '年龄', dataIndex: 'age', width: '80px' },
-  { key: 'address', title: '地址', dataIndex: 'address', width: '250px' },
-  { key: 'company', title: '公司', dataIndex: 'company', width: '200px' },
-  { key: 'email', title: '邮箱', dataIndex: 'email', width: '200px' },
-  { key: 'phone', title: '电话', dataIndex: 'phone', width: '150px' },
-  { key: 'department', title: '部门', dataIndex: 'department', width: '120px' },
-  { key: 'status', title: '状态', dataIndex: 'status', width: '100px', fixed: 'right', slot: 'status' },
-  { key: 'action', title: '操作', dataIndex: 'action', width: '150px', fixed: 'right', slot: 'action' }
+  { key: 'address', title: '地址', dataIndex: 'address' },  // 自动铺满
+  { key: 'company', title: '公司', dataIndex: 'company' },  // 自动铺满
+  { key: 'email', title: '邮箱', dataIndex: 'email' },  // 自动铺满
+  { key: 'phone', title: '电话', dataIndex: 'phone', width: '130px' },
+  { key: 'department', title: '部门', dataIndex: 'department', width: '100px' },
+  { key: 'status', title: '状态', dataIndex: 'status', width: '80px', fixed: 'right', slot: 'status' },
+  { key: 'action', title: '操作', dataIndex: 'action', width: '120px', fixed: 'right', slot: 'action' }
 ])
 
 const dataSource = ref(
@@ -406,10 +427,10 @@ import { ref } from 'vue'
 const loading = ref(false)
 
 const columns = ref([
-  { key: 'name', title: '姓名', dataIndex: 'name', width: '120px' },
+  { key: 'name', title: '姓名', dataIndex: 'name', width: '100px' },
   { key: 'age', title: '年龄', dataIndex: 'age', width: '80px' },
-  { key: 'address', title: '地址', dataIndex: 'address', width: '200px' },
-  { key: 'email', title: '邮箱', dataIndex: 'email', width: '180px' }
+  { key: 'address', title: '地址', dataIndex: 'address' },  // 自动铺满
+  { key: 'email', title: '邮箱', dataIndex: 'email' }  // 自动铺满
 ])
 
 const dataSource = ref([
@@ -456,9 +477,9 @@ const toggleLoading = () => {
 import { ref } from 'vue'
 
 const columns = ref([
-  { key: 'name', title: '姓名', dataIndex: 'name', width: '120px' },
+  { key: 'name', title: '姓名', dataIndex: 'name', width: '100px' },
   { key: 'age', title: '年龄', dataIndex: 'age', width: '80px' },
-  { key: 'address', title: '地址', dataIndex: 'address', width: '200px' }
+  { key: 'address', title: '地址', dataIndex: 'address' }  // 自动铺满
 ])
 </script>
 ```
@@ -548,9 +569,9 @@ const columns = ref([
 import { ref } from 'vue'
 
 const columns = ref([
-  { key: 'name', title: '成员', dataIndex: 'name', width: '180px', slot: 'avatar' },
-  { key: 'progress', title: '进度', dataIndex: 'progress', width: '200px', slot: 'progress' },
-  { key: 'tags', title: '标签', dataIndex: 'tags', width: '250px', slot: 'tags' },
+  { key: 'name', title: '成员', dataIndex: 'name', width: '150px', slot: 'avatar' },
+  { key: 'progress', title: '进度', dataIndex: 'progress', slot: 'progress' },  // 自动铺满
+  { key: 'tags', title: '标签', dataIndex: 'tags', slot: 'tags' },  // 自动铺满
   { key: 'status', title: '状态', dataIndex: 'status', width: '100px' }
 ])
 
@@ -1235,8 +1256,8 @@ const handleRefresh = () => {
 | key | 列标识（必填） | `string` | - |
 | title | 列标题（必填） | `string` | - |
 | dataIndex | 数据字段名（必填） | `string` | - |
-| width | 列宽度 | `string` | - |
-| minWidth | 最小列宽 | `string` | `'100px'` |
+| width | 列宽度。**设置后固定宽度不伸缩；不设置则自动平分剩余空间** | `string` | - |
+| minWidth | 最小列宽（仅在未设置width时生效） | `string` | `'100px'` |
 | fixed | 固定列 | `'left' \| 'right'` | - |
 | slot | 自定义插槽名称 | `string` | - |
 | headerClass | 表头自定义类名 | `string` | - |

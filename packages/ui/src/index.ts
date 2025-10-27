@@ -1,5 +1,6 @@
 // 导入主题样式
 import './styles/theme.css'
+import './styles/z-index.css'
 
 // 导出组件
 export { default as XButton } from './components/Button/index.vue'
@@ -48,18 +49,23 @@ export { default as XFlex } from './components/Flex/index.vue'
 export { default as XCarousel } from './components/Carousel/index.vue'
 export { default as XTable } from './components/Table/index.vue'
 export { default as XIcon } from './components/Icon/index.vue'
+export { default as XLoading } from './components/Loading/index.vue'
+export { default as XMenu } from './components/Menu/index.vue'
 // 导出 Composables
 export { xlMsg, default as useMsg } from './composables/Msg'
 export { xlAlert, default as useAlert } from './composables/Alert'
+export { xlLoading, default as useLoading } from './composables/Loading'
 export { useDateTime, useDateRange, useCountdown, default as useDateTimeDefault } from './composables/DateTime'
 
 // 导出便捷 API（预初始化实例）
 import { xlMsg } from './composables/Msg'
 import { xlAlert } from './composables/Alert'
+import { xlLoading } from './composables/Loading'
 import { useDateTime } from './composables/DateTime'
 
 export const Msg = xlMsg()
 export const Alert = xlAlert()
+export const Loading = xlLoading()
 export const DateTime = useDateTime()
 
 // 导出工具函数
@@ -103,6 +109,9 @@ export type { FlexProps } from './components/Flex/index.vue'
 export type { CarouselProps, CarouselItem } from './components/Carousel/index.vue'
 export type { TableProps, Column, TableSize, TableBorder } from './components/Table/index.vue'
 export type { IconProps } from './components/Icon/index.vue'
+export type { LoadingProps } from './components/Loading/index.vue'
+export type { MenuProps, MenuItem } from './components/Menu/index.vue'
+export type { LoadingOptions } from './composables/Loading'
 export type { DateTimeOptions, DateRange, CalendarDate } from './composables/DateTime'
 
 

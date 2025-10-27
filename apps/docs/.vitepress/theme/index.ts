@@ -4,6 +4,9 @@ import '@unocss/reset/tailwind.css'
 import 'uno.css'
 import './custom.css'
 
+// 导入 Element Plus 样式
+import 'element-plus/dist/index.css'
+
 // 导入 demoblock 样式
 import 'vitepress-theme-demoblock/dist/theme/styles/index.css'
 

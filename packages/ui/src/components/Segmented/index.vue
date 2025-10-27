@@ -129,11 +129,11 @@ onMounted(() => {
   border-radius: 10px;
   padding: 6px;
   gap: 4px;
-  background-color: #fff;
-  color: #000000;
+  background-color: var(--x-bg-color, #ffffff);
+  color: var(--x-text-color-primary, #000000);
   overflow: hidden;
   border: 1px solid rgba(53, 52, 52, 0.226);
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+  box-shadow: var(--x-shadow-sm, 0 1px 2px rgba(0, 0, 0, 0.05));
 }
 
 .x-segmented input {
@@ -201,7 +201,7 @@ onMounted(() => {
 }
 
 .x-segmented label:not(.disabled):hover {
-  background-color: rgba(0, 0, 0, 0.04);
+  background-color: var(--x-fill-color-dark, rgba(0, 0, 0, 0.04));
 }
 
 .x-segmented label:not(.disabled):hover .icon {
@@ -241,20 +241,20 @@ onMounted(() => {
 
 /* 选中状态 - 文字必须是白色 */
 .x-segmented label:has(input:checked) {
-  color: #fff !important;
+  color: var(--x-text-color-white, #ffffff) !important;
 }
 
 .x-segmented label:has(input:checked) .label {
-  color: #fff !important;
+  color: var(--x-text-color-white, #ffffff) !important;
 }
 
 /* 兼容初始加载 - 确保 checked 状态下文字为白色 */
 .x-segmented label:has(input[checked]) {
-  color: #fff !important;
+  color: var(--x-text-color-white, #ffffff) !important;
 }
 
 .x-segmented label:has(input[checked]) .label {
-  color: #fff !important;
+  color: var(--x-text-color-white, #ffffff) !important;
 }
 
 /* 图标选中状态 - 彩色 logo 保持原色，不做反色处理 */
@@ -276,7 +276,7 @@ onMounted(() => {
   z-index: 1;
   border-radius: 6px;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  box-shadow: var(--x-shadow-md, 0 2px 8px rgba(0, 0, 0, 0.15));
 }
 
 .x-segmented.direction-vertical .selection {

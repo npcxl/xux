@@ -1,8 +1,57 @@
 # 快速开始
 
-本指南将帮助您快速上手 XUX 组件库。
+本指南将帮助您快速上手 XUX-UI 组件库，从安装到使用，让您在几分钟内就能开始构建现代化的电商应用。
+
+## 📌 版本说明
+
+当前版本：**1.3.12**
+
+::: tip 重要提示
+- ✅ 推荐使用最新版本，旧版本可能存在 Bug 和样式问题
+- ✅ 完整支持 Vue 3 项目和 UniApp 项目
+- ✅ 部分复杂组件基于 Element Plus 的 `ElPopover` 优化性能
+- ✅ 问题反馈：18569795073@163.com
+:::
+
+### 版本检查
+
+查看当前已安装版本：
+
+::: code-group
+
+```bash [pnpm]
+pnpm list @xlui/xux-ui
+```
+
+```bash [npm]
+npm list @xlui/xux-ui
+```
+
+:::
+
+### 版本更新
+
+如果已安装旧版本，使用以下命令更新：
+
+::: code-group
+
+```bash [pnpm]
+pnpm update @xlui/xux-ui
+```
+
+```bash [npm]
+npm update @xlui/xux-ui
+```
+
+```bash [yarn]
+yarn upgrade @xlui/xux-ui
+```
+
+:::
 
 ## 📦 安装
+
+### 使用包管理器安装
 
 ::: code-group
 
@@ -79,48 +128,17 @@ const handleSubmit = () => {
 
 ### 引入样式
 
-XUX 的样式已经内置在组件中，无需单独引入。但如果您想使用主题变量，可以在项目中引入：
+组件样式已内置，但推荐在项目入口引入完整样式以获得更好的主题支持：
 
 ```ts
 // main.ts
 import '@xlui/xux-ui/dist/index.css'
 ```
 
-## 🎨 主题定制
-
-XUX 使用 CSS 变量来实现主题定制，您可以在项目中覆盖这些变量：
-
-```css
-/* styles/custom-theme.css */
-:root {
-  /* 主色调 */
-  --x-color-primary: #1a1a1a;
-  --x-color-primary-light: #3a3a3a;
-  --x-color-primary-dark: #0d0d0d;
-  
-  /* 成功色 */
-  --x-color-success: #10b981;
-  
-  /* 警告色 */
-  --x-color-warning: #f59e0b;
-  
-  /* 危险色 */
-  --x-color-danger: #ef4444;
-  
-  /* 圆角 */
-  --x-radius: 6px;
-  --x-radius-lg: 12px;
-  
-  /* 阴影 */
-  --x-shadow: 0 2px 8px rgba(26, 26, 26, 0.1);
-}
-```
-
-然后在 `main.ts` 中引入：
-
-```ts
-import './styles/custom-theme.css'
-```
+::: tip 主题定制
+XUX-UI 支持完整的主题定制和深色/浅色模式切换。  
+📖 查看 [主题化配置](/components/theme-config) 了解详细的主题定制方案。
+:::
 
 ## 🔧 Vue 3 项目配置
 

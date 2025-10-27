@@ -14,20 +14,20 @@
 }
 
 .x-tree-node-row:hover {
-  background-color: #f3f4f6;
+  background-color: var(--x-fill-color, #f3f4f6);
 }
 
 .x-tree-node-row.is-selected {
-  background-color: #eff6ff;
+  background-color: var(--x-tree-node-selected-bg, #eff6ff);
 }
 
 /* 暗黑模式支持 */
 :global(.dark) .x-tree-node-row:hover {
-  background-color: rgba(31, 41, 55, 0.8);
+  background-color: var(--x-fill-color-dark, rgba(31, 41, 55, 0.8));
 }
 
 :global(.dark) .x-tree-node-row.is-selected {
-  background-color: rgba(30, 64, 175, 0.2);
+  background-color: var(--x-tree-node-selected-bg-dark, rgba(30, 64, 175, 0.2));
 }
 
 /* 展开/收起图标容器 */
@@ -54,12 +54,12 @@
 
 /* 加载图标 */
 .x-tree-loading-icon {
-  color: #3b82f6;
+  color: var(--x-color-primary, #3b82f6);
 }
 
 /* 展开箭头图标 */
 .x-tree-chevron-icon {
-  color: #6b7280;
+  color: var(--x-text-color-secondary, #6b7280);
   transition: transform 0.2s;
 }
 
