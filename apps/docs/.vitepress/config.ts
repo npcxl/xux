@@ -132,6 +132,7 @@ export default defineConfig({
             { text: 'Switch 开关', link: '/components/switch' },
             { text: 'DateTimePicker 日期时间选择器', link: '/components/datetime-picker' },
             { text: 'Color 颜色选择器', link: '/components/color' },
+            { text: 'Upload 上传', link: '/components/upload' },
           ]
         },
         {
