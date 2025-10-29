@@ -44,7 +44,6 @@
 
 <script setup lang="ts">
 import { Icon } from '@iconify/vue'
-
 /**
  * Checkboxes 多选框组件
  * @displayName XCheckboxes

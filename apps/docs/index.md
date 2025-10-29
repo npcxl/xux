@@ -15,6 +15,9 @@ hero:
     - theme: alt
       text: 查看组件
       link: /components/button
+    - theme: alt
+      text: 在线演示
+      link: https://admin.xlcig.cn
 
 features:
   - icon: 🛒
@@ -50,5 +53,11 @@ features:
   - icon: 🎭
     title: 动画效果
     details: 精心设计的过渡动画，流畅的交互体验，提升用户满意度
+  - icon: 🚀
+    title: 实际应用
+    details: 查看组件在真实项目中的应用效果，访问 admin.xlcig.cn 体验完整的后台管理系统
 ---
+
+
+
 

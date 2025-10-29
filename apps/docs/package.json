@@ -7,7 +7,9 @@
     "dev": "vitepress dev",
     "build": "vitepress build",
     "preview": "vitepress preview",
-    "docs:gen": "node scripts/gen-docs.mjs"
+    "docs:gen": "node scripts/gen-docs.mjs",
+    "sitemap": "node scripts/generate-sitemap.mjs",
+    "submit:baidu": "node scripts/submit-to-baidu.mjs"
   },
   "dependencies": {
     "@xlui/xux-ui": "workspace:*"

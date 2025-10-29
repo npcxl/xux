@@ -86,7 +86,6 @@ export function useDateTime(options: DateTimeOptions = {}) {
 
   // ===================== 基础 =====================
   const now = ref(d())
-
   const updateNow = () => { now.value = d() }
   const getCurrent = () => d()
 
@@ -254,7 +253,6 @@ export function useDateTime(options: DateTimeOptions = {}) {
     format,
     parse,
     create,
-
     // 比较
     isSame,
     isAfter,
@@ -262,14 +260,12 @@ export function useDateTime(options: DateTimeOptions = {}) {
     isSameOrAfter,
     isSameOrBefore,
     isBetween,
-
     // 计算
     add,
     subtract,
     diff,
     startOf,
     endOf,
-
     // 相对时间
     fromNow,
     toNow,
@@ -277,23 +273,18 @@ export function useDateTime(options: DateTimeOptions = {}) {
     to,
     humanizeDiff,
     formatParts,
-
     // 日历
     getCalendarDates,
     getMonthInfo,
     getTimeRanges,
-
     // 工具
     isValid,
     getUnit,
     setUnit,
-
     // 常量
     formats,
-
     // tz/locale 绑定 dayjs（高级用法）
     dayjs: (v?: DateInput) => normalize(v),
-
     // UTC <-> 本地
     toUTC,
     fromUTC,

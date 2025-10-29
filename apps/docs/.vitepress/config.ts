@@ -38,6 +38,17 @@ export default defineConfig({
     
     // Baidu verification (如果需要百度收录)
     ['meta', { name: 'baidu-site-verification', content: 'codeValue' }],
+    
+    // Baidu Analytics (百度统计)
+    ['script', {}, `
+      var _hmt = _hmt || [];
+      (function() {
+        var hm = document.createElement("script");
+        hm.src = "https://hm.baidu.com/hm.js?b114320f3d7780a049bb020c503a2850";
+        var s = document.getElementsByTagName("script")[0]; 
+        s.parentNode.insertBefore(hm, s);
+      })();
+    `]
   ],
 
   themeConfig: {
@@ -84,10 +95,17 @@ export default defineConfig({
           text: '通用',
           items: [
             { text: 'Button 按钮', link: '/components/button' },
+            { text: 'Link 链接', link: '/components/link' },
             { text: 'Tag 标签', link: '/components/tag' },
             { text: 'Search 搜索', link: '/components/search' },
             { text: 'Table 表格(测试版)', link: '/components/table' },
             { text: 'Icon 图标', link: '/components/icon' },
+          ]
+        },
+        {
+          text: '导航',
+          items: [
+            { text: 'Tabs 标签页', link: '/components/tabs' },
           ]
         },
         {
@@ -132,6 +150,7 @@ export default defineConfig({
             { text: 'Image 图片', link: '/components/image' },
             { text: 'DragSort 拖拽排序', link: '/components/drag-sort' },
             { text: 'Pagination 分页', link: '/components/pagination' },
+            { text: 'List 列表', link: '/components/list' },
           ]
         },
         {
@@ -146,7 +165,8 @@ export default defineConfig({
             { text: 'Popconfirm 气泡确认框', link: '/components/popconfirm' },
             { text: 'Result 结果', link: '/components/result' },
             { text: 'Chat 聊天', link: '/components/chat' },
-            { text: 'Loading 加载中', link: '/components/loading' }
+            { text: 'Loading 加载中', link: '/components/loading' },
+            { text: 'Tour 漫游式引导', link: '/components/tour' },
           ]
         },
         {

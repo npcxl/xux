@@ -89,7 +89,6 @@ const handleInput = (e: Event) => {
 .x-color-picker {
   display: flex;
   align-items: center;
-  gap: 12px;
 }
 
 .x-color-input {

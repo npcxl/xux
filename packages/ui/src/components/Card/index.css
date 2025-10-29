@@ -165,6 +165,7 @@
 .x-card-info {
   display: flex;
   gap: 16px;
+  padding: 12px 16px 16px;
 }
 
 .x-card-info .x-card-icon {

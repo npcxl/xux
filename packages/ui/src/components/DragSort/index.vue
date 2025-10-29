@@ -129,7 +129,6 @@ const props = defineProps({
 })
 
 const emit = defineEmits(['update:modelValue', 'change', 'dragStart', 'dragEnd'])
-
 const containerRef = ref<HTMLDivElement | null>(null)
 const localItems = ref<any[]>([...props.modelValue])
 const draggingIndex = ref<number | null>(null)

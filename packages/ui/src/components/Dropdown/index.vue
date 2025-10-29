@@ -166,11 +166,11 @@ defineExpose({
 /* 全局样式 - 自定义 Element Plus Dropdown */
 .x-dropdown-popper.el-popper {
   padding: 0 !important;
-  background: #ffffff !important;
-  border: 1px solid #e5e7eb !important;
-  border-radius: 8px !important;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 
-              0 2px 4px -1px rgba(0, 0, 0, 0.06) !important;
+  background: var(--x-bg-color, #ffffff) !important;
+  border: 1px solid var(--x-border-color, #e5e7eb) !important;
+  border-radius: var(--x-radius-md, 8px) !important;
+  box-shadow: var(--x-shadow-md, 0 4px 6px -1px rgba(0, 0, 0, 0.1), 
+               var(--x-shadow-sm, 0 2px 4px -1px rgba(0, 0, 0, 0.06))) !important;
 }
 
 .x-dropdown-popper .el-dropdown-menu {
@@ -185,9 +185,9 @@ defineExpose({
 
 /* 暗色模式 */
 .dark .x-dropdown-popper.el-popper {
-  background: #1a1a1a !important;
-  border: 1px solid #333 !important;
-  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.32) !important;
+  background: var(--x-bg-color-dark, #1a1a1a) !important;
+  border: 1px solid var(--x-border-color-dark, #333) !important;
+  box-shadow: var(--x-shadow-lg, 0 6px 16px rgba(0, 0, 0, 0.32)) !important;
 }
 </style>
 

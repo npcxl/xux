@@ -56,6 +56,7 @@
             <div class="x-menu-item-content">
               <!-- 图标 -->
               <span v-if="item.icon || item.xicon || item.customIcon" class="x-menu-item-icon">
+
                 <slot v-if="item.customIcon" :name="`icon-${item.key}`">
                   <XIcon v-if="item.xicon" :name="item.xicon" />
                   <Icon v-else-if="item.icon" :icon="item.icon" />
@@ -69,7 +70,6 @@
               
               <!-- 徽标 -->
               <span v-if="item.badge && !collapsed" class="x-menu-item-badge">{{ item.badge }}</span>
-              
               <!-- 展开箭头（仅在可折叠模式显示） -->
               <span v-if="!collapsed && collapsible" class="x-menu-group-arrow">
                 <XIcon name="chevron-down" />
@@ -80,6 +80,7 @@
           <!-- 子菜单列表（展开模式） -->
           <transition name="x-menu-collapse">
             <div v-show="(collapsible ? openKeys.includes(item.key) : true) && !collapsed" class="x-menu-submenu">
+              
               <div
                 v-for="subItem in item.children"
                 :key="subItem.key"
