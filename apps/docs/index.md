@@ -18,7 +18,8 @@ hero:
     - theme: alt
       text: 在线演示
       link: https://admin.xlcig.cn
-
+    - theme: alt
+      text: 当前版本：v1.3.15
 features:
   - icon: 🛒
     title: 电商场景
