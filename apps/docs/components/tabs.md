@@ -12,48 +12,48 @@
 <template>
   <div class="space-y-6">
     <div>
-      <h4 class="text-sm font-semibold mb-3 text-gray-900">线条风格（默认）</h4>
+      <h4 class="text-sm font-semibold mb-3 text-gray-900 dark:text-gray-100">线条风格（默认）</h4>
       <XTabs v-model="activeTab1">
         <XTabPane name="home" label="首页">
           <div class="p-4">
-            <h3 class="text-lg font-semibold mb-2">欢迎来到首页</h3>
-            <p class="text-gray-600">这是首页的内容区域</p>
+            <h3 class="text-lg font-semibold mb-2 dark:text-gray-100">欢迎来到首页</h3>
+            <p class="text-gray-600 dark:text-gray-400">这是首页的内容区域</p>
           </div>
         </XTabPane>
         <XTabPane name="user" label="用户管理" icon="mdi:account">
           <div class="p-4">
-            <h3 class="text-lg font-semibold mb-2">用户管理</h3>
-            <p class="text-gray-600">管理系统用户信息</p>
+            <h3 class="text-lg font-semibold mb-2 dark:text-gray-100">用户管理</h3>
+            <p class="text-gray-600 dark:text-gray-400">管理系统用户信息</p>
           </div>
         </XTabPane>
         <XTabPane name="settings" label="系统设置" icon="mdi:cog">
           <div class="p-4">
-            <h3 class="text-lg font-semibold mb-2">系统设置</h3>
-            <p class="text-gray-600">配置系统参数</p>
+            <h3 class="text-lg font-semibold mb-2 dark:text-gray-100">系统设置</h3>
+            <p class="text-gray-600 dark:text-gray-400">配置系统参数</p>
           </div>
         </XTabPane>
       </XTabs>
     </div>
     
     <div>
-      <h4 class="text-sm font-semibold mb-3 text-gray-900">卡片风格</h4>
+      <h4 class="text-sm font-semibold mb-3 text-gray-900 dark:text-gray-100">卡片风格</h4>
       <XTabs v-model="activeTab2" type="card">
         <XTabPane name="orders" label="订单管理" icon="mdi:clipboard-list">
           <div class="p-4">
-            <h3 class="text-lg font-semibold mb-2">订单管理</h3>
-            <p class="text-gray-600">查看和管理所有订单</p>
+            <h3 class="text-lg font-semibold mb-2 dark:text-gray-100">订单管理</h3>
+            <p class="text-gray-600 dark:text-gray-400">查看和管理所有订单</p>
           </div>
         </XTabPane>
         <XTabPane name="products" label="商品管理" icon="mdi:package-variant">
           <div class="p-4">
-            <h3 class="text-lg font-semibold mb-2">商品管理</h3>
-            <p class="text-gray-600">管理商品库存和信息</p>
+            <h3 class="text-lg font-semibold mb-2 dark:text-gray-100">商品管理</h3>
+            <p class="text-gray-600 dark:text-gray-400">管理商品库存和信息</p>
           </div>
         </XTabPane>
         <XTabPane name="analytics" label="数据分析" icon="mdi:chart-line">
           <div class="p-4">
-            <h3 class="text-lg font-semibold mb-2">数据分析</h3>
-            <p class="text-gray-600">查看销售数据和趋势</p>
+            <h3 class="text-lg font-semibold mb-2 dark:text-gray-100">数据分析</h3>
+            <p class="text-gray-600 dark:text-gray-400">查看销售数据和趋势</p>
           </div>
         </XTabPane>
       </XTabs>
@@ -89,29 +89,29 @@ h4 {
   <XTabs v-model="borderCardTab" type="border-card">
     <XTabPane name="overview" label="概览" icon="mdi:view-dashboard">
       <div class="p-4">
-        <h3 class="text-lg font-semibold mb-2">系统概览</h3>
+        <h3 class="text-lg font-semibold mb-2 dark:text-gray-100">系统概览</h3>
         <div class="grid grid-cols-2 gap-4 mt-4">
-          <div class="p-4 bg-blue-50 rounded-lg">
-            <div class="text-sm text-gray-600">总用户数</div>
-            <div class="text-2xl font-bold text-blue-600">12,345</div>
+          <div class="p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
+            <div class="text-sm text-gray-600 dark:text-gray-400">总用户数</div>
+            <div class="text-2xl font-bold text-blue-600 dark:text-blue-400">12,345</div>
           </div>
-          <div class="p-4 bg-green-50 rounded-lg">
-            <div class="text-sm text-gray-600">活跃用户</div>
-            <div class="text-2xl font-bold text-green-600">8,901</div>
+          <div class="p-4 bg-green-50 dark:bg-green-900/20 rounded-lg">
+            <div class="text-sm text-gray-600 dark:text-gray-400">活跃用户</div>
+            <div class="text-2xl font-bold text-green-600 dark:text-green-400">8,901</div>
           </div>
         </div>
       </div>
     </XTabPane>
     <XTabPane name="stats" label="数据统计" icon="mdi:chart-bar">
       <div class="p-4">
-        <h3 class="text-lg font-semibold mb-2">数据统计</h3>
-        <p class="text-gray-600">查看详细的数据分析报告</p>
+        <h3 class="text-lg font-semibold mb-2 dark:text-gray-100">数据统计</h3>
+        <p class="text-gray-600 dark:text-gray-400">查看详细的数据分析报告</p>
       </div>
     </XTabPane>
     <XTabPane name="reports" label="报表中心" icon="mdi:file-document">
       <div class="p-4">
-        <h3 class="text-lg font-semibold mb-2">报表中心</h3>
-        <p class="text-gray-600">生成和下载各类报表</p>
+        <h3 class="text-lg font-semibold mb-2 dark:text-gray-100">报表中心</h3>
+        <p class="text-gray-600 dark:text-gray-400">生成和下载各类报表</p>
       </div>
     </XTabPane>
   </XTabs>
@@ -138,26 +138,26 @@ const borderCardTab = ref('overview')
   <XTabs v-model="buttonTab" type="button">
     <XTabPane name="all" label="全部" icon="mdi:apps">
       <div class="p-4">
-        <h3 class="text-lg font-semibold mb-2">全部内容</h3>
-        <p class="text-gray-600">显示所有类型的内容</p>
+        <h3 class="text-lg font-semibold mb-2 dark:text-gray-100">全部内容</h3>
+        <p class="text-gray-600 dark:text-gray-400">显示所有类型的内容</p>
       </div>
     </XTabPane>
     <XTabPane name="images" label="图片" icon="mdi:image">
       <div class="p-4">
-        <h3 class="text-lg font-semibold mb-2">图片内容</h3>
-        <p class="text-gray-600">只显示图片类型</p>
+        <h3 class="text-lg font-semibold mb-2 dark:text-gray-100">图片内容</h3>
+        <p class="text-gray-600 dark:text-gray-400">只显示图片类型</p>
       </div>
     </XTabPane>
     <XTabPane name="videos" label="视频" icon="mdi:video">
       <div class="p-4">
-        <h3 class="text-lg font-semibold mb-2">视频内容</h3>
-        <p class="text-gray-600">只显示视频类型</p>
+        <h3 class="text-lg font-semibold mb-2 dark:text-gray-100">视频内容</h3>
+        <p class="text-gray-600 dark:text-gray-400">只显示视频类型</p>
       </div>
     </XTabPane>
     <XTabPane name="documents" label="文档" icon="mdi:file-document">
       <div class="p-4">
-        <h3 class="text-lg font-semibold mb-2">文档内容</h3>
-        <p class="text-gray-600">只显示文档类型</p>
+        <h3 class="text-lg font-semibold mb-2 dark:text-gray-100">文档内容</h3>
+        <p class="text-gray-600 dark:text-gray-400">只显示文档类型</p>
       </div>
     </XTabPane>
   </XTabs>
@@ -184,26 +184,26 @@ const buttonTab = ref('all')
   <XTabs v-model="segmentTab" type="segment">
     <XTabPane name="day" label="日">
       <div class="p-4">
-        <h3 class="text-lg font-semibold mb-2">日视图</h3>
-        <p class="text-gray-600">按天显示数据</p>
+        <h3 class="text-lg font-semibold mb-2 dark:text-gray-100">日视图</h3>
+        <p class="text-gray-600 dark:text-gray-400">按天显示数据</p>
       </div>
     </XTabPane>
     <XTabPane name="week" label="周">
       <div class="p-4">
-        <h3 class="text-lg font-semibold mb-2">周视图</h3>
-        <p class="text-gray-600">按周显示数据</p>
+        <h3 class="text-lg font-semibold mb-2 dark:text-gray-100">周视图</h3>
+        <p class="text-gray-600 dark:text-gray-400">按周显示数据</p>
       </div>
     </XTabPane>
     <XTabPane name="month" label="月">
       <div class="p-4">
-        <h3 class="text-lg font-semibold mb-2">月视图</h3>
-        <p class="text-gray-600">按月显示数据</p>
+        <h3 class="text-lg font-semibold mb-2 dark:text-gray-100">月视图</h3>
+        <p class="text-gray-600 dark:text-gray-400">按月显示数据</p>
       </div>
     </XTabPane>
     <XTabPane name="year" label="年">
       <div class="p-4">
-        <h3 class="text-lg font-semibold mb-2">年视图</h3>
-        <p class="text-gray-600">按年显示数据</p>
+        <h3 class="text-lg font-semibold mb-2 dark:text-gray-100">年视图</h3>
+        <p class="text-gray-600 dark:text-gray-400">按年显示数据</p>
       </div>
     </XTabPane>
   </XTabs>
@@ -236,8 +236,8 @@ const segmentTab = ref('day')
       :icon="tab.icon"
     >
       <div class="p-6">
-        <h3 class="text-xl font-bold mb-3">{{ tab.label }}</h3>
-        <p class="text-gray-600 mb-4">{{ tab.content }}</p>
+        <h3 class="text-xl font-bold mb-3 dark:text-gray-100">{{ tab.label }}</h3>
+        <p class="text-gray-600 dark:text-gray-400 mb-4">{{ tab.content }}</p>
         <div class="flex gap-2">
           <XButton type="primary" size="small">操作</XButton>
           <XButton size="small">取消</XButton>
@@ -301,20 +301,20 @@ const handleRemoveTab = (name) => {
       :label="tab.label" 
       :icon="tab.icon"
     >
-      <div class="p-6 bg-gray-50 rounded-lg">
+      <div class="p-6 bg-gray-50 dark:bg-gray-800/50 rounded-lg">
         <div class="flex items-center gap-3 mb-4">
           <Icon :icon="tab.icon" class="text-2xl text-primary" />
-          <h3 class="text-xl font-bold">{{ tab.label }}</h3>
+          <h3 class="text-xl font-bold dark:text-gray-100">{{ tab.label }}</h3>
         </div>
-        <p class="text-gray-600 mb-4">{{ tab.content }}</p>
+        <p class="text-gray-600 dark:text-gray-400 mb-4">{{ tab.content }}</p>
         <div class="grid grid-cols-2 gap-4">
-          <div class="p-4 bg-white rounded-lg shadow-sm">
-            <div class="text-sm text-gray-500">访问量</div>
-            <div class="text-2xl font-bold text-primary">1.2K</div>
+          <div class="p-4 bg-white dark:bg-gray-700/50 rounded-lg shadow-sm">
+            <div class="text-sm text-gray-500 dark:text-gray-400">访问量</div>
+            <div class="text-2xl font-bold text-primary dark:text-blue-400">1.2K</div>
           </div>
-          <div class="p-4 bg-white rounded-lg shadow-sm">
-            <div class="text-sm text-gray-500">活跃度</div>
-            <div class="text-2xl font-bold text-success">95%</div>
+          <div class="p-4 bg-white dark:bg-gray-700/50 rounded-lg shadow-sm">
+            <div class="text-sm text-gray-500 dark:text-gray-400">活跃度</div>
+            <div class="text-2xl font-bold text-success dark:text-green-400">95%</div>
           </div>
         </div>
       </div>
@@ -371,16 +371,16 @@ const handleRemoveTab = (name) => {
 <template>
   <XTabs v-model="closableTab" closable @tab-remove="handleRemove">
     <XTabPane name="tab1" label="标签 1" icon="mdi:numeric-1-circle">
-      <div class="p-4">标签 1 的内容</div>
+      <div class="p-4 dark:text-gray-100">标签 1 的内容</div>
     </XTabPane>
     <XTabPane name="tab2" label="标签 2" icon="mdi:numeric-2-circle">
-      <div class="p-4">标签 2 的内容</div>
+      <div class="p-4 dark:text-gray-100">标签 2 的内容</div>
     </XTabPane>
     <XTabPane name="tab3" label="不可关闭" icon="mdi:lock" :closable="false">
-      <div class="p-4">这个标签不能被关闭</div>
+      <div class="p-4 dark:text-gray-100">这个标签不能被关闭</div>
     </XTabPane>
     <XTabPane name="tab4" label="标签 4" icon="mdi:numeric-4-circle">
-      <div class="p-4">标签 4 的内容</div>
+      <div class="p-4 dark:text-gray-100">标签 4 的内容</div>
     </XTabPane>
   </XTabs>
 </template>
@@ -416,8 +416,8 @@ const handleRemove = (name) => {
       :label="tab.label"
     >
       <div class="p-4">
-        <h4 class="font-semibold mb-2">{{ tab.label }}</h4>
-        <p class="text-gray-600">{{ tab.content }}</p>
+        <h4 class="font-semibold mb-2 dark:text-gray-100">{{ tab.label }}</h4>
+        <p class="text-gray-600 dark:text-gray-400">{{ tab.content }}</p>
       </div>
     </XTabPane>
   </XTabs>
@@ -469,13 +469,13 @@ const handleRemove = (name) => {
 <template>
   <XTabs v-model="disabledTab">
     <XTabPane name="tab1" label="可用标签 1" icon="mdi:check-circle">
-      <div class="p-4">可用标签 1 的内容</div>
+      <div class="p-4 dark:text-gray-100">可用标签 1 的内容</div>
     </XTabPane>
     <XTabPane name="tab2" label="禁用标签" icon="mdi:cancel" disabled>
-      <div class="p-4">禁用标签的内容</div>
+      <div class="p-4 dark:text-gray-100">禁用标签的内容</div>
     </XTabPane>
     <XTabPane name="tab3" label="可用标签 2" icon="mdi:check-circle">
-      <div class="p-4">可用标签 2 的内容</div>
+      <div class="p-4 dark:text-gray-100">可用标签 2 的内容</div>
     </XTabPane>
   </XTabs>
 </template>
@@ -508,17 +508,17 @@ const disabledTab = ref('tab1')
     <XTabPane name="tab1" label="数据监控" icon="mdi:monitor-dashboard">
       <div class="p-4">
         <div class="grid grid-cols-3 gap-4">
-          <div class="p-4 bg-blue-50 rounded-lg">
-            <div class="text-sm text-blue-600">CPU 使用率</div>
-            <div class="text-2xl font-bold text-blue-700">45%</div>
+          <div class="p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
+            <div class="text-sm text-blue-600 dark:text-blue-400">CPU 使用率</div>
+            <div class="text-2xl font-bold text-blue-700 dark:text-blue-300">45%</div>
           </div>
-          <div class="p-4 bg-green-50 rounded-lg">
-            <div class="text-sm text-green-600">内存使用</div>
-            <div class="text-2xl font-bold text-green-700">2.1GB</div>
+          <div class="p-4 bg-green-50 dark:bg-green-900/20 rounded-lg">
+            <div class="text-sm text-green-600 dark:text-green-400">内存使用</div>
+            <div class="text-2xl font-bold text-green-700 dark:text-green-300">2.1GB</div>
           </div>
-          <div class="p-4 bg-purple-50 rounded-lg">
-            <div class="text-sm text-purple-600">网络流量</div>
-            <div class="text-2xl font-bold text-purple-700">150MB</div>
+          <div class="p-4 bg-purple-50 dark:bg-purple-900/20 rounded-lg">
+            <div class="text-sm text-purple-600 dark:text-purple-400">网络流量</div>
+            <div class="text-2xl font-bold text-purple-700 dark:text-purple-300">150MB</div>
           </div>
         </div>
       </div>
@@ -526,13 +526,13 @@ const disabledTab = ref('tab1')
     <XTabPane name="tab2" label="系统日志" icon="mdi:text-box-multiple">
       <div class="p-4">
         <div class="space-y-2">
-          <div class="p-3 bg-gray-50 rounded text-sm">
+          <div class="p-3 bg-gray-50 dark:bg-gray-800/50 rounded text-sm dark:text-gray-300">
             [INFO] 系统启动成功
           </div>
-          <div class="p-3 bg-green-50 rounded text-sm text-green-700">
+          <div class="p-3 bg-green-50 dark:bg-green-900/20 rounded text-sm text-green-700 dark:text-green-400">
             [SUCCESS] 用户登录成功
           </div>
-          <div class="p-3 bg-yellow-50 rounded text-sm text-yellow-700">
+          <div class="p-3 bg-yellow-50 dark:bg-yellow-900/20 rounded text-sm text-yellow-700 dark:text-yellow-400">
             [WARNING] 磁盘空间不足
           </div>
         </div>
@@ -540,7 +540,7 @@ const disabledTab = ref('tab1')
     </XTabPane>
     <XTabPane name="tab3" label="警报信息" icon="mdi:bell-alert">
       <div class="p-4">
-        <p class="text-gray-600">暂无警报信息</p>
+        <p class="text-gray-600 dark:text-gray-400">暂无警报信息</p>
       </div>
     </XTabPane>
   </XTabs>
@@ -551,6 +551,58 @@ import { ref } from 'vue'
 import { XTabs, XTabPane, XButton } from '@xlui/xux-ui'
 
 const extraTab = ref('tab1')
+</script>
+```
+
+:::
+
+## 超出宽度下拉
+
+当标签页超出父级宽度时，自动将溢出的标签显示在下拉菜单中。
+
+:::demo
+
+```vue
+<template>
+  <div class="space-y-4">
+    <div style="max-width: 600px;">
+      <XTabs v-model="overflowTab" type="card" showOverflowDropdown>
+        <XTabPane 
+          v-for="tab in overflowTabs" 
+          :key="tab.name"
+          :name="tab.name" 
+          :label="tab.label"
+          :icon="tab.icon"
+        >
+          <div class="p-4">
+            <h3 class="text-lg font-semibold mb-2 dark:text-gray-100">{{ tab.label }}</h3>
+            <p class="text-gray-600 dark:text-gray-400">{{ tab.content }}</p>
+          </div>
+        </XTabPane>
+      </XTabs>
+    </div>
+    
+    <div class="text-sm text-gray-500 dark:text-gray-400">
+      💡 提示：调整浏览器窗口大小查看下拉菜单效果
+    </div>
+  </div>
+</template>
+
+<script setup>
+import { ref } from 'vue'
+import { XTabs, XTabPane } from '@xlui/xux-ui'
+
+const overflowTab = ref('tab1')
+const overflowTabs = ref([
+  { name: 'tab1', label: '首页', icon: 'mdi:home', content: '欢迎来到首页' },
+  { name: 'tab2', label: '用户管理', icon: 'mdi:account-group', content: '管理系统用户' },
+  { name: 'tab3', label: '商品列表', icon: 'mdi:package-variant', content: '查看所有商品' },
+  { name: 'tab4', label: '订单中心', icon: 'mdi:clipboard-list', content: '处理订单信息' },
+  { name: 'tab5', label: '数据分析', icon: 'mdi:chart-line', content: '查看数据报表' },
+  { name: 'tab6', label: '系统设置', icon: 'mdi:cog', content: '配置系统参数' },
+  { name: 'tab7', label: '权限管理', icon: 'mdi:shield-account', content: '管理用户权限' },
+  { name: 'tab8', label: '日志查看', icon: 'mdi:text-box-multiple', content: '查看系统日志' }
+])
 </script>
 ```
 
@@ -574,19 +626,19 @@ const extraTab = ref('tab1')
       @tab-remove="handleTabRemove"
     >
       <XTabPane name="home" label="首页" icon="mdi:home">
-        <div class="p-4">首页内容</div>
+        <div class="p-4 dark:text-gray-100">首页内容</div>
       </XTabPane>
       <XTabPane name="profile" label="个人中心" icon="mdi:account">
-        <div class="p-4">个人中心内容</div>
+        <div class="p-4 dark:text-gray-100">个人中心内容</div>
       </XTabPane>
       <XTabPane name="settings" label="设置" icon="mdi:cog">
-        <div class="p-4">设置内容</div>
+        <div class="p-4 dark:text-gray-100">设置内容</div>
       </XTabPane>
     </XTabs>
     
-    <div class="p-4 bg-gray-50 rounded-lg">
-      <h4 class="text-sm font-semibold mb-2">事件日志：</h4>
-      <div class="text-sm text-gray-600 space-y-1">
+    <div class="p-4 bg-gray-50 dark:bg-gray-800/50 rounded-lg">
+      <h4 class="text-sm font-semibold mb-2 dark:text-gray-100">事件日志：</h4>
+      <div class="text-sm text-gray-600 dark:text-gray-400 space-y-1">
         <div v-for="(log, index) in eventLogs" :key="index">{{ log }}</div>
       </div>
     </div>
@@ -637,6 +689,7 @@ h4 {
 | closable | 标签是否可关闭 | `boolean` | `false` |
 | addable | 是否显示新增按钮 | `boolean` | `false` |
 | scrollable | 标签过多时是否可滚动 | `boolean` | `false` |
+| showOverflowDropdown | 超出宽度时显示下拉菜单 | `boolean` | `false` |
 | animated | 是否启用动画 | `boolean` | `true` |
 
 ### Tabs Events

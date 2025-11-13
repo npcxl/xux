@@ -723,6 +723,185 @@ const menuItems = ref([
 
 :::
 
+## 固定高度与滚动
+
+设置 `height` 属性后，菜单会限制高度并支持滚动，适合在固定高度容器中展示大量菜单项。
+
+:::demo
+
+```vue
+<template>
+  <div class="space-y-4">
+    <div>
+      <h4 class="text-sm font-semibold mb-3 text-gray-900 dark:text-gray-100">固定高度 500px</h4>
+      <XMenu 
+        :items="menuItems" 
+        v-model:activeKey="activeKey"
+        height="500px"
+      />
+    </div>
+    
+    <div>
+      <h4 class="text-sm font-semibold mb-3 text-gray-900 dark:text-gray-100">固定高度 300px + 默认展开</h4>
+      <XMenu 
+        :items="menuItems" 
+        v-model:activeKey="activeKey2"
+        height="300px"
+        :defaultOpenKeys="['system', 'content', 'data']"
+      />
+    </div>
+  </div>
+</template>
+
+<script setup>
+import { ref } from 'vue'
+
+const activeKey = ref('home')
+const activeKey2 = ref('article')
+
+const menuItems = ref([
+  {
+    key: 'home',
+    label: '首页',
+    icon: 'mdi:home'
+  },
+  {
+    key: 'dashboard',
+    label: '仪表盘',
+    icon: 'mdi:view-dashboard'
+  },
+  {
+    key: 'system',
+    label: '系统管理',
+    icon: 'mdi:cog-outline',
+    children: [
+      {
+        key: 'user-list',
+        label: '用户管理',
+        icon: 'mdi:account-multiple'
+      },
+      {
+        key: 'role-list',
+        label: '角色管理',
+        icon: 'mdi:shield-account'
+      },
+      {
+        key: 'permission',
+        label: '权限管理',
+        icon: 'mdi:lock'
+      },
+      {
+        key: 'menu-config',
+        label: '菜单配置',
+        icon: 'mdi:menu'
+      }
+    ]
+  },
+  {
+    key: 'content',
+    label: '内容管理',
+    icon: 'mdi:file-document-multiple',
+    children: [
+      {
+        key: 'article',
+        label: '文章列表',
+        icon: 'mdi:text-box'
+      },
+      {
+        key: 'category',
+        label: '分类管理',
+        icon: 'mdi:folder'
+      },
+      {
+        key: 'tag',
+        label: '标签管理',
+        icon: 'mdi:tag'
+      },
+      {
+        key: 'comment',
+        label: '评论管理',
+        icon: 'mdi:comment-multiple'
+      }
+    ]
+  },
+  {
+    key: 'data',
+    label: '数据分析',
+    icon: 'mdi:chart-bar',
+    children: [
+      {
+        key: 'report',
+        label: '数据报表',
+        icon: 'mdi:file-chart'
+      },
+      {
+        key: 'statistics',
+        label: '统计分析',
+        icon: 'mdi:chart-line'
+      },
+      {
+        key: 'export',
+        label: '数据导出',
+        icon: 'mdi:download'
+      }
+    ]
+  },
+  {
+    key: 'finance',
+    label: '财务管理',
+    icon: 'mdi:currency-usd',
+    children: [
+      {
+        key: 'order',
+        label: '订单管理',
+        icon: 'mdi:clipboard-list'
+      },
+      {
+        key: 'payment',
+        label: '支付记录',
+        icon: 'mdi:credit-card'
+      },
+      {
+        key: 'refund',
+        label: '退款处理',
+        icon: 'mdi:cash-refund'
+      }
+    ]
+  },
+  {
+    key: 'settings',
+    label: '系统设置',
+    icon: 'mdi:cog',
+    children: [
+      {
+        key: 'basic',
+        label: '基础设置',
+        icon: 'mdi:cog-outline'
+      },
+      {
+        key: 'email',
+        label: '邮件设置',
+        icon: 'mdi:email'
+      },
+      {
+        key: 'sms',
+        label: '短信设置',
+        icon: 'mdi:message-text'
+      }
+    ]
+  }
+])
+</script>
+
+<style scoped>
+h4 {
+  margin: 0;
+}
+</style>
+```
+
+:::
+
 ## 监听展开变化
 
 可以监听菜单分组的展开/折叠状态。
@@ -802,6 +981,7 @@ const handleOpenChange = (keys) => {
 | defaultOpenKeys | 默认展开的菜单组 | `string[]` | `[]` |
 | collapsed | 是否折叠菜单 | `boolean` | `false` |
 | width | 菜单宽度 | `string` | `'280px'` |
+| height | 菜单高度（超出自动滚动） | `string` | - |
 | accordion | 手风琴模式（只展开一个） | `boolean` | `false` |
 | collapsible | 是否可折叠（false时父级变为分组目录样式：小字号、淡颜色、无箭头、子菜单始终展开） | `boolean` | `true` |
 

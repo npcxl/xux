@@ -188,7 +188,6 @@ function handleMouseDown(event: MouseEvent) {
 
 .x-btn:active:not(.x-btn-disabled):not(.x-btn-loading) {
   transform: translateY(1px);
-  box-shadow: var(--x-shadow-sm, 0 2px 4px rgba(0, 0, 0, 0.1));
 }
 
 /* 波纹效果 */
@@ -262,13 +261,11 @@ function handleMouseDown(event: MouseEvent) {
   background-color: var(--x-color-white, #ffffff);
   border-color: var(--x-color-gray-300, #cacaca);
   color: var(--x-color-black, #1a1a1a);
-  box-shadow: var(--x-shadow-sm, 0 1px 2px rgba(26, 26, 26, 0.05));
 }
 
 .x-btn-default:hover:not(.x-btn-disabled):not(.x-btn-loading) {
   border-color: var(--x-color-primary, #1a1a1a);
   color: var(--x-color-primary, #1a1a1a);
-  box-shadow: var(--x-shadow-primary, 0 4px 12px rgba(26, 26, 26, 0.3));
   transform: translateY(-2px);
 }
 
@@ -277,12 +274,10 @@ function handleMouseDown(event: MouseEvent) {
   background: var(--x-gradient-primary, linear-gradient(135deg, #ff6b35 0%, #ff8c61 100%));
   border-color: var(--x-color-primary, #ff6b35);
   color: var(--x-color-white, #ffffff);
-  box-shadow: var(--x-shadow-primary, 0 4px 12px rgba(255, 107, 53, 0.3));
 }
 
 .x-btn-primary:hover:not(.x-btn-disabled):not(.x-btn-loading) {
   background: var(--x-gradient-primary-hover, linear-gradient(135deg, #ff8c61 0%, #ffad8d 100%));
-  box-shadow: var(--x-shadow-primary-lg, 0 8px 24px rgba(255, 107, 53, 0.4));
   transform: translateY(-2px);
 }
 
@@ -291,12 +286,10 @@ function handleMouseDown(event: MouseEvent) {
   background: var(--x-gradient-success, linear-gradient(135deg, #10b981 0%, #059669 100%));
   border-color: var(--x-color-success, #10b981);
   color: var(--x-color-white, #ffffff);
-  box-shadow: var(--x-shadow-success, 0 4px 12px rgba(16, 185, 129, 0.3));
 }
 
 .x-btn-success:hover:not(.x-btn-disabled):not(.x-btn-loading) {
   background: var(--x-gradient-success-hover, linear-gradient(135deg, var(--x-color-success-light, #34d399) 0%, var(--x-color-success, #10b981) 100%));
-  box-shadow: var(--x-shadow-success-lg, 0 6px 16px rgba(16, 185, 129, 0.4));
   transform: translateY(-2px);
 }
 
@@ -305,12 +298,10 @@ function handleMouseDown(event: MouseEvent) {
   background: var(--x-gradient-warning, linear-gradient(135deg, #f59e0b 0%, #d97706 100%));
   border-color: var(--x-color-warning, #f59e0b);
   color: var(--x-color-white, #ffffff);
-  box-shadow: var(--x-shadow-warning, 0 4px 12px rgba(245, 158, 11, 0.3));
 }
 
 .x-btn-warning:hover:not(.x-btn-disabled):not(.x-btn-loading) {
   background: var(--x-gradient-warning-hover, linear-gradient(135deg, var(--x-color-warning-light, #fbbf24) 0%, var(--x-color-warning, #f59e0b) 100%));
-  box-shadow: var(--x-shadow-warning-lg, 0 6px 16px rgba(245, 158, 11, 0.4));
   transform: translateY(-2px);
 }
 
@@ -319,12 +310,10 @@ function handleMouseDown(event: MouseEvent) {
   background: var(--x-gradient-danger, linear-gradient(135deg, #ef4444 0%, #dc2626 100%));
   border-color: var(--x-color-danger, #ef4444);
   color: var(--x-color-white, #ffffff);
-  box-shadow: var(--x-shadow-danger, 0 4px 12px rgba(239, 68, 68, 0.3));
 }
 
 .x-btn-danger:hover:not(.x-btn-disabled):not(.x-btn-loading) {
   background: var(--x-gradient-danger-hover, linear-gradient(135deg, var(--x-color-danger-light, #f87171) 0%, var(--x-color-danger, #ef4444) 100%));
-  box-shadow: var(--x-shadow-danger-lg, 0 6px 16px rgba(239, 68, 68, 0.4));
   transform: translateY(-2px);
 }
 
@@ -371,8 +360,8 @@ function handleMouseDown(event: MouseEvent) {
 }
 
 .x-btn-ghost.x-btn-default:hover:not(.x-btn-disabled):not(.x-btn-loading) {
-  background-color: var(--x-fill-color-lighter, rgba(26, 26, 26, 0.05));
-  background: var(--x-fill-color-lighter, rgba(26, 26, 26, 0.05));
+  background-color: color-mix(in srgb, var(--x-color-gray-400, #a0a0a0) 10%, transparent);
+  background: color-mix(in srgb, var(--x-color-gray-400, #a0a0a0) 10%, transparent);
   border-color: var(--x-color-gray-400, #a0a0a0);
 }
 
@@ -385,8 +374,8 @@ function handleMouseDown(event: MouseEvent) {
 }
 
 .x-btn-ghost.x-btn-primary:hover:not(.x-btn-disabled):not(.x-btn-loading) {
-  background-color: var(--x-fill-color-dark, rgba(26, 26, 26, 0.1));
-  background: var(--x-fill-color-dark, rgba(26, 26, 26, 0.1));
+  background-color: color-mix(in srgb, var(--x-color-primary, #1a1a1a) 10%, transparent);
+  background: color-mix(in srgb, var(--x-color-primary, #1a1a1a) 10%, transparent);
   border-color: var(--x-color-primary, #1a1a1a);
   box-shadow: none;
 }
@@ -400,8 +389,8 @@ function handleMouseDown(event: MouseEvent) {
 }
 
 .x-btn-ghost.x-btn-success:hover:not(.x-btn-disabled):not(.x-btn-loading) {
-  background-color: var(--x-fill-color-success-light, rgba(16, 185, 129, 0.1));
-  background: var(--x-fill-color-success-light, rgba(16, 185, 129, 0.1));
+  background-color: color-mix(in srgb, var(--x-color-success, #10b981) 10%, transparent);
+  background: color-mix(in srgb, var(--x-color-success, #10b981) 10%, transparent);
   border-color: var(--x-color-success, #10b981);
   box-shadow: none;
 }
@@ -415,8 +404,8 @@ function handleMouseDown(event: MouseEvent) {
 }
 
 .x-btn-ghost.x-btn-warning:hover:not(.x-btn-disabled):not(.x-btn-loading) {
-  background-color: var(--x-fill-color-warning-light, rgba(245, 158, 11, 0.1));
-  background: var(--x-fill-color-warning-light, rgba(245, 158, 11, 0.1));
+  background-color: color-mix(in srgb, var(--x-color-warning, #f59e0b) 10%, transparent);
+  background: color-mix(in srgb, var(--x-color-warning, #f59e0b) 10%, transparent);
   border-color: var(--x-color-warning, #f59e0b);
   box-shadow: none;
 }
@@ -430,8 +419,8 @@ function handleMouseDown(event: MouseEvent) {
 }
 
 .x-btn-ghost.x-btn-danger:hover:not(.x-btn-disabled):not(.x-btn-loading) {
-  background-color: var(--x-fill-color-danger-light, rgba(239, 68, 68, 0.1));
-  background: var(--x-fill-color-danger-light, rgba(239, 68, 68, 0.1));
+  background-color: color-mix(in srgb, var(--x-color-danger, #ef4444) 10%, transparent);
+  background: color-mix(in srgb, var(--x-color-danger, #ef4444) 10%, transparent);
   border-color: var(--x-color-danger, #ef4444);
   box-shadow: none;
 }

@@ -264,23 +264,23 @@ const handleChange = (value: string | number) => {
 }
 
 .x-radio-item:hover .radio-button {
-  border-color: #1a1a1a;
+  border-color: var(--x-color-primary, #1a1a1a);
   transform: scale(1.15) rotate(10deg);
   box-shadow: 0 0 0 4px rgba(26, 26, 26, 0.08);
 }
 
 .x-radio-item.radio-item-checked .radio-button {
-  border-color: #1a1a1a;
-  background: linear-gradient(135deg, #1a1a1a, #333);
+  border-color: var(--x-color-primary, #1a1a1a);
+  background: var(--x-gradient-primary, linear-gradient(135deg, #1a1a1a 0%, #333 100%));
   animation: radioBtnPop 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
-  box-shadow: 0 0 0 4px rgba(26, 26, 26, 0.12), 0 2px 8px rgba(26, 26, 26, 0.15);
+  box-shadow: 0 0 0 4px var(--x-shadow-primary, rgba(26, 26, 26, 0.12)), 0 2px 8px var(--x-shadow-primary-lg, rgba(26, 26, 26, 0.15));
 }
 
 .x-radio-item.radio-item-checked .radio-button-inner {
-  background-color: #ffffff;
+  background-color: var(--x-color-white, #ffffff);
   transform: translate(-50%, -50%) scale(1);
   animation: radioDotBounce 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) 0.1s;
-  box-shadow: 0 0 4px rgba(255, 255, 255, 0.8);
+  box-shadow: 0 0 4px var(--x-color-white, #ffffff);
 }
 
 .x-radio-item.radio-item-disabled {
@@ -304,9 +304,9 @@ const handleChange = (value: string | number) => {
   position: relative;
   width: 1.25rem;
   height: 1.25rem;
-  border: 2px solid #d1d5db;
+  border: 2px solid var(--x-border-color-light, #d1d5db);
   border-radius: 50%;
-  background-color: #ffffff;
+  background-color: var(--x-color-white, #ffffff);
   transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
   flex-shrink: 0;
   
@@ -315,7 +315,7 @@ const handleChange = (value: string | number) => {
     position: absolute;
     inset: -6px;
     border-radius: 50%;
-    background: radial-gradient(circle, rgba(26, 26, 26, 0.1), transparent);
+    background: radial-gradient(circle, var(--x-fill-color-primary-lighter, rgba(26, 26, 26, 0.1)), transparent);
     opacity: 0;
     transform: scale(0);
     transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
@@ -353,7 +353,7 @@ const handleChange = (value: string | number) => {
   justify-content: center;
   width: 1.5rem;
   height: 1.5rem;
-  color: #6b7280;
+  color: var(--x-text-color-secondary, #6b7280);
   transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
@@ -362,7 +362,7 @@ const handleChange = (value: string | number) => {
 }
 
 .radio-item-checked .radio-icon {
-  color: #1a1a1a;
+  color: var(--x-text-color-primary, #1a1a1a);
   animation: iconPop 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
@@ -373,38 +373,38 @@ const handleChange = (value: string | number) => {
 
 .radio-label {
   font-weight: 500;
-  color: #1a1a1a;
+  color: var(--x-text-color-primary, #1a1a1a);
   transition: all 0.3s ease;
   font-size: 0.875rem;
   line-height: 1.5;
 }
 
 .x-radio-item:hover .radio-label {
-  color: #1a1a1a;
+  color: var(--x-text-color-primary, #1a1a1a);
   transform: translateX(2px);
 }
 
 .radio-item-checked .radio-label {
-  color: #1a1a1a;
+  color: var(--x-text-color-primary, #1a1a1a);
   font-weight: 600;
   transform: translateX(4px);
 }
 
 .radio-description {
   font-size: 0.75rem;
-  color: #6b7280;
+  color: var(--x-text-color-secondary, #6b7280);
   margin-top: 0.25rem;
   line-height: 1.4;
   transition: all 0.3s ease;
 }
 
 .x-radio-item:hover .radio-description {
-  color: #4b5563;
+  color: var(--x-text-color-regular, #4b5563);
   transform: translateX(2px);
 }
 
 .radio-item-checked .radio-description {
-  color: #4b5563;
+  color: var(--x-text-color-regular, #4b5563);
   transform: translateX(4px);
 }
 
@@ -551,28 +551,28 @@ const handleChange = (value: string | number) => {
 .radio-disabled .x-radio-item {
   opacity: 0.5;
   cursor: not-allowed;
-  background: linear-gradient(135deg, #f9fafb 0%, #f3f4f6 100%);
-  border-color: #e5e7eb;
+  background: var(--x-gradient-bg-light, linear-gradient(135deg, #fafafa, #f3f4f6));
+  border-color: var(--x-border-color, #e5e7eb);
 }
 
 .radio-disabled .x-radio-item:hover {
-  border-color: #e5e7eb;
-  background: linear-gradient(135deg, #f9fafb 0%, #f3f4f6 100%);
+  border-color: var(--x-border-color, #e5e7eb);
+  background: var(--x-gradient-bg-light, linear-gradient(135deg, #fafafa, #f3f4f6));
   box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
   transform: none;
 }
 
 .radio-disabled .radio-icon {
   background: rgba(243, 244, 246, 0.8);
-  color: #9ca3af;
+  color: var(--x-text-color-placeholder, #9ca3af);
 }
 
 .radio-disabled .radio-label {
-  color: #9ca3af;
+  color: var(--x-text-color-placeholder, #9ca3af);
 }
 
 .radio-disabled .radio-description {
-  color: #9ca3af;
+  color: var(--x-text-color-placeholder, #9ca3af);
 }
 
 /* ===== 电商支付版本样式 ===== */
@@ -587,9 +587,9 @@ const handleChange = (value: string | number) => {
   align-items: center;
   justify-content: center;
   gap: 1rem;
-  background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+  background: var(--x-gradient-bg-light, linear-gradient(135deg, #fafafa, #f3f4f6));
   backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  border: 1px solid var(--x-border-color-lighter, rgba(255, 255, 255, 0.2));
 }
 
 .payment-title {
@@ -597,7 +597,7 @@ const handleChange = (value: string | number) => {
   font-weight: 700;
   align-self: flex-start;
   margin: 0;
-  color: #1e293b;
+  color: var(--x-text-color-primary, #1a1a1a);
   font-size: 1.125rem;
   letter-spacing: -0.025em;
 }
@@ -606,7 +606,7 @@ const handleChange = (value: string | number) => {
   font-size: 0.75rem;
   align-self: flex-start;
   text-wrap: wrap;
-  color: #64748b;
+  color: var(--x-text-color-secondary, #6b7280);
   padding-bottom: 0.5rem;
   margin: 0;
   line-height: 1.4;

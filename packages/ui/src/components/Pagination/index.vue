@@ -3,8 +3,8 @@
     <!-- 左侧信息 -->
     <div class="x-pagination-info">
       <slot name="info">
-        共 <span class="x-pagination-info-number">{{ total }}</span> 条，
-        当前第 <span class="x-pagination-info-number">{{ current }}</span>/{{ totalPages }} 页
+        {{ localeText.total }} <span class="x-pagination-info-number">{{ total }}</span> {{ localeText.items }}{{ localeText.comma }}
+        {{ localeText.currentPage }} <span class="x-pagination-info-number">{{ current }}</span>/{{ totalPages }} {{ localeText.page }}
       </slot>
     </div>
 
@@ -74,34 +74,40 @@
       <!-- 快速跳转 -->
       <template v-if="showQuickJumper">
         <div class="x-pagination-divider"></div>
-        <span class="x-pagination-jumper-label">跳至</span>
+        <span class="x-pagination-jumper-label">{{ localeText.jumpTo }}</span>
         <input
           v-model.number="jumpPage"
           type="number"
           class="x-pagination-jump-input"
-          placeholder="页码"
+          :placeholder="localeText.pageNumber"
           :min="1"
           :max="totalPages"
           @keyup.enter="handleQuickJump"
         />
-        <span class="x-pagination-jumper-label">页</span>
+        <span class="x-pagination-jumper-label">{{ localeText.page }}</span>
         <XButton
           size="small"
           @click="handleQuickJump"
         >
-          跳转
+          {{ localeText.go }}
         </XButton>
       </template>
     </div>
   </div>
 </template>
 
-<script setup lang="ts">
-import './index.css'
-import { ref, computed, watch } from 'vue'
-import { Icon } from '@iconify/vue'
-import XButton from '../Button/index.vue'
-import XSelect from '../Select/index.vue'
+<script lang="ts">
+export interface PaginationLocale {
+  total?: string
+  items?: string
+  comma?: string
+  currentPage?: string
+  page?: string
+  perPage?: string
+  jumpTo?: string
+  pageNumber?: string
+  go?: string
+}
 
 export interface PaginationProps {
   current?: number
@@ -109,7 +115,42 @@ export interface PaginationProps {
   total?: number
   pageSizeOptions?: number[]
   showQuickJumper?: boolean
+  locale?: PaginationLocale
 }
+
+// 默认中文
+export const defaultLocale: Required<PaginationLocale> = {
+  total: '共',
+  items: '条',
+  comma: '，',
+  currentPage: '当前第',
+  page: '页',
+  perPage: '条/页',
+  jumpTo: '跳至',
+  pageNumber: '页码',
+  go: '跳转'
+}
+
+// 英文
+export const enUS: Required<PaginationLocale> = {
+  total: 'Total',
+  items: 'items',
+  comma: ',',
+  currentPage: 'Page',
+  page: 'page',
+  perPage: 'per page',
+  jumpTo: 'Go to',
+  pageNumber: 'Page',
+  go: 'Go'
+}
+</script>
+
+<script setup lang="ts">
+import './index.css'
+import { ref, computed, watch } from 'vue'
+import { Icon } from '@iconify/vue'
+import XButton from '../Button/index.vue'
+import XSelect from '../Select/index.vue'
 
 const props = withDefaults(defineProps<PaginationProps>(), {
   current: 1,
@@ -128,11 +169,17 @@ const emit = defineEmits<{
 const internalPageSize = ref(props.pageSize)
 const jumpPage = ref<number | string>('')
 
+// 合并用户提供的 locale 和默认 locale
+const localeText = computed<Required<PaginationLocale>>(() => ({
+  ...defaultLocale,
+  ...props.locale
+}))
+
 const totalPages = computed(() => Math.ceil(props.total / internalPageSize.value) || 1)
 
 const pageSizeOpts = computed(() => 
   props.pageSizeOptions.map(size => ({
-    label: `${size} 条/页`,
+    label: `${size} ${localeText.value.perPage}`,
     value: size
   }))
 )

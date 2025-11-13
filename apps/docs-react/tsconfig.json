@@ -1,0 +1,22 @@
+{
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    "jsx": "react-jsx",
+    "baseUrl": ".",
+    "paths": {
+      "@xlui/xux-react": [
+        "../../packages/react/src"
+      ],
+      "@@/*": [
+        ".dumi/tmp/*"
+      ],
+      "@/*": [
+        "./src/*"
+      ]
+    }
+  },
+  "include": [
+    "docs/**/*",
+    "../../packages/react/src/**/*"
+  ]
+}

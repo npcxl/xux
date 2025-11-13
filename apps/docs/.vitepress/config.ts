@@ -63,6 +63,7 @@ export default defineConfig({
       { text: '指南', link: '/guide/introduction' },
       { text: '组件', link: '/components/button' },
       { text: 'API 工具', link: '/api/' },
+      { text: '在线演示', link: 'https://admin.xlcig.cn' },
       { 
         text: '资源',
         items: [
@@ -152,6 +153,7 @@ export default defineConfig({
             { text: 'DragSort 拖拽排序', link: '/components/drag-sort' },
             { text: 'Pagination 分页', link: '/components/pagination' },
             { text: 'List 列表', link: '/components/list' },
+            { text: 'Chart 图表', link: '/components/chart' },
           ]
         },
         {
@@ -236,7 +238,7 @@ export default defineConfig({
     },
 
     socialLinks: [
-      { icon: 'github', link: 'https://gitee.com/leheya/xux' },
+      { icon: 'npm', link: 'https://www.npmjs.com/package/@xlui/xux-ui' },
     ],
 
     footer: {

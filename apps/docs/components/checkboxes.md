@@ -332,6 +332,76 @@ const options = [
 
 </div>
 
+<div style="break-inside: avoid; margin-bottom: 24px;">
+
+## 可折叠菜单
+
+使用 `collapsible` 属性开启折叠功能，添加汉堡菜单按钮控制选项的显示和隐藏。
+
+:::demo
+
+```vue
+<template>
+  <XFlex vertical gap="24">
+    <div>
+      <div style="font-size: 14px; font-weight: 500; margin-bottom: 8px; color: #374151;">折叠菜单 - 默认展开</div>
+      <XCheckboxes 
+        v-model="selected1" 
+        :options="options"
+        collapsible
+        :defaultExpanded="true"
+      />
+      <div style="font-size: 14px; color: #666; margin-top: 12px">
+        已选择：{{ selected1.join(', ') || '未选择' }}
+      </div>
+    </div>
+    
+    <div>
+      <div style="font-size: 14px; font-weight: 500; margin-bottom: 8px; color: #374151;">折叠菜单 - 默认折叠</div>
+      <XCheckboxes 
+        v-model="selected2" 
+        :options="techOptions"
+        collapsible
+        :defaultExpanded="false"
+        layout="grid"
+        :columns="2"
+      />
+      <div style="font-size: 14px; color: #666; margin-top: 12px">
+        已选择 {{ selected2.length }} 项
+      </div>
+    </div>
+  </XFlex>
+</template>
+
+<script setup>
+import { ref } from 'vue'
+import { XFlex, XCheckboxes } from '@xlui/xux-ui'
+
+const selected1 = ref(['apple', 'banana'])
+const options = [
+  { label: '苹果', value: 'apple', icon: 'mdi:apple' },
+  { label: '香蕉', value: 'banana', icon: 'mdi:fruit-citrus' },
+  { label: '橙子', value: 'orange', icon: 'mdi:orange' },
+  { label: '葡萄', value: 'grape', icon: 'mdi:fruit-grapes' },
+  { label: '草莓', value: 'strawberry', icon: 'mdi:food-apple' }
+]
+
+const selected2 = ref(['vue', 'ts'])
+const techOptions = [
+  { label: 'Vue.js', value: 'vue', icon: 'mdi:vuejs' },
+  { label: 'React', value: 'react', icon: 'mdi:react' },
+  { label: 'TypeScript', value: 'ts', icon: 'mdi:language-typescript' },
+  { label: 'JavaScript', value: 'js', icon: 'mdi:language-javascript' },
+  { label: 'Node.js', value: 'node', icon: 'mdi:nodejs' },
+  { label: 'Python', value: 'python', icon: 'mdi:language-python' }
+]
+</script>
+```
+
+:::
+
+</div>
+
 </div>
 
 ## API
@@ -345,6 +415,8 @@ const options = [
 | layout | 布局方式 | `'vertical' \| 'horizontal' \| 'grid'` | `'vertical'` |
 | columns | 网格列数（仅 grid 布局） | `number` | `3` |
 | disabled | 是否禁用 | `boolean` | `false` |
+| collapsible | 是否可折叠 | `boolean` | `false` |
+| defaultExpanded | 默认是否展开 | `boolean` | `true` |
 
 ### Option
 
@@ -361,3 +433,14 @@ const options = [
 |--------|------|----------|
 | update:modelValue | 值变化时触发 | `(value: Array<string \| number>)` |
 | change | 值变化时触发 | `(value: Array<string \| number>)` |
+
+### Methods
+
+| 方法名 | 说明 | 参数 |
+|--------|------|------|
+| clearAll | 清空所有选中项 | - |
+| selectAll | 全选所有可选项 | - |
+| removeOption | 移除单个选项 | `value: string \| number` |
+| toggle | 切换折叠状态 | - |
+| expand | 展开选项列表 | - |
+| collapse | 折叠选项列表 | - |

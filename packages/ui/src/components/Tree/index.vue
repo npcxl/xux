@@ -50,6 +50,8 @@ export interface TreeProps {
   data: TreeNodeData[]
   /** 是否可勾选 */
   checkable?: boolean
+  /** 是否支持多选（点击节点） */
+  multiple?: boolean
   /** 默认展开所有节点 */
   defaultExpandAll?: boolean
   /** 默认选中的节点key */
@@ -69,6 +71,7 @@ export interface TreeProps {
 const props = withDefaults(defineProps<TreeProps>(), {
   data: () => [],
   checkable: false,
+  multiple: false,
   defaultExpandAll: false,
   defaultSelectedKeys: () => [],
   defaultCheckedKeys: () => [],
@@ -180,7 +183,18 @@ function updateParentCheckState(nodeKey: string) {
 }
 
 const handleSelect = (key: string, node: TreeNodeData) => {
-  selectedKeys.value = [key]
+  if (props.multiple) {
+    // 多选模式：切换选中状态
+    const index = selectedKeys.value.indexOf(key)
+    if (index > -1) {
+      selectedKeys.value.splice(index, 1)
+    } else {
+      selectedKeys.value.push(key)
+    }
+  } else {
+    // 单选模式：替换选中
+    selectedKeys.value = [key]
+  }
   emit('select', selectedKeys.value, node)
 }
 
@@ -279,6 +293,11 @@ defineExpose({
     halfChecked: halfCheckedKeys.value
   }),
   getExpandedKeys: () => expandedKeys.value,
+
+  // 设置选中的节点
+  setSelectedKeys: (keys: string[]) => {
+    selectedKeys.value = keys
+  },
   setCheckedKeys: (keys: string[]) => {
     checkedKeys.value = keys
   },

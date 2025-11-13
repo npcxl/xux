@@ -58,12 +58,15 @@
         <div
           v-for="(item, index) in items"
           :key="getItemKey(item, index)"
+          :ref="animated ? (el) => setItemRef(el, index) : undefined"
           class="x-list-item"
           :class="{
             'x-list-item--clickable': clickable,
             'x-list-item--selected': isSelected(item, index),
-            'x-list-item--disabled': item.disabled
+            'x-list-item--disabled': item.disabled,
+            'x-list-item--animated': animated
           }"
+          :style="animated ? { '--animation-delay': `${index * animationDelay}ms` } : undefined"
           @click="handleItemClick(item, index)"
         >
           <!-- 选择框 -->
@@ -156,7 +159,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, onMounted, onBeforeUnmount, nextTick, watch } from 'vue'
 import { Icon } from '@iconify/vue'
 
 export interface ListAction {
@@ -193,7 +196,7 @@ export interface ListProps {
   /** 尺寸 */
   size?: 'small' | 'medium' | 'large'
   /** 变体 */
-  variant?: 'default' | 'card' | 'timeline'
+  variant?: 'default' | 'card'
   /** 是否显示边框 */
   bordered?: boolean
   /** 是否显示分割线 */
@@ -216,6 +219,10 @@ export interface ListProps {
   selectedKeys?: (string | number)[]
   /** 项的唯一标识字段 */
   itemKey?: string
+  /** 是否启用动画 */
+  animated?: boolean
+  /** 动画延迟（ms） */
+  animationDelay?: number
 }
 
 const props = withDefaults(defineProps<ListProps>(), {
@@ -231,7 +238,9 @@ const props = withDefaults(defineProps<ListProps>(), {
   loadingText: '加载中...',
   emptyText: '暂无数据',
   selectedKeys: () => [],
-  itemKey: 'id'
+  itemKey: 'id',
+  animated: false,
+  animationDelay: 50
 })
 
 const emit = defineEmits<{
@@ -242,6 +251,92 @@ const emit = defineEmits<{
 }>()
 
 const selectedKeysInternal = ref<(string | number)[]>([...props.selectedKeys])
+
+// 滚动动画相关
+const itemRefs = ref<HTMLElement[]>([])
+const observer = ref<IntersectionObserver | null>(null)
+
+const setItemRef = (el: any, index: number) => {
+  if (el) {
+    itemRefs.value[index] = el
+  }
+}
+
+// 初始化 Intersection Observer
+const initObserver = () => {
+  if (!props.animated || typeof window === 'undefined') return
+
+  observer.value = new IntersectionObserver(
+    (entries) => {
+      // 使用 requestAnimationFrame 异步处理，避免阻塞主线程
+      requestAnimationFrame(() => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            // 进入视口时添加可见类
+            entry.target.classList.add('x-list-item--visible')
+          } else {
+            // 离开视口时移除可见类，下次进入时可以重新触发动画
+            entry.target.classList.remove('x-list-item--visible')
+          }
+        })
+      })
+    },
+    {
+      threshold: 0.01, // 更低的阈值，更早触发
+      rootMargin: '150px' // 更大的边距，提前 150px 就开始加载动画
+    }
+  )
+
+  // 观察所有列表项
+  itemRefs.value.forEach((item, index) => {
+    if (item) {
+      observer.value?.observe(item)
+      
+      // 首屏元素立即显示，无需等待动画
+      // 使用 getBoundingClientRect 检查是否已在视口内
+      const rect = item.getBoundingClientRect()
+      const isInViewport = rect.top < window.innerHeight && rect.bottom > 0
+      
+      if (isInViewport) {
+        // 首屏元素立即显示
+        item.classList.add('x-list-item--visible')
+      }
+    }
+  })
+}
+
+// 监听 items 变化，重新初始化观察器
+watch(() => props.items, async () => {
+  if (props.animated) {
+    await nextTick()
+    // 清理旧的观察器
+    if (observer.value) {
+      itemRefs.value.forEach((item) => {
+        if (item) {
+          observer.value?.unobserve(item)
+          item.classList.remove('x-list-item--visible')
+        }
+      })
+    }
+    itemRefs.value = []
+    await nextTick()
+    initObserver()
+  }
+}, { deep: true })
+
+onMounted(() => {
+  if (props.animated) {
+    nextTick(() => {
+      initObserver()
+    })
+  }
+})
+
+onBeforeUnmount(() => {
+  if (observer.value) {
+    observer.value.disconnect()
+  }
+})
 
 // 获取项的 key
 const getItemKey = (item: ListItem, index: number): string | number => {
@@ -642,46 +737,6 @@ defineExpose({
   margin-bottom: 12px;
 }
 
-/* 时间轴变体 */
-.x-list--timeline .x-list-items {
-  position: relative;
-  padding-left: 32px;
-}
-
-.x-list--timeline .x-list-items::before {
-  content: '';
-  position: absolute;
-  left: 19px;
-  top: 12px;
-  bottom: 12px;
-  width: 2px;
-  background: var(--x-border-color, #e5e7eb);
-}
-
-.x-list--timeline .x-list-item {
-  position: relative;
-  padding-left: 0;
-}
-
-.x-list--timeline .x-list-item::before {
-  content: '';
-  position: absolute;
-  left: -20px;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-  background: var(--x-color-primary, #1a1a1a);
-  border: 2px solid var(--x-bg-color, #ffffff);
-  z-index: 1;
-}
-
-.x-list--timeline .x-list-item--selected::before {
-  background: var(--x-color-primary, #3b82f6);
-  box-shadow: 0 0 0 3px var(--x-timeline-node-shadow, rgba(59, 130, 246, 0.3));
-}
-
 /* 底部 */
 .x-list-footer {
   padding: 12px 20px;
@@ -765,5 +820,20 @@ defineExpose({
   font-size: var(--x-font-size-sm, 14px);
   color: var(--x-text-color-placeholder, #9ca3af);
 }
+
+/* 滚动动画 - 快速响应 */
+.x-list-item--animated {
+  opacity: 0;
+  transform: translateY(20px) scale(0.96);
+  transition: opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1), 
+              transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  transition-delay: var(--animation-delay, 0ms);
+}
+
+.x-list-item--animated.x-list-item--visible {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
 </style>
+
 

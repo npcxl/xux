@@ -10,7 +10,7 @@
         >
           <!-- 标签列表 -->
           <div
-            v-for="(tab, index) in tabs"
+            v-for="(tab, index) in displayTabs"
             :key="tab.name"
             class="x-tabs__item"
             :class="{
@@ -48,6 +48,48 @@
             <Icon icon="mdi:plus" />
           </div>
           
+          <!-- 下拉按钮 -->
+          <XDropdown
+            v-if="showOverflowDropdown && overflowTabs.length > 0"
+            ref="dropdownRef"
+            trigger="click"
+            placement="bottom-end"
+            :close-on-click="true"
+            :max-height="400"
+            :min-width="160"
+          >
+            <div class="x-tabs__dropdown-btn">
+              <Icon icon="mdi:chevron-down" />
+            </div>
+            
+            <template #dropdown>
+              <div class="x-tabs__dropdown-menu">
+                <div
+                  v-for="tab in overflowTabs"
+                  :key="tab.name"
+                  class="x-tabs__dropdown-item"
+                  :class="{
+                    'is-active': activeKey === tab.name,
+                    'is-disabled': tab.disabled
+                  }"
+                  @click="handleDropdownTabClick(tab)"
+                >
+                  <span v-if="tab.icon" class="x-tabs__dropdown-item-icon">
+                    <Icon :icon="tab.icon" />
+                  </span>
+                  <span class="x-tabs__dropdown-item-label">{{ tab.label }}</span>
+                  <span
+                    v-if="tab.closable !== false && closable"
+                    class="x-tabs__dropdown-item-close"
+                    @click.stop="handleTabClose(tab, tabs.findIndex(t => t.name === tab.name))"
+                  >
+                    <Icon icon="mdi:close" />
+                  </span>
+                </div>
+              </div>
+            </template>
+          </XDropdown>
+          
           <!-- 激活指示器 -->
           <div
             v-if="type === 'line' || type === 'card'"
@@ -72,8 +114,9 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch, nextTick, onMounted, provide } from 'vue'
+import { ref, computed, watch, nextTick, onMounted, provide } from 'vue'
 import { Icon } from '@iconify/vue'
+import XDropdown from '../Dropdown/index.vue'
 
 export interface TabPane {
   name: string | number
@@ -92,6 +135,8 @@ export interface TabsProps {
   addable?: boolean
   scrollable?: boolean
   animated?: boolean
+  /** 超出宽度时显示下拉菜单 */
+  showOverflowDropdown?: boolean
 }
 
 const props = withDefaults(defineProps<TabsProps>(), {
@@ -101,7 +146,8 @@ const props = withDefaults(defineProps<TabsProps>(), {
   closable: false,
   addable: false,
   scrollable: false,
-  animated: true
+  animated: true,
+  showOverflowDropdown: false
 })
 
 const emit = defineEmits<{
@@ -117,6 +163,11 @@ const tabs = ref<TabPane[]>([])
 const activeKey = ref(props.modelValue)
 const navRef = ref<HTMLElement>()
 const indicatorRef = ref<HTMLElement>()
+
+// 下拉菜单相关
+const dropdownRef = ref()
+const visibleTabs = ref<TabPane[]>([])
+const overflowTabs = ref<TabPane[]>([])
 
 // 注册标签页
 const registerTab = (tab: TabPane) => {
@@ -184,7 +235,7 @@ const handleTabClick = (tab: TabPane, index: number) => {
 }
 
 // 悬停标签
-const handleTabHover = () => {
+const handleTabHover = (_tab: TabPane, _index: number) => {
   // 可以在这里添加悬停效果
 }
 
@@ -213,29 +264,133 @@ const handleTabAdd = () => {
   emit('tab-add')
 }
 
+// 计算显示的标签
+const displayTabs = computed(() => {
+  if (!props.showOverflowDropdown) {
+    return tabs.value
+  }
+  return visibleTabs.value
+})
+
+// 计算标签溢出
+const calculateOverflow = () => {
+  if (!props.showOverflowDropdown || !navRef.value || tabs.value.length === 0) {
+    visibleTabs.value = tabs.value
+    overflowTabs.value = []
+    return
+  }
+
+  // 先暂时显示所有标签以正确测量
+  visibleTabs.value = tabs.value
+  overflowTabs.value = []
+  
+  nextTick(() => {
+    if (!navRef.value) return
+    
+    const navWidth = navRef.value.clientWidth || 0
+    const items = Array.from(navRef.value.querySelectorAll('.x-tabs__item')) as HTMLElement[]
+    const addBtn = navRef.value.querySelector('.x-tabs__add') as HTMLElement
+    const dropdownBtnWidth = 40 // 下拉按钮预估宽度
+    
+    const addBtnWidth = addBtn ? addBtn.offsetWidth + 8 : 0 // +8 for margin
+    let availableWidth = navWidth - addBtnWidth - dropdownBtnWidth
+    
+    let totalWidth = 0
+    const visible: TabPane[] = []
+    const overflow: TabPane[] = []
+    
+    // 计算哪些标签可以显示
+    for (let i = 0; i < tabs.value.length; i++) {
+      const item = items[i]
+      if (!item) continue
+      
+      const itemWidth = item.offsetWidth
+      totalWidth += itemWidth
+      
+      if (totalWidth <= availableWidth) {
+        visible.push(tabs.value[i])
+      } else {
+        overflow.push(tabs.value[i])
+      }
+    }
+    
+    // 如果没有溢出，增加可用宽度（不需要下拉按钮）
+    if (overflow.length === 0) {
+      availableWidth += dropdownBtnWidth
+      totalWidth = 0
+      visible.length = 0
+      
+      for (let i = 0; i < tabs.value.length; i++) {
+        const item = items[i]
+        if (!item) continue
+        
+        const itemWidth = item.offsetWidth
+        totalWidth += itemWidth
+        
+        if (totalWidth <= availableWidth) {
+          visible.push(tabs.value[i])
+        } else {
+          overflow.push(tabs.value[i])
+        }
+      }
+    }
+    
+    // 确保当前激活的标签总是可见
+    const activeIndex = overflow.findIndex(tab => tab.name === activeKey.value)
+    if (activeIndex > -1 && visible.length > 0) {
+      const activeTab = overflow.splice(activeIndex, 1)[0]
+      visible.push(activeTab)
+      // 移除最后一个可见标签到溢出列表（除了第一个）
+      if (visible.length > 1) {
+        const removed = visible.splice(visible.length - 2, 1)
+        overflow.unshift(...removed)
+      }
+    }
+    
+    visibleTabs.value = visible
+    overflowTabs.value = overflow
+  })
+}
+
+// 处理下拉菜单标签点击
+const handleDropdownTabClick = (tab: TabPane) => {
+  if (tab.disabled) return
+  
+  const index = tabs.value.findIndex(t => t.name === tab.name)
+  handleTabClick(tab, index)
+}
+
 // 监听 modelValue 变化
 watch(() => props.modelValue, (val) => {
   activeKey.value = val
+  calculateOverflow()
   updateIndicator()
 })
 
 // 监听标签变化
 watch(() => tabs.value.length, () => {
   nextTick(() => {
+    calculateOverflow()
     updateIndicator()
   })
 })
 
 onMounted(() => {
+  calculateOverflow()
   updateIndicator()
   
   // 监听窗口大小变化
-  window.addEventListener('resize', updateIndicator)
+  const handleResize = () => {
+    calculateOverflow()
+    updateIndicator()
+  }
+  window.addEventListener('resize', handleResize)
 })
 
 // 暴露方法
 defineExpose({
-  updateIndicator
+  updateIndicator,
+  calculateOverflow
 })
 </script>
 
@@ -362,6 +517,99 @@ defineExpose({
 .x-tabs__add:hover {
   color: var(--x-color-primary, #1a1a1a);
   background: var(--x-bg-color-hover, #f5f5f5);
+}
+
+/* 下拉按钮 */
+.x-tabs__dropdown-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  margin-left: 8px;
+  border-radius: var(--x-radius-base, 6px);
+  color: var(--x-text-color-secondary, #666);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 18px;
+}
+
+.x-tabs__dropdown-btn:hover {
+  color: var(--x-color-primary, #1a1a1a);
+  background: var(--x-bg-color-hover, #f5f5f5);
+}
+
+/* 下拉菜单 */
+.x-tabs__dropdown-menu {
+  padding: 4px;
+}
+
+.x-tabs__dropdown-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  border-radius: var(--x-radius-sm, 4px);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  color: var(--x-text-color, #333);
+  font-size: 14px;
+  white-space: nowrap;
+}
+
+.x-tabs__dropdown-item:hover {
+  background: var(--x-bg-color-hover, #f5f5f5);
+  color: var(--x-color-primary, #1a1a1a);
+}
+
+.x-tabs__dropdown-item.is-active {
+  background: var(--x-color-primary-light, rgba(26, 26, 26, 0.1));
+  color: var(--x-color-primary, #1a1a1a);
+  font-weight: 600;
+}
+
+.x-tabs__dropdown-item.is-disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+  color: var(--x-text-color-disabled, #ccc);
+}
+
+.x-tabs__dropdown-item.is-disabled:hover {
+  background: transparent;
+  color: var(--x-text-color-disabled, #ccc);
+}
+
+.x-tabs__dropdown-item-icon {
+  display: flex;
+  align-items: center;
+  font-size: 16px;
+}
+
+.x-tabs__dropdown-item-label {
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.x-tabs__dropdown-item-close {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  font-size: 12px;
+  opacity: 0;
+  transition: all 0.2s ease;
+}
+
+.x-tabs__dropdown-item:hover .x-tabs__dropdown-item-close {
+  opacity: 0.6;
+}
+
+.x-tabs__dropdown-item-close:hover {
+  opacity: 1 !important;
+  background: var(--x-bg-color-hover, rgba(0, 0, 0, 0.1));
 }
 
 /* 指示器 */
@@ -623,6 +871,49 @@ defineExpose({
   padding: 20px;
 }
 
+/* Chrome 风格深色模式 */
+@media (prefers-color-scheme: dark) {
+  .x-tabs--chrome .x-tabs__nav {
+    background: var(--x-bg-color-secondary, #1f2937);
+  }
+  
+  .x-tabs--chrome .x-tabs__item {
+    background: var(--x-bg-color-tertiary, #374151);
+  }
+  
+  .x-tabs--chrome .x-tabs__item::before {
+    background: linear-gradient(
+      to bottom,
+      transparent 0%,
+      rgba(0, 0, 0, 0.2) 100%
+    );
+  }
+  
+  .x-tabs--chrome .x-tabs__item:hover {
+    background: var(--x-bg-color-secondary, #1f2937);
+  }
+  
+  .x-tabs--chrome .x-tabs__item.is-active {
+    background: var(--x-bg-color, #111827);
+    box-shadow: 
+      0 -2px 12px rgba(0, 0, 0, 0.4),
+      0 0 0 1px rgba(255, 255, 255, 0.1),
+      inset 0 -1px 0 0 var(--x-bg-color, #111827);
+  }
+  
+  .x-tabs--chrome .x-tabs__item.is-active::before {
+    background: linear-gradient(
+      to bottom,
+      var(--x-color-primary-alpha-10, rgba(255, 255, 255, 0.05)) 0%,
+      transparent 30%
+    );
+  }
+  
+  .x-tabs--chrome .x-tabs__content {
+    background: var(--x-bg-color, #111827);
+  }
+}
+
 /* ============================================
    Safari 类型 - Safari 浏览器风格
    ============================================ */
@@ -630,6 +921,7 @@ defineExpose({
   gap: 2px;
   background: var(--x-bg-color-secondary, #f5f5f5);
   padding: 4px;
+  color: var(--x-text-color, #1a1a1a);
   border-radius: var(--x-radius-lg, 12px);
 }
 
@@ -673,6 +965,26 @@ defineExpose({
 
 .x-tabs--safari .x-tabs__content {
   padding: 16px 0;
+}
+
+/* Safari 风格深色模式 */
+@media (prefers-color-scheme: dark) {
+  .x-tabs--safari .x-tabs__nav {
+    background: var(--x-bg-color-secondary, #1f2937);
+    color: var(--x-text-color, #f3f4f6);
+  }
+  
+  .x-tabs--safari .x-tabs__item:hover {
+    background: var(--x-bg-color-hover, rgba(255, 255, 255, 0.08));
+  }
+  
+  .x-tabs--safari .x-tabs__item.is-active {
+    background: var(--x-bg-color, #111827);
+    box-shadow: 
+      0 1px 3px rgba(0, 0, 0, 0.3),
+      0 1px 2px rgba(0, 0, 0, 0.2),
+      inset 0 0 0 0.5px rgba(255, 255, 255, 0.1);
+  }
 }
 
 /* ============================================

@@ -1,5 +1,5 @@
 <template>
-  <div :class="['x-menu', { 'x-menu-collapsed': collapsed }]" :style="{ width: menuWidth }">
+  <div :class="['x-menu', { 'x-menu-collapsed': collapsed }]" :style="{ width: menuWidth, height: props.height }">
     <div class="x-menu-items">
       <template v-for="item in menuItems" :key="item.key">
         <!-- 单层菜单项（无子菜单） -->
@@ -201,6 +201,8 @@ export interface MenuProps {
   collapsed?: boolean
   /** 菜单宽度 */
   width?: string
+  /** 菜单高度（超出自动滚动） */
+  height?: string
   /** 手风琴模式（只展开一个） */
   accordion?: boolean
   /** 是否可折叠（是否显示箭头和折叠功能） */
@@ -213,6 +215,7 @@ const props = withDefaults(defineProps<MenuProps>(), {
   defaultOpenKeys: () => [],
   collapsed: false,
   width: '280px',
+  height: '',
   accordion: false,
   collapsible: true
 })
@@ -363,11 +366,59 @@ onUnmounted(() => {
 <style scoped>
 .x-menu {
   font-family: var(--x-font-family, 'Segoe UI', sans-serif);
-  background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+  background: linear-gradient(135deg, 
+    var(--x-bg-color, #ffffff) 0%, 
+    var(--x-bg-color-secondary, #f8f9fa) 100%
+  );
   border-radius: var(--x-radius-lg, 12px);
   padding: 12px;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 4px 20px var(--x-shadow-color, rgba(0, 0, 0, 0.08));
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+/* 滚动条样式美化 */
+.x-menu::-webkit-scrollbar {
+  width: 6px;
+}
+
+.x-menu::-webkit-scrollbar-track {
+  background: var(--x-scrollbar-track-color, rgba(0, 0, 0, 0.05));
+  border-radius: 3px;
+}
+
+.x-menu::-webkit-scrollbar-thumb {
+  background: var(--x-scrollbar-thumb-color, rgba(0, 0, 0, 0.2));
+  border-radius: 3px;
+  transition: background 0.3s;
+}
+
+.x-menu::-webkit-scrollbar-thumb:hover {
+  background: var(--x-scrollbar-thumb-hover-color, rgba(0, 0, 0, 0.3));
+}
+
+/* 深色模式 */
+@media (prefers-color-scheme: dark) {
+  .x-menu {
+    background: linear-gradient(135deg, 
+      var(--x-bg-color, #1f2937) 0%, 
+      var(--x-bg-color-secondary, #111827) 100%
+    );
+    box-shadow: 0 4px 20px var(--x-shadow-color, rgba(0, 0, 0, 0.3));
+  }
+  
+  .x-menu::-webkit-scrollbar-track {
+    background: var(--x-scrollbar-track-color, rgba(255, 255, 255, 0.05));
+  }
+  
+  .x-menu::-webkit-scrollbar-thumb {
+    background: var(--x-scrollbar-thumb-color, rgba(255, 255, 255, 0.2));
+  }
+  
+  .x-menu::-webkit-scrollbar-thumb:hover {
+    background: var(--x-scrollbar-thumb-hover-color, rgba(255, 255, 255, 0.3));
+  }
 }
 
 .x-menu-items {
@@ -407,7 +458,10 @@ onUnmounted(() => {
 }
 
 .x-menu-item:hover {
-  background: linear-gradient(135deg, rgba(26, 26, 26, 0.06) 0%, rgba(26, 26, 26, 0.03) 100%);
+  background: linear-gradient(135deg, 
+    var(--x-menu-hover-bg-start, rgba(26, 26, 26, 0.06)) 0%, 
+    var(--x-menu-hover-bg-end, rgba(26, 26, 26, 0.03)) 100%
+  );
   transform: translateX(4px);
 }
 
@@ -416,11 +470,31 @@ onUnmounted(() => {
 }
 
 .x-menu-item-active {
-  background: linear-gradient(135deg, rgba(26, 26, 26, 0.1) 0%, rgba(26, 26, 26, 0.05) 100%);
+  background: linear-gradient(135deg, 
+    var(--x-menu-active-bg-start, rgba(26, 26, 26, 0.1)) 0%, 
+    var(--x-menu-active-bg-end, rgba(26, 26, 26, 0.05)) 100%
+  );
 }
 
 .x-menu-item-active::before {
   transform: scaleY(1);
+}
+
+/* 深色模式 */
+@media (prefers-color-scheme: dark) {
+  .x-menu-item:hover {
+    background: linear-gradient(135deg, 
+      var(--x-menu-hover-bg-start, rgba(255, 255, 255, 0.08)) 0%, 
+      var(--x-menu-hover-bg-end, rgba(255, 255, 255, 0.04)) 100%
+    );
+  }
+  
+  .x-menu-item-active {
+    background: linear-gradient(135deg, 
+      var(--x-menu-active-bg-start, rgba(255, 255, 255, 0.12)) 0%, 
+      var(--x-menu-active-bg-end, rgba(255, 255, 255, 0.06)) 100%
+    );
+  }
 }
 
 .x-menu-item-disabled {
@@ -505,7 +579,10 @@ onUnmounted(() => {
 }
 
 .x-menu-group-title[style*="cursor: pointer"]:hover {
-  background: linear-gradient(135deg, rgba(26, 26, 26, 0.06) 0%, rgba(26, 26, 26, 0.03) 100%);
+  background: linear-gradient(135deg, 
+    var(--x-menu-hover-bg-start, rgba(26, 26, 26, 0.06)) 0%, 
+    var(--x-menu-hover-bg-end, rgba(26, 26, 26, 0.03)) 100%
+  );
 }
 
 .x-menu-group-title[style*="cursor: pointer"]:hover::before {
@@ -513,7 +590,27 @@ onUnmounted(() => {
 }
 
 .x-menu-group-open .x-menu-group-title {
-  background: linear-gradient(135deg, rgba(26, 26, 26, 0.08) 0%, rgba(26, 26, 26, 0.04) 100%);
+  background: linear-gradient(135deg, 
+    var(--x-menu-open-bg-start, rgba(26, 26, 26, 0.08)) 0%, 
+    var(--x-menu-open-bg-end, rgba(26, 26, 26, 0.04)) 100%
+  );
+}
+
+/* 深色模式 */
+@media (prefers-color-scheme: dark) {
+  .x-menu-group-title[style*="cursor: pointer"]:hover {
+    background: linear-gradient(135deg, 
+      var(--x-menu-hover-bg-start, rgba(255, 255, 255, 0.08)) 0%, 
+      var(--x-menu-hover-bg-end, rgba(255, 255, 255, 0.04)) 100%
+    );
+  }
+  
+  .x-menu-group-open .x-menu-group-title {
+    background: linear-gradient(135deg, 
+      var(--x-menu-open-bg-start, rgba(255, 255, 255, 0.1)) 0%, 
+      var(--x-menu-open-bg-end, rgba(255, 255, 255, 0.05)) 100%
+    );
+  }
 }
 
 .x-menu-group-disabled .x-menu-group-title {
@@ -521,10 +618,6 @@ onUnmounted(() => {
   opacity: 0.5;
 }
 
-/* 分组目录模式（不可折叠） */
-.x-menu-group-title--category {
-  padding: 8px 16px 4px 16px;
-}
 
 .x-menu-group-title--category .x-menu-item-icon {
   font-size: 14px;
@@ -605,7 +698,7 @@ onUnmounted(() => {
 }
 
 .x-menu-subitem:hover {
-  background: rgba(26, 26, 26, 0.05);
+  background: var(--x-menu-subitem-hover-bg, rgba(26, 26, 26, 0.05));
   transform: translateX(6px);
 }
 
@@ -615,12 +708,23 @@ onUnmounted(() => {
 }
 
 .x-menu-subitem-active {
-  background: rgba(26, 26, 26, 0.08);
+  background: var(--x-menu-subitem-active-bg, rgba(26, 26, 26, 0.08));
 }
 
 .x-menu-subitem-active::before {
   opacity: 1;
   left: 6px;
+}
+
+/* 深色模式 */
+@media (prefers-color-scheme: dark) {
+  .x-menu-subitem:hover {
+    background: var(--x-menu-subitem-hover-bg, rgba(255, 255, 255, 0.06));
+  }
+  
+  .x-menu-subitem-active {
+    background: var(--x-menu-subitem-active-bg, rgba(255, 255, 255, 0.1));
+  }
 }
 
 .x-menu-subitem-disabled {
@@ -722,11 +826,25 @@ onUnmounted(() => {
 .x-menu-popup {
   /* position 和 top/left 由内联样式动态设置 */
   min-width: 200px;
-  background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+  background: linear-gradient(135deg, 
+    var(--x-bg-color, #ffffff) 0%, 
+    var(--x-bg-color-secondary, #f8f9fa) 100%
+  );
   border-radius: var(--x-radius-lg, 12px);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 8px 24px var(--x-shadow-lg, rgba(0, 0, 0, 0.15));
   z-index: 9999;
   overflow: hidden;
+}
+
+/* 深色模式 */
+@media (prefers-color-scheme: dark) {
+  .x-menu-popup {
+    background: linear-gradient(135deg, 
+      var(--x-bg-color, #1f2937) 0%, 
+      var(--x-bg-color-secondary, #111827) 100%
+    );
+    box-shadow: 0 8px 24px var(--x-shadow-lg, rgba(0, 0, 0, 0.5));
+  }
 }
 
 .x-menu-popup-title {
@@ -736,7 +854,14 @@ onUnmounted(() => {
   color: var(--x-color-gray-500, #6b7280);
   text-transform: uppercase;
   letter-spacing: 0.5px;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+  border-bottom: 1px solid var(--x-border-color-light, rgba(0, 0, 0, 0.06));
+}
+
+/* 深色模式 */
+@media (prefers-color-scheme: dark) {
+  .x-menu-popup-title {
+    border-bottom: 1px solid var(--x-border-color-light, rgba(255, 255, 255, 0.1));
+  }
 }
 
 .x-menu-popup-items {
@@ -770,7 +895,7 @@ onUnmounted(() => {
 }
 
 .x-menu-popup-item:hover {
-  background: rgba(26, 26, 26, 0.05);
+  background: var(--x-menu-popup-hover-bg, rgba(26, 26, 26, 0.05));
   transform: translateX(4px);
 }
 
@@ -780,12 +905,23 @@ onUnmounted(() => {
 }
 
 .x-menu-popup-item-active {
-  background: rgba(26, 26, 26, 0.08);
+  background: var(--x-menu-popup-active-bg, rgba(26, 26, 26, 0.08));
 }
 
 .x-menu-popup-item-active::before {
   opacity: 1;
   left: 4px;
+}
+
+/* 深色模式 */
+@media (prefers-color-scheme: dark) {
+  .x-menu-popup-item:hover {
+    background: var(--x-menu-popup-hover-bg, rgba(255, 255, 255, 0.06));
+  }
+  
+  .x-menu-popup-item-active {
+    background: var(--x-menu-popup-active-bg, rgba(255, 255, 255, 0.1));
+  }
 }
 
 .x-menu-popup-item-disabled {

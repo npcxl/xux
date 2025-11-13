@@ -122,6 +122,83 @@ const handleChange = (page, size) => {
 
 :::
 
+## 国际化
+
+支持自定义语言文本，默认为中文。
+
+:::demo
+
+```vue
+<template>
+  <div class="space-y-6">
+    <div>
+      <div class="text-sm font-medium mb-2">默认中文：</div>
+      <XPagination 
+        v-model:current="current1"
+        :total="100"
+        show-quick-jumper
+      />
+    </div>
+
+    <div>
+      <div class="text-sm font-medium mb-2">英文：</div>
+      <XPagination 
+        v-model:current="current2"
+        :total="100"
+        :locale="enUS"
+        show-quick-jumper
+      />
+    </div>
+
+    <div>
+      <div class="text-sm font-medium mb-2">自定义文案（西班牙语）：</div>
+      <XPagination 
+        v-model:current="current3"
+        :total="100"
+        :locale="customLocale"
+        show-quick-jumper
+      />
+    </div>
+  </div>
+</template>
+
+<script setup>
+import { ref } from 'vue'
+
+const current1 = ref(1)
+const current2 = ref(1)
+const current3 = ref(1)
+
+// 英文语言包
+const enUS = {
+  total: 'Total',
+  items: 'items',
+  comma: ',',
+  currentPage: 'Page',
+  page: 'page',
+  perPage: 'per page',
+  jumpTo: 'Go to',
+  pageNumber: 'Page',
+  go: 'Go'
+}
+
+// 自定义语言文案（西班牙语示例）
+const customLocale = {
+  total: 'Total de',
+  items: 'elementos',
+  comma: ',',
+  currentPage: 'Página',
+  page: 'página',
+  perPage: 'por página',
+  jumpTo: 'Ir a',
+  pageNumber: 'Página',
+  go: 'Ir'
+}
+</script>
+```
+
+:::
+
 ## 自定义信息
 
 通过插槽自定义分页信息展示。
@@ -171,6 +248,60 @@ const total = ref(328)
 | total | 数据总数 | `number` | `0` |
 | pageSizeOptions | 每页条数选项 | `number[]` | `[10, 20, 50, 100]` |
 | showQuickJumper | 是否显示快速跳转 | `boolean` | `false` |
+| locale | 国际化配置 | `PaginationLocale` | 中文 |
+
+### PaginationLocale
+
+| 属性 | 说明 | 类型 | 默认值（中文） |
+| --- | --- | --- | --- |
+| total | "总计"文本 | `string` | `'共'` |
+| items | "条"文本 | `string` | `'条'` |
+| comma | 逗号分隔符 | `string` | `'，'` |
+| currentPage | "当前页"文本 | `string` | `'当前第'` |
+| page | "页"文本 | `string` | `'页'` |
+| perPage | "每页"文本 | `string` | `'条/页'` |
+| jumpTo | "跳至"文本 | `string` | `'跳至'` |
+| pageNumber | 页码输入框占位符 | `string` | `'页码'` |
+| go | "跳转"按钮文本 | `string` | `'跳转'` |
+
+### 语言配置
+
+通过 `locale` 属性传入自定义语言配置对象：
+
+```typescript
+// 中文语言包（默认）
+const zhCN = {
+  total: '共',
+  items: '条',
+  comma: '，',
+  currentPage: '当前第',
+  page: '页',
+  perPage: '条/页',
+  jumpTo: '跳至',
+  pageNumber: '页码',
+  go: '跳转'
+}
+
+// 英文语言包
+const enUS = {
+  total: 'Total',
+  items: 'items',
+  comma: ',',
+  currentPage: 'Page',
+  page: 'page',
+  perPage: 'per page',
+  jumpTo: 'Go to',
+  pageNumber: 'Page',
+  go: 'Go'
+}
+
+// 使用示例
+// 默认中文，无需配置
+<XPagination :total="100" />
+
+// 切换到英文
+<XPagination :locale="enUS" :total="100" />
+```
 
 ### Events
 

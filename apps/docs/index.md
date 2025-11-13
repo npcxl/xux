@@ -1,13 +1,19 @@
 ---
 layout: home
+title: XUX UI - 基于 Vue3 的现代化 UI 组件库 | 电商后台管理系统组件
+description: XUX UI 是一个专为电商平台和后台管理系统设计的 Vue3 组件库，提供40+精美组件、丰富的工具函数、完整的 TypeScript 支持。开箱即用，性能优异，支持按需引入和主题定制。
+head:
+  - - meta
+    - name: keywords
+      content: Vue3组件库,UI组件库,电商组件,后台管理组件,XUX,TypeScript组件,开源组件库,Vue UI框架,前端组件,管理系统UI
 
 hero:
-  name:  
-  text: Vue3 组件库
-  tagline: 现代化 UI 组件库
+  name: XUX UI
+  text: Vue3 企业级组件库
+  tagline: 专为电商平台和后台管理系统打造的现代化 UI 解决方案
   image:
     src: /logo.png
-    alt: XUX Logo
+    alt: XUX UI Logo - Vue3 组件库
   actions:
     - theme: brand
       text: 快速开始
@@ -19,7 +25,7 @@ hero:
       text: 在线演示
       link: https://admin.xlcig.cn
     - theme: alt
-      text: 当前版本：v1.3.15
+      text: 当前版本：v1.3.29
 features:
   - icon: 🛒
     title: 电商场景

@@ -422,18 +422,15 @@ const handleChange = () => {
   background-color: var(--x-switch-thumb, #ffffff);
   border-radius: inherit;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .switch input:checked + .slider {
-  box-shadow: 0 0 12px var(--x-switch-shadow, rgba(26, 26, 26, 0.5));
   border-color: var(--x-switch-active-border, var(--x-color-primary, #1a1a1a));
   background-color: var(--x-switch-active-bg, var(--x-color-primary, #1a1a1a));
 }
 
 .switch input:checked + .slider:before {
   transform: translateX(1.5em);
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
 }
 
 /* 尺寸变体 */
@@ -486,17 +483,11 @@ const handleChange = () => {
 
 .switch.disabled input:checked + .slider {
   border-color: #9ca3af;
-  box-shadow: none;
 }
 
 /* 悬停效果 */
 .switch:not(.disabled):not(.loading):hover .slider {
   border-color: var(--x-switch-hover-border, rgba(26, 26, 26, 0.4));
-  box-shadow: 0 0 8px var(--x-switch-hover-shadow, rgba(26, 26, 26, 0.3));
-}
-
-.switch:not(.disabled):not(.loading) input:checked + .slider:hover {
-  box-shadow: 0 0 16px var(--x-switch-active-hover-shadow, rgba(26, 26, 26, 0.6));
 }
 
 /* 点击效果 */
@@ -576,14 +567,6 @@ const handleChange = () => {
 .switch.loading:hover .slider {
   transform: none;
   border-color: transparent;
-}
-
-.switch.loading input:checked + .slider {
-  box-shadow: 0 0 12px var(--x-switch-shadow, rgba(26, 26, 26, 0.5));
-}
-
-.switch.loading input:checked + .slider:hover {
-  box-shadow: 0 0 12px var(--x-switch-shadow, rgba(26, 26, 26, 0.5));
 }
 
 @keyframes spin {

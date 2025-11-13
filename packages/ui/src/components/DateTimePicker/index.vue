@@ -72,7 +72,7 @@
           icon="mdi:calendar"
           @click="currentMode = 'date'"
         >
-          <span>日期</span>
+          <span>{{ i18n.date }}</span>
         </XButton>
         <XButton
           size="small"
@@ -80,7 +80,7 @@
           :class="{ active: currentMode === 'time' }"
           @click="currentMode = 'time'"
         >
-          <span>时间</span>
+          <span>{{ i18n.time }}</span>
         </XButton>
       </div>
 
@@ -105,7 +105,8 @@
             <Icon icon="mdi:chevron-left" />
           </XButton>
           <div class="current-month">
-            <span class="month-year">{{ currentYear }}年{{ currentMonth + 1 }}月</span>
+            <span class="month-year" v-if="locale === 'zh-CN'">{{ currentYear }}{{ i18n.year }}{{ currentMonth + 1 }}{{ i18n.month }}</span>
+            <span class="month-year" v-else>{{ currentMonth + 1 }}/{{ currentYear }}</span>
           </div>
           <XButton size="small" @click="nextMonth">
             <Icon icon="mdi:chevron-right" />
@@ -141,115 +142,207 @@
 
       <!-- 时间选择器 -->
       <div v-if="currentMode === 'time' || mode === 'time'" class="datetime-time-picker">
-        <div class="time-inputs">
-          <div class="time-input-group">
-            <label class="time-label">时</label>
-            <input 
-              v-model.number="selectedHour"
-              type="number" 
-              min="0" 
-              max="23" 
-              class="time-input" 
-              @input="updateTimeFromInput('hour', $event)"
-            />
+        <!-- 范围选择时显示开始和结束时间 -->
+        <template v-if="range">
+          <!-- 开始时间 -->
+          <div class="time-range-section">
+            <div class="time-range-title">{{ i18n.startTime }}</div>
+            <div class="time-sliders">
+              <div class="time-slider-group">
+                <label class="slider-label">{{ i18n.hour }}: {{ selectedStartHour.toString().padStart(2, '0') }}</label>
+                <div class="slider-wrapper">
+                  <input 
+                    v-model.number="selectedStartHour"
+                    type="range" 
+                    min="0" 
+                    max="23" 
+                    class="time-slider"
+                  />
+                </div>
+              </div>
+              <div class="time-slider-group">
+                <label class="slider-label">{{ i18n.minute }}: {{ selectedStartMinute.toString().padStart(2, '0') }}</label>
+                <div class="slider-wrapper">
+                  <input 
+                    v-model.number="selectedStartMinute"
+                    type="range" 
+                    min="0" 
+                    max="59" 
+                    class="time-slider"
+                  />
+                </div>
+              </div>
+              <div v-if="showSeconds" class="time-slider-group">
+                <label class="slider-label">{{ i18n.second }}: {{ selectedStartSecond.toString().padStart(2, '0') }}</label>
+                <div class="slider-wrapper">
+                  <input 
+                    v-model.number="selectedStartSecond"
+                    type="range" 
+                    min="0" 
+                    max="59" 
+                    class="time-slider"
+                  />
+                </div>
+              </div>
+            </div>
           </div>
-          <div class="time-separator">:</div>
-          <div class="time-input-group">
-            <label class="time-label">分</label>
-            <input 
-              v-model.number="selectedMinute"
-              type="number" 
-              min="0" 
-              max="59" 
-              class="time-input" 
-              @input="updateTimeFromInput('minute', $event)"
-            />
-          </div>
-          <div v-if="showSeconds" class="time-separator">:</div>
-          <div v-if="showSeconds" class="time-input-group">
-            <label class="time-label">秒</label>
-            <input 
-              v-model.number="selectedSecond"
-              type="number" 
-              min="0" 
-              max="59" 
-              class="time-input" 
-              @input="updateTimeFromInput('second', $event)"
-            />
-          </div>
-        </div>
 
-        <!-- 时间滑块 -->
-        <div class="time-sliders">
-          <div class="time-slider-group">
-            <label class="slider-label">小时</label>
-            <div class="slider-wrapper">
+          <!-- 结束时间 -->
+          <div class="time-range-section">
+            <div class="time-range-title">{{ i18n.endTime }}</div>
+            <div class="time-sliders">
+              <div class="time-slider-group">
+                <label class="slider-label">{{ i18n.hour }}: {{ selectedEndHour.toString().padStart(2, '0') }}</label>
+                <div class="slider-wrapper">
+                  <input 
+                    v-model.number="selectedEndHour"
+                    type="range" 
+                    min="0" 
+                    max="23" 
+                    class="time-slider"
+                  />
+                </div>
+              </div>
+              <div class="time-slider-group">
+                <label class="slider-label">{{ i18n.minute }}: {{ selectedEndMinute.toString().padStart(2, '0') }}</label>
+                <div class="slider-wrapper">
+                  <input 
+                    v-model.number="selectedEndMinute"
+                    type="range" 
+                    min="0" 
+                    max="59" 
+                    class="time-slider"
+                  />
+                </div>
+              </div>
+              <div v-if="showSeconds" class="time-slider-group">
+                <label class="slider-label">{{ i18n.second }}: {{ selectedEndSecond.toString().padStart(2, '0') }}</label>
+                <div class="slider-wrapper">
+                  <input 
+                    v-model.number="selectedEndSecond"
+                    type="range" 
+                    min="0" 
+                    max="59" 
+                    class="time-slider"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+        </template>
+
+        <!-- 单选时显示单组时间 -->
+        <template v-else>
+          <div class="time-inputs">
+            <div class="time-input-group">
+              <label class="time-label">{{ i18n.h }}</label>
               <input 
                 v-model.number="selectedHour"
-                type="range" 
+                type="number" 
                 min="0" 
                 max="23" 
-                class="time-slider" 
-                @input="updateTimeFromSlider"
+                class="time-input" 
+                @input="updateTimeFromInput('hour', $event)"
               />
-              <div 
-                class="slider-tooltip slider-tooltip-always"
-                :style="{ left: getTooltipPosition('hour') }"
-              >
-                {{ selectedHour.toString().padStart(2, '0') }}
-              </div>
             </div>
-          </div>
-          <div class="time-slider-group">
-            <label class="slider-label">分钟</label>
-            <div class="slider-wrapper">
+            <div class="time-separator">:</div>
+            <div class="time-input-group">
+              <label class="time-label">{{ i18n.m }}</label>
               <input 
                 v-model.number="selectedMinute"
-                type="range" 
+                type="number" 
                 min="0" 
                 max="59" 
-                class="time-slider" 
-                @input="updateTimeFromSlider"
+                class="time-input" 
+                @input="updateTimeFromInput('minute', $event)"
               />
-              <div 
-                class="slider-tooltip slider-tooltip-always"
-                :style="{ left: getTooltipPosition('minute') }"
-              >
-                {{ selectedMinute.toString().padStart(2, '0') }}
-              </div>
             </div>
-          </div>
-          <div v-if="showSeconds" class="time-slider-group">
-            <label class="slider-label">秒钟</label>
-            <div class="slider-wrapper">
+            <div v-if="showSeconds" class="time-separator">:</div>
+            <div v-if="showSeconds" class="time-input-group">
+              <label class="time-label">{{ i18n.s }}</label>
               <input 
                 v-model.number="selectedSecond"
-                type="range" 
+                type="number" 
                 min="0" 
                 max="59" 
-                class="time-slider" 
-                @input="updateTimeFromSlider"
+                class="time-input" 
+                @input="updateTimeFromInput('second', $event)"
               />
-              <div 
-                class="slider-tooltip slider-tooltip-always"
-                :style="{ left: getTooltipPosition('second') }"
-              >
-                {{ selectedSecond.toString().padStart(2, '0') }}
+            </div>
+          </div>
+
+          <!-- 时间滑块 -->
+          <div class="time-sliders">
+            <div class="time-slider-group">
+              <label class="slider-label">{{ i18n.hour }}</label>
+              <div class="slider-wrapper">
+                <input 
+                  v-model.number="selectedHour"
+                  type="range" 
+                  min="0" 
+                  max="23" 
+                  class="time-slider" 
+                  @input="updateTimeFromSlider"
+                />
+                <div 
+                  class="slider-tooltip slider-tooltip-always"
+                  :style="{ left: getTooltipPosition('hour') }"
+                >
+                  {{ selectedHour.toString().padStart(2, '0') }}
+                </div>
+              </div>
+            </div>
+            <div class="time-slider-group">
+              <label class="slider-label">{{ i18n.minute }}</label>
+              <div class="slider-wrapper">
+                <input 
+                  v-model.number="selectedMinute"
+                  type="range" 
+                  min="0" 
+                  max="59" 
+                  class="time-slider" 
+                  @input="updateTimeFromSlider"
+                />
+                <div 
+                  class="slider-tooltip slider-tooltip-always"
+                  :style="{ left: getTooltipPosition('minute') }"
+                >
+                  {{ selectedMinute.toString().padStart(2, '0') }}
+                </div>
+              </div>
+            </div>
+            <div v-if="showSeconds" class="time-slider-group">
+              <label class="slider-label">{{ i18n.second }}</label>
+              <div class="slider-wrapper">
+                <input 
+                  v-model.number="selectedSecond"
+                  type="range" 
+                  min="0" 
+                  max="59" 
+                  class="time-slider" 
+                  @input="updateTimeFromSlider"
+                />
+                <div 
+                  class="slider-tooltip slider-tooltip-always"
+                  :style="{ left: getTooltipPosition('second') }"
+                >
+                  {{ selectedSecond.toString().padStart(2, '0') }}
+                </div>
               </div>
             </div>
           </div>
-        </div>
+        </template>
       </div>
 
       <!-- 底部操作 -->
       <div class="datetime-footer">
         <XButton size="small" ghost type="danger" @click="clearValue">
           <Icon icon="mdi:delete" />
-          <span>清空</span>
+          <span>{{ i18n.clear }}</span>
         </XButton>
         <XButton size="small" ghost type="primary" @click="confirmSelection">
           <Icon icon="mdi:check" />
-          <span>确定</span>
+          <span>{{ i18n.confirm }}</span>
         </XButton>
       </div>
       </div>
@@ -257,11 +350,38 @@
   </ElPopover>
 </template>
 
-<script setup lang="ts">
-import { ref, computed, watch } from 'vue'
-import { Icon } from '@iconify/vue'
-import { ElPopover } from 'element-plus'
-import { useDateTime } from '../../composables/DateTime'
+<script lang="ts">
+/**
+ * DateTimePicker 日期时间选择器
+ * 
+ * 国际化使用示例：
+ * 
+ * 1. 使用内置语言（中文/英文）：
+ *    <DateTimePicker locale="zh-CN" /> // 中文（默认）
+ *    <DateTimePicker locale="en-US" /> // 英文
+ * 
+ * 2. 自定义部分文本：
+ *    <DateTimePicker 
+ *      locale="zh-CN" 
+ *      :i18nTexts="{ today: '现在', clear: '重置' }" 
+ *    />
+ * 
+ * 3. 完全自定义：
+ *    <DateTimePicker 
+ *      :i18nTexts="{
+ *        date: 'Date',
+ *        time: 'Time',
+ *        today: 'Today',
+ *        clear: 'Clear',
+ *        confirm: 'OK',
+ *        ...
+ *      }" 
+ *    />
+ */
+
+// 重新导出 i18n 相关内容
+export { zhCN, enUS, type I18nTexts } from './i18n'
+
 export interface ShortcutOption {
   text: string
   value: () => Date | [Date, Date]
@@ -307,7 +427,19 @@ export interface DateTimePickerProps {
       showShortcuts?: boolean
       /** 自定义快捷选项 */
       shortcuts?: ShortcutOption[]
+      /** 自定义国际化文本 */
+      i18nTexts?: I18nTexts
     }
+</script>
+
+<script setup lang="ts">
+import { ref, computed, watch } from 'vue'
+import { Icon } from '@iconify/vue'
+import { ElPopover } from 'element-plus'
+import { useDateTime } from '../../composables/DateTime'
+import { zhCN, enUS, type I18nTexts } from './i18n'
+
+// ShortcutOption 和 DateTimePickerProps 已在上面的 script 标签中定义
     
     const props = withDefaults(defineProps<DateTimePickerProps>(), {
       modelValue: null,
@@ -347,6 +479,13 @@ export interface DateTimePickerProps {
     const selectedHour = ref(0)
     const selectedMinute = ref(0)
     const selectedSecond = ref(0)
+    // 范围选择的时间
+    const selectedStartHour = ref(0)
+    const selectedStartMinute = ref(0)
+    const selectedStartSecond = ref(0)
+    const selectedEndHour = ref(23)
+    const selectedEndMinute = ref(59)
+    const selectedEndSecond = ref(59)
     
     // 引用
     const inputRef = ref<HTMLInputElement>()
@@ -362,11 +501,18 @@ export interface DateTimePickerProps {
       locale: 'zh-cn'
     })
     
+    // 国际化文本
+    const i18n = computed<Required<I18nTexts>>(() => {
+      const baseTexts = props.locale === 'en-US' ? enUS : zhCN
+      return {
+        ...baseTexts,
+        ...props.i18nTexts
+      } as Required<I18nTexts>
+    })
+    
     // 星期标题
     const weekdays = computed(() => {
-      return props.locale === 'zh-CN' 
-        ? ['日', '一', '二', '三', '四', '五', '六']
-        : ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
+      return i18n.value.weekdays
     })
     
     // 动态快捷选项
@@ -379,7 +525,7 @@ export interface DateTimePickerProps {
         // 范围选择：本周、本月、本年、今天
         return [
           {
-            text: '本周',
+            text: i18n.value.thisWeek,
             icon: 'mdi:calendar-week',
             value: (): [Date, Date] => {
               const now = new Date()
@@ -392,7 +538,7 @@ export interface DateTimePickerProps {
             }
           },
           {
-            text: '本月',
+            text: i18n.value.thisMonth,
             icon: 'mdi:calendar-month',
             value: (): [Date, Date] => {
               const now = new Date()
@@ -402,7 +548,7 @@ export interface DateTimePickerProps {
             }
           },
           {
-            text: '本年',
+            text: i18n.value.thisYear,
             icon: 'mdi:calendar',
             value: (): [Date, Date] => {
               const now = new Date()
@@ -412,7 +558,7 @@ export interface DateTimePickerProps {
             }
           },
           {
-            text: '今天',
+            text: i18n.value.today,
             icon: 'mdi:calendar-today',
             value: (): [Date, Date] => {
               const now = new Date()
@@ -424,7 +570,7 @@ export interface DateTimePickerProps {
         // 单选：只有今天
         return [
           {
-            text: '今天',
+            text: i18n.value.today,
             icon: 'mdi:calendar-today',
             value: (): Date => new Date()
           }
@@ -434,32 +580,66 @@ export interface DateTimePickerProps {
     
     // 显示值
     const displayValue = computed(() => {
-      if (!selectedDate.value) return ''
+      if (!selectedDate.value && props.mode !== 'time') return ''
       
-      const date = create(selectedDate.value)
+      // 确保时间值是有效的数字
+      const hour = Number(selectedHour.value) || 0
+      const minute = Number(selectedMinute.value) || 0
+      const second = Number(selectedSecond.value) || 0
+      
       const timeStr = props.showSeconds 
-        ? `${selectedHour.value.toString().padStart(2, '0')}:${selectedMinute.value.toString().padStart(2, '0')}:${selectedSecond.value.toString().padStart(2, '0')}`
-        : `${selectedHour.value.toString().padStart(2, '0')}:${selectedMinute.value.toString().padStart(2, '0')}`
+        ? `${hour.toString().padStart(2, '0')}:${minute.toString().padStart(2, '0')}:${second.toString().padStart(2, '0')}`
+        : `${hour.toString().padStart(2, '0')}:${minute.toString().padStart(2, '0')}`
       
-      if (props.mode === 'date') {
+      if (props.mode === 'date' && selectedDate.value) {
+        const date = create(selectedDate.value)
         return format(date, formats.date)
       } else if (props.mode === 'time') {
         return timeStr
-      } else {
+      } else if (selectedDate.value) {
+        const date = create(selectedDate.value)
         return `${format(date, formats.date)} ${timeStr}`
       }
+      
+      return ''
     })
     
     // 范围选择显示值
     const displayStartValue = computed(() => {
       if (!selectedStartDate.value) return ''
       const date = create(selectedStartDate.value)
+      
+      if (props.mode === 'datetime') {
+        // 确保时间值是有效的数字
+        const hour = Number(selectedStartHour.value) || 0
+        const minute = Number(selectedStartMinute.value) || 0
+        const second = Number(selectedStartSecond.value) || 0
+        
+        const timeStr = props.showSeconds 
+          ? `${hour.toString().padStart(2, '0')}:${minute.toString().padStart(2, '0')}:${second.toString().padStart(2, '0')}`
+          : `${hour.toString().padStart(2, '0')}:${minute.toString().padStart(2, '0')}`
+        return `${format(date, props.dateFormat)} ${timeStr}`
+      }
+      
       return format(date, props.dateFormat)
     })
     
     const displayEndValue = computed(() => {
       if (!selectedEndDate.value) return ''
       const date = create(selectedEndDate.value)
+      
+      if (props.mode === 'datetime') {
+        // 确保时间值是有效的数字
+        const hour = Number(selectedEndHour.value) || 0
+        const minute = Number(selectedEndMinute.value) || 0
+        const second = Number(selectedEndSecond.value) || 0
+        
+        const timeStr = props.showSeconds 
+          ? `${hour.toString().padStart(2, '0')}:${minute.toString().padStart(2, '0')}:${second.toString().padStart(2, '0')}`
+          : `${hour.toString().padStart(2, '0')}:${minute.toString().padStart(2, '0')}`
+        return `${format(date, props.dateFormat)} ${timeStr}`
+      }
+      
       return format(date, props.dateFormat)
     })
     
@@ -540,6 +720,12 @@ export interface DateTimePickerProps {
           selectedStartDate.value = calendarDate.date.toDate()
           selectedEndDate.value = null
           rangeSelectingStart.value = false
+          // 设置默认开始时间为 00:00:00
+          if (props.mode === 'datetime') {
+            selectedStartHour.value = 0
+            selectedStartMinute.value = 0
+            selectedStartSecond.value = 0
+          }
         } else {
           // 选择结束日期
           const endDate = calendarDate.date.toDate()
@@ -547,13 +733,35 @@ export interface DateTimePickerProps {
             // 如果结束日期早于开始日期，交换
             selectedEndDate.value = selectedStartDate.value
             selectedStartDate.value = endDate
+            // 交换时间
+            if (props.mode === 'datetime') {
+              const tempH = selectedStartHour.value
+              const tempM = selectedStartMinute.value
+              const tempS = selectedStartSecond.value
+              selectedStartHour.value = selectedEndHour.value
+              selectedStartMinute.value = selectedEndMinute.value
+              selectedStartSecond.value = selectedEndSecond.value
+              selectedEndHour.value = tempH
+              selectedEndMinute.value = tempM
+              selectedEndSecond.value = tempS
+            }
           } else {
             selectedEndDate.value = endDate
+            // 设置默认结束时间为 23:59:59
+            if (props.mode === 'datetime') {
+              selectedEndHour.value = 23
+              selectedEndMinute.value = 59
+              selectedEndSecond.value = 59
+            }
           }
           rangeSelectingStart.value = true
           
-          // 范围选择完成，确认
+          // 范围选择完成，自动确认并关闭
           if (props.mode === 'date') {
+            // 仅日期模式，直接确认并关闭
+            confirmSelection()
+          } else if (props.mode === 'datetime') {
+            // 日期时间模式，也直接确认并关闭（使用默认时间）
             confirmSelection()
           }
         }
@@ -561,7 +769,17 @@ export interface DateTimePickerProps {
         // 单选逻辑
         selectedDate.value = calendarDate.date.toDate()
         
-        if (props.mode === 'date') {
+        // 设置默认时间（如果是datetime模式）
+        if (props.mode === 'datetime') {
+          // 使用当前时间作为默认值
+          const now = new Date()
+          selectedHour.value = now.getHours()
+          selectedMinute.value = now.getMinutes()
+          selectedSecond.value = now.getSeconds()
+        }
+        
+        // 单选完成后自动关闭
+        if (props.mode === 'date' || props.mode === 'datetime') {
           confirmSelection()
         }
       }
@@ -621,10 +839,36 @@ export interface DateTimePickerProps {
         if (selectedStartDate.value && selectedEndDate.value) {
           const startDate = create(selectedStartDate.value)
           const endDate = create(selectedEndDate.value)
-          const formattedStart = format(startDate, props.dateFormat)
-          const formattedEnd = format(endDate, props.dateFormat)
-          emit('update:modelValue', [formattedStart, formattedEnd])
-          emit('change', [formattedStart, formattedEnd])
+          
+          if (props.mode === 'datetime') {
+            // 范围选择 + 时间（开始和结束时间分别设置）
+            // 确保时间值是有效的数字
+            const startHour = Number(selectedStartHour.value) || 0
+            const startMinute = Number(selectedStartMinute.value) || 0
+            const startSecond = Number(selectedStartSecond.value) || 0
+            const endHour = Number(selectedEndHour.value) || 0
+            const endMinute = Number(selectedEndMinute.value) || 0
+            const endSecond = Number(selectedEndSecond.value) || 0
+            
+            const startDateTime = startDate.hour(startHour).minute(startMinute).second(startSecond)
+            const endDateTime = endDate.hour(endHour).minute(endMinute).second(endSecond)
+            const startTimeStr = props.showSeconds 
+              ? `${startHour.toString().padStart(2, '0')}:${startMinute.toString().padStart(2, '0')}:${startSecond.toString().padStart(2, '0')}`
+              : `${startHour.toString().padStart(2, '0')}:${startMinute.toString().padStart(2, '0')}`
+            const endTimeStr = props.showSeconds 
+              ? `${endHour.toString().padStart(2, '0')}:${endMinute.toString().padStart(2, '0')}:${endSecond.toString().padStart(2, '0')}`
+              : `${endHour.toString().padStart(2, '0')}:${endMinute.toString().padStart(2, '0')}`
+            const formattedStart = `${format(startDateTime, props.dateFormat)} ${startTimeStr}`
+            const formattedEnd = `${format(endDateTime, props.dateFormat)} ${endTimeStr}`
+            emit('update:modelValue', [formattedStart, formattedEnd])
+            emit('change', [formattedStart, formattedEnd])
+          } else {
+            // 范围选择 + 仅日期
+            const formattedStart = format(startDate, props.dateFormat)
+            const formattedEnd = format(endDate, props.dateFormat)
+            emit('update:modelValue', [formattedStart, formattedEnd])
+            emit('change', [formattedStart, formattedEnd])
+          }
         }
       } else {
         // 单选
@@ -634,16 +878,26 @@ export interface DateTimePickerProps {
           emit('update:modelValue', formattedDate)
           emit('change', formattedDate)
         } else if (props.mode === 'time') {
+          // 确保时间值是有效的数字
+          const hour = Number(selectedHour.value) || 0
+          const minute = Number(selectedMinute.value) || 0
+          const second = Number(selectedSecond.value) || 0
+          
           const timeStr = props.showSeconds 
-            ? `${selectedHour.value.toString().padStart(2, '0')}:${selectedMinute.value.toString().padStart(2, '0')}:${selectedSecond.value.toString().padStart(2, '0')}`
-            : `${selectedHour.value.toString().padStart(2, '0')}:${selectedMinute.value.toString().padStart(2, '0')}`
+            ? `${hour.toString().padStart(2, '0')}:${minute.toString().padStart(2, '0')}:${second.toString().padStart(2, '0')}`
+            : `${hour.toString().padStart(2, '0')}:${minute.toString().padStart(2, '0')}`
           emit('update:modelValue', timeStr)
           emit('change', timeStr)
         } else if (props.mode === 'datetime' && selectedDate.value) {
-          const datetime = create(selectedDate.value).hour(selectedHour.value).minute(selectedMinute.value).second(selectedSecond.value).millisecond(0)
+          // 确保时间值是有效的数字
+          const hour = Number(selectedHour.value) || 0
+          const minute = Number(selectedMinute.value) || 0
+          const second = Number(selectedSecond.value) || 0
+          
+          const datetime = create(selectedDate.value).hour(hour).minute(minute).second(second).millisecond(0)
           const timeStr = props.showSeconds 
-            ? `${selectedHour.value.toString().padStart(2, '0')}:${selectedMinute.value.toString().padStart(2, '0')}:${selectedSecond.value.toString().padStart(2, '0')}`
-            : `${selectedHour.value.toString().padStart(2, '0')}:${selectedMinute.value.toString().padStart(2, '0')}`
+            ? `${hour.toString().padStart(2, '0')}:${minute.toString().padStart(2, '0')}:${second.toString().padStart(2, '0')}`
+            : `${hour.toString().padStart(2, '0')}:${minute.toString().padStart(2, '0')}`
           const formattedDateTime = `${format(datetime, props.dateFormat)} ${timeStr}`
           emit('update:modelValue', formattedDateTime)
           emit('change', formattedDateTime)
@@ -660,6 +914,12 @@ export interface DateTimePickerProps {
       selectedHour.value = 0
       selectedMinute.value = 0
       selectedSecond.value = 0
+      selectedStartHour.value = 0
+      selectedStartMinute.value = 0
+      selectedStartSecond.value = 0
+      selectedEndHour.value = 23
+      selectedEndMinute.value = 59
+      selectedEndSecond.value = 59
       rangeSelectingStart.value = true
       emit('update:modelValue', null)
       emit('change', null)
@@ -678,7 +938,18 @@ export interface DateTimePickerProps {
         currentMonth.value = start.getMonth()
         rangeSelectingStart.value = true
         
-        if (props.mode === 'date') {
+        // 设置默认时间：开始 00:00:00，结束 23:59:59
+        if (props.mode === 'datetime') {
+          selectedStartHour.value = 0
+          selectedStartMinute.value = 0
+          selectedStartSecond.value = 0
+          selectedEndHour.value = 23
+          selectedEndMinute.value = 59
+          selectedEndSecond.value = 59
+        }
+        
+        // 范围选择完成后自动确认并关闭
+        if (props.mode === 'date' || props.mode === 'datetime') {
           confirmSelection()
         }
       } else {
@@ -687,7 +958,16 @@ export interface DateTimePickerProps {
         currentYear.value = result.getFullYear()
         currentMonth.value = result.getMonth()
         
-        if (props.mode === 'date') {
+        // 设置默认时间（如果是datetime模式）
+        if (props.mode === 'datetime') {
+          const now = result
+          selectedHour.value = now.getHours()
+          selectedMinute.value = now.getMinutes()
+          selectedSecond.value = now.getSeconds()
+        }
+        
+        // 单选完成后自动确认并关闭
+        if (props.mode === 'date' || props.mode === 'datetime') {
           confirmSelection()
         }
       }
@@ -702,6 +982,15 @@ export interface DateTimePickerProps {
         const endDate = create(end)
         selectedStartDate.value = startDate.toDate()
         selectedEndDate.value = endDate.toDate()
+        
+        // 提取时间部分
+        selectedStartHour.value = startDate.hour()
+        selectedStartMinute.value = startDate.minute()
+        selectedStartSecond.value = startDate.second()
+        selectedEndHour.value = endDate.hour()
+        selectedEndMinute.value = endDate.minute()
+        selectedEndSecond.value = endDate.second()
+        
         currentYear.value = startDate.year()
         currentMonth.value = startDate.month()
       } else if (newValue) {
@@ -721,6 +1010,12 @@ export interface DateTimePickerProps {
         selectedHour.value = 0
         selectedMinute.value = 0
         selectedSecond.value = 0
+        selectedStartHour.value = 0
+        selectedStartMinute.value = 0
+        selectedStartSecond.value = 0
+        selectedEndHour.value = 23
+        selectedEndMinute.value = 59
+        selectedEndSecond.value = 59
       }
     }, { immediate: true })
     
@@ -793,7 +1088,7 @@ export interface DateTimePickerProps {
 .datetime-input-start,
 .datetime-input-end {
   flex: 1;
-  min-width: 0;
+  min-width: 120px;
   text-align: center;
 }
 
@@ -1079,13 +1374,6 @@ export interface DateTimePickerProps {
   z-index: 0;
 }
 
-/* 悬停时的动画边框效果 */
-.date-cell:hover:not(.date-disabled):not(.date-selected)::before {
-  opacity: 1;
-  border-color: #9ca3af;
-  animation: borderSweep 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
 .date-cell:hover:not(.date-disabled):not(.date-selected)::after {
   opacity: 1;
   animation: backgroundFade 0.3s ease;
@@ -1130,13 +1418,13 @@ export interface DateTimePickerProps {
 
 /* 今天的日期 */
 .date-today {
-  color: #3b82f6;
+  color:var(--x-color-primary, #3b82f6);
   font-weight: 600;
   position: relative;
 }
 
 .date-today::before {
-  border: 2px solid #3b82f6;
+  border: 2px solid var(--x-color-primary, #3b82f6);
   opacity: 1;
 }
 
@@ -1154,46 +1442,38 @@ export interface DateTimePickerProps {
 
 /* 选中的日期 - Windows 10 风格 */
 .date-selected {
-  color: var(--x-color-white, #ffffff);
+  color: var(--x-color-primary, #3b82f6);
   font-weight: 600;
 }
 
 .date-selected::before {
-  border: 2px solid var(--x-color-primary, #3b82f6);
+  border: 2px solid var(--x-color-white, #ffffff);
   opacity: 1;
   box-shadow: 0 0 0 1px var(--x-datetime-selected-shadow, rgba(59, 130, 246, 0.1));
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .date-selected::after {
   background-color: var(--x-color-primary, #3b82f6);
   opacity: 1;
   box-shadow: 0 2px 4px var(--x-datetime-selected-shadow-md, rgba(59, 130, 246, 0.3));
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 /* 选中日期的悬停效果 */
 .date-selected:hover::before {
-  border-color: #2563eb;
-  animation: borderPulse 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  border-color: var(--x-color-primary, #3b82f6);
+  transform: scale(1.05);
 }
 
 .date-selected:hover::after {
-  background-color: #2563eb;
+  background-color: var(--x-color-primary, #3b82f6);
   box-shadow: 0 4px 8px rgba(59, 130, 246, 0.4);
-}
-
-/* 选中状态的边框脉冲动画 */
-@keyframes borderPulse {
-  0%, 100% {
-    transform: scale(1);
-  }
-  50% {
-    transform: scale(1.05);
-  }
 }
 
 /* 禁用状态 */
 .date-disabled {
-  color: #e5e7eb;
+  color: var(--x-border-color, #e5e7eb);
   cursor: not-allowed;
   opacity: 0.5;
 }
@@ -1206,35 +1486,65 @@ export interface DateTimePickerProps {
 /* 范围选择样式 */
 .date-range-start,
 .date-range-end {
-  color: #ffffff;
+  color: var(--x-color-white, #ffffff);
   font-weight: 600;
 }
 
 .date-range-start::before,
 .date-range-end::before {
-  border: 2px solid #1a1a1a;
+  border: 2px solid var(--x-color-primary, #3b82f6);
   opacity: 1;
+  transition: border-color 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .date-range-start::after,
 .date-range-end::after {
-  background-color: #1a1a1a;
+  background-color: var(--x-color-primary, #3b82f6);
   opacity: 1;
+  transition: background-color 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .date-in-range {
-  background-color: rgba(26, 26, 26, 0.08);
   color: #1a1a1a;
+  position: relative;
+}
+
+.date-in-range::before {
+  border: 2px solid transparent;
+  opacity: 1;
+  transition: border-color 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .date-in-range::after {
   background-color: rgba(26, 26, 26, 0.08);
   opacity: 1;
+  transition: background-color 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 /* 时间选择器 */
 .datetime-time-picker {
   padding: 1rem;
+}
+
+/* 时间范围选择区域 */
+.time-range-section {
+  margin-bottom: 1.5rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid var(--x-border-color, #e5e7eb);
+}
+
+.time-range-section:last-child {
+  margin-bottom: 0;
+  padding-bottom: 0;
+  border-bottom: none;
+}
+
+.time-range-title {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #1a1a1a;
+  margin-bottom: 1rem;
+  padding-left: 0.25rem;
 }
 
 .time-inputs {
@@ -1254,31 +1564,31 @@ export interface DateTimePickerProps {
 
 .time-label {
   font-size: 0.75rem;
-  color: #6b7280;
+  color: var(--x-text-color-secondary, #6b7280);
   font-weight: 500;
 }
 
 .time-input {
   width: 3rem;
   padding: 0.5rem;
-  border: 1px solid #d1d5db;
+  border: 1px solid var(--x-border-color, #e5e7eb);
   border-radius: 0.375rem;
   text-align: center;
   font-size: 1rem;
-  color: #1a1a1a;
-  background-color: #ffffff;
+  color: var(--x-color-primary, #3b82f6);
+  background-color: var(--x-color-white, #ffffff);
   transition: all 0.2s ease;
 }
 
 .time-input:focus {
   outline: none;
-  border-color: #1a1a1a;
+  border-color: var(--x-color-primary, #3b82f6);
   box-shadow: 0 0 0 1px #1a1a1a;
 }
 
 .time-separator {
   font-size: 1.5rem;
-  color: #1a1a1a;
+  color: var(--x-color-primary, #3b82f6);
   font-weight: 600;
   margin-top: 1.5rem;
 }
@@ -1324,7 +1634,7 @@ export interface DateTimePickerProps {
   width: 1.25rem;
   height: 1.25rem;
   border-radius: 50%;
-  background: #1a1a1a;
+  background: var(--x-color-primary, #3b82f6);
   cursor: pointer;
   transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
@@ -1333,7 +1643,7 @@ export interface DateTimePickerProps {
 .time-slider::-webkit-slider-thumb:hover {
   transform: scale(1.2);
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-  background: #000000;
+  background: var(--x-color-primary, #3b82f6);
 }
 
 .time-slider::-webkit-slider-thumb:active {
@@ -1345,7 +1655,7 @@ export interface DateTimePickerProps {
   width: 1.25rem;
   height: 1.25rem;
   border-radius: 50%;
-  background: #1a1a1a;
+  background: var(--x-color-primary, #3b82f6);
   cursor: pointer;
   border: none;
   transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
@@ -1355,7 +1665,7 @@ export interface DateTimePickerProps {
 .time-slider::-moz-range-thumb:hover {
   transform: scale(1.2);
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-  background: #000000;
+  background: var(--x-color-primary, #3b82f6);
 }
 
 .time-slider::-moz-range-thumb:active {
@@ -1369,7 +1679,7 @@ export interface DateTimePickerProps {
   transform: translateX(-50%);
   padding: 0.25rem 0.75rem;
   background-color: #1a1a1a;
-  color: #ffffff;
+  color: var(--x-color-white, #ffffff);
   font-size: 0.75rem;
   font-weight: 600;
   border-radius: 0.375rem;
@@ -1401,8 +1711,8 @@ export interface DateTimePickerProps {
   display: flex;
   gap: 0.625rem;
   padding: 0.875rem 1rem;
-  border-top: 1px solid #f3f4f6;
-  background: linear-gradient(to top, #fafafa, #ffffff);
+  border-top: 1px solid var(--x-border-color, #e5e7eb);
+  background: linear-gradient(to top, var(--x-fill-color, #f5f5f5), var(--x-color-white, #ffffff));
 }
 
 .btn {
@@ -1421,22 +1731,22 @@ export interface DateTimePickerProps {
 }
 
 .btn-secondary {
-  background-color: #f3f4f6;
-  color: #6b7280;
+  background-color: var(--x-fill-color, #f5f5f5);
+  color: var(--x-text-color-secondary, #6b7280);
 }
 
 .btn-secondary:hover {
-  background-color: #e5e7eb;
-  color: #1a1a1a;
+  background-color: var(--x-border-color, #e5e7eb);
+  color: var(--x-color-primary, #3b82f6);
 }
 
 .btn-primary {
-  background-color: #1a1a1a;
-  color: #ffffff;
+  background-color: var(--x-color-primary, #3b82f6);
+  color: var(--x-color-white, #ffffff); 
 }
 
 .btn-primary:hover {
-  background-color: #000000;
+  background-color: var(--x-color-primary, #3b82f6);
 }
 
 

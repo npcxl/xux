@@ -5,13 +5,19 @@
   "description": "VUE3组件库 Monorepo",
   "scripts": {
     "dev": "pnpm --filter @xux/docs dev",
+    "dev:react": "pnpm --filter @xux/docs-react dev",
     "dev:demo": "pnpm --filter @xux/demo dev",
-    "build": "pnpm --filter @xlui/xux-ui build && pnpm --filter @xux/docs build",
-    "build:ui": "pnpm --filter @xlui/xux-ui build",
+    "build": "pnpm --filter @xlui/xux-ui build && pnpm --filter @xlui/xux-react build && pnpm --filter @xux/docs build && pnpm --filter @xux/docs-react build",
+    "build:vue": "pnpm --filter @xlui/xux-ui build",
+    "build:react": "pnpm --filter @xlui/xux-react build",
+    "build:ui": "pnpm build:vue && pnpm build:react",
     "build:docs": "pnpm --filter @xux/docs build",
+    "build:docs-react": "pnpm --filter @xux/docs-react build",
     "build:demo": "pnpm --filter @xux/demo build",
     "preview": "pnpm --filter @xux/docs preview",
-    "publish:ui": "cd packages/ui && pnpm publish",
+    "preview:react": "pnpm --filter @xux/docs-react preview",
+    "publish:vue": "cd packages/vue && pnpm publish",
+    "publish:react": "cd packages/react && pnpm publish",
     "lint": "eslint . --ext .vue,.js,.ts,.jsx,.tsx"
   },
   "devDependencies": {

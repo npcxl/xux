@@ -342,7 +342,7 @@ const actionItems = [
 
 ```vue
 <template>
-  <XFlex vertical gap="16">
+  <div style=" gap: 16px; width: 100%;">
     <div>
       <div style="margin-bottom: 8px; font-weight: 500;">小尺寸</div>
       <XList size="small" :items="sizeItems" bordered />
@@ -355,7 +355,7 @@ const actionItems = [
       <div style="margin-bottom: 8px; font-weight: 500;">大尺寸</div>
       <XList size="large" :items="sizeItems" bordered />
     </div>
-  </XFlex>
+  </div>
 </template>
 
 <script setup>
@@ -417,52 +417,6 @@ const cardItems = [
     extra: '¥1,299.00',
     tag: '待付款',
     tagType: 'warning'
-  }
-]
-</script>
-```
-
-:::
-
-## 时间轴样式列表
-
-使用 `variant="timeline"` 展示时间轴样式。
-
-:::demo
-
-```vue
-<template>
-  <XList
-    variant="timeline"
-    :items="timelineItems"
-  />
-</template>
-
-<script setup>
-const timelineItems = [
-  {
-    id: 1,
-    title: '订单已创建',
-    description: '您的订单已成功创建',
-    meta: '2024-01-15 10:30'
-  },
-  {
-    id: 2,
-    title: '商家已接单',
-    description: '商家正在准备您的商品',
-    meta: '2024-01-15 10:35'
-  },
-  {
-    id: 3,
-    title: '商品已发货',
-    description: '快递单号: SF1234567890',
-    meta: '2024-01-15 14:20'
-  },
-  {
-    id: 4,
-    title: '运输中',
-    description: '您的包裹正在派送中',
-    meta: '2024-01-16 09:15'
   }
 ]
 </script>
@@ -615,7 +569,7 @@ const handleDelete = (item) => {
 ```vue
 <template>
   <XFlex vertical gap="16">
-    <div>
+    <div class="w-full">
       <div style="margin-bottom: 8px; font-weight: 500;">加载中</div>
       <XList
         :items="[]"
@@ -625,7 +579,7 @@ const handleDelete = (item) => {
       />
     </div>
     
-    <div>
+    <div class="w-full">
       <div style="margin-bottom: 8px; font-weight: 500;">空状态</div>
       <XList
         :items="[]"
@@ -715,6 +669,110 @@ const customItems = [
 
 :::
 
+## 滚动动画列表
+
+启用 `animated` 属性，列表项滚动进入视口时会以流畅的动画效果出现。首屏元素即刻显示，滚动时提前预加载，体验更快速。
+
+:::demo
+
+```vue
+<template>
+  <div>
+    <XList
+      title="商品列表"
+      extra="共 30 件商品"
+      :items="longList"
+      animated
+      :animation-delay="30"
+      :max-height="500"
+      bordered
+      hoverable
+    />
+  </div>
+</template>
+
+<script setup>
+const longList = Array.from({ length: 30 }, (_, i) => {
+  const categories = ['数码产品', '家居用品', '运动户外', '美妆护肤', '图书音像', '食品饮料']
+  const brands = ['品牌A', '品牌B', '品牌C', '品牌D', '品牌E']
+  
+  return {
+    id: i + 1,
+    image: `https://picsum.photos/seed/product${i + 1}/100`,
+    title: `${categories[i % 6]} - 商品 ${i + 1}`,
+    subtitle: `${brands[i % 5]} | ${i % 2 === 0 ? '包邮' : '自营'} | 库存充足`,
+    description: `精选优质商品，满足您的品质生活需求。商品编号：SP${String(i + 1).padStart(4, '0')}`,
+    price: `¥${(Math.random() * 1000 + 100).toFixed(2)}`,
+    tag: i % 4 === 0 ? '热销' : i % 4 === 1 ? '新品' : i % 4 === 2 ? '推荐' : '特惠',
+    tagType: i % 4 === 0 ? 'danger' : i % 4 === 1 ? 'primary' : i % 4 === 2 ? 'success' : 'warning',
+    meta: i % 3 === 0 ? '刚刚' : i % 3 === 1 ? '5分钟前' : '1小时前'
+  }
+})
+</script>
+```
+
+:::
+
+## 简单动画示例
+
+快速上手，查看基础的滚动动画效果。
+
+:::demo
+
+```vue
+<template>
+  <XList
+    :items="simpleItems"
+    animated
+    :animation-delay="40"
+    bordered
+  />
+</template>
+
+<script setup>
+const simpleItems = [
+  { 
+    id: 1, 
+    icon: 'mdi:rocket-launch', 
+    title: '快速启动', 
+    description: '一键启动您的项目' 
+  },
+  { 
+    id: 2, 
+    icon: 'mdi:shield-check', 
+    title: '安全可靠', 
+    description: '企业级安全防护' 
+  },
+  { 
+    id: 3, 
+    icon: 'mdi:lightning-bolt', 
+    title: '性能卓越', 
+    description: '极速响应体验' 
+  },
+  { 
+    id: 4, 
+    icon: 'mdi:puzzle', 
+    title: '易于集成', 
+    description: '简单快捷集成' 
+  },
+  { 
+    id: 5, 
+    icon: 'mdi:chart-line', 
+    title: '数据分析', 
+    description: '实时数据洞察' 
+  },
+  { 
+    id: 6, 
+    icon: 'mdi:account-group', 
+    title: '团队协作', 
+    description: '高效团队协作' 
+  }
+]
+</script>
+```
+
+:::
+
 ## API
 
 ### Props
@@ -725,7 +783,7 @@ const customItems = [
 | title | 列表标题 | `string` | - |
 | extra | 列表额外内容 | `string` | - |
 | size | 尺寸 | `small` \| `medium` \| `large` | `medium` |
-| variant | 变体 | `default` \| `card` \| `timeline` | `default` |
+| variant | 变体 | `default` \| `card` | `default` |
 | bordered | 是否显示边框 | `boolean` | `false` |
 | split | 是否显示分割线 | `boolean` | `true` |
 | hoverable | 是否可悬停 | `boolean` | `true` |
@@ -737,6 +795,8 @@ const customItems = [
 | empty-text | 空状态文本 | `string` | `暂无数据` |
 | selected-keys | 已选中的项 | `(string \| number)[]` | `[]` |
 | item-key | 项的唯一标识字段 | `string` | `id` |
+| animated | 是否启用动画 | `boolean` | `false` |
+| animation-delay | 动画延迟间隔（ms） | `number` | `50` |
 
 ### ListItem 类型
 

@@ -1,0 +1,622 @@
+/**
+ * XUX React 文档自定义样式
+ * 参考 Vue 文档样式
+ * 主题色: #1a1a1a
+ */
+
+:root {
+  /* 品牌色 */
+  --dumi-primary-color: #1a1a1a;
+  --dumi-primary-hover: #2a2a2a;
+  --dumi-primary-active: #0d0d0d;
+  
+  /* 文本色 */
+  --dumi-text-color: #1a1a1a;
+  --dumi-text-color-light: #4a4a4a;
+  --dumi-text-color-lighter: #6a6a6a;
+  
+  /* 背景色 */
+  --dumi-bg-color: #ffffff;
+  --dumi-bg-soft: #f9fafb;
+  --dumi-bg-hover: #f5f5f5;
+  
+  /* 边框色 */
+  --dumi-border-color: #e5e7eb;
+  --dumi-divider-color: #e5e7eb;
+  
+  /* 代码块 */
+  --dumi-code-bg: #f6f8fa;
+  --dumi-code-color: #1a1a1a;
+  
+  /* 阴影 */
+  --dumi-shadow-sm: 0 1px 2px rgba(26, 26, 26, 0.05);
+  --dumi-shadow: 0 2px 8px rgba(26, 26, 26, 0.1);
+  --dumi-shadow-md: 0 4px 12px rgba(26, 26, 26, 0.15);
+  --dumi-shadow-lg: 0 8px 24px rgba(26, 26, 26, 0.2);
+}
+
+/* ==================== 全局优化 ==================== */
+
+/* 滚动条优化 */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--dumi-bg-soft);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--dumi-border-color);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--dumi-primary-color);
+}
+
+/* ==================== 导航栏优化 ==================== */
+
+/* 导航栏 */
+.__dumi-default-navbar {
+  border-bottom: 1px solid var(--dumi-border-color);
+  backdrop-filter: blur(8px);
+  background-color: rgba(255, 255, 255, 0.9);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+}
+
+/* Logo 优化 */
+.__dumi-default-navbar-logo {
+  height: 40px;
+  display: flex;
+  align-items: center;
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--dumi-primary-color);
+  transition: all 0.3s ease;
+}
+
+.__dumi-default-navbar-logo:hover {
+  transform: translateY(-1px);
+}
+
+/* 导航链接 */
+.__dumi-default-navbar-link {
+  color: var(--dumi-text-color-light);
+  font-weight: 500;
+  transition: all 0.3s ease;
+  padding: 8px 16px;
+  border-radius: 6px;
+}
+
+.__dumi-default-navbar-link:hover {
+  color: var(--dumi-primary-color);
+  background-color: var(--dumi-bg-soft);
+}
+
+.__dumi-default-navbar-link.active {
+  color: var(--dumi-primary-color);
+  font-weight: 600;
+  background-color: var(--dumi-bg-soft);
+}
+
+/* ==================== 侧边栏优化 ==================== */
+
+/* 侧边栏容器 */
+.__dumi-default-sidebar {
+  padding: 24px 16px;
+  border-right: 1px solid var(--dumi-border-color);
+}
+
+/* 侧边栏分组标题 */
+.__dumi-default-menu-group-title {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--dumi-text-color);
+  padding: 12px 12px 8px;
+  margin-top: 20px;
+  letter-spacing: 0.3px;
+}
+
+/* 侧边栏链接 */
+.__dumi-default-menu-item {
+  padding: 6px 12px;
+  margin: 2px 0;
+  border-radius: 6px;
+  color: var(--dumi-text-color-light);
+  font-size: 14px;
+  transition: all 0.3s ease;
+  border-left: 2px solid transparent;
+}
+
+.__dumi-default-menu-item:hover {
+  background-color: rgba(26, 26, 26, 0.08);
+  color: var(--dumi-primary-color);
+  padding-left: 16px;
+  border-left-color: var(--dumi-primary-color);
+}
+
+/* 激活的侧边栏链接 */
+.__dumi-default-menu-item.active {
+  background-color: var(--dumi-primary-color) !important;
+  color: #ffffff !important;
+  font-weight: 600;
+  padding-left: 16px;
+  border-left-color: var(--dumi-primary-color);
+}
+
+/* ==================== 首页 Hero 区域 ==================== */
+
+/* Hero 标题 */
+.__dumi-default-hero-title {
+  font-size: 56px !important;
+  font-weight: 700 !important;
+  line-height: 1.2 !important;
+  background: linear-gradient(135deg, #1a1a1a 0%, #3a3a3a 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: fadeInUp 1s ease-out;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Hero 描述 */
+.__dumi-default-hero-description {
+  font-size: 18px !important;
+  color: var(--dumi-text-color-light) !important;
+  margin-top: 16px !important;
+  animation: fadeInUp 1s ease-out 0.2s both;
+}
+
+/* Hero 按钮 */
+.__dumi-default-hero-actions {
+  margin-top: 32px !important;
+  display: flex;
+  gap: 16px;
+  animation: fadeInUp 1s ease-out 0.4s both;
+}
+
+.__dumi-default-hero-btn {
+  padding: 12px 32px !important;
+  border-radius: 8px !important;
+  font-weight: 600 !important;
+  font-size: 16px !important;
+  transition: all 0.3s ease !important;
+  position: relative;
+  overflow: hidden;
+}
+
+.__dumi-default-hero-btn-primary {
+  background-color: var(--dumi-primary-color) !important;
+  color: #ffffff !important;
+  border: none !important;
+}
+
+.__dumi-default-hero-btn-primary:hover {
+  background-color: var(--dumi-primary-hover) !important;
+  transform: translateY(-2px);
+  box-shadow: var(--dumi-shadow-md);
+}
+
+.__dumi-default-hero-btn-primary::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: linear-gradient(
+    45deg,
+    transparent,
+    rgba(255, 255, 255, 0.3),
+    transparent
+  );
+  transform: rotate(45deg);
+  animation: buttonShine 3s infinite;
+}
+
+@keyframes buttonShine {
+  0% {
+    transform: translateX(-100%) translateY(-100%) rotate(45deg);
+  }
+  100% {
+    transform: translateX(100%) translateY(100%) rotate(45deg);
+  }
+}
+
+/* ==================== 特性卡片优化 ==================== */
+
+/* 特性网格 */
+.__dumi-default-features {
+  display: grid !important;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)) !important;
+  gap: 24px !important;
+  margin-top: 48px !important;
+  padding: 0 24px !important;
+}
+
+/* 特性卡片 */
+.__dumi-default-feature {
+  border: 1px solid var(--dumi-border-color) !important;
+  border-radius: 12px !important;
+  padding: 32px 24px !important;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  position: relative;
+  background: var(--dumi-bg-color);
+}
+
+.__dumi-default-feature:hover {
+  box-shadow: var(--dumi-shadow-lg);
+  transform: translateY(-4px) scale(1.02);
+  border-color: var(--dumi-primary-color);
+}
+
+/* 特性卡片渐变背景 */
+.__dumi-default-feature::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 12px;
+  background: linear-gradient(135deg, transparent 0%, rgba(26, 26, 26, 0.03) 100%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+  z-index: -1;
+}
+
+.__dumi-default-feature:hover::after {
+  opacity: 1;
+}
+
+/* 特性图标 */
+.__dumi-default-feature-emoji {
+  font-size: 48px !important;
+  margin-bottom: 16px !important;
+  display: inline-block;
+  transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.__dumi-default-feature:hover .__dumi-default-feature-emoji {
+  transform: scale(1.15) rotate(8deg);
+  animation: iconBounce 0.6s ease;
+}
+
+@keyframes iconBounce {
+  0%, 100% {
+    transform: scale(1.15) rotate(8deg);
+  }
+  50% {
+    transform: scale(1.25) rotate(-8deg);
+  }
+}
+
+/* 特性标题 */
+.__dumi-default-feature-title {
+  font-size: 18px !important;
+  font-weight: 600 !important;
+  color: var(--dumi-text-color) !important;
+  margin-bottom: 12px !important;
+}
+
+/* 特性描述 */
+.__dumi-default-feature-description {
+  font-size: 14px !important;
+  color: var(--dumi-text-color-light) !important;
+  line-height: 1.6 !important;
+}
+
+/* ==================== 文档内容区域 ==================== */
+
+/* 文档容器 */
+.__dumi-default-content {
+  max-width: 100%;
+  padding: 32px 48px;
+}
+
+/* 标题优化 */
+.__dumi-default-content h1 {
+  font-size: 36px;
+  font-weight: 700;
+  color: var(--dumi-text-color);
+  border-bottom: 2px solid var(--dumi-primary-color);
+  padding-bottom: 16px;
+  margin-top: 24px;
+  margin-bottom: 24px;
+}
+
+.__dumi-default-content h2 {
+  font-size: 28px;
+  font-weight: 600;
+  color: var(--dumi-text-color);
+  margin-top: 48px;
+  margin-bottom: 16px;
+  padding-top: 24px;
+  border-top: 1px solid var(--dumi-divider-color);
+}
+
+.__dumi-default-content h3 {
+  font-size: 22px;
+  font-weight: 600;
+  color: var(--dumi-text-color);
+  margin-top: 32px;
+  margin-bottom: 16px;
+}
+
+/* 段落 */
+.__dumi-default-content p {
+  font-size: 16px;
+  line-height: 1.7;
+  color: var(--dumi-text-color-light);
+  margin: 16px 0;
+}
+
+/* 链接 */
+.__dumi-default-content a {
+  color: var(--dumi-primary-color);
+  text-decoration: none;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  border-bottom: 1px solid transparent;
+}
+
+.__dumi-default-content a:hover {
+  color: var(--dumi-primary-hover);
+  border-bottom-color: var(--dumi-primary-color);
+}
+
+/* ==================== 代码块优化 ==================== */
+
+/* 代码块容器 */
+.__dumi-default-previewer-demo {
+  border: 1px solid var(--dumi-border-color);
+  border-radius: 8px;
+  margin: 24px 0;
+  overflow: hidden;
+}
+
+/* 代码块内容 */
+.__dumi-default-previewer-demo > div {
+  padding: 24px;
+  background: var(--dumi-bg-soft);
+}
+
+/* 代码编辑器 */
+.__dumi-default-previewer-source {
+  border-top: 1px solid var(--dumi-divider-color);
+}
+
+/* 代码块 */
+pre[class*="language-"] {
+  border-radius: 8px;
+  margin: 16px 0;
+  font-family: 'JetBrains Mono', 'Fira Code', Consolas, Monaco, 'Courier New', monospace;
+  font-size: 14px;
+  line-height: 1.7;
+}
+
+code[class*="language-"] {
+  font-family: 'JetBrains Mono', 'Fira Code', Consolas, Monaco, 'Courier New', monospace;
+  font-size: 14px;
+}
+
+/* 行内代码 */
+code:not([class*="language-"]) {
+  background-color: var(--dumi-code-bg);
+  color: var(--dumi-code-color);
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-family: 'JetBrains Mono', 'Fira Code', Consolas, Monaco, 'Courier New', monospace;
+  font-size: 0.9em;
+}
+
+/* ==================== 表格优化 ==================== */
+
+table {
+  display: block;
+  width: 100%;
+  overflow-x: auto;
+  border-collapse: collapse;
+  margin: 24px 0;
+  border-radius: 8px;
+  border: 1px solid var(--dumi-border-color);
+}
+
+thead {
+  background-color: var(--dumi-bg-soft);
+}
+
+th {
+  background-color: var(--dumi-bg-soft);
+  font-weight: 600;
+  text-align: left;
+  color: var(--dumi-text-color);
+}
+
+th, td {
+  border: 1px solid var(--dumi-border-color);
+  padding: 12px 16px;
+  font-size: 14px;
+}
+
+tbody tr {
+  transition: background-color 0.2s ease;
+}
+
+tbody tr:hover {
+  background-color: var(--dumi-bg-soft);
+}
+
+/* ==================== 锚点导航优化 ==================== */
+
+/* 右侧锚点容器 */
+.__dumi-default-toc {
+  padding: 24px;
+  position: sticky;
+  top: 80px;
+}
+
+/* 锚点标题 */
+.__dumi-default-toc-title {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--dumi-text-color);
+  margin-bottom: 12px;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+
+/* 锚点链接 */
+.__dumi-default-toc-list a {
+  display: block;
+  padding: 6px 12px;
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--dumi-text-color-light);
+  border-left: 2px solid transparent;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+}
+
+.__dumi-default-toc-list a:hover {
+  color: var(--dumi-primary-color);
+  background-color: var(--dumi-bg-soft);
+  border-left-color: var(--dumi-primary-color);
+  transform: translateX(2px);
+}
+
+/* 激活的锚点 */
+.__dumi-default-toc-list a.active {
+  color: #ffffff !important;
+  background-color: var(--dumi-primary-color) !important;
+  border-left-color: var(--dumi-primary-color);
+  font-weight: 600;
+}
+
+/* ==================== 响应式优化 ==================== */
+
+@media (max-width: 1440px) {
+  .__dumi-default-content {
+    padding: 32px 40px;
+  }
+}
+
+@media (max-width: 1200px) {
+  .__dumi-default-content {
+    padding: 24px 32px;
+  }
+  
+  .__dumi-default-features {
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)) !important;
+    gap: 20px !important;
+  }
+}
+
+@media (max-width: 960px) {
+  .__dumi-default-content {
+    padding: 24px 24px;
+  }
+  
+  .__dumi-default-hero-title {
+    font-size: 42px !important;
+  }
+  
+  .__dumi-default-features {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+@media (max-width: 768px) {
+  .__dumi-default-content {
+    padding: 20px 16px;
+  }
+  
+  .__dumi-default-hero-title {
+    font-size: 36px !important;
+  }
+  
+  .__dumi-default-hero-description {
+    font-size: 16px !important;
+  }
+  
+  .__dumi-default-hero-btn {
+    padding: 10px 24px !important;
+    font-size: 14px !important;
+  }
+  
+  table {
+    font-size: 12px;
+  }
+  
+  th, td {
+    padding: 8px 12px;
+  }
+}
+
+/* ==================== 暗色模式 ==================== */
+
+[data-prefers-color="dark"] {
+  --dumi-primary-color: #e5e5e5;
+  --dumi-primary-hover: #ffffff;
+  --dumi-primary-active: #cacaca;
+  
+  --dumi-text-color: #e5e5e5;
+  --dumi-text-color-light: #cacaca;
+  --dumi-text-color-lighter: #aaaaaa;
+  
+  --dumi-bg-color: #1a1a1a;
+  --dumi-bg-soft: #0d0d0d;
+  --dumi-bg-hover: #2a2a2a;
+  
+  --dumi-border-color: #2a2a2a;
+  --dumi-divider-color: #2a2a2a;
+  
+  --dumi-code-bg: #0d0d0d;
+  --dumi-code-color: #e5e5e5;
+  
+  --dumi-shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
+  --dumi-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+  --dumi-shadow-md: 0 4px 12px rgba(0, 0, 0, 0.5);
+  --dumi-shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.6);
+}
+
+[data-prefers-color="dark"] .__dumi-default-navbar {
+  background-color: rgba(26, 26, 26, 0.9);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+[data-prefers-color="dark"] .__dumi-default-hero-title {
+  background: linear-gradient(135deg, #ffffff 0%, #e5e5e5 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+[data-prefers-color="dark"] .__dumi-default-menu-item.active {
+  background-color: #ffffff !important;
+  color: #1a1a1a !important;
+}
+
+[data-prefers-color="dark"] .__dumi-default-toc-list a.active {
+  background-color: #ffffff !important;
+  color: #1a1a1a !important;
+}
+
+[data-prefers-color="dark"] .__dumi-default-feature::after {
+  background: linear-gradient(135deg, transparent 0%, rgba(255, 255, 255, 0.03) 100%);
+}
+
+[data-prefers-color="dark"] .__dumi-default-feature:hover {
+  box-shadow: 0 8px 24px rgba(255, 255, 255, 0.08);
+}
+

@@ -1,4 +1,4 @@
-/* Table 表格样式 - 企业级 Div 布局 */
+/* Table 表格样式 - CSS Grid 列式布局 */
 
 /* ========== 基础容器 ========== */
 .x-table-container {
@@ -18,21 +18,8 @@
   box-shadow: var(--x-shadow-sm, 0 2px 8px rgba(0, 0, 0, 0.06));
 }
 
-/* ========== 表头容器 ========== */
-.x-table-header-wrapper {
-  overflow-x: auto;
-  overflow-y: visible; /* 允许筛选下拉框溢出显示 */
-  /* 隐藏表头的滚动条 */
-  scrollbar-width: none;
-  -ms-overflow-style: none;
-}
-
-.x-table-header-wrapper::-webkit-scrollbar {
-  display: none;
-}
-
-/* ========== 表体滚动容器 ========== */
-.x-table-body-wrapper {
+/* ========== 滚动容器 ========== */
+.x-table-scroll-wrapper {
   flex: 1;
   overflow: auto;
   position: relative;
@@ -40,44 +27,37 @@
   scrollbar-color: rgba(0, 0, 0, 0.15) transparent;
 }
 
-.x-table-body-wrapper::-webkit-scrollbar {
+.x-table-scroll-wrapper::-webkit-scrollbar {
   width: 6px;
   height: 6px;
 }
 
-.x-table-body-wrapper::-webkit-scrollbar-track {
+.x-table-scroll-wrapper::-webkit-scrollbar-track {
   background: transparent;
 }
 
-.x-table-body-wrapper::-webkit-scrollbar-thumb {
+.x-table-scroll-wrapper::-webkit-scrollbar-thumb {
   background: rgba(0, 0, 0, 0.12);
   border-radius: 3px;
   transition: background 0.2s ease;
 }
 
-.x-table-body-wrapper::-webkit-scrollbar-thumb:hover {
+.x-table-scroll-wrapper::-webkit-scrollbar-thumb:hover {
   background: rgba(0, 0, 0, 0.2);
 }
 
-.x-table-body-wrapper::-webkit-scrollbar-corner {
+.x-table-scroll-wrapper::-webkit-scrollbar-corner {
   background: transparent;
 }
 
-/* ========== 表头样式 ========== */
-.x-table-header {
-  background: var(--x-fill-color-lighter, #fafafa);
-}
-
-.x-table-row {
-  display: flex;
-  width: 100%;
+/* ========== Grid 布局 ========== */
+.x-table-grid {
+  display: grid;
+  /* grid-template-columns 由 JavaScript 动态设置 */
   min-width: max-content;
 }
 
-.x-table-header-row {
-  background: var(--x-fill-color-lighter, #fafafa);
-}
-
+/* ========== 单元格基础样式 ========== */
 .x-table-cell {
   padding: 16px;
   font-size: 14px;
@@ -86,17 +66,7 @@
   text-overflow: ellipsis;
   border-bottom: 1px solid var(--x-border-color-lighter, #f0f0f0);
   box-sizing: border-box;
-}
-
-/* 有固定宽度的列 - 不伸缩 */
-.x-table-cell-has-width {
-  flex: 0 0 auto;
-}
-
-/* 没有固定宽度的列 - 自动平分剩余空间 */
-.x-table-cell-auto-width {
-  flex: 1 1 0;
-  min-width: 100px;
+  background: inherit;
 }
 
 .x-table-cell-content {
@@ -107,28 +77,20 @@
   transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* 只有普通列的内容才移动，固定列和选择列不动 */
-.x-table-body-row:hover .x-table-body-cell:not(.x-table-cell-fixed-left):not(.x-table-cell-fixed-right):not(.x-table-selection-column) .x-table-cell-content {
-  transform: translateX(2px);
-}
-
-.x-table-body-row:active .x-table-body-cell .x-table-cell-content {
-  transform: translateX(0);
-}
-
+/* ========== 表头样式 ========== */
 .x-table-header-cell {
   font-weight: 500;
   color: var(--x-text-color-primary, rgba(0, 0, 0, 0.88));
   background: var(--x-fill-color-lighter, #fafafa);
   transition: all 0.2s ease;
   user-select: none;
-}
-
-.x-table-header-cell:not(.x-table-selection-column) {
   position: relative;
+  position: sticky;
+  top: 0;
+  z-index: 3;
 }
 
-.x-table-header-cell:not(.x-table-selection-column)::after {
+.x-table-header-cell::after {
   content: '';
   position: absolute;
   left: 0;
@@ -191,18 +153,20 @@
 }
 
 /* ========== 表体样式 ========== */
-.x-table-body {
-  flex: 1;
-}
-
-.x-table-body-row {
+.x-table-body-cell {
+  color: var(--x-text-color-primary, rgba(0, 0, 0, 0.88));
+  background: var(--x-bg-color, #ffffff);
   transition: background-color 0.25s cubic-bezier(0.4, 0, 0.2, 1);
   cursor: pointer;
-  background: var(--x-bg-color, #ffffff);
   position: relative;
 }
 
-.x-table-body-row::before {
+/* 行hover效果 - 整行横向背景 */
+.x-table-body-cell.x-table-row-hover {
+  background: var(--x-fill-color-lighter, #fafafa);
+}
+
+.x-table-body-cell.x-table-row-hover::before {
   content: '';
   position: absolute;
   left: 0;
@@ -210,45 +174,39 @@
   right: 0;
   bottom: 0;
   background: var(--x-table-row-hover-gradient, linear-gradient(90deg, rgba(24, 144, 255, 0.03) 0%, transparent 100%));
-  opacity: 0;
-  transition: opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  opacity: 1;
   pointer-events: none;
-  z-index: 0;
+  z-index: -1;
 }
 
-.x-table-body-row:hover::before,
-.x-table-body-row.x-table-row-hover::before {
-  opacity: 1;
-}
-
-.x-table-body-row:hover,
-.x-table-body-row.x-table-row-hover {
-  background: var(--x-fill-color-lighter, #fafafa);
-}
-
-.x-table-body-row:active {
-  background: var(--x-fill-color, #f5f5f5);
-}
-
-/* 选中行样式 */
-.x-table-body-row.x-table-row-selected {
+/* 行选中效果 - 整行横向选中 */
+.x-table-body-cell.x-table-row-selected {
   background: var(--x-table-row-selected-bg, #e6f7ff);
-  box-shadow: inset 3px 0 0 var(--x-color-primary, #1890ff);
 }
 
-.x-table-body-row.x-table-row-selected::before {
-  background: var(--x-table-row-selected-gradient, linear-gradient(90deg, rgba(24, 144, 255, 0.08) 0%, transparent 100%));
-  opacity: 1;
+.x-table-body-cell.x-table-row-selected::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 3px;
+  background: var(--x-color-primary, #1890ff);
+  pointer-events: none;
 }
 
-.x-table-body-row.x-table-row-selected:hover {
-  background: var(--x-table-row-selected-hover-bg, #bae7ff);
+/* 只在第一个单元格显示选中指示条 */
+.x-table-body-cell.x-table-row-selected:not(:first-child)::after {
+  display: none;
 }
 
-.x-table-body-cell {
-  color: var(--x-text-color-primary, rgba(0, 0, 0, 0.88));
-  background: transparent;
-  transition: background-color 0.2s ease;
+.x-table-body-cell.x-table-row-selected.x-table-selection-cell::after {
+  display: block;
+}
+
+/* 内容移动效果 - 只对非固定列 */
+.x-table-body-cell.x-table-row-hover:not(.x-table-cell-fixed):not(.x-table-cell-fixed-right):not(.x-table-selection-cell) .x-table-cell-content {
+  transform: translateX(2px);
 }
 
 /* ========== 对齐方式 ========== */
@@ -277,38 +235,28 @@
 }
 
 /* ========== 尺寸变体 ========== */
-/* 大号 */
 .x-table-size-large .x-table-cell {
   padding: 20px 16px;
 }
 
-/* 默认 */
 .x-table-size-default .x-table-cell {
   padding: 16px;
 }
 
-/* 紧凑 */
 .x-table-size-small .x-table-cell {
   padding: 12px 8px;
   font-size: 13px;
 }
 
 /* ========== 边框样式 ========== */
-/* 无边框 */
 .x-table-border-none .x-table-cell {
   border-bottom: none;
 }
 
-/* 横向边框（默认） */
 .x-table-border-horizontal .x-table-cell {
   border-bottom: 1px solid var(--x-border-color-lighter, #f0f0f0);
 }
 
-.x-table-border-horizontal .x-table-header-cell {
-  border-bottom: 1px solid var(--x-border-color-lighter, #f0f0f0);
-}
-
-/* 纵向边框 */
 .x-table-border-vertical .x-table-cell {
   border-left: 1px solid var(--x-border-color-lighter, #f0f0f0);
   border-bottom: none;
@@ -318,44 +266,35 @@
   border-left: none;
 }
 
-/* 全边框 */
 .x-table-border-all .x-table-cell {
   border-left: 1px solid var(--x-border-color-lighter, #f0f0f0);
   border-bottom: 1px solid var(--x-border-color-lighter, #f0f0f0);
 }
 
-.x-table-border-all .x-table-cell:first-child {
-  border-left: none;
-}
-
 /* ========== 斑马纹 ========== */
-.x-table-stripe .x-table-body-row:nth-child(even) {
-  background: var(--x-fill-color-lighter, #fafafa);
+/* Grid布局下的斑马纹通过 JavaScript 在 Vue 组件中实现 */
+/* 因为 Grid 中 nth-child 计算的是所有 cell 而非行 */
+.x-table-body-cell.x-table-row-stripe {
+  background: var(--x-table-stripe-bg, #f9fafb) !important;
 }
 
-.x-table-stripe .x-table-body-row:nth-child(even):hover {
-  background: var(--x-fill-color, #f5f5f5);
+.x-table-body-cell.x-table-row-stripe.x-table-row-hover {
+  background: var(--x-table-stripe-hover-bg, #f3f4f6) !important;
 }
 
-.x-table-stripe .x-table-body-row.x-table-row-selected:nth-child(even) {
-  background: var(--x-table-row-selected-bg, #e6f7ff);
-}
-
-.x-table-stripe .x-table-body-row.x-table-row-selected:nth-child(even):hover {
-  background: var(--x-table-row-selected-hover-bg, #bae7ff);
+.x-table-body-cell.x-table-row-stripe.x-table-row-selected {
+  background: var(--x-table-row-selected-bg, #e6f7ff) !important;
 }
 
 /* ========== 选择列样式 ========== */
-.x-table-selection-column {
-  width: 48px !important;
-  min-width: 48px !important;
-  max-width: 48px !important;
-  padding: 16px 12px !important;
-  flex-shrink: 0 !important;
-  flex-grow: 0 !important;
+.x-table-selection-cell {
+  padding: 16px 12px;
+  width: 48px;
+  min-width: 48px;
+  max-width: 48px;
 }
 
-.x-table-selection-column .x-table-cell-content {
+.x-table-selection-cell .x-table-cell-content {
   justify-content: center;
 }
 
@@ -424,56 +363,88 @@
   outline-offset: 2px;
 }
 
+/* 禁用状态 */
+.x-table-checkbox:disabled {
+  cursor: not-allowed;
+  background: var(--x-fill-color, #f5f5f5);
+  border-color: var(--x-border-color, #d9d9d9);
+  opacity: 0.6;
+}
+
+.x-table-checkbox:disabled:hover {
+  border-color: var(--x-border-color, #d9d9d9);
+}
+
+.x-table-checkbox:disabled:checked {
+  background: var(--x-color-primary-light, #91d5ff);
+  border-color: var(--x-color-primary-light, #91d5ff);
+}
+
+.x-table-checkbox:disabled:checked::after {
+  border-color: var(--x-color-white, #ffffff);
+}
+
 /* ========== 固定列样式 ========== */
-.x-table-cell-fixed-left,
-.x-table-cell-fixed-right {
+.x-table-cell-fixed {
   position: sticky;
+  left: 0;
   z-index: 2;
 }
 
-.x-table-header-cell.x-table-cell-fixed-left,
+.x-table-header-cell.x-table-cell-fixed {
+  z-index: 4;
+  background: var(--x-fill-color-lighter, #fafafa);
+}
+
+.x-table-cell-fixed-right {
+  position: sticky;
+  right: 0;
+  z-index: 2;
+}
+
 .x-table-header-cell.x-table-cell-fixed-right {
   z-index: 4;
   background: var(--x-fill-color-lighter, #fafafa);
 }
 
-.x-table-body-cell.x-table-cell-fixed-left,
-.x-table-body-cell.x-table-cell-fixed-right {
+/* 固定列默认背景 - 必须明确设置，否则会透明 */
+.x-table-body-cell.x-table-cell-fixed:not(.x-table-row-stripe):not(.x-table-row-hover):not(.x-table-row-selected),
+.x-table-body-cell.x-table-cell-fixed-right:not(.x-table-row-stripe):not(.x-table-row-hover):not(.x-table-row-selected) {
   background: var(--x-bg-color, #ffffff);
 }
 
-/* 悬停状态 */
-.x-table-body-row:hover .x-table-body-cell.x-table-cell-fixed-left,
-.x-table-body-row:hover .x-table-body-cell.x-table-cell-fixed-right,
-.x-table-body-row.x-table-row-hover .x-table-body-cell.x-table-cell-fixed-left,
-.x-table-body-row.x-table-row-hover .x-table-body-cell.x-table-cell-fixed-right {
-  background: var(--x-fill-color-lighter, #fafafa);
+/* 固定列在斑马纹状态下的背景 */
+.x-table-body-cell.x-table-cell-fixed.x-table-row-stripe,
+.x-table-body-cell.x-table-cell-fixed-right.x-table-row-stripe {
+  background: var(--x-table-stripe-bg, #f9fafb) !important;
 }
 
-/* 选中状态 */
-.x-table-body-row.x-table-row-selected .x-table-body-cell.x-table-cell-fixed-left,
-.x-table-body-row.x-table-row-selected .x-table-body-cell.x-table-cell-fixed-right {
-  background: var(--x-table-row-selected-bg, #e6f7ff);
+/* 固定列在hover状态下的背景 */
+.x-table-body-cell.x-table-cell-fixed.x-table-row-hover,
+.x-table-body-cell.x-table-cell-fixed-right.x-table-row-hover {
+  background: var(--x-fill-color-lighter, #fafafa) !important;
 }
 
-.x-table-body-row.x-table-row-selected:hover .x-table-body-cell.x-table-cell-fixed-left,
-.x-table-body-row.x-table-row-selected:hover .x-table-body-cell.x-table-cell-fixed-right {
-  background: var(--x-table-row-selected-hover-bg, #bae7ff);
+/* 固定列在斑马纹+hover状态下的背景 */
+.x-table-body-cell.x-table-cell-fixed.x-table-row-stripe.x-table-row-hover,
+.x-table-body-cell.x-table-cell-fixed-right.x-table-row-stripe.x-table-row-hover {
+  background: var(--x-table-stripe-hover-bg, #f3f4f6) !important;
 }
 
-/* 斑马纹 + 固定列 */
-.x-table-stripe .x-table-body-row:nth-child(even) .x-table-body-cell.x-table-cell-fixed-left,
-.x-table-stripe .x-table-body-row:nth-child(even) .x-table-body-cell.x-table-cell-fixed-right {
-  background: var(--x-fill-color-lighter, #fafafa);
+/* 固定列在selected状态下的背景 */
+.x-table-body-cell.x-table-cell-fixed.x-table-row-selected,
+.x-table-body-cell.x-table-cell-fixed-right.x-table-row-selected {
+  background: var(--x-table-row-selected-bg, #e6f7ff) !important;
 }
 
-.x-table-stripe .x-table-body-row:nth-child(even):hover .x-table-body-cell.x-table-cell-fixed-left,
-.x-table-stripe .x-table-body-row:nth-child(even):hover .x-table-body-cell.x-table-cell-fixed-right {
-  background: var(--x-fill-color, #f5f5f5);
+/* 固定列在斑马纹+selected状态下的背景 */
+.x-table-body-cell.x-table-cell-fixed.x-table-row-stripe.x-table-row-selected,
+.x-table-body-cell.x-table-cell-fixed-right.x-table-row-stripe.x-table-row-selected {
+  background: var(--x-table-row-selected-bg, #e6f7ff) !important;
 }
 
 /* 固定列分隔线 */
-.x-table-cell-fixed-left::after {
+.x-table-cell-fixed::after {
   content: '';
   position: absolute;
   top: 0;
@@ -502,7 +473,7 @@
   width: 1px;
   pointer-events: none;
   transition: box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  z-index: 3;
+  z-index: 5;
 }
 
 .x-table-fixed-shadow-left {
@@ -601,224 +572,6 @@
   font-weight: 400;
 }
 
-/* ========== 响应式设计 ========== */
-@media (max-width: 768px) {
-  .x-table-container {
-    border-radius: 8px;
-  }
-  
-  .x-table-cell {
-    padding: 12px;
-    font-size: 13px;
-  }
-  
-  .x-table-scroll-wrapper::-webkit-scrollbar {
-    width: 4px;
-    height: 4px;
-  }
-  
-  .x-table-selection-column {
-    padding: 12px 8px !important;
-  }
-}
-
-/* ========== 暗色模式支持 ========== */
-@media (prefers-color-scheme: dark) {
-  .x-table-container {
-    background: #141414;
-    border-color: #303030;
-  }
-  
-  .x-table-container:hover {
-    border-color: #434343;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.45);
-  }
-  
-  .x-table-header {
-    background: #1f1f1f;
-  }
-  
-  .x-table-header-row {
-    background: #1f1f1f;
-  }
-  
-  .x-table-header-cell {
-    background: #1f1f1f;
-    color: rgba(255, 255, 255, 0.85);
-    border-bottom-color: #303030;
-  }
-  
-  .x-table-sortable:hover {
-    background: rgba(255, 255, 255, 0.04);
-  }
-  
-  .x-table-sorted {
-    background: rgba(24, 144, 255, 0.1);
-  }
-  
-  .x-table-sort-icon svg {
-    color: rgba(255, 255, 255, 0.45);
-  }
-  
-  .x-table-cell {
-    border-bottom-color: #303030;
-  }
-  
-  .x-table-body-row {
-    background: #141414;
-  }
-  
-  .x-table-body-row:hover,
-  .x-table-body-row.x-table-row-hover {
-    background: #262626;
-  }
-  
-  .x-table-body-row.x-table-row-selected {
-    background: #111b26;
-  }
-  
-  .x-table-body-row.x-table-row-selected:hover {
-    background: #15395b;
-  }
-  
-  .x-table-body-cell {
-    color: rgba(255, 255, 255, 0.85);
-  }
-  
-  .x-table-stripe .x-table-body-row:nth-child(even) {
-    background: #1a1a1a;
-  }
-  
-  .x-table-checkbox {
-    border-color: #434343;
-    background: #141414;
-  }
-  
-  /* 暗色模式固定列 */
-  .x-table-header-cell.x-table-cell-fixed-left,
-  .x-table-header-cell.x-table-cell-fixed-right {
-    background: #1f1f1f;
-  }
-  
-  .x-table-body-cell.x-table-cell-fixed-left,
-  .x-table-body-cell.x-table-cell-fixed-right {
-    background: #141414;
-  }
-  
-  .x-table-body-row:hover .x-table-body-cell.x-table-cell-fixed-left,
-  .x-table-body-row:hover .x-table-body-cell.x-table-cell-fixed-right,
-  .x-table-body-row.x-table-row-hover .x-table-body-cell.x-table-cell-fixed-left,
-  .x-table-body-row.x-table-row-hover .x-table-body-cell.x-table-cell-fixed-right {
-    background: #262626;
-  }
-  
-  .x-table-body-row.x-table-row-selected .x-table-body-cell.x-table-cell-fixed-left,
-  .x-table-body-row.x-table-row-selected .x-table-body-cell.x-table-cell-fixed-right {
-    background: #111b26;
-  }
-  
-  .x-table-cell-fixed-left::after,
-  .x-table-cell-fixed-right::before {
-    background: #303030;
-  }
-  
-  .x-table-loading {
-    background: rgba(20, 20, 20, 0.85);
-  }
-  
-  .x-table-loading-text {
-    color: rgba(255, 255, 255, 0.65);
-  }
-}
-
-/* ========== 打印样式 ========== */
-@media print {
-  .x-table-container {
-    box-shadow: none;
-    border: 1px solid #d9d9d9;
-  }
-  
-  .x-table-scroll-wrapper {
-    overflow: visible !important;
-  }
-  
-  .x-table-loading {
-    display: none !important;
-  }
-  
-  .x-table-selection-column {
-    display: none !important;
-  }
-}
-
-/* ========== 无障碍支持 ========== */
-@media (prefers-reduced-motion: reduce) {
-  * {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
-  }
-}
-
-/* 键盘焦点样式 */
-.x-table-body-row:focus-visible {
-  outline: 2px solid #1890ff;
-  outline-offset: -2px;
-}
-
-/* ========== 色盲模式支持 ========== */
-/* 可以通过添加 data-colorblind 属性启用 */
-[data-colorblind="protanopia"] .x-table-body-row.x-table-row-selected,
-[data-colorblind="deuteranopia"] .x-table-body-row.x-table-row-selected {
-  /* 红绿色盲：使用蓝色/黄色系 */
-  background: #fff7e6;
-  box-shadow: inset 3px 0 0 #fa8c16;
-}
-
-[data-colorblind="protanopia"] .x-table-body-row.x-table-row-selected::before,
-[data-colorblind="deuteranopia"] .x-table-body-row.x-table-row-selected::before {
-  background: linear-gradient(90deg, rgba(250, 140, 22, 0.08) 0%, transparent 100%);
-}
-
-[data-colorblind="protanopia"] .x-table-body-row.x-table-row-selected:hover,
-[data-colorblind="deuteranopia"] .x-table-body-row.x-table-row-selected:hover {
-  background: #ffe7ba;
-}
-
-[data-colorblind="tritanopia"] .x-table-body-row.x-table-row-selected {
-  /* 蓝黄色盲：使用红色/品红系 */
-  background: #fff1f0;
-  box-shadow: inset 3px 0 0 #f5222d;
-}
-
-[data-colorblind="tritanopia"] .x-table-body-row.x-table-row-selected::before {
-  background: linear-gradient(90deg, rgba(245, 34, 45, 0.08) 0%, transparent 100%);
-}
-
-[data-colorblind="tritanopia"] .x-table-body-row.x-table-row-selected:hover {
-  background: #ffccc7;
-}
-
-/* 高对比度模式 */
-[data-contrast="high"] .x-table-container {
-  border: 2px solid #000000;
-}
-
-[data-contrast="high"] .x-table-cell {
-  border-bottom: 2px solid #000000;
-}
-
-[data-contrast="high"] .x-table-body-row.x-table-row-selected {
-  background: #ffff00;
-  color: #000000;
-  box-shadow: inset 4px 0 0 #000000;
-}
-
-[data-contrast="high"] .x-table-body-cell {
-  color: #000000;
-  font-weight: 500;
-}
-
 /* ========== 可编辑单元格 ========== */
 .x-table-editable-cell {
   position: relative;
@@ -863,3 +616,170 @@
   box-shadow: 0 0 0 2px rgba(26, 26, 26, 0.1);
 }
 
+/* ========== 响应式设计 ========== */
+@media (max-width: 768px) {
+  .x-table-container {
+    border-radius: 8px;
+  }
+  
+  .x-table-cell {
+    padding: 12px;
+    font-size: 13px;
+  }
+  
+  .x-table-scroll-wrapper::-webkit-scrollbar {
+    width: 4px;
+    height: 4px;
+  }
+  
+  .x-table-selection-cell {
+    padding: 12px 8px;
+  }
+}
+
+/* ========== 暗色模式支持 ========== */
+@media (prefers-color-scheme: dark) {
+  .x-table-container {
+    background: #141414;
+    border-color: #303030;
+  }
+  
+  .x-table-container:hover {
+    border-color: #434343;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.45);
+  }
+  
+  .x-table-header-cell {
+    background: #1f1f1f;
+    color: rgba(255, 255, 255, 0.85);
+    border-bottom-color: #303030;
+  }
+  
+  .x-table-sortable:hover {
+    background: rgba(255, 255, 255, 0.04);
+  }
+  
+  .x-table-sorted {
+    background: rgba(24, 144, 255, 0.1);
+  }
+  
+  .x-table-sort-icon svg {
+    color: rgba(255, 255, 255, 0.45);
+  }
+  
+  .x-table-cell {
+    border-bottom-color: #303030;
+  }
+  
+  .x-table-body-cell {
+    background: #141414;
+    color: rgba(255, 255, 255, 0.85);
+  }
+  
+  .x-table-body-cell.x-table-row-hover {
+    background: #262626;
+  }
+  
+  .x-table-body-cell.x-table-row-selected {
+    background: #111b26;
+  }
+  
+  .x-table-body-cell.x-table-cell-fixed.x-table-row-hover,
+  .x-table-body-cell.x-table-cell-fixed-right.x-table-row-hover {
+    background: #262626;
+  }
+  
+  .x-table-body-cell.x-table-cell-fixed.x-table-row-selected,
+  .x-table-body-cell.x-table-cell-fixed-right.x-table-row-selected {
+    background: #111b26;
+  }
+  
+  .x-table-body-cell.x-table-cell-fixed,
+  .x-table-body-cell.x-table-cell-fixed-right {
+    background: #141414;
+  }
+  
+  .x-table-body-cell.x-table-cell-fixed.x-table-row-stripe,
+  .x-table-body-cell.x-table-cell-fixed-right.x-table-row-stripe {
+    background: #1a1a1a !important;
+  }
+  
+  .x-table-body-cell.x-table-cell-fixed.x-table-row-stripe.x-table-row-hover,
+  .x-table-body-cell.x-table-cell-fixed-right.x-table-row-stripe.x-table-row-hover {
+    background: #262626 !important;
+  }
+  
+  .x-table-body-cell.x-table-cell-fixed.x-table-row-stripe.x-table-row-selected,
+  .x-table-body-cell.x-table-cell-fixed-right.x-table-row-stripe.x-table-row-selected {
+    background: #111b26 !important;
+  }
+  
+  .x-table-body-cell.x-table-row-stripe {
+    background: #1a1a1a !important;
+  }
+  
+  .x-table-body-cell.x-table-row-stripe.x-table-row-hover {
+    background: #262626 !important;
+  }
+  
+  .x-table-body-cell.x-table-row-stripe.x-table-row-selected {
+    background: #111b26 !important;
+  }
+  
+  .x-table-checkbox {
+    border-color: #434343;
+    background: #141414;
+  }
+  
+  .x-table-checkbox:disabled {
+    background: #262626;
+    border-color: #434343;
+  }
+  
+  .x-table-checkbox:disabled:checked {
+    background: rgba(24, 144, 255, 0.3);
+    border-color: rgba(24, 144, 255, 0.3);
+  }
+  
+  .x-table-cell-fixed::after,
+  .x-table-cell-fixed-right::before {
+    background: #303030;
+  }
+  
+  .x-table-loading {
+    background: rgba(20, 20, 20, 0.85);
+  }
+  
+  .x-table-loading-text {
+    color: rgba(255, 255, 255, 0.65);
+  }
+}
+
+/* ========== 打印样式 ========== */
+@media print {
+  .x-table-container {
+    box-shadow: none;
+    border: 1px solid #d9d9d9;
+  }
+  
+  .x-table-scroll-wrapper {
+    overflow: visible !important;
+  }
+  
+  .x-table-loading {
+    display: none !important;
+  }
+  
+  .x-table-selection-cell {
+    display: none !important;
+  }
+}
+
+/* ========== 无障碍支持 ========== */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

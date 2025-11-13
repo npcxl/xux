@@ -83,6 +83,88 @@ const handleCheck = (keys, node) => {
 
 :::
 
+## 多选与方法调用
+
+设置 `multiple` 属性支持多选节点，使用 `setSelectedKeys` 和 `getSelectedKeys` 方法控制选中状态。
+
+:::demo
+
+```vue
+<template>
+  <div class="space-y-4">
+    <div class="flex gap-2">
+      <XButton @click="selectAll" size="small">全选</XButton>
+      <XButton @click="clearSelection" size="small">清空</XButton>
+      <XButton @click="selectSpecific" size="small" type="primary">选中第2、3项</XButton>
+      <XButton @click="getSelected" size="small" type="success">获取选中</XButton>
+    </div>
+    
+    <XTree 
+      ref="treeRef"
+      :data="multiSelectData" 
+      multiple
+      @select="handleSelect" 
+    />
+    
+    <div v-if="selectedInfo" class="text-sm text-gray-600">
+      当前选中：{{ selectedInfo }}
+    </div>
+  </div>
+</template>
+
+<script setup>
+import { ref } from 'vue'
+
+const treeRef = ref(null)
+const selectedInfo = ref('')
+
+const multiSelectData = ref([
+  {
+    key: '1',
+    title: '选项 1'
+  },
+  {
+    key: '2',
+    title: '选项 2'
+  },
+  {
+    key: '3',
+    title: '选项 3'
+  },
+  {
+    key: '4',
+    title: '选项 4'
+  }
+])
+
+const handleSelect = (keys) => {
+  selectedInfo.value = keys.join(', ') || '未选择'
+}
+
+const selectAll = () => {
+  treeRef.value.setSelectedKeys(['1', '2', '3', '4'])
+  selectedInfo.value = '1, 2, 3, 4'
+}
+
+const clearSelection = () => {
+  treeRef.value.setSelectedKeys([])
+  selectedInfo.value = '未选择'
+}
+
+const selectSpecific = () => {
+  treeRef.value.setSelectedKeys(['2', '3'])
+  selectedInfo.value = '2, 3'
+}
+
+const getSelected = () => {
+  const keys = treeRef.value.getSelectedKeys()
+  xlMsg.info(`选中的节点: ${keys.join(', ') || '未选择'}`)
+}
+</script>
+```
+
+:::
+
 ## 自定义图标
 
 使用 `icon` 字段或插槽自定义图标。
@@ -277,6 +359,7 @@ const handleCheck2 = (keys, halfKeys) => {
 | --- | --- | --- | --- |
 | data | 树形数据 | `TreeNodeData[]` | `[]` |
 | checkable | 是否可勾选 | `boolean` | `false` |
+| multiple | 是否支持多选（点击节点） | `boolean` | `false` |
 | default-expand-all | 是否默认展开所有 | `boolean` | `false` |
 | default-selected-keys | 默认选中的节点 | `string[]` | `[]` |
 | default-checked-keys | 默认勾选的节点 | `string[]` | `[]` |
@@ -319,6 +402,7 @@ const handleCheck2 = (keys, halfKeys) => {
 | getSelectedKeys | 获取选中的节点 | `() => string[]` |
 | getCheckedKeys | 获取勾选的节点 | `() => { checked: string[], halfChecked: string[] }` |
 | getExpandedKeys | 获取展开的节点 | `() => string[]` |
+| setSelectedKeys | 设置选中的节点 | `(keys: string[]) => void` |
 | setCheckedKeys | 设置勾选的节点 | `(keys: string[]) => void` |
 | setExpandedKeys | 设置展开的节点 | `(keys: string[]) => void` |
 

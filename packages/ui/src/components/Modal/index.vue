@@ -6,6 +6,7 @@
       <div
         v-if="visible"
         class="modal-mask"
+        :style="{ zIndex: modalZIndex }"
         @click="handleMaskClick"
       >
         <Transition
@@ -74,9 +75,25 @@
   </Teleport>
 </template>
 
+<script lang="ts">
+import { ref as globalRef } from 'vue'
+
+// 全局 Modal 实例栈，用于管理多个弹框的层级关系（所有 Modal 实例共享）
+const modalStack: symbol[] = []
+
+// 栈变化版本号，用于触发响应式更新
+const stackVersion = globalRef(0)
+
+// 触发栈更新
+const updateStack = () => {
+  stackVersion.value++
+}
+</script>
+
 <script setup lang="ts">
-import { watch } from 'vue'
+import { watch, onMounted, onUnmounted, computed } from 'vue'
 import { Icon } from '@iconify/vue'
+
 /**
  * Modal 模态框组件
  * @displayName XModal
@@ -126,6 +143,20 @@ const emit = defineEmits<{
   'closed': []
 }>()
 
+// 创建唯一的 Modal 实例 ID
+const modalId = Symbol('modal')
+
+// 基础 z-index
+const BASE_Z_INDEX = 1000
+
+// 计算当前 Modal 的 z-index（根据在栈中的位置）
+const modalZIndex = computed(() => {
+  // 依赖 stackVersion 以触发响应式更新
+  stackVersion.value
+  const index = modalStack.indexOf(modalId)
+  return index >= 0 ? BASE_Z_INDEX + index : BASE_Z_INDEX
+})
+
 const handleClose = () => {
   emit('update:visible', false)
   emit('close')
@@ -146,23 +177,74 @@ const handleMaskClick = () => {
   }
 }
 
-// 键盘事件
-const handleEsc = (e: KeyboardEvent) => {
-  if (e.key === 'Escape' && props.escClosable && props.visible) {
-    handleClose()
+// 全局 ESC 键盘事件处理
+const handleGlobalEsc = (e: KeyboardEvent) => {
+  if (e.key === 'Escape') {
+    // 获取栈顶的 Modal（最上层的弹框）
+    const topModalId = modalStack[modalStack.length - 1]
+    
+    // 只有当前 Modal 是栈顶时才处理 ESC 事件
+    if (topModalId === modalId && props.escClosable && props.visible) {
+      handleClose()
+    }
+  }
+}
+
+// 将当前 Modal 添加到栈顶
+const pushToStack = () => {
+  if (!modalStack.includes(modalId)) {
+    modalStack.push(modalId)
+    updateStack() // 触发响应式更新
+  }
+}
+
+// 从栈中移除当前 Modal
+const removeFromStack = () => {
+  const index = modalStack.indexOf(modalId)
+  if (index > -1) {
+    modalStack.splice(index, 1)
+    updateStack() // 触发响应式更新
   }
 }
 
 // 监听 visible 变化
 watch(() => props.visible, (val) => {
   if (val) {
-    document.addEventListener('keydown', handleEsc)
-    document.body.style.overflow = 'hidden'
+    // 打开弹框：添加到栈顶
+    pushToStack()
+    
+    // 只有第一个弹框时才禁止 body 滚动
+    if (modalStack.length === 1) {
+      document.body.style.overflow = 'hidden'
+    }
+    
     emit('opened')
   } else {
-    document.removeEventListener('keydown', handleEsc)
-    document.body.style.overflow = ''
+    // 关闭弹框：从栈中移除
+    removeFromStack()
+    
+    // 只有所有弹框都关闭时才恢复 body 滚动
+    if (modalStack.length === 0) {
+      document.body.style.overflow = ''
+    }
+    
     emit('closed')
+  }
+})
+
+// 组件挂载时添加全局 ESC 事件监听
+onMounted(() => {
+  document.addEventListener('keydown', handleGlobalEsc)
+})
+
+// 组件卸载时移除事件监听和栈中的记录
+onUnmounted(() => {
+  document.removeEventListener('keydown', handleGlobalEsc)
+  removeFromStack()
+  
+  // 如果是最后一个 Modal 被卸载，恢复 body 滚动
+  if (modalStack.length === 0) {
+    document.body.style.overflow = ''
   }
 })
 
@@ -175,36 +257,28 @@ defineExpose({
 <style scoped>
 /* 遮罩层动画 - 渐显渐隐 */
 .modal-mask-enter-active {
-  animation: maskFadeIn 0.4s ease-out;
+  animation: maskFadeIn 0.3s ease-out;
 }
 
 .modal-mask-leave-active {
-  animation: maskFadeOut 0.3s ease-in;
+  animation: maskFadeOut 0.2s ease-in;
 }
 
 @keyframes maskFadeIn {
   0% {
     opacity: 0;
-    backdrop-filter: blur(0px);
-    background-color: rgba(0, 0, 0, 0);
   }
   100% {
     opacity: 1;
-    backdrop-filter: blur(8px);
-    background-color: rgba(0, 0, 0, 0.6);
   }
 }
 
 @keyframes maskFadeOut {
   0% {
     opacity: 1;
-    backdrop-filter: blur(8px);
-    background-color: rgba(0, 0, 0, 0.6);
   }
   100% {
     opacity: 0;
-    backdrop-filter: blur(0px);
-    background-color: rgba(0, 0, 0, 0);
   }
 }
 
@@ -216,7 +290,7 @@ defineExpose({
   bottom: 0;
   background-color: var(--x-modal-mask-bg, rgba(0, 0, 0, 0.6));
   backdrop-filter: blur(8px);
-  z-index: 99;
+  /* z-index 由组件动态设置 */
   display: flex;
   align-items: center;
   justify-content: center;
@@ -225,110 +299,55 @@ defineExpose({
 
 /* 普通模态框动画 - 弹出/缩放效果 */
 .modal-enter-active {
-  animation: modalPopIn 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+  animation: modalPopIn 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
 .modal-leave-active {
-  animation: modalPopOut 0.3s cubic-bezier(0.55, 0.055, 0.675, 0.19);
+  animation: modalPopOut 0.2s cubic-bezier(0.55, 0.055, 0.675, 0.19);
 }
 
 @keyframes modalPopIn {
   0% {
     opacity: 0;
-    transform: scale(0.7);
-    filter: blur(10px);
-    box-shadow: 
-      0 0 0 0 rgba(59, 130, 246, 0),
-      0 0 0 0 rgba(147, 51, 234, 0),
-      0 0 80px -20px rgba(0, 0, 0, 0);
-  }
-  
-  50% {
-    opacity: 0.9;
-    transform: scale(1.05);
-    filter: blur(2px);
-    box-shadow: 
-      0 0 60px 3px rgba(59, 130, 246, 0.6),
-      0 0 100px 5px rgba(147, 51, 234, 0.5),
-      0 40px 80px -20px rgba(0, 0, 0, 0.4);
+    transform: scale(0.9) translateY(-20px);
   }
   
   100% {
     opacity: 1;
-    transform: scale(1);
-    filter: blur(0px);
-    box-shadow: 
-      0 0 30px 0 rgba(59, 130, 246, 0.2),
-      0 0 60px 0 rgba(147, 51, 234, 0.15),
-      0 30px 70px -15px rgba(0, 0, 0, 0.35);
+    transform: scale(1) translateY(0);
   }
 }
 
 @keyframes modalPopOut {
   0% {
     opacity: 1;
-    transform: scale(1);
-    filter: blur(0px);
-    box-shadow: 
-      0 0 30px 0 rgba(59, 130, 246, 0.2),
-      0 0 60px 0 rgba(147, 51, 234, 0.15),
-      0 30px 70px -15px rgba(0, 0, 0, 0.35);
+    transform: scale(1) translateY(0);
   }
   
   100% {
     opacity: 0;
-    transform: scale(0.8);
-    filter: blur(8px);
-    box-shadow: 
-      0 0 40px 0 rgba(59, 130, 246, 0.3),
-      0 0 80px 0 rgba(147, 51, 234, 0.25),
-      0 20px 50px -10px rgba(0, 0, 0, 0.2);
+    transform: scale(0.9) translateY(-20px);
   }
 }
 
 /* 全屏模态框动画 - 弹出展开效果 */
 .modal-fullscreen-enter-active {
-  animation: fullscreenPopIn 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+  animation: fullscreenPopIn 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
 .modal-fullscreen-leave-active {
-  animation: fullscreenPopOut 0.35s cubic-bezier(0.55, 0.055, 0.675, 0.19);
+  animation: fullscreenPopOut 0.2s cubic-bezier(0.55, 0.055, 0.675, 0.19);
 }
 
 @keyframes fullscreenPopIn {
   0% {
     opacity: 0;
-    transform: scale(0.85);
-    border-radius: 30px;
-    filter: blur(12px);
-    box-shadow: 
-      0 0 0 0 rgba(59, 130, 246, 0),
-      0 0 0 0 rgba(147, 51, 234, 0),
-      inset 0 0 0 0 rgba(255, 255, 255, 0);
-  }
-  
-  60% {
-    opacity: 0.95;
-    transform: scale(1.02);
-    border-radius: 8px;
-    filter: blur(2px);
-    box-shadow: 
-      0 0 80px 5px rgba(59, 130, 246, 0.6),
-      0 0 120px 8px rgba(147, 51, 234, 0.5),
-      inset 0 0 60px rgba(255, 255, 255, 0.12),
-      0 30px 80px -25px rgba(0, 0, 0, 0.35);
+    transform: scale(0.95);
   }
   
   100% {
     opacity: 1;
     transform: scale(1);
-    border-radius: 0;
-    filter: blur(0px);
-    box-shadow: 
-      0 0 40px 0 rgba(59, 130, 246, 0.25),
-      0 0 80px 0 rgba(147, 51, 234, 0.2),
-      inset 0 0 40px rgba(255, 255, 255, 0.05),
-      0 30px 80px -20px rgba(0, 0, 0, 0.3);
   }
 }
 
@@ -336,92 +355,28 @@ defineExpose({
   0% {
     opacity: 1;
     transform: scale(1);
-    border-radius: 0;
-    filter: blur(0px);
-    box-shadow: 
-      0 0 40px 0 rgba(59, 130, 246, 0.25),
-      0 0 80px 0 rgba(147, 51, 234, 0.2),
-      inset 0 0 40px rgba(255, 255, 255, 0.05),
-      0 30px 80px -20px rgba(0, 0, 0, 0.3);
   }
   
   100% {
     opacity: 0;
-    transform: scale(0.9);
-    border-radius: 24px;
-    filter: blur(10px);
-    box-shadow: 
-      0 0 60px 3px rgba(59, 130, 246, 0.4),
-      0 0 100px 5px rgba(147, 51, 234, 0.3),
-      inset 0 0 30px rgba(255, 255, 255, 0.08),
-      0 20px 60px -15px rgba(0, 0, 0, 0.25);
+    transform: scale(0.95);
   }
 }
 
 .modal-container {
   position: relative;
-  background: var(--x-bg-color, 
-    linear-gradient(135deg, 
-      rgba(255, 255, 255, 0.98) 0%, 
-      rgba(255, 255, 255, 0.95) 100%));
-  border-radius: var(--x-radius-lg, 16px);
-  box-shadow: 
-    var(--x-shadow-xl, 
-      0 0 30px rgba(59, 130, 246, 0.15),
-      0 0 60px rgba(147, 51, 234, 0.1),
-      0 30px 70px -15px rgba(0, 0, 0, 0.3),
-      inset 0 1px 0 rgba(255, 255, 255, 0.8));
+  background: var(--x-bg-color,#1f1f1f);
+  border-radius: var(--x-radius-md, 8px);
   max-width: 100%;
   max-height: calc(100vh - 40px);
   display: flex;
   flex-direction: column;
   overflow: hidden;
-  transform-style: preserve-3d;
-  backface-visibility: hidden;
-  will-change: transform, opacity, filter;
   border: 1px solid rgba(255, 255, 255, 0.3);
-  /* 微妙的光泽效果 */
-  backdrop-filter: blur(10px);
 }
 
-/* 为容器添加动态光效边框 */
-.modal-container::before {
-  content: '';
-  position: absolute;
-  inset: -1px;
-  border-radius: inherit;
-  padding: 1px;
-  background: linear-gradient(
-    135deg,
-    rgba(59, 130, 246, 0.3) 0%,
-    rgba(147, 51, 234, 0.2) 50%,
-    rgba(59, 130, 246, 0.3) 100%
-  );
-  -webkit-mask: 
-    linear-gradient(#fff 0 0) content-box, 
-    linear-gradient(#fff 0 0);
-  -webkit-mask-composite: xor;
-  mask: 
-    linear-gradient(#fff 0 0) content-box, 
-    linear-gradient(#fff 0 0);
-  mask-composite: exclude;
-  pointer-events: none;
-  opacity: 0.6;
-}
 
-/* 内部光晕效果 */
-.modal-container::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  border-radius: inherit;
-  background: radial-gradient(
-    circle at 50% 0%,
-    rgba(59, 130, 246, 0.08) 0%,
-    transparent 60%
-  );
-  pointer-events: none;
-}
+
 
 .modal-container--small {
   width: 400px;
@@ -465,11 +420,8 @@ defineExpose({
   padding: 24px 28px;
   border-bottom: 1px solid var(--x-color-gray-200, rgba(229, 231, 235, 0.6));
   flex-shrink: 0;
-  background: linear-gradient(
-    to bottom,
-    rgba(255, 255, 255, 0.95) 0%,
-    rgba(255, 255, 255, 0.8) 100%
-  );
+  background: var(--x-gradient-bg-light, linear-gradient(to bottom, #fafafa, #ffffff));
+
   backdrop-filter: blur(10px);
   z-index: 1;
 }
@@ -606,11 +558,7 @@ defineExpose({
   padding: 20px 28px;
   border-top: 1px solid var(--x-color-gray-200, rgba(229, 231, 235, 0.6));
   flex-shrink: 0;
-  background: linear-gradient(
-    to top,
-    rgba(255, 255, 255, 0.95) 0%,
-    rgba(255, 255, 255, 0.8) 100%
-  );
+  background: var(--x-gradient-bg-light, linear-gradient(to top, #fafafa, #ffffff));
   backdrop-filter: blur(10px);
   z-index: 1;
 }
@@ -625,9 +573,9 @@ defineExpose({
   background: linear-gradient(
     90deg,
     transparent 0%,
-    rgba(59, 130, 246, 0.3) 20%,
-    rgba(147, 51, 234, 0.2) 50%,
-    rgba(59, 130, 246, 0.3) 80%,
+    var(--x-color-primary, #1a1a1a) 20%,
+    var(--x-color-secondary, #4a90e2) 50%,
+    var(--x-color-primary, #1a1a1a) 80%,
     transparent 100%
   );
 }

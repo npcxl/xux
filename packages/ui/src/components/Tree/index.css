@@ -85,17 +85,17 @@
 
 .x-tree-checkbox.is-checked,
 .x-tree-checkbox.is-indeterminate {
-  border-color: #1a1a1a;
+  border-color: var(--x-color-primary);
 }
 
 .x-tree-checkbox:not(.is-checked):not(.is-indeterminate) {
-  border-color: #d1d5db;
-  background-color: #fff;
+  border-color: var(--x-border-color);
+  background-color: var(--x-bg-color);
 }
 
 /* 复选框图标 */
 .x-tree-checkbox-icon {
-  color: #1a1a1a;
+  color: var(--x-color-primary);
   font-size: 12px;
   font-weight: bold;
 }
@@ -104,7 +104,7 @@
 .x-tree-checkbox-minus {
   width: 10px;
   height: 2px;
-  background-color: #1a1a1a;
+  background-color: var(--x-color-primary);
   border-radius: 1px;
 }
 
@@ -113,22 +113,22 @@
   width: 16px;
   height: 16px;
   margin-right: 8px;
-  color: #6b7280;
+  color: var(--x-text-color-secondary);
 }
 
 :global(.dark) .x-tree-node-icon {
-  color: #9ca3af;
+  color: var(--x-text-color-placeholder);
 }
 
 /* 节点标题 */
 .x-tree-node-title {
   font-size: 14px;
-  color: #111827;
+  color: var(--x-text-color-primary);
   flex: 1;
 }
 
 :global(.dark) .x-tree-node-title {
-  color: #f3f4f6;
+  color: var(--x-text-color-primary);
 }
 
 /* 展开/收起动画 */
