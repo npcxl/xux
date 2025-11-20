@@ -1,6 +1,12 @@
 <template>
     <div :class="containerClass" :style="containerStyle">
+        <!-- Canvas -->
         <canvas ref="canvasRef" :width="canvasSize" :height="canvasSize" :style="canvasStyle"></canvas>
+
+        <!-- Logo/GIF 覆盖层 -->
+        <div v-if="config.logo && !loading && !error" class="x-qrcode-logo" :style="logoStyle">
+            <img :src="config.logo" alt="logo" @load="onLogoLoad" @error="onLogoError">
+        </div>
 
         <!-- 加载状态 -->
         <div v-if="loading" class="x-qrcode-loading">
@@ -44,9 +50,9 @@ export interface QrcodeOptions {
     errorCorrectionLevel?: 'L' | 'M' | 'Q' | 'H'
     /**
      * 二维码样式类型
-     * @values normal, rounded, dots
+     * @values normal, rounded, dots, gradient, liquid
      */
-    type?: 'normal' | 'rounded' | 'dots'
+    type?: 'normal' | 'rounded' | 'dots' | 'gradient' | 'liquid'
     /**
      * Logo图片（仅支持图片URL）
      */
@@ -113,9 +119,9 @@ export interface QrcodeProps {
     errorCorrectionLevel?: 'L' | 'M' | 'Q' | 'H'
     /**
      * 二维码样式类型
-     * @values normal, rounded, dots
+     * @values normal, rounded, dots, gradient, liquid
      */
-    type?: 'normal' | 'rounded' | 'dots'
+    type?: 'normal' | 'rounded' | 'dots' | 'gradient' | 'liquid'
     /**
      * 是否显示边框
      */
@@ -182,6 +188,7 @@ const config = computed(() => ({
 const canvasRef = ref<HTMLCanvasElement>()
 const loading = ref(false)
 const error = ref(false)
+const logoLoaded = ref(false)
 
 const canvasSize = computed(() => config.value.size)
 const containerSize = computed(() => config.value.bordered ? config.value.size + config.value.borderWidth * 2 : config.value.size)
@@ -203,9 +210,48 @@ const containerStyle = computed(() => ({
 const canvasStyle = computed(() => ({
     width: `${config.value.size}px`,
     height: `${config.value.size}px`,
-    border: config.value.bordered ? `${config.value.borderWidth}px solid ${config.value.borderColor}` : 'none',
-    borderRadius: '4px'
+    border: 'none', // 移除边框，使用容器的阴影
+    borderRadius: '16px',
+    background: 'white'
 }))
+
+const logoStyle = computed(() => {
+    // 计算Logo的安全尺寸，确保不会遮挡过多二维码
+    const maxLogoSize = config.value.size * 0.22 // Logo最大不超过二维码的22%
+    const actualLogoSize = Math.min(config.value.logoSize, maxLogoSize)
+    const padding = actualLogoSize * 0.18 // iOS风格的padding
+    
+    return {
+        width: `${actualLogoSize}px`,
+        height: `${actualLogoSize}px`,
+        position: 'absolute',
+        top: '50%',
+        left: '50%',
+        transform: 'translate(-50%, -50%)',
+        borderRadius: `${actualLogoSize * 0.22}px`, // iOS图标的圆角比例
+        backgroundColor: 'rgba(255, 255, 255, 0.95)',
+        backdropFilter: 'blur(10px)',
+        WebkitBackdropFilter: 'blur(10px)',
+        padding: `${padding}px`,
+        boxShadow: `
+            0 3px 10px rgba(0, 0, 0, 0.16),
+            0 3px 6px rgba(0, 0, 0, 0.1),
+            0 1px 0 rgba(255, 255, 255, 0.8) inset
+        `.trim(),
+        border: '0.5px solid rgba(0, 0, 0, 0.04)',
+        zIndex: 10,
+        transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)'
+    }
+})
+
+// Logo 事件处理
+function onLogoLoad() {
+    logoLoaded.value = true
+}
+
+function onLogoError() {
+    console.error('Logo failed to load')
+}
 
 // 使用qrcode库生成真正的二维码
 async function generateQRCode(value: string, size: number): Promise<void> {
@@ -220,8 +266,9 @@ async function generateQRCode(value: string, size: number): Promise<void> {
         const cfg = config.value
 
         // 配置二维码选项
+        // 如果有Logo，强制使用最高容错级别H，确保能被扫描
         const options = {
-            errorCorrectionLevel: cfg.errorCorrectionLevel,
+            errorCorrectionLevel: cfg.logo ? 'H' : cfg.errorCorrectionLevel,
             margin: 1
         }
 
@@ -229,13 +276,13 @@ async function generateQRCode(value: string, size: number): Promise<void> {
         const qrData = QRCode.create(value, options)
         
         // 根据type类型渲染不同风格
-        if (cfg.type === 'normal') {
+        if (cfg.type === 'normal' && !cfg.foregroundColor.startsWith('gradient')) {
             // 使用默认渲染
             await QRCode.toCanvas(canvas, value, {
                 width: size,
                 margin: 1,
                 color: {
-                    dark: cfg.foregroundColor.startsWith('gradient') ? '#000000' : cfg.foregroundColor,
+                    dark: cfg.foregroundColor,
                     light: cfg.backgroundColor
                 },
                 errorCorrectionLevel: cfg.errorCorrectionLevel
@@ -265,8 +312,17 @@ function renderStyledQRCode(qrData: any, canvas: HTMLCanvasElement, size: number
     ctx.fillStyle = cfg.backgroundColor
     ctx.fillRect(0, 0, size, size)
 
-    // 设置前景色
-    ctx.fillStyle = cfg.foregroundColor
+    // 设置渐变色（如果需要）
+    let gradient: CanvasGradient | null = null
+    if (cfg.foregroundColor.startsWith('gradient') || cfg.type === 'gradient') {
+        // iOS 17风格渐变 - 更柔和的色彩过渡
+        gradient = ctx.createLinearGradient(0, 0, size * 0.8, size * 0.8)
+        gradient.addColorStop(0, '#007AFF')     // iOS蓝
+        gradient.addColorStop(0.3, '#5856D6')   // iOS紫
+        gradient.addColorStop(0.6, '#FF9500')   // iOS橙
+        gradient.addColorStop(0.9, '#FF3B30')   // iOS红
+        gradient.addColorStop(1, '#AF52DE')     // iOS洋红
+    }
 
     // 遍历每个模块
     for (let row = 0; row < moduleCount; row++) {
@@ -277,38 +333,63 @@ function renderStyledQRCode(qrData: any, canvas: HTMLCanvasElement, size: number
                 const x = (col + margin) * moduleSize
                 const y = (row + margin) * moduleSize
 
+                // 设置填充样式
+                if (gradient && (cfg.type === 'gradient' || cfg.type === 'normal')) {
+                    ctx.fillStyle = gradient
+                } else {
+                    ctx.fillStyle = cfg.foregroundColor
+                }
+
                 if (cfg.type === 'dots') {
                     // 点状粒子风格 - 绘制圆点
                     ctx.beginPath()
                     ctx.arc(
                         x + moduleSize / 2,
                         y + moduleSize / 2,
-                        moduleSize * 0.46, // 使用46%的半径确保足够覆盖
+                        moduleSize * 0.46,
                         0,
                         Math.PI * 2
                     )
                     ctx.fill()
                 } else if (cfg.type === 'rounded') {
-                    // 圆角方块风格
-                    const radius = Math.min(moduleSize * 0.28, 3) // 圆角半径
-                    const padding = moduleSize * 0.03
+                    // iOS风格圆角方块
+                    const radius = moduleSize * 0.37 // iOS风格的圆角比例
+                    const padding = moduleSize * 0.08
                     const rectX = x + padding
                     const rectY = y + padding
                     const rectWidth = moduleSize - padding * 2
                     const rectHeight = moduleSize - padding * 2
 
+                    // 使用iOS的平滑圆角算法
                     ctx.beginPath()
                     ctx.moveTo(rectX + radius, rectY)
                     ctx.lineTo(rectX + rectWidth - radius, rectY)
-                    ctx.arcTo(rectX + rectWidth, rectY, rectX + rectWidth, rectY + radius, radius)
+                    ctx.quadraticCurveTo(rectX + rectWidth, rectY, rectX + rectWidth, rectY + radius)
                     ctx.lineTo(rectX + rectWidth, rectY + rectHeight - radius)
-                    ctx.arcTo(rectX + rectWidth, rectY + rectHeight, rectX + rectWidth - radius, rectY + rectHeight, radius)
+                    ctx.quadraticCurveTo(rectX + rectWidth, rectY + rectHeight, rectX + rectWidth - radius, rectY + rectHeight)
                     ctx.lineTo(rectX + radius, rectY + rectHeight)
-                    ctx.arcTo(rectX, rectY + rectHeight, rectX, rectY + rectHeight - radius, radius)
+                    ctx.quadraticCurveTo(rectX, rectY + rectHeight, rectX, rectY + rectHeight - radius)
                     ctx.lineTo(rectX, rectY + radius)
-                    ctx.arcTo(rectX, rectY, rectX + radius, rectY, radius)
+                    ctx.quadraticCurveTo(rectX, rectY, rectX + radius, rectY)
                     ctx.closePath()
                     ctx.fill()
+                } else if (cfg.type === 'liquid') {
+                    // 液态流动风格 - 静态版本，避免持续动画影响性能
+                    const offset = Math.sin(col * 0.3) * moduleSize * 0.08
+                    const height = Math.cos(row * 0.3) * moduleSize * 0.08
+                    
+                    ctx.beginPath()
+                    ctx.arc(
+                        x + moduleSize / 2 + offset,
+                        y + moduleSize / 2 + height,
+                        moduleSize * 0.46,
+                        0,
+                        Math.PI * 2
+                    )
+                    ctx.fill()
+                } else {
+                    // 默认方块（包括gradient类型）
+                    ctx.fillRect(x, y, moduleSize, moduleSize)
                 }
             }
         }
@@ -365,13 +446,28 @@ defineExpose({
     position: relative;
     display: inline-block;
     background-color: var(--x-color-white, #ffffff);
-    border-radius: 8px;
+    border-radius: 20px;
     overflow: hidden;
-    transition: all 0.3s ease;
+    transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
 }
 
 .x-qrcode-bordered {
-    box-shadow: var(--x-shadow-sm, 0 1px 2px rgba(0, 0, 0, 0.05));
+    box-shadow: 
+        0 4px 6px -1px rgba(0, 0, 0, 0.1),
+        0 2px 4px -2px rgba(0, 0, 0, 0.1),
+        0 0 0 1px rgba(0, 0, 0, 0.05);
+    background: rgba(255, 255, 255, 0.8);
+}
+
+/* iOS风格的悬停效果 */
+.x-qrcode:hover {
+    transform: translateY(-2px);
+    box-shadow: 
+        0 10px 15px -3px rgba(0, 0, 0, 0.1),
+        0 4px 6px -4px rgba(0, 0, 0, 0.1),
+        0 0 0 1px rgba(0, 0, 0, 0.05);
 }
 
 .x-qrcode canvas {
@@ -379,7 +475,24 @@ defineExpose({
     transition: opacity 0.3s ease;
 }
 
-/* 加载状态 */
+/* Logo样式 */
+.x-qrcode-logo {
+    position: absolute;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    pointer-events: none; /* 确保不会阻止二维码的点击事件 */
+}
+
+.x-qrcode-logo img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    display: block;
+}
+
+/* 加载状态 - iOS风格 */
 .x-qrcode-loading {
     position: absolute;
     top: 0;
@@ -390,31 +503,35 @@ defineExpose({
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    background-color: rgba(255, 255, 255, 0.9);
-    backdrop-filter: blur(2px);
+    background-color: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-radius: 20px;
 }
 
 .x-qrcode-loading canvas {
-    opacity: 0.3;
+    opacity: 0.1;
 }
 
 .x-qrcode-spinner {
-    width: 24px;
-    height: 24px;
-    border: 2px solid var(--x-color-gray-200, #e5e5e5);
-    border-top: 2px solid var(--x-color-primary, #ff6b35);
+    width: 28px;
+    height: 28px;
+    border: 2.5px solid rgba(0, 0, 0, 0.1);
+    border-top: 2.5px solid #007AFF;
     border-radius: 50%;
-    animation: spin 1s linear infinite;
-    margin-bottom: 8px;
+    animation: iosSpin 0.8s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+    margin-bottom: 12px;
 }
 
 .x-qrcode-loading-text {
-    font-size: 12px;
-    color: var(--x-color-gray-600, #666666);
+    font-size: 13px;
+    font-weight: 500;
+    color: #8E8E93;
     text-align: center;
+    letter-spacing: -0.08px;
 }
 
-/* 错误状态 */
+/* 错误状态 - iOS风格 */
 .x-qrcode-error {
     position: absolute;
     top: 0;
@@ -425,44 +542,88 @@ defineExpose({
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    background-color: rgba(255, 255, 255, 0.9);
-    backdrop-filter: blur(2px);
+    background-color: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-radius: 20px;
 }
 
 .x-qrcode-error canvas {
-    opacity: 0.1;
+    opacity: 0.05;
 }
 
 .x-qrcode-error-icon {
-    font-size: 24px;
-    margin-bottom: 8px;
+    font-size: 28px;
+    margin-bottom: 10px;
+    filter: grayscale(20%);
 }
 
 .x-qrcode-error-text {
-    font-size: 12px;
-    color: var(--x-color-danger, #ef4444);
+    font-size: 13px;
+    font-weight: 500;
+    color: #FF3B30;
     text-align: center;
+    letter-spacing: -0.08px;
 }
 
-@keyframes spin {
-    from {
-        transform: rotate(0deg);
-    }
-
+/* iOS风格的旋转动画 */
+@keyframes iosSpin {
     to {
         transform: rotate(360deg);
     }
 }
 
-/* 响应式 */
+/* iOS风格的淡入动画 */
+@keyframes iosFadeIn {
+    from {
+        opacity: 0;
+        transform: scale(0.95);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+/* 应用淡入动画 */
+.x-qrcode {
+    animation: iosFadeIn 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* 响应式 - iOS风格 */
 @media (max-width: 768px) {
     .x-qrcode {
-        border-radius: 6px;
+        border-radius: 16px;
+    }
+    
+    .x-qrcode canvas {
+        border-radius: 12px;
     }
 
     .x-qrcode-loading-text,
     .x-qrcode-error-text {
-        font-size: 11px;
+        font-size: 12px;
+    }
+    
+    .x-qrcode-spinner {
+        width: 24px;
+        height: 24px;
+    }
+}
+
+/* 暗色模式支持 */
+@media (prefers-color-scheme: dark) {
+    .x-qrcode {
+        background-color: rgba(28, 28, 30, 0.8);
+    }
+    
+    .x-qrcode-loading,
+    .x-qrcode-error {
+        background-color: rgba(28, 28, 30, 0.95);
+    }
+    
+    .x-qrcode-loading-text {
+        color: #98989D;
     }
 }
 </style>

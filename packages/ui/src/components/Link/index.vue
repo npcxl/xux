@@ -78,11 +78,13 @@ defineExpose({
   display: inline-flex;
   align-items: center;
   gap: 4px;
-  font-size: var(--x-font-size-base, 14px);
-  font-weight: 500;
+  font-size: var(--x-font-size, 15px);
+  font-family: var(--x-font-family);
+  font-weight: 400;
+  letter-spacing: -0.3px;
   text-decoration: none !important;
   cursor: pointer;
-  transition: all var(--x-transition-base, 0.3s ease);
+  transition: all 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
   outline: none;
   padding: 2px 0;
 }
@@ -108,54 +110,54 @@ defineExpose({
 
 /* 主要类型 */
 .x-link--primary {
-  color: var(--x-color-primary, #1a1a1a);
+  color: var(--x-color-primary, #007AFF);
 }
 
 .x-link--primary:hover {
-  color: var(--x-color-primary-light, #3a3a3a);
+  color: var(--x-color-primary-light, #3395FF);
 }
 
 .x-link--primary:active {
-  color: var(--x-color-primary-dark, #0d0d0d);
+  color: var(--x-color-primary-dark, #0051D5);
 }
 
 /* 成功类型 */
 .x-link--success {
-  color: var(--x-color-success, #10b981);
+  color: var(--x-color-success, #34C759);
 }
 
 .x-link--success:hover {
-  color: var(--x-color-success-light, #34d399);
+  opacity: 0.8;
 }
 
 .x-link--success:active {
-  color: var(--x-color-success-dark, #059669);
+  opacity: 0.6;
 }
 
 /* 警告类型 */
 .x-link--warning {
-  color: var(--x-color-warning, #f59e0b);
+  color: var(--x-color-warning, #FF9500);
 }
 
 .x-link--warning:hover {
-  color: var(--x-color-warning-light, #fbbf24);
+  opacity: 0.8;
 }
 
 .x-link--warning:active {
-  color: var(--x-color-warning-dark, #d97706);
+  opacity: 0.6;
 }
 
 /* 危险类型 */
 .x-link--danger {
-  color: var(--x-color-danger, #ef4444);
+  color: var(--x-color-danger, #FF3B30);
 }
 
 .x-link--danger:hover {
-  color: var(--x-color-danger-light, #f87171);
+  opacity: 0.8;
 }
 
 .x-link--danger:active {
-  color: var(--x-color-danger-dark, #dc2626);
+  opacity: 0.6;
 }
 
 /* 信息类型 */

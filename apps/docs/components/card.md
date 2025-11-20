@@ -1,6 +1,10 @@
 # Card 卡片
 
-卡片组件，支持商品卡片、信息卡片和基础卡片三种类型。
+卡片组件，支持商品卡片、信息卡片和基础卡片三种类型。采用 iOS 17 设计语言，提供精致的毛玻璃效果、流畅的动画和优雅的光效。
+
+<div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px; margin-top: 32px;">
+
+<div>
 
 ## 商品卡片（不带描述）
 
@@ -35,6 +39,10 @@ const handleLike = () => {
 ```
 
 :::
+
+</div>
+
+<div>
 
 ## 商品卡片（带描述）
 
@@ -72,6 +80,14 @@ const handleLike = () => {
 ```
 
 :::
+
+</div>
+
+</div>
+
+<div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px; margin-top: 24px;">
+
+<div>
 
 ## 商品卡片列表
 
@@ -134,6 +150,10 @@ const handleLike = (id) => {
 ```
 
 :::
+
+</div>
+
+<div>
 
 ## 信息卡片
 
@@ -222,6 +242,10 @@ const handleClick = () => {
 ```
 
 :::
+
+</div>
+
+</div>
 
 ## API
 

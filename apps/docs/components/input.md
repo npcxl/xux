@@ -1,6 +1,10 @@
 # Input 输入框
 
-企业级输入框组件，支持多种类型、尺寸和状态，提供丰富的交互功能。
+输入框组件，支持多种类型、尺寸和状态，提供丰富的交互功能。
+
+<div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px; margin-top: 32px;">
+
+<div>
 
 ## 基础用法
 
@@ -33,19 +37,10 @@ const input1 = ref('')
 
 ```vue
 <template>
-  <div class="space-y-6">
-    <div>
-      <div class="text-sm text-gray-600 mb-2">Small 小尺寸</div>
-      <XInput v-model="small" size="small" placeholder="小尺寸输入框" width="300px" />
-    </div>
-    <div>
-      <div class="text-sm text-gray-600 mb-2">Medium 中等尺寸（默认）</div>
-      <XInput v-model="medium" size="medium" placeholder="中等尺寸输入框" width="300px" />
-    </div>
-    <div>
-      <div class="text-sm text-gray-600 mb-2">Large 大尺寸</div>
-      <XInput v-model="large" size="large" placeholder="大尺寸输入框" width="300px" />
-    </div>
+  <div class="space-y-4">
+    <XInput v-model="small" size="small" placeholder="小尺寸" width="300px" />
+    <XInput v-model="medium" placeholder="默认尺寸" width="300px" />
+    <XInput v-model="large" size="large" placeholder="大尺寸" width="300px" />
   </div>
 </template>
 
@@ -62,13 +57,13 @@ const large = ref('')
 
 ## 带标签
 
-使用 `label` 属性为输入框添加浮动标签，支持必填标记。
+使用 `label` 属性为输入框添加标签，支持必填标记。
 
 :::demo
 
 ```vue
 <template>
-  <div class="space-y-6">
+  <div class="space-y-4">
     <XInput v-model="name" label="姓名" width="300px" />
     <XInput v-model="email" label="邮箱地址" type="email" width="300px" />
     <XInput v-model="phone" label="手机号码" type="tel" required width="300px" />
@@ -85,6 +80,86 @@ const phone = ref('')
 ```
 
 :::
+
+## 可清空
+
+添加 `clearable` 属性，可快速清空输入内容。
+
+:::demo
+
+```vue
+<template>
+  <div class="space-y-4">
+    <XInput 
+      v-model="input1" 
+      placeholder="可清空输入框" 
+      clearable 
+      width="300px" 
+    />
+    <XInput 
+      v-model="input2" 
+      label="用户名"
+      placeholder="输入用户名" 
+      clearable 
+      width="300px" 
+    />
+  </div>
+</template>
+
+<script setup>
+import { ref } from 'vue'
+
+const input1 = ref('Some text')
+const input2 = ref('')
+</script>
+```
+
+:::
+
+## 禁用和只读
+
+通过 `disabled` 或 `readonly` 属性控制输入框状态。
+
+:::demo
+
+```vue
+<template>
+  <div class="space-y-4">
+    <XInput 
+      v-model="value1" 
+      label="正常状态"
+      placeholder="可以输入" 
+      width="300px" 
+    />
+    <XInput 
+      v-model="value2" 
+      label="禁用状态"
+      disabled 
+      width="300px" 
+    />
+    <XInput 
+      v-model="value3" 
+      label="只读状态"
+      readonly 
+      width="300px" 
+    />
+  </div>
+</template>
+
+<script setup>
+import { ref } from 'vue'
+
+const value1 = ref('')
+const value2 = ref('已禁用的内容')
+const value3 = ref('这是只读内容')
+</script>
+```
+
+:::
+
+</div>
+
+<div>
 
 ## 前缀和后缀图标
 
@@ -194,41 +269,6 @@ const helpInput = ref('')
 
 :::
 
-## 可清空
-
-添加 `clearable` 属性，可快速清空输入内容。
-
-:::demo
-
-```vue
-<template>
-  <div class="space-y-4">
-    <XInput 
-      v-model="clearableValue" 
-      placeholder="可清空的输入框" 
-      clearable 
-      width="300px"
-      @clear="handleClear"
-    />
-    <div class="text-sm text-gray-600">
-      输入的值：{{ clearableValue || '空' }}
-    </div>
-  </div>
-</template>
-
-<script setup>
-import { ref } from 'vue'
-
-const clearableValue = ref('可以点击清空按钮')
-
-const handleClear = () => {
-  console.log('输入框已清空')
-}
-</script>
-```
-
-:::
-
 ## 密码输入
 
 设置 `type="password"` 实现密码输入功能，自动显示密码可见性切换按钮。
@@ -275,47 +315,6 @@ const password2 = ref('')
 
 :::
 
-## 禁用和只读
-
-通过 `disabled` 或 `readonly` 属性控制输入框状态。
-
-:::demo
-
-```vue
-<template>
-  <div class="space-y-6">
-    <XInput 
-      v-model="value1" 
-      label="正常状态"
-      placeholder="可以输入" 
-      width="300px" 
-    />
-    <XInput 
-      v-model="value2" 
-      label="禁用状态"
-      disabled 
-      width="300px" 
-    />
-    <XInput 
-      v-model="value3" 
-      label="只读状态"
-      readonly 
-      width="300px" 
-    />
-  </div>
-</template>
-
-<script setup>
-import { ref } from 'vue'
-
-const value1 = ref('')
-const value2 = ref('已禁用的内容')
-const value3 = ref('这是只读内容')
-</script>
-```
-
-:::
-
 ## 字数限制
 
 使用 `maxlength` 和 `show-word-limit` 属性限制和显示字数，接近限制时会高亮显示。
@@ -357,9 +356,17 @@ const text2 = ref('')
 
 :::
 
+</div>
+
+</div>
+
+<div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px; margin-top: 24px;">
+
+<div>
+
 ## 数字输入与步进器
 
-数字类型输入框会自动显示步进器按钮，支持精度控制和范围限制。
+数字类型输入框会自动显示步进器按钮，支持精度控制和范围限制。当输入值超出范围时，失去焦点后会自动调整到有效范围内。
 
 :::demo
 
@@ -377,7 +384,7 @@ const text2 = ref('')
         :max="100"
         width="300px" 
       />
-      <div class="text-sm text-gray-500 mt-1">当前值：{{ count }}</div>
+      <div class="text-sm text-gray-500 mt-1">范围：0-100，当前值：{{ count }}</div>
     </div>
     
     <div>
@@ -439,6 +446,199 @@ const temperature = ref(25.5)
 ```
 
 :::
+
+## 数字范围自动限制
+
+数字输入框支持自动范围限制功能。当输入值小于最小值或大于最大值时，失去焦点后会自动调整到有效范围。
+
+:::demo
+
+```vue
+<template>
+  <div class="space-y-6">
+    <div>
+      <div class="text-sm text-gray-600 mb-2">试试输入 -10 或 150（范围 0-100）</div>
+      <XInput 
+        v-model="limitTest1" 
+        type="number" 
+        label="年龄限制"
+        :min="0"
+        :max="100"
+        width="300px"
+        help-text="输入超出范围的值，失去焦点后会自动调整"
+      />
+      <div class="text-sm text-gray-500 mt-1">
+        当前值：{{ limitTest1 }}
+        <span v-if="limitTest1 === 0" class="text-orange-600"> (已限制到最小值)</span>
+        <span v-else-if="limitTest1 === 100" class="text-orange-600"> (已限制到最大值)</span>
+      </div>
+    </div>
+    
+    <div>
+      <div class="text-sm text-gray-600 mb-2">试试输入 -100 或 100（范围 -10 到 10）</div>
+      <XInput 
+        v-model="limitTest2" 
+        type="number" 
+        label="评分范围"
+        prefix-icon="mdi:star"
+        :min="-10"
+        :max="10"
+        :step="1"
+        width="300px"
+        help-text="负数也支持自动限制"
+      />
+      <div class="text-sm text-gray-500 mt-1">
+        当前值：{{ limitTest2 }}
+        <span v-if="limitTest2 === -10" class="text-orange-600"> (已限制到最小值 -10)</span>
+        <span v-else-if="limitTest2 === 10" class="text-orange-600"> (已限制到最大值 10)</span>
+      </div>
+    </div>
+    
+    <div>
+      <div class="text-sm text-gray-600 mb-2">试试输入 -5 或 15（范围 0-10，保留1位小数）</div>
+      <XInput 
+        v-model="limitTest3" 
+        type="number" 
+        label="评分（0-10分）"
+        prefix-icon="mdi:star-half-full"
+        :min="0"
+        :max="10"
+        :step="0.5"
+        :precision="1"
+        width="300px"
+        help-text="带精度的数字也会自动限制"
+      />
+      <div class="text-sm text-gray-500 mt-1">
+        当前值：{{ limitTest3 }}
+        <span v-if="limitTest3 === 0" class="text-orange-600"> (已限制到最小值)</span>
+        <span v-else-if="limitTest3 === 10" class="text-orange-600"> (已限制到最大值)</span>
+      </div>
+    </div>
+  </div>
+</template>
+
+<script setup>
+import { ref } from 'vue'
+
+const limitTest1 = ref(50)
+const limitTest2 = ref(0)
+const limitTest3 = ref(5.0)
+</script>
+```
+
+:::
+
+## 自定义宽度
+
+通过 `width` 属性自定义输入框宽度。
+
+:::demo
+
+```vue
+<template>
+  <div class="space-y-4">
+    <div>
+      <div class="text-sm text-gray-600 mb-2">宽度: 150px</div>
+      <XInput v-model="value1" placeholder="150px" size="small" width="150px" />
+    </div>
+    <div>
+      <div class="text-sm text-gray-600 mb-2">宽度: 300px</div>
+      <XInput v-model="value2" placeholder="300px" width="300px" />
+    </div>
+    <div>
+      <div class="text-sm text-gray-600 mb-2">宽度: 100%</div>
+      <XInput v-model="value4" placeholder="100%" width="100%" />
+    </div>
+  </div>
+</template>
+
+<script setup>
+import { ref } from 'vue'
+
+const value1 = ref('')
+const value2 = ref('')
+const value4 = ref('')
+</script>
+```
+
+:::
+
+## 事件监听
+
+监听输入框的各种事件。
+
+:::demo
+
+```vue
+<template>
+  <div class="space-y-4">
+    <XInput 
+      v-model="eventValue" 
+      label="事件测试"
+      placeholder="输入查看事件日志"
+      clearable
+      width="300px"
+      @input="handleInput"
+      @change="handleChange"
+      @focus="handleFocus"
+      @blur="handleBlur"
+      @clear="handleClear"
+    />
+    <div class="p-4 bg-gray-50 rounded-lg text-sm space-y-2">
+      <div class="font-semibold text-gray-700">事件日志：</div>
+      <div class="space-y-1 max-h-48 overflow-y-auto">
+        <div v-for="(log, index) in logs" :key="index" class="text-xs text-gray-600 font-mono">
+          {{ log }}
+        </div>
+        <div v-if="logs.length === 0" class="text-xs text-gray-400">
+          暂无事件记录
+        </div>
+      </div>
+    </div>
+  </div>
+</template>
+
+<script setup>
+import { ref } from 'vue'
+
+const eventValue = ref('')
+const logs = ref([])
+
+const addLog = (message) => {
+  const time = new Date().toLocaleTimeString()
+  logs.value.unshift(`[${time}] ${message}`)
+  if (logs.value.length > 10) {
+    logs.value.pop()
+  }
+}
+
+const handleInput = (value) => {
+  addLog(`输入事件: "${value}"`)
+}
+
+const handleChange = (value) => {
+  addLog(`改变事件: "${value}"`)
+}
+
+const handleFocus = () => {
+  addLog('获得焦点')
+}
+
+const handleBlur = () => {
+  addLog('失去焦点')
+}
+
+const handleClear = () => {
+  addLog('清空输入')
+}
+</script>
+```
+
+:::
+
+</div>
+
+<div>
 
 ## 不同输入类型
 
@@ -656,118 +856,9 @@ const validatePhone = () => {
 
 :::
 
-## 事件监听
+</div>
 
-监听输入框的各种事件。
-
-:::demo
-
-```vue
-<template>
-  <div class="space-y-4">
-    <XInput 
-      v-model="eventValue" 
-      label="事件测试"
-      placeholder="输入查看事件日志"
-      clearable
-      width="400px"
-      @input="handleInput"
-      @change="handleChange"
-      @focus="handleFocus"
-      @blur="handleBlur"
-      @clear="handleClear"
-    />
-    <div class="p-4 bg-gray-50 rounded-lg text-sm space-y-2">
-      <div class="font-semibold text-gray-700">事件日志：</div>
-      <div class="space-y-1 max-h-48 overflow-y-auto">
-        <div v-for="(log, index) in logs" :key="index" class="text-xs text-gray-600 font-mono">
-          {{ log }}
-        </div>
-        <div v-if="logs.length === 0" class="text-xs text-gray-400">
-          暂无事件记录
-        </div>
-      </div>
-    </div>
-  </div>
-</template>
-
-<script setup>
-import { ref } from 'vue'
-
-const eventValue = ref('')
-const logs = ref([])
-
-const addLog = (message) => {
-  const time = new Date().toLocaleTimeString()
-  logs.value.unshift(`[${time}] ${message}`)
-  if (logs.value.length > 10) {
-    logs.value.pop()
-  }
-}
-
-const handleInput = (value) => {
-  addLog(`输入事件: "${value}"`)
-}
-
-const handleChange = (value) => {
-  addLog(`改变事件: "${value}"`)
-}
-
-const handleFocus = () => {
-  addLog('获得焦点')
-}
-
-const handleBlur = () => {
-  addLog('失去焦点')
-}
-
-const handleClear = () => {
-  addLog('清空输入')
-}
-</script>
-```
-
-:::
-
-## 自定义宽度
-
-通过 `width` 属性自定义输入框宽度。
-
-:::demo
-
-```vue
-<template>
-  <div class="space-y-6">
-    <div>
-      <div class="text-sm text-gray-600 mb-2">宽度: 150px</div>
-      <XInput v-model="value1" placeholder="150px" size="small" width="150px" />
-    </div>
-    <div>
-      <div class="text-sm text-gray-600 mb-2">宽度: 300px</div>
-      <XInput v-model="value2" placeholder="300px" width="300px" />
-    </div>
-    <div>
-      <div class="text-sm text-gray-600 mb-2">宽度: 500px</div>
-      <XInput v-model="value3" placeholder="500px" size="large" width="500px" />
-    </div>
-    <div>
-      <div class="text-sm text-gray-600 mb-2">宽度: 100%</div>
-      <XInput v-model="value4" placeholder="100%" width="100%" />
-    </div>
-  </div>
-</template>
-
-<script setup>
-import { ref } from 'vue'
-
-const value1 = ref('')
-const value2 = ref('')
-const value3 = ref('')
-const value4 = ref('')
-</script>
-```
-
-:::
+</div>
 
 ## API
 

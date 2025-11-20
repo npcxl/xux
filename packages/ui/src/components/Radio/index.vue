@@ -194,22 +194,11 @@ const handleChange = (value: string | number) => {
   cursor: pointer;
   display: flex;
   align-items: center;
-  gap: 0.75rem;
-  padding: 0.5rem 0;
-  transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-  animation: radioSlideIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) backwards;
+  gap: 10px;
+  padding: 8px 0;
+  transition: all 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
 
-.x-radio-item:nth-child(1) { animation-delay: 0.03s; }
-.x-radio-item:nth-child(2) { animation-delay: 0.06s; }
-.x-radio-item:nth-child(3) { animation-delay: 0.09s; }
-.x-radio-item:nth-child(4) { animation-delay: 0.12s; }
-.x-radio-item:nth-child(5) { animation-delay: 0.15s; }
-.x-radio-item:nth-child(6) { animation-delay: 0.18s; }
-.x-radio-item:nth-child(7) { animation-delay: 0.21s; }
-.x-radio-item:nth-child(8) { animation-delay: 0.24s; }
-.x-radio-item:nth-child(9) { animation-delay: 0.27s; }
-.x-radio-item:nth-child(10) { animation-delay: 0.30s; }
 
 /* 列表模式样式 */
 .radio-list .x-radio-item {
@@ -264,23 +253,17 @@ const handleChange = (value: string | number) => {
 }
 
 .x-radio-item:hover .radio-button {
-  border-color: var(--x-color-primary, #1a1a1a);
-  transform: scale(1.15) rotate(10deg);
-  box-shadow: 0 0 0 4px rgba(26, 26, 26, 0.08);
+  border-color: var(--x-color-primary, #007AFF);
 }
 
 .x-radio-item.radio-item-checked .radio-button {
-  border-color: var(--x-color-primary, #1a1a1a);
-  background: var(--x-gradient-primary, linear-gradient(135deg, #1a1a1a 0%, #333 100%));
-  animation: radioBtnPop 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
-  box-shadow: 0 0 0 4px var(--x-shadow-primary, rgba(26, 26, 26, 0.12)), 0 2px 8px var(--x-shadow-primary-lg, rgba(26, 26, 26, 0.15));
+  border-color: var(--x-color-primary, #007AFF);
+  background: transparent;
 }
 
 .x-radio-item.radio-item-checked .radio-button-inner {
-  background-color: var(--x-color-white, #ffffff);
+  background-color: var(--x-color-primary, #007AFF);
   transform: translate(-50%, -50%) scale(1);
-  animation: radioDotBounce 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) 0.1s;
-  box-shadow: 0 0 4px var(--x-color-white, #ffffff);
 }
 
 .x-radio-item.radio-item-disabled {
@@ -302,42 +285,25 @@ const handleChange = (value: string | number) => {
 
 .radio-button {
   position: relative;
-  width: 1.25rem;
-  height: 1.25rem;
-  border: 2px solid var(--x-border-color-light, #d1d5db);
+  width: 20px;
+  height: 20px;
+  border: 2px solid var(--x-border-color-dark, #C7C7CC);
   border-radius: 50%;
   background-color: var(--x-color-white, #ffffff);
-  transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  transition: all 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
   flex-shrink: 0;
-  
-  &::before {
-    content: '';
-    position: absolute;
-    inset: -6px;
-    border-radius: 50%;
-    background: radial-gradient(circle, var(--x-fill-color-primary-lighter, rgba(26, 26, 26, 0.1)), transparent);
-    opacity: 0;
-    transform: scale(0);
-    transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-  }
-}
-
-.x-radio-item.radio-item-checked .radio-button::before {
-  opacity: 1;
-  transform: scale(1);
-  animation: radioRipple 0.6s ease-out;
 }
 
 .radio-button-inner {
   position: absolute;
   top: 50%;
   left: 50%;
-  width: 0.5rem;
-  height: 0.5rem;
+  width: 10px;
+  height: 10px;
   background-color: transparent;
   border-radius: 50%;
   transform: translate(-50%, -50%) scale(0);
-  transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+  transition: all 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
 
 .radio-content {
@@ -372,22 +338,22 @@ const handleChange = (value: string | number) => {
 }
 
 .radio-label {
-  font-weight: 500;
-  color: var(--x-text-color-primary, #1a1a1a);
-  transition: all 0.3s ease;
-  font-size: 0.875rem;
-  line-height: 1.5;
+  font-weight: 400;
+  font-family: var(--x-font-family);
+  color: var(--x-text-color-primary);
+  transition: all 0.2s ease;
+  font-size: var(--x-font-size, 15px);
+  line-height: 1.4;
+  letter-spacing: -0.3px;
 }
 
 .x-radio-item:hover .radio-label {
-  color: var(--x-text-color-primary, #1a1a1a);
-  transform: translateX(2px);
+  color: var(--x-text-color-primary);
 }
 
 .radio-item-checked .radio-label {
-  color: var(--x-text-color-primary, #1a1a1a);
-  font-weight: 600;
-  transform: translateX(4px);
+  color: var(--x-text-color-primary);
+  font-weight: 500;
 }
 
 .radio-description {

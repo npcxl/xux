@@ -53,15 +53,17 @@ const dividerStyle = computed(() => {
     display: flex;
     align-items: center;
     margin: 24px 0;
-    color: #6b7280;
-    font-size: 14px;
+    color: var(--x-text-color-secondary, #8E8E93);
+    font-size: var(--x-font-size-sm, 13px);
+    font-family: var(--x-font-family);
+    letter-spacing: -0.2px;
     white-space: nowrap;
     
     &::before,
     &::after {
       content: '';
       flex: 1;
-      border-top: 1px solid #e5e7eb;
+      border-top: 1px solid var(--x-border-color-lighter, #E5E5E7);
     }
     
     &.divider-dashed {
@@ -119,7 +121,7 @@ const dividerStyle = computed(() => {
     height: 1em;
     margin: 0 12px;
     vertical-align: middle;
-    border-left: 1px solid #e5e7eb;
+    border-left: 1px solid var(--x-border-color-lighter, #E5E5E7);
     
     &.divider-dashed {
       border-left-style: dashed;

@@ -1,289 +1,271 @@
 /**
- * XUX 电商主题色系统
- * 基准色: #1a1a1a
+ * XUX iOS 风格主题色系统
+ * 基于 iOS Human Interface Guidelines
  */
 
 :root {
-  /* ========== 基准色 ========== */
-  --x-color-base: #1a1a1a;
+  /* ========== iOS 主色 - 系统蓝 ========== */
+  --x-color-primary: #007AFF;
+  --x-color-primary-light: #4DA2FF;
+  --x-color-primary-lighter: #80BFFF;
+  --x-color-primary-dark: #0062CC;
+  --x-color-primary-darker: #004999;
   
-  /* ========== 主色 - 深色系 ========== */
-  --x-color-primary: #1a1a1a;
-  --x-color-primary-light: #3a3a3a;
-  --x-color-primary-lighter: #4a4a4a;
-  --x-color-primary-dark: #0d0d0d;
-  --x-color-primary-darker: #000000;
+  /* ========== iOS 辅助色 ========== */
+  --x-color-secondary: #5856D6; /* 系统紫 */
+  --x-color-secondary-light: #7D7AFF;
+  --x-color-secondary-lighter: #9D9BFF;
+  --x-color-secondary-dark: #3634A3;
+  --x-color-secondary-darker: #1F1D6B;
   
-  /* ========== 辅助色 - 深蓝色系（链接、信息） ========== */
-  --x-color-secondary: #4a90e2;
-  --x-color-secondary-light: #6ba8ed;
-  --x-color-secondary-lighter: #8dc0f7;
-  --x-color-secondary-dark: #3a7bc8;
-  --x-color-secondary-darker: #2a6bb0;
+  /* ========== iOS 成功色 - 系统绿 ========== */
+  --x-color-success: #34C759;
+  --x-color-success-light: #5ED77E;
+  --x-color-success-lighter: #8DE5A3;
+  --x-color-success-dark: #248A3D;
+  --x-color-success-darker: #1A5D2B;
   
-  /* ========== 成功色 - 翠绿色系 ========== */
-  --x-color-success: #10b981;
-  --x-color-success-light: #34d399;
-  --x-color-success-lighter: #6ee7b7;
-  --x-color-success-dark: #059669;
-  --x-color-success-darker: #047857;
+  /* ========== iOS 警告色 - 系统橙 ========== */
+  --x-color-warning: #FF9500;
+  --x-color-warning-light: #FFB340;
+  --x-color-warning-lighter: #FFCC73;
+  --x-color-warning-dark: #CC7700;
+  --x-color-warning-darker: #995900;
   
-  /* ========== 警告色 - 琥珀色系 ========== */
-  --x-color-warning: #f59e0b;
-  --x-color-warning-light: #fbbf24;
-  --x-color-warning-lighter: #fcd34d;
-  --x-color-warning-dark: #d97706;
-  --x-color-warning-darker: #b45309;
+  /* ========== iOS 危险色 - 系统红 ========== */
+  --x-color-danger: #FF3B30;
+  --x-color-danger-light: #FF6259;
+  --x-color-danger-lighter: #FF8A82;
+  --x-color-danger-dark: #CC2F26;
+  --x-color-danger-darker: #99231C;
   
-  /* ========== 危险色 - 红色系 ========== */
-  --x-color-danger: #ef4444;
-  --x-color-danger-light: #f87171;
-  --x-color-danger-lighter: #fca5a5;
-  --x-color-danger-dark: #dc2626;
-  --x-color-danger-darker: #b91c1c;
+  /* ========== iOS 中性色系统 ========== */
+  --x-color-black: #000000;
+  --x-color-gray-900: #1C1C1E;
+  --x-color-gray-800: #2C2C2E;
+  --x-color-gray-700: #3A3A3C;
+  --x-color-gray-600: #48484A;
+  --x-color-gray-500: #8E8E93;
+  --x-color-gray-400: #AEAEB2;
+  --x-color-gray-300: #C7C7CC;
+  --x-color-gray-200: #D1D1D6;
+  --x-color-gray-100: #E5E5EA;
+  --x-color-gray-50: #F2F2F7;
+  --x-color-white: #FFFFFF;
   
-  /* ========== 中性色 - 基于 #1a1a1a ========== */
-  --x-color-black: #1a1a1a;
-  --x-color-gray-900: #2a2a2a;
-  --x-color-gray-800: #3a3a3a;
-  --x-color-gray-700: #4a4a4a;
-  --x-color-gray-600: #6a6a6a;
-  --x-color-gray-500: #8a8a8a;
-  --x-color-gray-400: #aaaaaa;
-  --x-color-gray-300: #cacaca;
-  --x-color-gray-200: #e5e5e5;
-  --x-color-gray-100: #f5f5f5;
-  --x-color-white: #ffffff;
+  /* ========== iOS 阴影 (更轻柔) ========== */
+  --x-shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.04);
+  --x-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  --x-shadow-md: 0 4px 16px rgba(0, 0, 0, 0.12);
+  --x-shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.16);
+  --x-shadow-xl: 0 16px 48px rgba(0, 0, 0, 0.20);
   
-  /* ========== 渐变色 ========== */
-  --x-gradient-primary: linear-gradient(135deg, #1a1a1a 0%, #3a3a3a 100%);
-  --x-gradient-primary-hover: linear-gradient(135deg, #3a3a3a 0%, #4a4a4a 100%);
-  --x-gradient-secondary: linear-gradient(135deg, #4a90e2 0%, #3a7bc8 100%);
-  --x-gradient-success: linear-gradient(135deg, #10b981 0%, #059669 100%);
-  --x-gradient-success-hover: linear-gradient(135deg, #34d399 0%, #10b981 100%);
-  --x-gradient-warning: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
-  --x-gradient-warning-hover: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
-  --x-gradient-danger: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
-  --x-gradient-danger-hover: linear-gradient(135deg, #f87171 0%, #ef4444 100%);
-  --x-gradient-dark: linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 100%);
+  /* iOS 彩色阴影 (更柔和) */
+  --x-shadow-primary: 0 4px 12px rgba(0, 122, 255, 0.18);
+  --x-shadow-primary-lg: 0 8px 24px rgba(0, 122, 255, 0.24);
+  --x-shadow-success: 0 4px 12px rgba(52, 199, 89, 0.18);
+  --x-shadow-success-lg: 0 6px 16px rgba(52, 199, 89, 0.24);
+  --x-shadow-warning: 0 4px 12px rgba(255, 149, 0, 0.18);
+  --x-shadow-warning-lg: 0 6px 16px rgba(255, 149, 0, 0.24);
+  --x-shadow-danger: 0 4px 12px rgba(255, 59, 48, 0.18);
+  --x-shadow-danger-lg: 0 6px 16px rgba(255, 59, 48, 0.24);
   
-  /* ========== 阴影 ========== */
-  --x-shadow-sm: 0 1px 2px rgba(26, 26, 26, 0.05);
-  --x-shadow: 0 2px 8px rgba(26, 26, 26, 0.1);
-  --x-shadow-md: 0 4px 12px rgba(26, 26, 26, 0.15);
-  --x-shadow-lg: 0 8px 24px rgba(26, 26, 26, 0.2);
-  --x-shadow-xl: 0 16px 48px rgba(26, 26, 26, 0.25);
+  /* iOS 焦点阴影 */
+  --x-shadow-focus-primary: 0 0 0 4px rgba(0, 122, 255, 0.12);
+  --x-shadow-focus-danger: 0 0 0 4px rgba(255, 59, 48, 0.12);
   
-  /* 彩色阴影 */
-  --x-shadow-primary: 0 4px 12px rgba(26, 26, 26, 0.3);
-  --x-shadow-primary-lg: 0 8px 24px rgba(26, 26, 26, 0.4);
-  --x-shadow-secondary: 0 4px 12px rgba(74, 144, 226, 0.3);
-  --x-shadow-success: 0 4px 12px rgba(16, 185, 129, 0.3);
-  --x-shadow-success-lg: 0 6px 16px rgba(16, 185, 129, 0.4);
-  --x-shadow-warning: 0 4px 12px rgba(245, 158, 11, 0.3);
-  --x-shadow-warning-lg: 0 6px 16px rgba(245, 158, 11, 0.4);
-  --x-shadow-danger: 0 4px 12px rgba(239, 68, 68, 0.3);
-  --x-shadow-danger-lg: 0 6px 16px rgba(239, 68, 68, 0.4);
-  
-  /* 焦点阴影 */
-  --x-shadow-focus-primary: 0 0 0 3px rgba(26, 26, 26, 0.1);
-  --x-shadow-focus-danger: 0 0 0 3px rgba(239, 68, 68, 0.1);
-  
-  /* ========== 边框圆角 ========== */
-  --x-radius-sm: 4px;
-  --x-radius: 6px;
-  --x-radius-md: 8px;
-  --x-radius-lg: 12px;
-  --x-radius-xl: 16px;
+  /* ========== iOS 圆角 (更圆润) ========== */
+  --x-radius-sm: 6px;
+  --x-radius: 10px;
+  --x-radius-md: 12px;
+  --x-radius-lg: 14px;
+  --x-radius-xl: 20px;
   --x-radius-full: 9999px;
   
-  /* ========== 过渡动画 ========== */
-  --x-transition-fast: 0.15s cubic-bezier(0.4, 0, 0.2, 1);
-  --x-transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  --x-transition-slow: 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  /* ========== iOS 过渡动画 (更快速流畅) ========== */
+  --x-transition-fast: 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  --x-transition: 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  --x-transition-slow: 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
   
-  /* ========== 字体 ========== */
-  --x-font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-  --x-font-size-xs: 12px;
-  --x-font-size-sm: 14px;
-  --x-font-size: 16px;
-  --x-font-size-lg: 18px;
+  /* iOS 弹性动画 */
+  --x-transition-spring: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  
+  /* ========== iOS 字体系统 ========== */
+  --x-font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'SF Pro Display', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  --x-font-size-xs: 11px;
+  --x-font-size-sm: 13px;
+  --x-font-size: 15px;
+  --x-font-size-lg: 17px;
   --x-font-size-xl: 20px;
   --x-font-size-2xl: 24px;
-  --x-font-size-3xl: 30px;
+  --x-font-size-3xl: 28px;
   
-  /* ========== 组件背景色 ========== */
-  --x-bg-color: #ffffff;
-  --x-bg-color-page: #f5f5f5;
-  --x-bg-color-overlay: #ffffff;
+  /* ========== iOS 组件背景色 ========== */
+  --x-bg-color: #FFFFFF;
+  --x-bg-color-page: #F2F2F7;
+  --x-bg-color-overlay: #FFFFFF;
+  --x-bg-color-secondary: #F9F9F9;
   
-  /* ========== 文本颜色 ========== */
-  --x-text-color-primary: #1a1a1a;
-  --x-text-color-regular: #4a4a4a;
-  --x-text-color-secondary: #6a6a6a;
-  --x-text-color-placeholder: #aaaaaa;
-  --x-text-color-disabled: #cacaca;
+  /* ========== iOS 文本颜色 ========== */
+  --x-text-color-primary: #000000;
+  --x-text-color-regular: #1C1C1E;
+  --x-text-color-secondary: #3A3A3C;
+  --x-text-color-placeholder: #8E8E93;
+  --x-text-color-disabled: #C7C7CC;
   
-  /* ========== 边框颜色 ========== */
-  --x-border-color: #e5e5e5;
-  --x-border-color-light: #f5f5f5;
-  --x-border-color-lighter: #fafafa;
-  --x-border-color-dark: #cacaca;
+  /* ========== iOS 边框颜色 ========== */
+  --x-border-color: #C6C6C8;
+  --x-border-color-light: #D1D1D6;
+  --x-border-color-lighter: #E5E5EA;
+  --x-border-color-dark: #AEAEB2;
   
-  /* ========== 填充颜色 ========== */
-  --x-fill-color: #f5f5f5;
-  --x-fill-color-light: #fafafa;
-  --x-fill-color-lighter: #ffffff;
-  --x-fill-color-dark: #e5e5e5;
+  /* ========== iOS 填充颜色 ========== */
+  --x-fill-color: #F2F2F7;
+  --x-fill-color-light: #F9F9F9;
+  --x-fill-color-lighter: #FFFFFF;
+  --x-fill-color-dark: #E5E5EA;
   
-  /* 彩色填充（半透明背景） */
-  --x-fill-color-primary-light: rgba(26, 26, 26, 0.1);
-  --x-fill-color-primary-lighter: rgba(26, 26, 26, 0.05);
-  --x-fill-color-success-light: rgba(16, 185, 129, 0.1);
-  --x-fill-color-success-lighter: #f0fdf4;
-  --x-fill-color-warning-light: rgba(245, 158, 11, 0.1);
-  --x-fill-color-warning-lighter: #fef3c7;
-  --x-fill-color-danger-light: rgba(239, 68, 68, 0.1);
-  --x-fill-color-danger-lighter: #fee2e2;
+  /* iOS 彩色填充（半透明背景） */
+  --x-fill-color-primary-light: rgba(0, 122, 255, 0.1);
+  --x-fill-color-primary-lighter: rgba(0, 122, 255, 0.05);
+  --x-fill-color-success-light: rgba(52, 199, 89, 0.1);
+  --x-fill-color-success-lighter: rgba(52, 199, 89, 0.05);
+  --x-fill-color-warning-light: rgba(255, 149, 0, 0.1);
+  --x-fill-color-warning-lighter: rgba(255, 149, 0, 0.05);
+  --x-fill-color-danger-light: rgba(255, 59, 48, 0.1);
+  --x-fill-color-danger-lighter: rgba(255, 59, 48, 0.05);
   
-  /* ========== 遮罩颜色 ========== */
-  --x-mask-color: rgba(0, 0, 0, 0.5);
-  --x-mask-color-light: rgba(0, 0, 0, 0.3);
+  /* ========== iOS 遮罩颜色 ========== */
+  --x-mask-color: rgba(0, 0, 0, 0.4);
+  --x-mask-color-light: rgba(0, 0, 0, 0.2);
   
-  /* ========== 波纹效果颜色 ========== */
-  --x-ripple-color: rgba(0, 0, 0, 0.08);
-  --x-ripple-color-primary: rgba(26, 26, 26, 0.15);
-  --x-ripple-color-success: rgba(16, 185, 129, 0.15);
-  --x-ripple-color-warning: rgba(245, 158, 11, 0.15);
-  --x-ripple-color-danger: rgba(239, 68, 68, 0.15);
+  /* ========== iOS 波纹效果颜色 (更轻柔) ========== */
+  --x-ripple-color: rgba(0, 0, 0, 0.06);
+  --x-ripple-color-primary: rgba(0, 122, 255, 0.15);
+  --x-ripple-color-success: rgba(52, 199, 89, 0.15);
+  --x-ripple-color-warning: rgba(255, 149, 0, 0.15);
+  --x-ripple-color-danger: rgba(255, 59, 48, 0.15);
 }
 
-/* ========== 暗色模式（手动切换） ========== */
+/* ========== iOS 暗色模式 ========== */
 .dark,
 [data-theme="dark"] {
-  /* 主色调整（暗黑模式下使用浅色） */
-  --x-color-primary: #ffffff;
-  --x-color-primary-light: #e5e5e5;
-  --x-color-primary-lighter: #cacaca;
-  --x-color-primary-dark: #ffffff;
-  --x-color-primary-darker: #ffffff;
+  /* iOS 主色（暗色模式下稍微亮一些） */
+  --x-color-primary: #0A84FF;
+  --x-color-primary-light: #409CFF;
+  --x-color-primary-lighter: #64A8FF;
+  --x-color-primary-dark: #0070E0;
+  --x-color-primary-darker: #0051B3;
   
-  /* 中性色反转 */
-  --x-color-white: #1a1a1a;
-  --x-color-black: #ffffff;
-  --x-color-gray-100: #2a2a2a;
-  --x-color-gray-200: #3a3a3a;
-  --x-color-gray-300: #4a4a4a;
-  --x-color-gray-400: #6a6a6a;
-  --x-color-gray-500: #8a8a8a;
-  --x-color-gray-600: #aaaaaa;
-  --x-color-gray-700: #cacaca;
-  --x-color-gray-800: #e5e5e5;
-  --x-color-gray-900: #f5f5f5;
+  /* iOS 暗色中性色 */
+  --x-color-white: #000000;
+  --x-color-black: #FFFFFF;
+  --x-color-gray-50: #1C1C1E;
+  --x-color-gray-100: #2C2C2E;
+  --x-color-gray-200: #3A3A3C;
+  --x-color-gray-300: #48484A;
+  --x-color-gray-400: #636366;
+  --x-color-gray-500: #8E8E93;
+  --x-color-gray-600: #AEAEB2;
+  --x-color-gray-700: #C7C7CC;
+  --x-color-gray-800: #D1D1D6;
+  --x-color-gray-900: #E5E5EA;
   
-  /* 组件背景色 */
-  --x-bg-color: #1a1a1a;
-  --x-bg-color-page: #0d0d0d;
-  --x-bg-color-overlay: #2a2a2a;
+  /* iOS 暗色组件背景 */
+  --x-bg-color: #000000;
+  --x-bg-color-page: #1C1C1E;
+  --x-bg-color-overlay: #2C2C2E;
+  --x-bg-color-secondary: #1C1C1E;
   
-  /* 文本颜色 */
-  --x-text-color-primary: #ffffff;
-  --x-text-color-regular: #e5e5e5;
-  --x-text-color-secondary: #cacaca;
-  --x-text-color-placeholder: #6a6a6a;
-  --x-text-color-disabled: #4a4a4a;
+  /* iOS 暗色文本 */
+  --x-text-color-primary: #FFFFFF;
+  --x-text-color-regular: #E5E5EA;
+  --x-text-color-secondary: #AEAEB2;
+  --x-text-color-placeholder: #636366;
+  --x-text-color-disabled: #48484A;
   
-  /* 边框颜色 */
-  --x-border-color: #3a3a3a;
-  --x-border-color-light: #2a2a2a;
-  --x-border-color-lighter: #1a1a1a;
-  --x-border-color-dark: #4a4a4a;
+  /* iOS 暗色边框 */
+  --x-border-color: #38383A;
+  --x-border-color-light: #2C2C2E;
+  --x-border-color-lighter: #1C1C1E;
+  --x-border-color-dark: #48484A;
   
-  /* 填充颜色 */
-  --x-fill-color: #2a2a2a;
-  --x-fill-color-light: #1a1a1a;
-  --x-fill-color-lighter: #0d0d0d;
-  --x-fill-color-dark: #3a3a3a;
+  /* iOS 暗色填充 */
+  --x-fill-color: #1C1C1E;
+  --x-fill-color-light: #2C2C2E;
+  --x-fill-color-lighter: #3A3A3C;
+  --x-fill-color-dark: #000000;
   
-  /* 遮罩颜色 */
-  --x-mask-color: rgba(0, 0, 0, 0.7);
-  --x-mask-color-light: rgba(0, 0, 0, 0.5);
+  /* iOS 暗色遮罩 */
+  --x-mask-color: rgba(0, 0, 0, 0.6);
+  --x-mask-color-light: rgba(0, 0, 0, 0.4);
   
-  /* 阴影（暗黑模式下使用更亮的阴影） */
-  --x-shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
+  /* iOS 暗色阴影（几乎不可见） */
+  --x-shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.3);
   --x-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
-  --x-shadow-md: 0 4px 12px rgba(0, 0, 0, 0.5);
+  --x-shadow-md: 0 4px 16px rgba(0, 0, 0, 0.5);
   --x-shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.6);
   --x-shadow-xl: 0 16px 48px rgba(0, 0, 0, 0.7);
-  
-  /* 渐变色（暗黑模式下反转） */
-  --x-gradient-primary: linear-gradient(135deg, #ffffff 0%, #e5e5e5 100%);
-  --x-gradient-primary-hover: linear-gradient(135deg, #e5e5e5 0%, #cacaca 100%);
-  --x-gradient-dark: linear-gradient(135deg, #2a2a2a 0%, #1a1a1a 100%);
 }
 
-/* ========== 自动暗色模式（根据系统偏好） ========== */
+/* ========== iOS 自动暗色模式（根据系统偏好） ========== */
 @media (prefers-color-scheme: dark) {
   :root:not(.light):not([data-theme="light"]) {
-    /* 主色调整 */
-    --x-color-primary: #ffffff;
-    --x-color-primary-light: #e5e5e5;
-    --x-color-primary-lighter: #cacaca;
-    --x-color-primary-dark: #ffffff;
-    --x-color-primary-darker: #ffffff;
+    /* iOS 主色 */
+    --x-color-primary: #0A84FF;
+    --x-color-primary-light: #409CFF;
+    --x-color-primary-lighter: #64A8FF;
+    --x-color-primary-dark: #0070E0;
+    --x-color-primary-darker: #0051B3;
     
-    /* 中性色反转 */
-    --x-color-white: #1a1a1a;
-    --x-color-black: #ffffff;
-    --x-color-gray-100: #2a2a2a;
-    --x-color-gray-200: #3a3a3a;
-    --x-color-gray-300: #4a4a4a;
-    --x-color-gray-400: #6a6a6a;
-    --x-color-gray-500: #8a8a8a;
-    --x-color-gray-600: #aaaaaa;
-    --x-color-gray-700: #cacaca;
-    --x-color-gray-800: #e5e5e5;
-    --x-color-gray-900: #f5f5f5;
+    /* iOS 暗色中性色 */
+    --x-color-white: #000000;
+    --x-color-black: #FFFFFF;
+    --x-color-gray-50: #1C1C1E;
+    --x-color-gray-100: #2C2C2E;
+    --x-color-gray-200: #3A3A3C;
+    --x-color-gray-300: #48484A;
+    --x-color-gray-400: #636366;
+    --x-color-gray-500: #8E8E93;
+    --x-color-gray-600: #AEAEB2;
+    --x-color-gray-700: #C7C7CC;
+    --x-color-gray-800: #D1D1D6;
+    --x-color-gray-900: #E5E5EA;
     
-    /* 组件背景色 */
-    --x-bg-color: #1a1a1a;
-    --x-bg-color-page: #0d0d0d;
-    --x-bg-color-overlay: #2a2a2a;
+    /* iOS 暗色组件背景 */
+    --x-bg-color: #000000;
+    --x-bg-color-page: #1C1C1E;
+    --x-bg-color-overlay: #2C2C2E;
+    --x-bg-color-secondary: #1C1C1E;
     
-    /* 文本颜色 */
-    --x-text-color-primary: #ffffff;
-    --x-text-color-regular: #e5e5e5;
-    --x-text-color-secondary: #cacaca;
-    --x-text-color-placeholder: #6a6a6a;
-    --x-text-color-disabled: #4a4a4a;
+    /* iOS 暗色文本 */
+    --x-text-color-primary: #FFFFFF;
+    --x-text-color-regular: #E5E5EA;
+    --x-text-color-secondary: #AEAEB2;
+    --x-text-color-placeholder: #636366;
+    --x-text-color-disabled: #48484A;
     
-    /* 边框颜色 */
-    --x-border-color: #3a3a3a;
-    --x-border-color-light: #2a2a2a;
-    --x-border-color-lighter: #1a1a1a;
-    --x-border-color-dark: #4a4a4a;
+    /* iOS 暗色边框 */
+    --x-border-color: #38383A;
+    --x-border-color-light: #2C2C2E;
+    --x-border-color-lighter: #1C1C1E;
+    --x-border-color-dark: #48484A;
     
-    /* 填充颜色 */
-    --x-fill-color: #2a2a2a;
-    --x-fill-color-light: #1a1a1a;
-    --x-fill-color-lighter: #0d0d0d;
-    --x-fill-color-dark: #3a3a3a;
+    /* iOS 暗色填充 */
+    --x-fill-color: #1C1C1E;
+    --x-fill-color-light: #2C2C2E;
+    --x-fill-color-lighter: #3A3A3C;
+    --x-fill-color-dark: #000000;
     
-    /* 遮罩颜色 */
-    --x-mask-color: rgba(0, 0, 0, 0.7);
-    --x-mask-color-light: rgba(0, 0, 0, 0.5);
+    /* iOS 暗色遮罩 */
+    --x-mask-color: rgba(0, 0, 0, 0.6);
+    --x-mask-color-light: rgba(0, 0, 0, 0.4);
     
-    /* 阴影 */
-    --x-shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
+    /* iOS 暗色阴影 */
+    --x-shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.3);
     --x-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
-    --x-shadow-md: 0 4px 12px rgba(0, 0, 0, 0.5);
+    --x-shadow-md: 0 4px 16px rgba(0, 0, 0, 0.5);
     --x-shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.6);
     --x-shadow-xl: 0 16px 48px rgba(0, 0, 0, 0.7);
-    
-    /* 渐变色 */
-    --x-gradient-primary: linear-gradient(135deg, #ffffff 0%, #e5e5e5 100%);
-    --x-gradient-primary-hover: linear-gradient(135deg, #e5e5e5 0%, #cacaca 100%);
-    --x-gradient-dark: linear-gradient(135deg, #2a2a2a 0%, #1a1a1a 100%);
   }
 }
-

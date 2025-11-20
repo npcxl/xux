@@ -2,6 +2,10 @@
 
 手风琴组件，用于折叠/展开内容，节省页面空间。
 
+<div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px; margin-top: 32px;">
+
+<div>
+
 ## 基础用法
 
 基本的手风琴功能，一次只能展开一个面板。
@@ -38,6 +42,10 @@ const items = ref([
 
 :::
 
+</div>
+
+<div>
+
 ## 允许多个展开
 
 设置 `allow-multiple` 属性允许同时展开多个面板。
@@ -70,6 +78,14 @@ const items = ref([
 ```
 
 :::
+
+</div>
+
+</div>
+
+<div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px; margin-top: 24px;">
+
+<div>
 
 ## 默认展开
 
@@ -141,6 +157,14 @@ const items2 = ref([
 
 :::
 
+</div>
+
+</div>
+
+<div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px; margin-top: 24px;">
+
+<div>
+
 ## 禁用状态
 
 通过 `disabled` 属性禁用整个组件，或禁用单个项目。
@@ -178,6 +202,10 @@ const items2 = ref([
 ```
 
 :::
+
+</div>
+
+<div>
 
 ## 事件监听
 
@@ -234,6 +262,14 @@ const handleItemClick = (index, isOpen) => {
 ```
 
 :::
+
+</div>
+
+</div>
+
+<div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px; margin-top: 24px;">
+
+<div>
 
 ## 暴露的方法
 
@@ -308,6 +344,10 @@ const closeAll = () => {
 ```
 
 :::
+
+</div>
+
+</div>
 
 ## API
 

@@ -95,6 +95,11 @@
 import { ref, watch, nextTick } from 'vue'
 import { Icon } from '@iconify/vue'
 
+/**
+ * Search 搜索框组件
+ * @displayName XSearch
+ */
+
 export interface SearchProps {
   /** 占位符文本 */
   placeholder?: string
@@ -277,11 +282,16 @@ defineExpose({
 </script>
 
 <style scoped>
+/* ============================================
+   Search 搜索框组件 - iOS 17 设计语言
+   ============================================ */
+
 .x-search {
   position: relative;
   display: inline-flex;
   align-items: center;
   width: 100%;
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', 'Helvetica Neue', sans-serif;
 }
 
 /* 容器 */
@@ -291,17 +301,27 @@ defineExpose({
   align-items: center;
   width: 100%;
   min-width: 280px;
-  height: 40px;
-  border: 1px solid var(--vp-c-border, #e5e7eb);
-  border-radius: 20px;
-  background: var(--vp-c-bg, #ffffff);
-  transition: all 0.3s ease;
+  height: 44px;
+  border: 1.5px solid rgba(0, 0, 0, 0.04);
+  border-radius: 22px;
+  background: rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
   overflow: visible;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02), 
+              inset 0 1px 1px rgba(255, 255, 255, 0.8);
+  transform: translateZ(0);
+  will-change: transform, box-shadow;
 }
 
 .x-search__container:focus-within {
-  border-color: var(--x-color-primary, #1a1a1a);
-  box-shadow: 0 0 0 3px rgba(26, 26, 26, 0.1);
+  background: rgba(255, 255, 255, 0.98);
+  border-color: rgba(0, 122, 255, 0.4);
+  box-shadow: 0 0 0 3.5px rgba(0, 122, 255, 0.15), 
+              0 4px 12px rgba(0, 122, 255, 0.08),
+              inset 0 1px 1px rgba(255, 255, 255, 0.9);
+  transform: scale(1.01);
 }
 
 /* 输入框 */
@@ -311,132 +331,148 @@ defineExpose({
   height: 100%;
   border: none;
   outline: none;
-  font-size: 14px;
+  font-size: 15px;
+  font-weight: 400;
+  letter-spacing: -0.24px;
+  -webkit-font-smoothing: antialiased;
   background: transparent;
-  color: var(--vp-c-text-1, #111827);
-  padding: 0 16px;
-  transition: padding 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  color: #000000;
+  padding: 0 20px;
+  transition: padding 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  caret-color: #007AFF;
 }
 
 .x-search__input--expanded {
-  padding-right: 48px;
+  padding-right: 52px;
 }
 
 .x-search__input--left {
-  padding-left: 44px;
+  padding-left: 48px;
 }
 
 .x-search__input--right {
-  padding-right: 88px;
+  padding-right: 92px;
 }
 
 .x-search__input::placeholder {
-  color: var(--vp-c-text-3, #9ca3af);
+  color: rgba(60, 60, 67, 0.6);
+  font-weight: 400;
 }
 
 /* 搜索按钮（嵌入） */
 .x-search__button {
   position: absolute;
-  width: 32px;
-  height: 32px;
+  width: 36px;
+  height: 36px;
   display: flex;
   align-items: center;
   justify-content: center;
   border: none;
-  background: transparent;
-  color: var(--vp-c-text-2, #6b7280);
+  background: rgba(0, 122, 255, 0.1);
+  color: #007AFF;
   cursor: pointer;
   border-radius: 50%;
-  transition: all 0.3s ease;
+  transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
   padding: 0;
   z-index: 2;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
 }
 
 .x-search__button--left {
-  left: 6px;
+  left: 4px;
 }
 
 .x-search__button--right {
-  right: 6px;
+  right: 4px;
 }
 
 .x-search__button:hover {
-  background: var(--vp-c-bg-soft, #f3f4f6);
-  color: var(--x-color-primary, #1a1a1a);
-  transform: scale(1.1);
+  background: linear-gradient(135deg, #007AFF 0%, #0051D5 100%);
+  color: #FFFFFF;
+  transform: scale(1.08);
+  box-shadow: 0 4px 12px rgba(0, 122, 255, 0.25);
 }
 
 .x-search__button:active {
-  transform: scale(0.95);
+  transform: scale(0.96);
 }
 
 .x-search__button svg {
-  width: 16px;
-  height: 16px;
+  width: 18px;
+  height: 18px;
 }
 
 .x-search__button span[class*="iconify"] {
-  font-size: 16px;
+  font-size: 18px;
 }
 
 /* 按钮展开动画 */
 .x-search-button-enter-active {
-  animation: slideIn 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  animation: iosButtonIn 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
 
 .x-search-button-leave-active {
-  animation: slideOut 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  animation: iosButtonOut 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
 
 /* 左侧按钮动画：从中间到左侧 */
 .x-search__button--left.x-search-button-enter-active {
-  animation: slideFromCenterToLeft 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  animation: slideFromCenterToLeft 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
 
 @keyframes slideFromCenterToLeft {
   0% {
     left: 50%;
-    transform: translateX(-50%);
+    transform: translateX(-50%) scale(0.3);
     opacity: 0;
-    scale: 0.5;
+    filter: blur(10px);
+  }
+  50% {
+    filter: blur(5px);
   }
   100% {
-    left: 6px;
-    transform: translateX(0);
+    left: 4px;
+    transform: translateX(0) scale(1);
     opacity: 1;
-    scale: 1;
+    filter: blur(0);
   }
 }
 
 /* 右侧按钮动画：从中间到右侧 */
 .x-search__button--right.x-search-button-enter-active {
-  animation: slideFromCenterToRight 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  animation: slideFromCenterToRight 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
 
 @keyframes slideFromCenterToRight {
   0% {
     right: 50%;
-    transform: translateX(50%);
+    transform: translateX(50%) scale(0.3);
     opacity: 0;
-    scale: 0.5;
+    filter: blur(10px);
+  }
+  50% {
+    filter: blur(5px);
   }
   100% {
-    right: 6px;
-    transform: translateX(0);
+    right: 4px;
+    transform: translateX(0) scale(1);
     opacity: 1;
-    scale: 1;
+    filter: blur(0);
   }
 }
 
 /* 按钮消失动画 */
-@keyframes slideOut {
+@keyframes iosButtonOut {
   0% {
     opacity: 1;
-    scale: 1;
+    transform: scale(1);
+    filter: blur(0);
   }
   100% {
     opacity: 0;
-    scale: 0.5;
+    transform: scale(0.5);
+    filter: blur(10px);
   }
 }
 
@@ -446,33 +482,52 @@ defineExpose({
   right: 12px;
   display: flex;
   align-items: center;
-  gap: 4px;
+  gap: 6px;
   z-index: 1;
 }
 
 .x-search__loading,
 .x-search__clear {
-  width: 20px;
-  height: 20px;
+  width: 24px;
+  height: 24px;
   display: flex;
   align-items: center;
   justify-content: center;
   border: none;
-  background: transparent;
+  background: rgba(142, 142, 147, 0.1);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
   padding: 0;
   cursor: pointer;
-  color: var(--vp-c-text-3, #6b7280);
-  transition: color 0.2s ease;
+  color: rgba(60, 60, 67, 0.6);
+  border-radius: 50%;
+  transition: all 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
 
 .x-search__clear:hover {
-  color: var(--vp-c-text-1, #111827);
+  background: rgba(255, 59, 48, 0.1);
+  color: #FF3B30;
+  transform: scale(1.1);
 }
 
-.x-search__spinner {
-  width: 16px;
-  height: 16px;
-  animation: spin 1s linear infinite;
+.x-search__clear:active {
+  transform: scale(0.9);
+}
+
+.x-search__loading {
+  color: #007AFF;
+  animation: iosLoadingPulse 1.5s ease-in-out infinite;
+}
+
+@keyframes iosLoadingPulse {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.6;
+    transform: scale(0.95);
+  }
 }
 
 @keyframes spin {
@@ -502,46 +557,81 @@ defineExpose({
   top: calc(100% + 8px);
   left: 0;
   right: 0;
-  max-height: 300px;
+  max-height: 320px;
   overflow-y: auto;
-  background: var(--vp-c-bg, #ffffff);
-  border: 1px solid var(--vp-c-border, #e5e7eb);
-  border-radius: 12px;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+  background: rgba(255, 255, 255, 0.98);
+  backdrop-filter: blur(30px) saturate(180%);
+  -webkit-backdrop-filter: blur(30px) saturate(180%);
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  border-radius: 16px;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.12), 
+              0 4px 16px rgba(0, 0, 0, 0.08),
+              inset 0 1px 1px rgba(255, 255, 255, 0.8);
   z-index: 1000;
+  padding: 4px;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(142, 142, 147, 0.3) transparent;
 }
 
 .x-search__result-item {
   padding: 12px 16px;
+  margin: 2px;
   cursor: pointer;
-  transition: background 0.2s ease;
-  font-size: 14px;
-  color: var(--vp-c-text-1, #374151);
+  transition: all 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  font-size: 15px;
+  font-weight: 400;
+  letter-spacing: -0.24px;
+  -webkit-font-smoothing: antialiased;
+  color: #000000;
+  border-radius: 12px;
+  position: relative;
+  overflow: hidden;
+}
+
+.x-search__result-item::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, transparent 0%, rgba(0, 122, 255, 0.03) 100%);
+  opacity: 0;
+  transition: opacity 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  pointer-events: none;
 }
 
 .x-search__result-item:hover {
-  background: var(--vp-c-bg-soft, #f9fafb);
+  background: rgba(0, 122, 255, 0.06);
+  transform: scale(0.995);
+}
+
+.x-search__result-item:hover::before {
+  opacity: 1;
+}
+
+.x-search__result-item:active {
+  transform: scale(0.985);
+  background: rgba(0, 122, 255, 0.1);
 }
 
 .x-search__result-item:not(:last-child) {
-  border-bottom: 1px solid var(--vp-c-divider, #f3f4f6);
+  border-bottom: none;
 }
 
 /* 结果动画 */
 .x-search-results-enter-active,
 .x-search-results-leave-active {
-  transition: all 0.2s ease;
+  transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
 
-.x-search-results-enter-from,
+.x-search-results-enter-from {
+  opacity: 0;
+  transform: translateY(-12px) scale(0.96);
+  filter: blur(4px);
+}
+
 .x-search-results-leave-to {
   opacity: 0;
-  transform: translateY(-8px);
-}
-
-/* 暗色模式 */
-.dark .x-search__button:hover {
-  background: var(--vp-c-bg-soft, #374151);
+  transform: translateY(-8px) scale(0.98);
+  filter: blur(2px);
 }
 
 /* 滚动条样式 */
@@ -554,32 +644,124 @@ defineExpose({
 }
 
 .x-search__results::-webkit-scrollbar-thumb {
-  background: rgba(0, 0, 0, 0.2);
+  background: rgba(142, 142, 147, 0.3);
   border-radius: 3px;
 }
 
 .x-search__results::-webkit-scrollbar-thumb:hover {
-  background: rgba(0, 0, 0, 0.3);
+  background: rgba(142, 142, 147, 0.5);
+}
+
+/* 暗色模式 */
+@media (prefers-color-scheme: dark) {
+  .x-search__container {
+    background: rgba(30, 30, 30, 0.9);
+    border-color: rgba(255, 255, 255, 0.05);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1), 
+                inset 0 1px 1px rgba(255, 255, 255, 0.03);
+  }
+  
+  .x-search__container:focus-within {
+    background: rgba(35, 35, 35, 0.98);
+    box-shadow: 0 0 0 3.5px rgba(0, 122, 255, 0.2), 
+                0 4px 12px rgba(0, 122, 255, 0.1),
+                inset 0 1px 1px rgba(255, 255, 255, 0.05);
+  }
+  
+  .x-search__input {
+    color: #FFFFFF;
+  }
+  
+  .x-search__input::placeholder {
+    color: rgba(235, 235, 245, 0.6);
+  }
+  
+  .x-search__button {
+    background: rgba(0, 122, 255, 0.2);
+  }
+  
+  .x-search__button:hover {
+    box-shadow: 0 4px 12px rgba(0, 122, 255, 0.35);
+  }
+  
+  .x-search__loading,
+  .x-search__clear {
+    background: rgba(142, 142, 147, 0.2);
+    color: rgba(235, 235, 245, 0.6);
+  }
+  
+  .x-search__clear:hover {
+    background: rgba(255, 59, 48, 0.2);
+  }
+  
+  .x-search__results {
+    background: rgba(30, 30, 30, 0.98);
+    border-color: rgba(255, 255, 255, 0.05);
+  }
+  
+  .x-search__result-item {
+    color: #FFFFFF;
+  }
+  
+  .x-search__result-item:hover {
+    background: rgba(0, 122, 255, 0.1);
+  }
 }
 
 /* 移动端适配 */
 @media (max-width: 768px) {
   .x-search__container {
-    min-width: 240px;
+    min-width: 260px;
+    height: 40px;
   }
   
   .x-search__input {
-    font-size: 14px;
+    font-size: 16px; /* 防止iOS缩放 */
+    padding: 0 16px;
   }
   
   .x-search__button {
-    width: 28px;
-    height: 28px;
+    width: 32px;
+    height: 32px;
   }
   
   .x-search__button svg {
-    width: 14px;
-    height: 14px;
+    width: 16px;
+    height: 16px;
+  }
+  
+  .x-search__results {
+    max-height: 60vh;
+  }
+}
+
+/* 辅助功能 */
+@media (prefers-reduced-motion: reduce) {
+  .x-search__container,
+  .x-search__input,
+  .x-search__button,
+  .x-search__loading,
+  .x-search__clear,
+  .x-search__result-item,
+  .x-search-button-enter-active,
+  .x-search-button-leave-active,
+  .x-search-action-enter-active,
+  .x-search-action-leave-active,
+  .x-search-results-enter-active,
+  .x-search-results-leave-active {
+    transition: none !important;
+    animation: none !important;
+  }
+  
+  @keyframes slideFromCenterToLeft,
+  @keyframes slideFromCenterToRight,
+  @keyframes iosButtonOut,
+  @keyframes iosLoadingPulse {
+    0%, 100% {
+      opacity: 1;
+      transform: none;
+      filter: none;
+    }
   }
 }
 </style>

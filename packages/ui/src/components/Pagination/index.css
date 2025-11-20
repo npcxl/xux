@@ -11,13 +11,15 @@
 
 /* 左侧信息 */
 .x-pagination-info {
-  font-size: 14px;
-  color: var(--x-text-color-secondary, #6b7280);
+  font-size: var(--x-font-size-sm, 13px);
+  font-family: var(--x-font-family);
+  letter-spacing: -0.2px;
+  color: var(--x-text-color-secondary);
 }
 
 .x-pagination-info-number {
   font-weight: 600;
-  color: var(--x-text-color-primary, #111827);
+  color: var(--x-text-color-primary);
 }
 
 /* 右侧控制区 */
@@ -53,23 +55,24 @@
   width: 64px;
   height: 32px;
   padding: 0 8px;
-  font-size: 14px;
+  font-size: var(--x-font-size-sm, 13px);
+  font-family: var(--x-font-family);
   text-align: center;
-  color: var(--x-text-color-primary, #1a1a1a);
-  background: var(--x-bg-color, #fff);
-  border: 1px solid var(--x-border-color, #e5e7eb);
-  border-radius: 6px;
+  color: var(--x-text-color-primary);
+  background: var(--x-bg-color);
+  border: 1.5px solid var(--x-border-color);
+  border-radius: var(--x-radius-sm, 6px);
   outline: none;
-  transition: all 0.2s ease;
+  transition: all 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
 
 .x-pagination-jump-input:hover {
-  border-color: var(--x-color-primary, #1a1a1a);
+  border-color: var(--x-color-primary, #007AFF);
 }
 
 .x-pagination-jump-input:focus {
-  border-color: var(--x-color-primary, #1a1a1a);
-  box-shadow: 0 0 0 3px var(--x-shadow-focus, rgba(26, 26, 26, 0.1));
+  border-color: var(--x-color-primary, #007AFF);
+  box-shadow: 0 0 0 4px var(--x-fill-color-primary-lighter, rgba(0, 122, 255, 0.15));
 }
 
 .x-pagination-jump-input::placeholder {

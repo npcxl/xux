@@ -41,7 +41,7 @@ XUX 是一个专为电商平台打造的 Vue3 UI 组件库。
 
 ## 版本
 
-当前版本：`1.3.29`
+当前版本：`1.4.0`
 
 查看 [更新日志](./changelog.md) | [GitHub Releases](https://gitee.com/leheya/xux/releases)
 

@@ -53,81 +53,83 @@ function handleClose(e: MouseEvent) {
   display: inline-flex;
   align-items: center;
   gap: 4px;
-  border-radius: var(--x-radius, 6px);
+  border-radius: var(--x-radius-full, 12px);
   font-weight: 500;
-  transition: all var(--x-transition-fast, 0.2s cubic-bezier(0.4, 0, 0.2, 1));
+  font-family: var(--x-font-family);
+  letter-spacing: -0.2px;
+  transition: all 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
   white-space: nowrap;
   
   /* 大小 */
   &.tag-small {
     padding: 2px 8px;
-    font-size: var(--x-font-size-xs, 12px);
-    line-height: 1.5;
+    font-size: var(--x-font-size-xs, 11px);
+    line-height: 1.4;
   }
   
   &.tag-medium {
-    padding: 4px 12px;
-    font-size: var(--x-font-size-sm, 14px);
-    line-height: 1.5;
+    padding: 4px 10px;
+    font-size: var(--x-font-size-sm, 13px);
+    line-height: 1.4;
   }
   
   &.tag-large {
-    padding: 6px 16px;
-    font-size: var(--x-font-size, 16px);
-    line-height: 1.5;
+    padding: 6px 14px;
+    font-size: var(--x-font-size, 15px);
+    line-height: 1.4;
   }
   
   /* 类型 - 默认 */
   &.tag-default {
-    background: var(--x-fill-color, #f3f4f6);
-    color: var(--x-text-color-primary, #1a1a1a);
+    background: var(--x-fill-color, #F2F2F7);
+    color: var(--x-text-color-primary, #000000);
     
     &.tag-bordered {
-      border: 1px solid var(--x-border-color-dark, #d1d5db);
+      border: 1px solid var(--x-border-color-dark, #C7C7CC);
       background: var(--x-bg-color, #ffffff);
     }
   }
   
   /* 类型 - 主要 */
   &.tag-primary {
-    background: var(--x-fill-color-primary-light, #eff6ff);
-    color: var(--x-color-primary-darker, #1e40af);
+    background: var(--x-fill-color-primary-lighter, rgba(0, 122, 255, 0.15));
+    color: var(--x-color-primary, #007AFF);
     
     &.tag-bordered {
-      border: 1px solid var(--x-color-primary-light, #93c5fd);
+      border: 1px solid var(--x-color-primary, #007AFF);
       background: var(--x-bg-color, #ffffff);
     }
   }
   
   /* 类型 - 成功 */
   &.tag-success {
-    background: var(--x-fill-color-success-lighter, #f0fdf4);
-    color: var(--x-color-success-darker, #15803d);
+    background: var(--x-fill-color-success-lighter, rgba(52, 199, 89, 0.15));
+    color: var(--x-color-success, #34C759);
     
     &.tag-bordered {
-      border: 1px solid var(--x-color-success-light, #86efac);
+      border: 1px solid var(--x-color-success, #34C759);
       background: var(--x-bg-color, #ffffff);
     }
   }
   
   /* 类型 - 警告 */
   &.tag-warning {
-    background: var(--x-fill-color-warning-lighter, #fef3c7);
-    color: var(--x-color-warning-darker, #92400e);
+    background: var(--x-fill-color-warning-lighter, rgba(255, 159, 10, 0.15));
+    color: var(--x-color-warning, #FF9F0A);
     
     &.tag-bordered {
-      border: 1px solid var(--x-color-warning-light, #fcd34d);
+      border: 1px solid var(--x-color-warning, #FF9F0A);
       background: var(--x-bg-color, #ffffff);
     }
   }
   
   /* 类型 - 危险 */
   &.tag-danger {
-    background: var(--x-fill-color-danger-lighter, #fee2e2);
-    color: var(--x-color-danger-darker, #991b1b);
+    background: var(--x-fill-color-danger-lighter, rgba(255, 59, 48, 0.15));
+    color: var(--x-color-danger, #FF3B30);
     
     &.tag-bordered {
-      border: 1px solid var(--x-color-danger-light, #fca5a5);
+      border: 1px solid var(--x-color-danger, #FF3B30);
       background: var(--x-bg-color, #ffffff);
     }
   }

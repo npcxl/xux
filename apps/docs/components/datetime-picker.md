@@ -1,6 +1,10 @@
 # DateTimePicker 日期时间选择器
 
-现代化的日期时间选择器，支持日期、时间、日期时间三种模式，支持范围选择、快捷选项、时区配置等功能。
+现代化的日期时间选择器，采用优雅的风格设计，支持日期、时间、日期时间三种模式，支持范围选择、快捷选项、时区配置等功能。
+
+<div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px; margin-top: 32px;">
+
+<div>
 
 ## 基础用法
 
@@ -290,6 +294,10 @@ const customShortcuts = [
 
 :::
 
+</div>
+
+<div>
+
 ## 时间精度
 
 通过 `show-seconds` 属性控制是否显示秒。
@@ -545,6 +553,10 @@ const handleClose = () => {
 ```
 
 :::
+
+</div>
+
+</div>
 
 ## DateTime 工具函数
 

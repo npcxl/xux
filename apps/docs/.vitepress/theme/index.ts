@@ -22,11 +22,17 @@ import { useComponents } from './useComponents'
 // 导入磁性效果
 import { initMagneticEffect } from './magnetic-effect'
 
+// 导入自定义组件
+import AppleHomepage from '../../components/apple-homepage.vue'
+
 export default {
   extends: DefaultTheme,
   enhanceApp({ app, router }) {
     // 注册 demoblock 组件
     useComponents(app)
+    
+    // 注册自定义组件
+    app.component('AppleHomepage', AppleHomepage)
     
     // 注册所有 XUX 组件
     // @ts-ignore - 动态组件注册可能包含非组件对象

@@ -128,7 +128,7 @@ defineExpose({
   align-items: flex-start;
   margin-bottom: 24px;
   position: relative;
-  transition: all 0.3s ease;
+  transition: all var(--x-transition);
 }
 
 /* 行内表单样式 */
@@ -159,8 +159,8 @@ defineExpose({
   flex-shrink: 0;
   padding-right: 12px;
   padding-top: 12px;
-  font-size: 14px;
-  color: #333;
+  font-size: var(--x-font-size-sm);
+  color: var(--x-text-color-primary);
   line-height: 1.5;
   font-weight: 500;
   position: relative;
@@ -168,7 +168,7 @@ defineExpose({
 }
 
 .x-form-item__asterisk {
-  color: #ff4d4f;
+  color: var(--x-color-danger);
   margin-right: 4px;
   font-size: 16px;
   line-height: 1;
@@ -183,8 +183,8 @@ defineExpose({
 }
 
 .x-form-item__error {
-  color: #ff4d4f;
-  font-size: 13px;
+  color: var(--x-color-danger);
+  font-size: var(--x-font-size-xs);
   line-height: 1.5;
   margin-top: 6px;
   display: flex;
@@ -199,42 +199,40 @@ defineExpose({
   width: 16px;
   height: 16px;
   border-radius: 50%;
-  background-color: #ff4d4f;
-  color: white;
+  background-color: var(--x-color-danger);
+  color: var(--x-color-white);
   font-size: 12px;
   font-weight: bold;
   flex-shrink: 0;
 }
 
-.x-form-item--error :deep(.x-input),
-.x-form-item--error :deep(.x-radio-group),
-.x-form-item--error :deep(.x-checkboxes-group) {
-  border-color: #ff4d4f !important;
-  transition: border-color 0.3s ease;
+.x-form-item--error :deep(.x-input-wrapper) {
+  border-color: var(--x-color-danger) !important;
+  transition: border-color var(--x-transition);
 }
 
-.x-form-item--validating :deep(.x-input) {
-  border-color: #1890ff;
-  transition: border-color 0.3s ease;
+.x-form-item--validating :deep(.x-input-wrapper) {
+  border-color: var(--x-color-primary);
+  transition: border-color var(--x-transition);
 }
 
 /* 添加聚焦时的流畅过渡 */
-.x-form-item :deep(.x-input) {
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+.x-form-item :deep(.x-input-wrapper) {
+  transition: all var(--x-transition);
 }
 
-.x-form-item :deep(.x-input:focus) {
-  box-shadow: 0 0 0 2px rgba(24, 144, 255, 0.1);
+.x-form-item :deep(.x-input-wrapper):focus-within {
+  box-shadow: var(--x-shadow-focus-primary), var(--x-shadow);
 }
 
-.x-form-item--error :deep(.x-input:focus) {
-  box-shadow: 0 0 0 2px rgba(255, 77, 79, 0.1);
+.x-form-item--error :deep(.x-input-wrapper):focus-within {
+  box-shadow: var(--x-shadow-focus-danger), var(--x-shadow);
 }
 
 /* 错误提示进入和离开动画 - 更流畅 */
 .x-form-error-enter-active,
 .x-form-error-leave-active {
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: all var(--x-transition);
 }
 
 .x-form-error-enter-from {

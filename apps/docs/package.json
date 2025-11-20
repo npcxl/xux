@@ -12,7 +12,9 @@
     "submit:baidu": "node scripts/submit-to-baidu.mjs"
   },
   "dependencies": {
-    "@xlui/xux-ui": "workspace:*"
+    "@types/three": "^0.181.0",
+    "@xlui/xux-ui": "workspace:*",
+    "three": "^0.181.1"
   },
   "devDependencies": {
     "@iconify/vue": "^4.1.1",
@@ -25,4 +27,3 @@
     "vue-docgen-api": "^4.75.0"
   }
 }
-

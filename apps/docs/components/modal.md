@@ -11,12 +11,11 @@
 ```vue
 <template>
   <div>
-    <button 
+    <XButton 
       @click="visible = true"
-      class="px-4 py-2 bg-gray-800 text-white rounded hover:bg-gray-700"
     >
       打开模态框
-    </button>
+    </XButton>
     
     <XModal v-model:visible="visible" title="基础模态框">
       <p>这是模态框的内容</p>
@@ -119,6 +118,125 @@ const visibleCustom = ref(false)
         <p>这是一个全屏显示的模态框</p>
         <p>适合需要大量内容展示的场景</p>
         <p>比如：详细表单、图片查看、数据展示等</p>
+      </div>
+    </XModal>
+  </div>
+</template>
+
+<script setup>
+import { ref } from 'vue'
+
+const visible = ref(false)
+</script>
+```
+
+:::
+
+## 可拖拽模态框
+
+设置 `draggable` 属性使模态框可以通过标题栏拖拽移动。
+
+:::demo
+
+```vue
+<template>
+  <div>
+    <XButton 
+      @click="visible = true"
+      type="primary"
+    >
+      可拖拽模态框
+    </XButton>
+    
+    <XModal 
+      v-model:visible="visible" 
+      title="拖拽我试试" 
+      draggable
+    >
+      <div class="space-y-2">
+        <p> 1 点击标题栏并拖拽可以移动窗口位置</p>
+        <p> 2 拖拽时会有视觉反馈效果</p>
+        <p> 3 重新打开会恢复到中心位置</p>
+      </div>
+    </XModal>
+  </div>
+</template>
+
+<script setup>
+import { ref } from 'vue'
+
+const visible = ref(false)
+</script>
+```
+
+:::
+
+## 无蒙版模态框
+
+设置 `:show-mask="false"` 隐藏蒙版，仅用淡淡的暗色背景来区分层级。
+
+:::demo
+
+```vue
+<template>
+  <div>
+    <XButton 
+      @click="visible = true"
+      type="primary"
+    >
+      无蒙版模态框
+    </XButton>
+    
+    <XModal 
+      v-model:visible="visible" 
+      title="无蒙版模态框" 
+      :show-mask="false"
+    >
+      <div class="space-y-2">
+        <p> 1 没有深色蒙版遮罩</p>
+        <p> 2 使用加强的阴影来区分层级</p>
+        <p> 3 适合不想完全遮挡背景的场景</p>
+      </div>
+    </XModal>
+  </div>
+</template>
+
+<script setup>
+import { ref } from 'vue'
+
+const visible = ref(false)
+</script>
+```
+
+:::
+
+## 拖拽 + 无蒙版组合
+
+结合拖拽和无蒙版功能，实现更灵活的交互。
+
+:::demo
+
+```vue
+<template>
+  <div>
+    <XButton 
+      @click="visible = true"
+      type="primary"
+    >
+      拖拽 + 无蒙版
+    </XButton>
+    
+    <XModal 
+      v-model:visible="visible" 
+      title="自由模态框" 
+      draggable
+      :show-mask="false"
+    >
+      <div class="space-y-2">
+        <p> 1 可以拖拽移动位置</p>
+        <p> 2 没有蒙版遮挡背景</p>
+        <p> 3 更像一个独立的浮动窗口</p>
+        <p> 4 适合多窗口操作场景</p>
       </div>
     </XModal>
   </div>
@@ -425,6 +543,8 @@ const visible = ref(false)
 | confirmLoading | 确认按钮加载状态 | `boolean` | `false` |
 | maskClosable | 点击遮罩是否关闭 | `boolean` | `true` |
 | escClosable | 按 ESC 键是否关闭 | `boolean` | `true` |
+| draggable | 是否可拖拽移动 | `boolean` | `false` |
+| showMask | 是否显示蒙版 | `boolean` | `true` |
 
 ### Events
 

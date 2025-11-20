@@ -1,18 +1,20 @@
 # Form 表单
 
-用于数据录入和校验，支持多种验证规则和流畅的交互动画。
+用于数据录入和校验，支持多种验证规则和流畅的交互动画，完全适配主题色。
+
+<div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px; margin-top: 32px;">
+
+<div>
 
 ## 基础用法
 
 最简单的表单示例，展示基本的表单项组合。
 
-底部按钮在表单中自动横向填充完，所以需要做样式调整。此次改动并不影响原先按钮的块级样式。
-
 :::demo
 
 ```vue
 <template>
-  <XForm :model="form" style="max-width: 600px;">
+  <XForm :model="form" style="max-width: 500px;">
     <XFormItem label="用户名">
       <XInput v-model="form.username" placeholder="请输入用户名" />
     </XFormItem>
@@ -47,6 +49,176 @@ const handleSubmit = () => {
 
 :::
 
+## 必填项标记
+
+通过 `required` 属性标记必填字段，显示红色星号。
+
+:::demo
+
+```vue
+<template>
+  <XForm 
+    ref="formRef"
+    :model="form" 
+    :rules="rules" 
+    style="max-width: 500px;"
+  >
+    <XFormItem label="姓名" prop="name" required>
+      <XInput v-model="form.name" placeholder="请输入姓名" />
+    </XFormItem>
+    <XFormItem label="手机号" prop="phone" required>
+      <XInput v-model="form.phone" placeholder="请输入手机号" />
+    </XFormItem>
+    <XFormItem label="备注" prop="remark">
+      <XInput v-model="form.remark" placeholder="选填项" />
+    </XFormItem>
+    
+    <template #footer>
+      <XButton type="primary" @click="handleSubmit">提交</XButton>
+    </template>
+  </XForm>
+</template>
+
+<script setup>
+import { reactive, ref } from 'vue'
+
+const formRef = ref()
+
+const form = reactive({
+  name: '',
+  phone: '',
+  remark: ''
+})
+
+const rules = {
+  name: { required: true, message: '请输入姓名' },
+  phone: [
+    { required: true, message: '请输入手机号' },
+    { pattern: /^1[3-9]\d{9}$/, message: '请输入正确的手机号' }
+  ]
+}
+
+const handleSubmit = async () => {
+  const valid = await formRef.value.validate()
+  if (valid) {
+    xlMsg.success('提交成功！')
+  }
+}
+</script>
+```
+
+:::
+
+## 行内表单
+
+通过设置 `inline` 属性为 `true` 可以让表单项在一行内显示。
+
+:::demo
+
+```vue
+<template>
+  <XForm :model="form" inline>
+    <XFormItem label="用户名">
+      <XInput v-model="form.username" placeholder="用户名" style="width: 180px;" />
+    </XFormItem>
+    <XFormItem label="邮箱">
+      <XInput v-model="form.email" placeholder="邮箱" style="width: 200px;" />
+    </XFormItem>
+    <XFormItem>
+      <XButton type="primary" @click="handleSearch">搜索</XButton>
+    </XFormItem>
+  </XForm>
+</template>
+
+<script setup>
+import { reactive } from 'vue'
+
+const form = reactive({
+  username: '',
+  email: ''
+})
+
+const handleSearch = () => {
+  xlMsg.info('搜索中...')
+  console.log('搜索条件:', form)
+}
+</script>
+```
+
+:::
+
+## 单选框表单
+
+结合单选框组件实现单选题型表单。
+
+:::demo
+
+```vue
+<template>
+  <XForm 
+    ref="formRef"
+    :model="form" 
+    :rules="rules" 
+    style="max-width: 500px;"
+  >
+    <XFormItem label="性别" prop="gender" required>
+      <XRadio 
+        v-model="form.gender"
+        :options="[
+          { label: '男', value: 'male' },
+          { label: '女', value: 'female' },
+          { label: '其他', value: 'other' }
+        ]"
+      />
+    </XFormItem>
+    <XFormItem label="学历" prop="education" required>
+      <XRadio 
+        v-model="form.education"
+        :options="[
+          { label: '高中', value: 'high' },
+          { label: '本科', value: 'bachelor' },
+          { label: '硕士', value: 'master' }
+        ]"
+      />
+    </XFormItem>
+    
+    <template #footer>
+      <XButton type="primary" @click="handleSubmit">提交</XButton>
+    </template>
+  </XForm>
+</template>
+
+<script setup>
+import { reactive, ref } from 'vue'
+
+const formRef = ref()
+
+const form = reactive({
+  gender: '',
+  education: ''
+})
+
+const rules = {
+  gender: { required: true, message: '请选择性别' },
+  education: { required: true, message: '请选择学历' }
+}
+
+const handleSubmit = async () => {
+  const valid = await formRef.value.validate()
+  if (valid) {
+    xlMsg.success('提交成功！')
+    console.log('表单数据:', form)
+  }
+}
+</script>
+```
+
+:::
+
+</div>
+
+<div>
+
 ## 表单验证
 
 通过 `rules` 属性定义验证规则，支持必填、正则、长度等多种验证。
@@ -59,7 +231,7 @@ const handleSubmit = () => {
     ref="formRef"
     :model="form" 
     :rules="rules" 
-    style="max-width: 600px;"
+    style="max-width: 500px;"
     @submit="handleSubmit"
   >
     <XFormItem label="用户名" prop="username">
@@ -138,68 +310,6 @@ const handleReset = () => {
 
 :::
 
-## 必填项标记
-
-通过 `required` 属性标记必填字段，显示红色星号。
-
-:::demo
-
-```vue
-<template>
-  <XForm 
-    ref="formRef"
-    :model="form" 
-    :rules="rules" 
-    style="max-width: 600px;"
-  >
-    <XFormItem label="姓名" prop="name" required>
-      <XInput v-model="form.name" placeholder="请输入姓名" />
-    </XFormItem>
-    <XFormItem label="手机号" prop="phone" required>
-      <XInput v-model="form.phone" placeholder="请输入手机号" />
-    </XFormItem>
-    <XFormItem label="备注" prop="remark">
-      <XInput v-model="form.remark" placeholder="选填项" />
-    </XFormItem>
-    
-    <template #footer>
-      <div style="display: flex; justify-content: center;">
-        <XButton type="primary" @click="handleSubmit">提交</XButton>
-      </div>
-    </template>
-  </XForm>
-</template>
-
-<script setup>
-import { reactive, ref } from 'vue'
-
-const formRef = ref()
-
-const form = reactive({
-  name: '',
-  phone: '',
-  remark: ''
-})
-
-const rules = {
-  name: { required: true, message: '请输入姓名' },
-  phone: [
-    { required: true, message: '请输入手机号' },
-    { pattern: /^1[3-9]\d{9}$/, message: '请输入正确的手机号' }
-  ]
-}
-
-const handleSubmit = async () => {
-  const valid = await formRef.value.validate()
-  if (valid) {
-    xlMsg.success('提交成功！')
-  }
-}
-</script>
-```
-
-:::
-
 ## 标签位置
 
 通过 `labelPosition` 属性设置标签位置，支持 `left`、`right`、`top` 三种方式。
@@ -224,7 +334,7 @@ const handleSubmit = async () => {
       :model="form" 
       :label-position="labelPosition"
       label-width="100px"
-      style="max-width: 600px;"
+      style="max-width: 500px;"
     >
       <XFormItem label="用户名" prop="username">
         <XInput v-model="form.username" placeholder="请输入用户名" />
@@ -254,113 +364,6 @@ const form = reactive({
 
 :::
 
-## 行内表单
-
-通过设置 `inline` 属性为 `true` 可以让表单项在一行内显示。
-
-:::demo
-
-```vue
-<template>
-  <XForm :model="form" inline>
-    <XFormItem label="用户名">
-      <XInput v-model="form.username" placeholder="用户名" style="width: 180px;" />
-    </XFormItem>
-    <XFormItem label="邮箱">
-      <XInput v-model="form.email" placeholder="邮箱" style="width: 200px;" />
-    </XFormItem>
-    <XFormItem>
-      <XButton type="primary" @click="handleSearch">搜索</XButton>
-    </XFormItem>
-  </XForm>
-</template>
-
-<script setup>
-import { reactive } from 'vue'
-
-const form = reactive({
-  username: '',
-  email: ''
-})
-
-const handleSearch = () => {
-  xlMsg.info('搜索中...')
-  console.log('搜索条件:', form)
-}
-</script>
-```
-
-:::
-
-## 单选框表单
-
-结合单选框组件实现单选题型表单。
-
-:::demo
-
-```vue
-<template>
-  <XForm 
-    ref="formRef"
-    :model="form" 
-    :rules="rules" 
-    style="max-width: 600px;"
-  >
-    <XFormItem label="性别" prop="gender" required>
-      <XRadio 
-        v-model="form.gender"
-        :options="[
-          { label: '男', value: 'male' },
-          { label: '女', value: 'female' },
-          { label: '其他', value: 'other' }
-        ]"
-      />
-    </XFormItem>
-    <XFormItem label="学历" prop="education" required>
-      <XRadio 
-        v-model="form.education"
-        :options="[
-          { label: '高中', value: 'high' },
-          { label: '本科', value: 'bachelor' },
-          { label: '硕士', value: 'master' },
-          { label: '博士', value: 'doctor' }
-        ]"
-      />
-    </XFormItem>
-    
-    <template #footer>
-      <XButton type="primary" @click="handleSubmit">提交</XButton>
-    </template>
-  </XForm>
-</template>
-
-<script setup>
-import { reactive, ref } from 'vue'
-
-const formRef = ref()
-
-const form = reactive({
-  gender: '',
-  education: ''
-})
-
-const rules = {
-  gender: { required: true, message: '请选择性别' },
-  education: { required: true, message: '请选择学历' }
-}
-
-const handleSubmit = async () => {
-  const valid = await formRef.value.validate()
-  if (valid) {
-    xlMsg.success('提交成功！')
-    console.log('表单数据:', form)
-  }
-}
-</script>
-```
-
-:::
-
 ## 多选框表单
 
 结合多选框组件实现多选题型表单。
@@ -373,7 +376,7 @@ const handleSubmit = async () => {
     ref="formRef"
     :model="form" 
     :rules="rules" 
-    style="max-width: 600px;"
+    style="max-width: 500px;"
   >
     <XFormItem label="兴趣爱好" prop="hobbies" required>
       <XCheckboxes 
@@ -382,8 +385,7 @@ const handleSubmit = async () => {
           { label: '阅读', value: 'reading' },
           { label: '运动', value: 'sports' },
           { label: '旅游', value: 'travel' },
-          { label: '音乐', value: 'music' },
-          { label: '电影', value: 'movie' }
+          { label: '音乐', value: 'music' }
         ]"
       />
     </XFormItem>
@@ -394,8 +396,7 @@ const handleSubmit = async () => {
           { label: 'JavaScript', value: 'js' },
           { label: 'TypeScript', value: 'ts' },
           { label: 'Vue', value: 'vue' },
-          { label: 'React', value: 'react' },
-          { label: 'Node.js', value: 'node' }
+          { label: 'React', value: 'react' }
         ]"
       />
     </XFormItem>
@@ -440,6 +441,10 @@ const handleSubmit = async () => {
 ```
 
 :::
+
+</div>
+
+</div>
 
 ## 完整注册表单
 
@@ -624,23 +629,6 @@ const handleReset = () => {
 | default | 表单项内容 |
 | footer | 表单底部操作区，通常放置提交、重置等按钮 |
 
-**Footer 插槽使用示例：**
-
-```vue
-<XForm :model="form">
-  <XFormItem label="用户名">
-    <XInput v-model="form.username" />
-  </XFormItem>
-  
-  <template #footer>
-    <div style="display: flex; justify-content: flex-end; gap: 12px;">
-      <XButton type="submit">提交</XButton>
-      <XButton>取消</XButton>
-    </div>
-  </template>
-</XForm>
-```
-
 ### FormItem Props
 
 | 属性 | 说明 | 类型 | 默认值 |
@@ -662,91 +650,11 @@ const handleReset = () => {
 | validator | 自定义验证函数 | `(value: any) => boolean \| Promise<boolean>` | - |
 | trigger | 验证触发时机 | `'blur' \| 'change' \| 'submit'` | `'blur'` |
 
+## 最佳实践
 
-## 贡献者
-
-<div class="contributors">
-  <div class="contributor-item">
-    <a href="https://gitee.com/leheya" target="_blank" rel="noopener noreferrer">
-      <img 
-        src="https://foruda.gitee.com/avatar/1751620424517657404/10604783_leheya_1751620424.png!avatar200" 
-        alt="leheya"
-        class="contributor-avatar"
-      />
-      <span class="contributor-name">无敌暴龙神</span>
-    </a>
-  </div>
-  <!-- <div class="contributor-item">
-    <a href="https://gitee.com/haijun-li" target="_blank" rel="noopener noreferrer">
-      <img 
-        src="https://p3.itc.cn/images01/20230307/e9d72e3788844ed1a9259e442899e1bd.png" 
-        alt="lihaijun"
-        class="contributor-avatar"
-      />
-      <span class="contributor-name">lihaijun</span>
-    </a>
-  </div> -->
-</div>
-
-<style scoped>
-.contributors {
-  display: flex;
-  gap: 24px;
-  margin: 24px 0;
-  flex-wrap: wrap;
-}
-
-.contributor-item a {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  text-decoration: none;
-  color: inherit;
-  transition: transform 0.2s ease;
-}
-
-.contributor-item a:hover {
-  transform: translateY(-2px);
-}
-
-.contributor-avatar {
-  width: 80px;
-  height: 80px;
-  border-radius: 50%;
-  border: 3px solid var(--vp-c-border);
-  transition: border-color 0.2s ease;
-  object-fit: cover;
-}
-
-.contributor-item a:hover .contributor-avatar {
-  border-color: var(--vp-c-brand-1);
-}
-
-.contributor-name {
-  margin-top: 8px;
-  font-size: 14px;
-  font-weight: 500;
-  color: var(--vp-c-text-2);
-  transition: color 0.2s ease;
-}
-
-.contributor-item a:hover .contributor-name {
-  color: var(--vp-c-brand-1);
-}
-
-@media (max-width: 768px) {
-  .contributors {
-    gap: 16px;
-  }
-  
-  .contributor-avatar {
-    width: 60px;
-    height: 60px;
-  }
-  
-  .contributor-name {
-    font-size: 12px;
-  }
-}
-</style>
-
+1. **明确标签**：使用清晰的标签说明字段用途
+2. **及时反馈**：验证错误应立即显示，帮助用户快速纠正
+3. **合理分组**：相关字段应组织在一起
+4. **必填标识**：使用红色星号标识必填字段
+5. **友好提示**：错误提示应具体明确，告知用户如何修正
+6. **响应式布局**：移动端应采用顶部标签布局

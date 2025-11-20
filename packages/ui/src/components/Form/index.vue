@@ -225,7 +225,7 @@ defineExpose({
   width: 100%;
   margin-top: 24px;
   padding-top: 24px;
-  border-top: 1px solid #f0f0f0;
+  border-top: 1px solid var(--x-border-color-lighter);
 }
 
 /* 确保 footer 内的内容可以使用 flex 布局 */

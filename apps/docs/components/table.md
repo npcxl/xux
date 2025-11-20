@@ -108,6 +108,73 @@ const handleRowClick = (record, index) => {
 
 :::
 
+## 虚拟滚动（大数据量）
+
+启用虚拟滚动功能，支持几万甚至十万条数据的流畅渲染。只渲染可视区域的行，大幅提升性能。
+
+:::demo
+
+```vue
+<template>
+  <div>
+    <div style="margin-bottom: 16px; display: flex; gap: 12px; align-items: center;">
+      <span>数据量：{{ dataSource.length }} 条</span>
+      <XButton size="small" @click="generateData(1000)">1千条</XButton>
+      <XButton size="small" @click="generateData(10000)">1万条</XButton>
+      <XButton size="small" @click="generateData(50000)" type="primary">5万条</XButton>
+      <XButton size="small" @click="generateData(100000)" type="danger">10万条</XButton>
+    </div>
+    
+    <XTable 
+      :columns="columns" 
+      :dataSource="dataSource"
+      height="500px"
+      virtual
+      :virtual-row-height="48"
+      :virtual-buffer="10"
+      stripe
+    />
+  </div>
+</template>
+
+<script setup>
+import { ref } from 'vue'
+
+const columns = ref([
+  { key: 'id', title: 'ID', dataIndex: 'id', width: '80px' },
+  { key: 'name', title: '姓名', dataIndex: 'name', width: '120px' },
+  { key: 'age', title: '年龄', dataIndex: 'age', width: '80px' },
+  { key: 'email', title: '邮箱', dataIndex: 'email' },
+  { key: 'phone', title: '电话', dataIndex: 'phone', width: '130px' },
+  { key: 'address', title: '地址', dataIndex: 'address' }
+])
+
+const dataSource = ref([])
+
+const generateData = (count) => {
+  console.time('生成数据')
+  const data = []
+  for (let i = 0; i < count; i++) {
+    data.push({
+      id: `ID-${i + 1}`,
+      name: `用户${i + 1}`,
+      age: 20 + (i % 50),
+      email: `user${i + 1}@example.com`,
+      phone: `138${String(i).padStart(8, '0')}`,
+      address: `某省某市某区某街道${i + 1}号`
+    })
+  }
+  dataSource.value = data
+  console.timeEnd('生成数据')
+}
+
+// 默认加载1万条数据
+generateData(10000)
+</script>
+```
+
+:::
+
 ## 固定表头
 
 设置 `height` 后表头会自动固定。
@@ -1206,7 +1273,6 @@ const handleClearCurrentPage = () => {
   <div>
     <div style="margin-bottom: 16px;">
       <div style="padding: 12px; background: #f0f9ff; border-radius: 8px; border: 1px solid #bae7ff;">
-        <div style="font-weight: 600; margin-bottom: 8px; color: #1890ff;">💡 说明：</div>
         <ul style="margin: 0; padding-left: 20px; line-height: 1.8;">
           <li>状态为"已锁定"的行不可选择</li>
           <li>禁用的行显示灰色复选框，不响应点击</li>
@@ -1387,7 +1453,6 @@ const handleSelectionChange = (keys, rows) => {
   <div>
     <div style="margin-bottom: 16px;">
       <div style="padding: 12px; background: #f0f9ff; border-radius: 8px; border: 1px solid #bae7ff;">
-        <div style="font-weight: 600; margin-bottom: 8px; color: #1890ff;">💡 禁用规则：</div>
         <ul style="margin: 0; padding-left: 20px; line-height: 1.8;">
           <li>状态为"已离职"的员工不可选择</li>
           <li>余额低于 100 的不可选择</li>
@@ -1994,6 +2059,9 @@ const handleRefresh = () => {
 | preserveSelectedRowKeys | 跨页选择（保留其他页的选择状态） | `boolean` | `false` |
 | getCheckboxProps | 获取checkbox属性的函数，可设置禁用状态 | `(record: any) => { disabled?: boolean }` | - |
 | returnSelectedRows | selectionChange 事件是否返回完整行数据。设为 false 可优化性能，只返回 IDs | `boolean` | `true` |
+| virtual | 是否启用虚拟滚动（适用于大量数据） | `boolean` | `false` |
+| virtualRowHeight | 虚拟滚动行高（像素） | `number` | `48` |
+| virtualBuffer | 虚拟滚动缓冲区行数（提前渲染的行数） | `number` | `5` |
 
 ### Column 配置
 
@@ -2047,232 +2115,6 @@ const handleRefresh = () => {
 | getOtherPageSelectedRowKeys | 获取其他页的选中行键（跨页选择） | - | `(string\|number)[]` |
 | clearCurrentPageSelection | 清空当前页的选择（跨页选择） | - | `void` |
 | selectCurrentPage | 全选当前页（跨页选择） | - | `void` |
-
-
-## 最佳实践
-
-### 1. 性能优化
-
-**大数据场景**
-```vue
-<template>
-  <!-- 使用固定高度 -->
-  <XTable 
-    :columns="columns" 
-    :dataSource="largeDataSource"
-    height="600px"
-  />
-</template>
-```
-
-**避免在 dataSource 中使用复杂对象**
-```javascript
-// ❌ 不推荐
-const dataSource = ref([
-  { id: 1, user: { profile: { name: 'John' } } }
-])
-
-// ✅ 推荐 - 扁平化数据
-const dataSource = ref([
-  { id: 1, userName: 'John' }
-])
-```
-
-### 2. 列宽设置
-
-**设置固定宽度以获得最佳性能**
-```javascript
-const columns = ref([
-  { key: 'id', title: 'ID', dataIndex: 'id', width: '80px' },
-  { key: 'name', title: '姓名', dataIndex: 'name', width: '120px' },
-  // 最后一列可以不设置宽度，自动填充
-  { key: 'address', title: '地址', dataIndex: 'address' }
-])
-```
-
-### 3. 自定义单元格
-
-**使用插槽自定义单元格内容**
-```vue
-<template>
-  <XTable :columns="columns" :dataSource="dataSource">
-    <template #status="{ value, record }">
-      <span :style="{ color: record.online ? '#52c41a' : '#999' }">
-        {{ value }}
-      </span>
-    </template>
-  </XTable>
-</template>
-```
-
-### 4. 行选择最佳实践
-
-**使用 v-model 简化选择逻辑**
-```vue
-<script setup>
-const selectedKeys = ref([])
-
-// 监听选择变化
-watch(selectedKeys, (keys) => {
-  console.log('当前选中:', keys)
-})
-</script>
-
-<template>
-  <XTable 
-    row-selection
-    :selected-row-keys="selectedKeys"
-    @selection-change="(keys) => selectedKeys = keys"
-  />
-</template>
-```
-
-
-
-### 5. 固定列使用建议
-
-```javascript
-// ✅ 推荐 - 固定列必须设置宽度
-const columns = [
-  { key: 'id', title: 'ID', dataIndex: 'id', fixed: 'left', width: '80px' },
-  { key: 'name', title: '姓名', dataIndex: 'name', width: '120px' },
-  { key: 'action', title: '操作', dataIndex: 'action', fixed: 'right', width: '150px' }
-]
-```
-
-## 常见问题 FAQ
-
-### 1. 表格宽度如何控制？
-
-**Q: 表格总是占满容器宽度？**
-
-A: 表格宽度由列宽度决定：
-- 如果所有列都设置了 `width`，表格宽度 = 所有列宽度之和
-- 如果部分列没有设置 `width`，这些列会根据内容自动计算宽度
-- 表格会使用 `inline-flex` 布局，只占据内容所需的宽度
-
-### 2. 固定列显示不正确？
-
-**Q: 固定列位置错乱或不显示？**
-
-A: 请检查：
-1. 固定列必须设置 `width` 属性
-2. 确保使用了 `height` 属性（固定功能需要在滚动场景下）
-3. 检查是否有 CSS 冲突
-
-```javascript
-// ✅ 正确
-{ key: 'id', fixed: 'left', width: '80px' }
-
-// ❌ 错误 - 缺少 width
-{ key: 'id', fixed: 'left' }
-```
-
-### 3. 如何实现单选？
-
-**Q: 表格只支持多选吗？**
-
-A: 可以通过监听选择事件实现单选：
-
-```vue
-<script setup>
-const selectedKeys = ref([])
-
-const handleSelectionChange = (keys) => {
-  // 只保留最后一个选中项
-  selectedKeys.value = keys.slice(-1)
-}
-</script>
-
-<template>
-  <XTable 
-    row-selection
-    :selected-row-keys="selectedKeys"
-    @selection-change="handleSelectionChange"
-  />
-</template>
-```
-
-### 4. 表格滚动卡顿？
-
-**Q: 大数据量时滚动不流畅？**
-
-A: 优化建议：
-1. 使用分页，避免一次渲染过多行
-2. 设置固定列宽，避免动态计算
-3. 减少自定义插槽的复杂度
-4. 考虑使用虚拟滚动（需要自行实现）
-
-### 5. 如何实现展开行？
-
-**Q: 支持展开行功能吗？**
-
-A: 可以通过自定义单元格实现：
-
-```vue
-<template>
-  <XTable :columns="columns" :dataSource="dataSource">
-    <template #expand="{ record }">
-      <div v-if="expandedRows.includes(record.id)" style="padding: 12px; background: #fafafa;">
-        {{ record.detail }}
-      </div>
-    </template>
-  </XTable>
-</template>
-```
-
-### 6. 排序如何实现？
-
-**Q: 点击排序后数据没有变化？**
-
-A: 排序需要自己处理数据：
-
-```vue
-<script setup>
-const handleSortChange = (column, order) => {
-  if (!order) {
-    // 取消排序，恢复原始数据
-    dataSource.value = originalData
-  } else {
-    // 排序数据
-    dataSource.value = [...dataSource.value].sort((a, b) => {
-      return order === 'asc' 
-        ? a[column.dataIndex] - b[column.dataIndex]
-        : b[column.dataIndex] - a[column.dataIndex]
-    })
-  }
-}
-</script>
-```
-
-### 7. 如何自定义空状态？
-
-**Q: 空状态可以自定义吗？**
-
-A: 使用 `emptyText` 属性：
-
-```vue
-<XTable 
-  :dataSource="[]"
-  emptyText="没有找到匹配的数据"
-/>
-```
-
-### 8. 表格高度自适应？
-
-**Q: 如何让表格高度自适应容器？**
-
-A: 使用 CSS 变量或计算属性：
-
-```vue
-<script setup>
-const tableHeight = computed(() => `${window.innerHeight - 200}px`)
-</script>
-
-<template>
-  <XTable :height="tableHeight" />
-</template>
-```
 
 ## 贡献者
 

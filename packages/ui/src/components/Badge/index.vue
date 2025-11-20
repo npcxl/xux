@@ -55,28 +55,31 @@ const displayValue = computed(() => {
     right: 0;
     transform: translate(50%, -50%);
     border-radius: var(--x-radius-full, 10px);
-    min-width: 18px;
-    height: 18px;
+    min-width: 20px;
+    height: 20px;
     padding: 0 6px;
-    font-size: var(--x-font-size-xs, 12px);
-    font-weight: 500;
-    line-height: 18px;
-    color: var(--x-color-white, #fff);
-    background-color: var(--x-badge-bg, var(--x-color-danger, #ff4d4f));
+    font-size: var(--x-font-size-xs, 11px);
+    font-weight: 700;
+    line-height: 20px;
+    color: var(--x-color-white, #FFFFFF);
+    background-color: var(--x-badge-bg, var(--x-color-danger, #FF3B30));
     text-align: center;
     white-space: nowrap;
     box-sizing: border-box;
     z-index: 1;
-    transition: all var(--x-transition, 0.3s ease);
+    transition: all var(--x-transition);
+    box-shadow: 0 2px 6px rgba(255, 59, 48, 0.35), 0 0 0 2px var(--x-bg-color, #FFFFFF);
+    letter-spacing: -0.3px;
 }
 
 .x-badge__content--dot {
-    width: 8px;
-    height: 8px;
-    min-width: 8px;
+    width: 10px;
+    height: 10px;
+    min-width: 10px;
     padding: 0;
     border-radius: var(--x-radius-full, 50%);
     transform: translate(50%, -50%);
+    box-shadow: 0 2px 4px rgba(255, 59, 48, 0.3), 0 0 0 2px var(--x-bg-color, #FFFFFF);
 }
 
 .x-badge__content--number {
@@ -85,8 +88,9 @@ const displayValue = computed(() => {
 
 .x-badge__text {
     display: inline-block;
-    font-size: var(--x-font-size-xs, 12px);
+    font-size: var(--x-font-size-xs, 11px);
     line-height: 1;
+    font-weight: 700;
 }
 
 /* 当徽标内容为空时隐藏（但小红点模式除外） */

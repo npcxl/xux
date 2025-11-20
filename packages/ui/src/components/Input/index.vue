@@ -368,6 +368,33 @@ const handleChange = (event: Event) => {
 
 const handleBlur = (event: FocusEvent) => {
   isFocused.value = false
+  
+  // 数字输入框失去焦点时，自动限制到 min/max 范围
+  if (props.type === 'number' && props.modelValue !== '' && props.modelValue !== null && props.modelValue !== undefined) {
+    const val = Number(props.modelValue)
+    if (!isNaN(val)) {
+      let newValue = val
+      
+      // 限制最小值
+      if (val < props.min) {
+        newValue = props.min
+      }
+      // 限制最大值
+      if (val > props.max) {
+        newValue = props.max
+      }
+      
+      // 应用精度
+      const finalValue = toPrecision(newValue, props.precision)
+      
+      // 只在值改变时才触发更新
+      if (finalValue !== val) {
+        emit('update:modelValue', finalValue)
+        emit('change', finalValue, new Event('change'))
+      }
+    }
+  }
+  
   emit('blur', event)
 }
 
@@ -435,7 +462,7 @@ defineExpose({
   margin-bottom: 8px;
   line-height: 1.4;
   user-select: none;
-  transition: color 0.2s ease;
+  transition: color 0.15s ease;
 }
 
 .x-input-top-label--error {
@@ -465,22 +492,22 @@ defineExpose({
   display: flex;
   align-items: center;
   width: 100%;
-  background: var(--x-bg-color, #ffffff);
-  border: 2px solid var(--x-border-color, #e5e7eb);
-  border-radius: 10px;
-  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.02);
+  background: var(--x-bg-color, #FFFFFF);
+  border: 1.5px solid var(--x-border-color, #C6C6C8);
+  border-radius: var(--x-radius, 10px);
+  transition: all 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
 }
 
 .x-input-wrapper:hover:not(.x-input-wrapper--disabled) {
-  border-color: var(--x-border-color-light, #d1d5db);
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+  border-color: var(--x-border-color-dark, #AEAEB2);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
 }
 
 .x-input-wrapper--focused {
-  border-color: var(--x-color-primary, #1a1a1a);
-  background: var(--x-bg-color, #ffffff);
-  box-shadow: 0 0 0 3px rgba(26, 26, 26, 0.08), 0 4px 12px rgba(0, 0, 0, 0.08);
+  border-color: var(--x-color-primary, #007AFF);
+  background: var(--x-bg-color, #FFFFFF);
+  box-shadow: var(--x-shadow-focus-primary), 0 4px 12px rgba(0, 122, 255, 0.08);
 }
 
 /* ================================
@@ -499,7 +526,7 @@ defineExpose({
   font-family: inherit;
   line-height: 1.5;
   font-weight: 400;
-  transition: all 0.2s ease;
+  transition: none;
 }
 
 .x-input::placeholder {
@@ -530,25 +557,27 @@ defineExpose({
    尺寸变体
    ================================ */
 .x-input-wrapper--small {
-  min-height: 36px;
-  font-size: 13px;
+  min-height: 32px;
+  font-size: var(--x-font-size-sm, 13px);
+  border-radius: var(--x-radius-sm, 6px);
 }
 
 .x-input-wrapper--small .x-input {
-  padding: 8px 12px;
+  padding: 6px 10px;
 }
 
 .x-input-wrapper--small.x-input-wrapper--with-prefix .x-input {
-  padding-left: 36px;
+  padding-left: 32px;
 }
 
 .x-input-wrapper--small.x-input-wrapper--with-suffix .x-input {
-  padding-right: 36px;
+  padding-right: 32px;
 }
 
 .x-input-wrapper--medium {
-  min-height: 42px;
-  font-size: 14px;
+  min-height: 40px;
+  font-size: var(--x-font-size, 15px);
+  border-radius: var(--x-radius, 10px);
 }
 
 .x-input-wrapper--medium .x-input {
@@ -568,12 +597,13 @@ defineExpose({
 }
 
 .x-input-wrapper--large {
-  min-height: 48px;
-  font-size: 16px;
+  min-height: 50px;
+  font-size: var(--x-font-size-lg, 17px);
+  border-radius: var(--x-radius-md, 12px);
 }
 
 .x-input-wrapper--large .x-input {
-  padding: 12px 16px;
+  padding: 14px 16px;
 }
 
 .x-input-wrapper--large.x-input-wrapper--with-prefix .x-input {
@@ -589,7 +619,7 @@ defineExpose({
 }
 
 .x-input-wrapper--small .x-input[type="number"] {
-  padding-right: 44px;
+  padding-right: 40px;
 }
 
 /* ================================
@@ -597,49 +627,49 @@ defineExpose({
    ================================ */
 /* 禁用状态 */
 .x-input-wrapper--disabled {
-  background-color: var(--x-bg-color-disabled, #f9fafb);
-  border-color: var(--x-border-color, #e5e7eb);
+  background-color: var(--x-fill-color, #F2F2F7);
+  border-color: var(--x-border-color-lighter, #E5E5EA);
   cursor: not-allowed;
-  opacity: 0.6;
+  opacity: 0.5;
 }
 
 .x-input-wrapper--disabled:hover {
-  border-color: var(--x-border-color, #e5e7eb);
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.02);
+  border-color: var(--x-border-color-lighter, #E5E5EA);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
 }
 
 /* 错误状态 */
 .x-input-wrapper--error {
-  border-color: #fca5a5;
-  background: var(--x-fill-color-danger-lighter, #fef2f2);
+  border-color: var(--x-color-danger, #FF3B30);
+  background: var(--x-fill-color-danger-lighter, rgba(255, 59, 48, 0.05));
 }
 
 .x-input-wrapper--error:hover:not(.x-input-wrapper--disabled) {
-  border-color: var(--x-border-color-danger-light, #f87171);
-  box-shadow: 0 2px 6px rgba(239, 68, 68, 0.08);
+  border-color: var(--x-color-danger-light, #FF6259);
+  box-shadow: 0 2px 6px rgba(255, 59, 48, 0.1);
 }
 
 .x-input-wrapper--error.x-input-wrapper--focused {
-  border-color: var(--x-border-color-danger, #ef4444);
-  background: var(--x-bg-color, #ffffff);
-  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.10), 0 4px 12px rgba(239, 68, 68, 0.12);
+  border-color: var(--x-color-danger, #FF3B30);
+  background: var(--x-bg-color, #FFFFFF);
+  box-shadow: var(--x-shadow-focus-danger), 0 4px 12px rgba(255, 59, 48, 0.12);
 }
 
 /* 成功状态 */
 .x-input-wrapper--success {
-  border-color: var(--x-border-color-success, #86efac);
-  background: var(--x-fill-color-success-lighter, #f0fdf4);
+  border-color: var(--x-color-success, #34C759);
+  background: var(--x-fill-color-success-lighter, rgba(52, 199, 89, 0.05));
 }
 
 .x-input-wrapper--success:hover:not(.x-input-wrapper--disabled) {
-  border-color: var(--x-border-color-success-light, #4ade80);
-  box-shadow: 0 2px 6px rgba(16, 185, 129, 0.08);
+  border-color: var(--x-color-success-light, #5ED77E);
+  box-shadow: 0 2px 6px rgba(52, 199, 89, 0.1);
 }
 
 .x-input-wrapper--success.x-input-wrapper--focused {
-  border-color: var(--x-border-color-success, #10b981);
-  background: #ffffff;
-  box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.10), 0 4px 12px rgba(16, 185, 129, 0.12);
+  border-color: var(--x-color-success, #34C759);
+  background: var(--x-bg-color, #FFFFFF);
+  box-shadow: 0 0 0 4px rgba(52, 199, 89, 0.12), 0 4px 12px rgba(52, 199, 89, 0.12);
 }
 
 /* ================================
@@ -676,7 +706,7 @@ defineExpose({
 }
 
 .x-input-wrapper--focused .x-input-prefix {
-  color: var(--x-color-primary, #1a1a1a);
+  color: var(--x-color-primary, #007AFF);
 }
 
 .x-input-suffix {
@@ -758,8 +788,8 @@ defineExpose({
    加载图标
    ================================ */
 .x-input-icon--loading {
-  animation: x-input-rotate 1s linear infinite;
-  color: var(--x-color-primary, #1a1a1a);
+  animation: x-input-rotate 0.8s linear infinite;
+  color: var(--x-color-primary, #007AFF);
 }
 
 @keyframes x-input-rotate {
@@ -809,8 +839,8 @@ defineExpose({
 }
 
 .x-input-number-btn:hover:not(:disabled) {
-  color: var(--x-color-primary, #1a1a1a);
-  background-color: rgba(0, 0, 0, 0.06);
+  color: var(--x-color-primary, #007AFF);
+  background-color: var(--x-fill-color-primary-lighter, rgba(0, 122, 255, 0.08));
   transform: scale(1.1);
 }
 

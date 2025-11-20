@@ -6,6 +6,7 @@
       <div
         v-if="visible"
         class="modal-mask"
+        :class="{ 'modal-mask--hidden': !showMask }"
         :style="{ zIndex: modalZIndex }"
         @click="handleMaskClick"
       >
@@ -13,16 +14,28 @@
           :name="fullscreen ? 'modal-fullscreen' : 'modal'"
         >
           <div
+            ref="modalRef"
             class="modal-container"
             :class="[
               `modal-container--${size}`,
-              { 'modal-container--fullscreen': fullscreen }
+              { 'modal-container--fullscreen': fullscreen },
+              { 'modal-container--draggable': draggable && !fullscreen },
+              { 'modal-container--dragging': isDragging },
+              { 'modal-container--no-mask': !showMask }
             ]"
-            :style="{ width: width }"
+            :style="{ 
+              width: width,
+              transform: modalTransform
+            }"
             @click.stop
+            @mousedown="handleDragStart"
           >
             <!-- 头部 -->
-            <div v-if="showHeader" class="modal-header">
+            <div 
+              v-if="showHeader" 
+              class="modal-header"
+              :class="{ 'modal-header--draggable': draggable && !fullscreen }"
+            >
               <slot name="header">
                 <h3 class="modal-title">{{ title }}</h3>
               </slot>
@@ -91,7 +104,7 @@ const updateStack = () => {
 </script>
 
 <script setup lang="ts">
-import { watch, onMounted, onUnmounted, computed } from 'vue'
+import { watch, onMounted, onUnmounted, computed, ref } from 'vue'
 import { Icon } from '@iconify/vue'
 
 /**
@@ -115,6 +128,10 @@ export interface ModalProps {
   confirmLoading?: boolean
   maskClosable?: boolean
   escClosable?: boolean
+  /** 是否可拖拽 */
+  draggable?: boolean
+  /** 是否显示蒙版 */
+  showMask?: boolean
 }
 
 const props = withDefaults(defineProps<ModalProps>(), {
@@ -131,7 +148,9 @@ const props = withDefaults(defineProps<ModalProps>(), {
   confirmText: '确定',
   confirmLoading: false,
   maskClosable: true,
-  escClosable: true
+  escClosable: true,
+  draggable: false,
+  showMask: true
 })
 
 const emit = defineEmits<{
@@ -155,6 +174,56 @@ const modalZIndex = computed(() => {
   stackVersion.value
   const index = modalStack.indexOf(modalId)
   return index >= 0 ? BASE_Z_INDEX + index : BASE_Z_INDEX
+})
+
+// 拖拽相关状态
+const isDragging = ref(false)
+const dragOffset = ref({ x: 0, y: 0 })
+const modalPosition = ref({ x: 0, y: 0 })
+const modalRef = ref<HTMLElement | null>(null)
+
+// 拖拽开始
+const handleDragStart = (e: MouseEvent) => {
+  if (!props.draggable || props.fullscreen) return
+  
+  const target = e.target as HTMLElement
+  // 只有点击标题栏时才能拖拽
+  if (!target.closest('.modal-header')) return
+  
+  isDragging.value = true
+  dragOffset.value = {
+    x: e.clientX - modalPosition.value.x,
+    y: e.clientY - modalPosition.value.y
+  }
+  
+  document.addEventListener('mousemove', handleDragMove)
+  document.addEventListener('mouseup', handleDragEnd)
+  e.preventDefault()
+}
+
+// 拖拽移动
+const handleDragMove = (e: MouseEvent) => {
+  if (!isDragging.value) return
+  
+  modalPosition.value = {
+    x: e.clientX - dragOffset.value.x,
+    y: e.clientY - dragOffset.value.y
+  }
+}
+
+// 拖拽结束
+const handleDragEnd = () => {
+  isDragging.value = false
+  document.removeEventListener('mousemove', handleDragMove)
+  document.removeEventListener('mouseup', handleDragEnd)
+}
+
+// 计算Modal的transform样式
+const modalTransform = computed(() => {
+  if (props.fullscreen || (!props.draggable && modalPosition.value.x === 0 && modalPosition.value.y === 0)) {
+    return ''
+  }
+  return `translate(${modalPosition.value.x}px, ${modalPosition.value.y}px)`
 })
 
 const handleClose = () => {
@@ -218,6 +287,9 @@ watch(() => props.visible, (val) => {
       document.body.style.overflow = 'hidden'
     }
     
+    // 重置拖拽位置
+    modalPosition.value = { x: 0, y: 0 }
+    
     emit('opened')
   } else {
     // 关闭弹框：从栈中移除
@@ -240,6 +312,8 @@ onMounted(() => {
 // 组件卸载时移除事件监听和栈中的记录
 onUnmounted(() => {
   document.removeEventListener('keydown', handleGlobalEsc)
+  document.removeEventListener('mousemove', handleDragMove)
+  document.removeEventListener('mouseup', handleDragEnd)
   removeFromStack()
   
   // 如果是最后一个 Modal 被卸载，恢复 body 滚动
@@ -257,11 +331,11 @@ defineExpose({
 <style scoped>
 /* 遮罩层动画 - 渐显渐隐 */
 .modal-mask-enter-active {
-  animation: maskFadeIn 0.3s ease-out;
+  animation: maskFadeIn 0.25s ease-out;
 }
 
 .modal-mask-leave-active {
-  animation: maskFadeOut 0.2s ease-in;
+  animation: maskFadeOut 0.2s ease-out;
 }
 
 @keyframes maskFadeIn {
@@ -288,91 +362,117 @@ defineExpose({
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: var(--x-modal-mask-bg, rgba(0, 0, 0, 0.6));
-  backdrop-filter: blur(8px);
+  background-color: var(--x-mask-color, rgba(0, 0, 0, 0.4));
+  backdrop-filter: blur(20px);
   /* z-index 由组件动态设置 */
   display: flex;
   align-items: center;
   justify-content: center;
-  perspective: 2000px;
 }
 
-/* 普通模态框动画 - 弹出/缩放效果 */
+/* 隐藏蒙版 - 只保留一点点暗色来区分层级 */
+.modal-mask--hidden {
+  background-color: rgba(0, 0, 0, 0.05);
+  backdrop-filter: none;
+}
+
+/* 普通模态框动画 - 从上方滑入 */
 .modal-enter-active {
-  animation: modalPopIn 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  animation: modalSlideIn 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
 
 .modal-leave-active {
-  animation: modalPopOut 0.2s cubic-bezier(0.55, 0.055, 0.675, 0.19);
+  animation: modalSlideOut 0.25s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
 
-@keyframes modalPopIn {
+@keyframes modalSlideIn {
   0% {
     opacity: 0;
-    transform: scale(0.9) translateY(-20px);
+    transform: translateY(-10px) scale(0.98);
   }
   
   100% {
     opacity: 1;
-    transform: scale(1) translateY(0);
+    transform: translateY(0) scale(1);
   }
 }
 
-@keyframes modalPopOut {
+@keyframes modalSlideOut {
   0% {
     opacity: 1;
-    transform: scale(1) translateY(0);
+    transform: translateY(0) scale(1);
   }
   
   100% {
     opacity: 0;
-    transform: scale(0.9) translateY(-20px);
+    transform: translateY(-8px) scale(0.98);
   }
 }
 
-/* 全屏模态框动画 - 弹出展开效果 */
+/* 全屏模态框动画 - 从上方滑入 */
 .modal-fullscreen-enter-active {
-  animation: fullscreenPopIn 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  animation: fullscreenSlideIn 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
 
 .modal-fullscreen-leave-active {
-  animation: fullscreenPopOut 0.2s cubic-bezier(0.55, 0.055, 0.675, 0.19);
+  animation: fullscreenSlideOut 0.25s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
 
-@keyframes fullscreenPopIn {
+@keyframes fullscreenSlideIn {
   0% {
     opacity: 0;
-    transform: scale(0.95);
+    transform: translateY(-10px);
   }
   
   100% {
     opacity: 1;
-    transform: scale(1);
+    transform: translateY(0);
   }
 }
 
-@keyframes fullscreenPopOut {
+@keyframes fullscreenSlideOut {
   0% {
     opacity: 1;
-    transform: scale(1);
+    transform: translateY(0);
   }
   
   100% {
     opacity: 0;
-    transform: scale(0.95);
+    transform: translateY(-8px);
   }
 }
 
 .modal-container {
   position: relative;
-  background: var(--x-bg-color,#1f1f1f);
-  border-radius: var(--x-radius-md, 8px);
+  background: var(--x-bg-color, #FFFFFF);
+  border-radius: var(--x-radius-lg, 14px);
   max-width: 100%;
   max-height: calc(100vh - 40px);
   display: flex;
   flex-direction: column;
   overflow: hidden;
-  border: 1px solid rgba(255, 255, 255, 0.3);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3), 0 4px 16px rgba(0, 0, 0, 0.2);
+  border: 1px solid var(--x-border-color-lighter, #E5E5E7);
+  transition: box-shadow 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+/* 可拖拽的Modal */
+.modal-container--draggable {
+  cursor: default;
+}
+
+/* 拖拽中的Modal */
+.modal-container--dragging {
+  box-shadow: 0 25px 80px rgba(0, 0, 0, 0.4), 0 8px 24px rgba(0, 0, 0, 0.25);
+  cursor: move;
+  user-select: none;
+}
+
+/* 无蒙版时的Modal - 加强阴影来区分层级 */
+.modal-container--no-mask {
+  box-shadow: 0 30px 90px rgba(0, 0, 0, 0.35), 
+              0 10px 30px rgba(0, 0, 0, 0.25),
+              0 0 0 1px rgba(0, 0, 0, 0.05);
 }
 
 
@@ -396,20 +496,19 @@ defineExpose({
   max-height: 100vh;
   border-radius: 0;
   margin: 0;
+  border: none;
 }
 
 .modal-container--fullscreen .modal-header {
-  padding: 24px 32px;
-  background: var(--x-gradient-bg-light, linear-gradient(to bottom, #fafafa, #ffffff));
+  padding: 20px 28px;
 }
 
 .modal-container--fullscreen .modal-body {
-  padding: 32px;
+  padding: 28px;
 }
 
 .modal-container--fullscreen .modal-footer {
-  padding: 20px 32px;
-  background: var(--x-gradient-bg-light, linear-gradient(to top, #fafafa, #ffffff));
+  padding: 16px 28px;
 }
 
 .modal-header {
@@ -417,46 +516,25 @@ defineExpose({
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 24px 28px;
-  border-bottom: 1px solid var(--x-color-gray-200, rgba(229, 231, 235, 0.6));
+  padding: 16px 20px;
   flex-shrink: 0;
-  background: var(--x-gradient-bg-light, linear-gradient(to bottom, #fafafa, #ffffff));
-
-  backdrop-filter: blur(10px);
+  background: var(--x-bg-color, #FFFFFF);
   z-index: 1;
 }
 
-.modal-header::after {
-  content: '';
-  position: absolute;
-  bottom: -1px;
-  left: 0;
-  right: 0;
-  height: 1px;
-  background: linear-gradient(
-    90deg,
-    transparent 0%,
-    rgba(59, 130, 246, 0.3) 20%,
-    rgba(147, 51, 234, 0.2) 50%,
-    rgba(59, 130, 246, 0.3) 80%,
-    transparent 100%
-  );
+/* 可拖拽的标题栏 */
+.modal-header--draggable {
+  cursor: move;
+  user-select: none;
 }
 
 .modal-title {
-  font-size: var(--x-font-size-lg, 20px);
-  font-weight: 700;
-  background: linear-gradient(
-    135deg,
-    var(--x-color-gray-900, #1a1a1a) 0%,
-    var(--x-color-gray-700, #374151) 100%
-  );
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+  font-size: var(--x-font-size-lg, 17px);
+  font-weight: 600;
+  font-family: var(--x-font-family);
+  color: var(--x-text-color-primary);
   margin: 0;
-  letter-spacing: -0.02em;
-  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  letter-spacing: -0.4px;
 }
 
 .modal-close {
@@ -464,67 +542,43 @@ defineExpose({
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 36px;
-  height: 36px;
+  width: 32px;
+  height: 32px;
   padding: 0;
-  border: 1px solid transparent;
-  background: rgba(0, 0, 0, 0.02);
-  color: var(--x-color-gray-500, #6b7280);
+  border: none;
+  background: var(--x-fill-color);
+  color: var(--x-text-color-secondary, #8E8E93);
   cursor: pointer;
-  border-radius: var(--x-radius-md, 8px);
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  overflow: hidden;
-}
-
-.modal-close::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(
-    135deg,
-    rgba(59, 130, 246, 0.1) 0%,
-    rgba(147, 51, 234, 0.1) 100%
-  );
-  opacity: 0;
-  transition: opacity 0.3s ease;
+  border-radius: 50%;
+  transition: all 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
 
 .modal-close:hover {
-  background: linear-gradient(
-    135deg,
-    rgba(239, 68, 68, 0.1) 0%,
-    rgba(220, 38, 38, 0.08) 100%
-  );
-  color: var(--x-color-red-600, #dc2626);
-  border-color: rgba(239, 68, 68, 0.2);
-  transform: scale(1.05) rotate(90deg);
-  box-shadow: 
-    0 4px 12px rgba(239, 68, 68, 0.15),
-    inset 0 1px 0 rgba(255, 255, 255, 0.5);
-}
-
-.modal-close:hover::before {
-  opacity: 1;
+  background: var(--x-fill-color-hover);
+  color: var(--x-text-color-primary);
+  transform: scale(1.1);
 }
 
 .modal-close:active {
-  transform: scale(0.95) rotate(90deg);
+  transform: scale(0.95);
 }
 
 .modal-body {
   position: relative;
   flex: 1;
-  padding: 28px;
+  padding: 20px;
   overflow-y: auto;
-  color: var(--x-color-gray-700, #374151);
+  font-family: var(--x-font-family);
+  color: var(--x-text-color-regular);
+  line-height: 1.5;
   z-index: 1;
   /* 美化滚动条 */
   scrollbar-width: thin;
-  scrollbar-color: rgba(59, 130, 246, 0.3) transparent;
+  scrollbar-color: rgba(142, 142, 147, 0.3) transparent;
 }
 
 .modal-body::-webkit-scrollbar {
-  width: 8px;
+  width: 6px;
 }
 
 .modal-body::-webkit-scrollbar-track {
@@ -532,21 +586,13 @@ defineExpose({
 }
 
 .modal-body::-webkit-scrollbar-thumb {
-  background: linear-gradient(
-    180deg,
-    rgba(59, 130, 246, 0.4) 0%,
-    rgba(147, 51, 234, 0.3) 100%
-  );
-  border-radius: 4px;
-  transition: background 0.3s ease;
+  background: rgba(142, 142, 147, 0.3);
+  border-radius: 3px;
+  transition: background 0.2s ease;
 }
 
 .modal-body::-webkit-scrollbar-thumb:hover {
-  background: linear-gradient(
-    180deg,
-    rgba(59, 130, 246, 0.6) 0%,
-    rgba(147, 51, 234, 0.5) 100%
-  );
+  background: rgba(142, 142, 147, 0.5);
 }
 
 .modal-footer {
@@ -554,30 +600,11 @@ defineExpose({
   display: flex;
   align-items: center;
   justify-content: flex-end;
-  gap: 14px;
-  padding: 20px 28px;
-  border-top: 1px solid var(--x-color-gray-200, rgba(229, 231, 235, 0.6));
+  gap: 10px;
+  padding: 12px 20px 16px;
   flex-shrink: 0;
-  background: var(--x-gradient-bg-light, linear-gradient(to top, #fafafa, #ffffff));
-  backdrop-filter: blur(10px);
+  background: var(--x-bg-color, #FFFFFF);
   z-index: 1;
-}
-
-.modal-footer::before {
-  content: '';
-  position: absolute;
-  top: -1px;
-  left: 0;
-  right: 0;
-  height: 1px;
-  background: linear-gradient(
-    90deg,
-    transparent 0%,
-    var(--x-color-primary, #1a1a1a) 20%,
-    var(--x-color-secondary, #4a90e2) 50%,
-    var(--x-color-primary, #1a1a1a) 80%,
-    transparent 100%
-  );
 }
 
 .modal-btn {
@@ -620,74 +647,20 @@ defineExpose({
 }
 
 .loading-spinner {
-  width: 18px;
-  height: 18px;
-  border: 2.5px solid transparent;
-  border-top-color: rgba(255, 255, 255, 0.9);
-  border-right-color: rgba(255, 255, 255, 0.6);
-  border-bottom-color: rgba(255, 255, 255, 0.3);
-  border-left-color: rgba(255, 255, 255, 0.1);
+  width: 16px;
+  height: 16px;
+  border: 2px solid transparent;
+  border-top-color: currentColor;
   border-radius: 50%;
-  animation: 
-    epicSpin 0.8s cubic-bezier(0.4, 0, 0.2, 1) infinite,
-    spinPulse 1.6s ease-in-out infinite;
-  box-shadow: 
-    0 0 8px rgba(255, 255, 255, 0.3),
-    inset 0 0 8px rgba(255, 255, 255, 0.2);
-  position: relative;
+  animation: spin 0.8s linear infinite;
 }
 
-.loading-spinner::before {
-  content: '';
-  position: absolute;
-  inset: -4px;
-  border: 1px solid transparent;
-  border-top-color: rgba(59, 130, 246, 0.4);
-  border-radius: 50%;
-  animation: epicSpin 1.2s cubic-bezier(0.4, 0, 0.2, 1) infinite reverse;
-}
-
-.loading-spinner::after {
-  content: '';
-  position: absolute;
-  inset: 2px;
-  background: radial-gradient(
-    circle,
-    rgba(255, 255, 255, 0.8) 0%,
-    transparent 70%
-  );
-  border-radius: 50%;
-  animation: spinGlow 1.6s ease-in-out infinite;
-}
-
-@keyframes epicSpin {
+@keyframes spin {
   0% {
     transform: rotate(0deg);
   }
   100% {
     transform: rotate(360deg);
-  }
-}
-
-@keyframes spinPulse {
-  0%, 100% {
-    border-width: 2.5px;
-    opacity: 1;
-  }
-  50% {
-    border-width: 3px;
-    opacity: 0.8;
-  }
-}
-
-@keyframes spinGlow {
-  0%, 100% {
-    opacity: 0.3;
-    transform: scale(0.8);
-  }
-  50% {
-    opacity: 0.6;
-    transform: scale(1.2);
   }
 }
 

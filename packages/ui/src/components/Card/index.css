@@ -2,17 +2,18 @@
 
 /* 基础卡片容器 */
 .x-card {
-  background: var(--x-color-white, #fff);
-  border-radius: var(--x-radius-lg, 12px);
+  background: var(--x-bg-color, #FFFFFF);
+  border-radius: var(--x-radius-lg, 14px);
   overflow: hidden;
-  transition: all var(--x-transition, 0.3s);
-  box-shadow: var(--x-shadow-sm, 0 1px 2px 0 rgba(0, 0, 0, 0.05));
+  transition: all var(--x-transition);
+  box-shadow: var(--x-shadow, 0 2px 8px rgba(0, 0, 0, 0.08));
   cursor: pointer;
+  border: 1px solid var(--x-border-color-lighter, #E5E5EA);
 }
 
 .x-card:hover {
-  box-shadow: var(--x-shadow-md, 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06));
-  transform: translateY(-2px);
+  box-shadow: var(--x-shadow-md, 0 4px 16px rgba(0, 0, 0, 0.12));
+  transform: translateY(-3px) scale(1.01);
 }
 
 /* 图片容器包装 */
@@ -25,8 +26,8 @@
 .x-card-image {
   position: relative;
   overflow: hidden;
-  border-radius: var(--x-radius-md, 8px);
-  background-color: var(--x-fill-color, #f3f4f6);
+  border-radius: var(--x-radius-md, 12px);
+  background-color: var(--x-fill-color, #F2F2F7);
   aspect-ratio: 1 / 1;
 }
 
@@ -34,11 +35,11 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
-  transition: transform var(--x-transition, 0.3s);
+  transition: transform var(--x-transition);
 }
 
 .x-card:hover .x-card-image img {
-  transform: scale(1.05);
+  transform: scale(1.08);
 }
 
 /* 标签徽章 */
@@ -51,12 +52,14 @@
 
 .x-card-badge {
   display: inline-block;
-  background: var(--x-color-primary, #1a1a1a);
-  color: var(--x-color-white, #fff);
-  font-size: var(--x-font-size-xs, 12px);
-  padding: 4px 8px;
-  border-radius: var(--x-radius-sm, 4px);
-  font-weight: 500;
+  background: var(--x-color-primary, #007AFF);
+  color: var(--x-color-white, #FFFFFF);
+  font-size: var(--x-font-size-xs, 11px);
+  padding: 4px 10px;
+  border-radius: var(--x-radius-full, 12px);
+  font-weight: 600;
+  letter-spacing: -0.2px;
+  box-shadow: 0 2px 6px rgba(0, 122, 255, 0.3);
 }
 
 /* 卡片内容 */
@@ -98,9 +101,10 @@
 }
 
 .x-card-price {
-  font-size: var(--x-font-size-lg, 18px);
+  font-size: var(--x-font-size-lg, 17px);
   font-weight: 700;
-  color: var(--x-color-primary, #1a1a1a);
+  color: var(--x-color-primary, #007AFF);
+  letter-spacing: -0.5px;
 }
 
 /* 收藏按钮 */
@@ -115,15 +119,15 @@
 }
 
 .x-card-like-icon.is-liked {
-  color: var(--x-color-danger, #ef4444);
+  color: var(--x-color-danger, #FF3B30);
 }
 
 .x-card-like-icon:not(.is-liked) {
-  color: var(--x-text-color-placeholder, #9ca3af);
+  color: var(--x-text-color-placeholder, #8E8E93);
 }
 
 .x-card-like-btn:hover .x-card-like-icon {
-  transform: scale(1.15);
+  transform: scale(1.2);
 }
 
 /* 光效蒙版动画 */
@@ -176,9 +180,9 @@
   align-items: center;
   justify-content: center;
   font-size: var(--x-font-size-2xl, 24px);
-  color: var(--x-color-primary, #1a1a1a);
-  background: var(--x-fill-color, #f3f4f6);
-  border-radius: var(--x-radius-md, 8px);
+  color: var(--x-color-primary, #007AFF);
+  background: var(--x-fill-color-primary-lighter, rgba(0, 122, 255, 0.08));
+  border-radius: var(--x-radius-md, 12px);
 }
 
 .x-card-info .x-card-content {

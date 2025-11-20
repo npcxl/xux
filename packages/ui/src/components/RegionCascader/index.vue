@@ -182,7 +182,6 @@
 import { ref, computed, watch, nextTick } from 'vue'
 import { ElPopover } from 'element-plus'
 import chinaAreasData from './data/china-areas.full.json'
-import './index.css'
 
 interface AreaNode {
   value: string
@@ -1083,3 +1082,674 @@ defineExpose({
   clearCache: () => childrenCache.clear()
 })
 </script>
+
+<style scoped>
+/* iOS 风格地区级联选择器 */
+
+/* 全局样式 - 自定义 Element Plus Popover */
+:global(.x-region-cascader-popper) {
+  padding: 0 !important;
+  border-radius: var(--x-radius-lg, 14px) !important;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12), 0 2px 8px rgba(0, 0, 0, 0.04) !important;
+  border: 1px solid var(--x-border-color-light, rgba(0, 0, 0, 0.04)) !important;
+  animation: dropdown-fade-in 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  overflow: hidden;
+}
+
+:global(.x-region-cascader-popper .el-popper__arrow) {
+  display: none !important;
+}
+
+@keyframes dropdown-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(-8px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* iOS 输入框 */
+.x-region-input {
+  position: relative;
+  width: 100%;
+  min-height: 44px;
+  padding: 12px 16px;
+  border: 1px solid var(--x-border-color-light, #F0F0F5);
+  border-radius: var(--x-radius, 10px);
+  background-color: var(--x-bg-color, #FAFAFA);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-family: var(--x-font-family, -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Segoe UI', Roboto, sans-serif);
+  transition: all var(--x-transition, 0.3s ease);
+  outline: none;
+  user-select: none;
+  overflow: hidden;
+}
+
+.x-region-input::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: linear-gradient(135deg, transparent 0%, var(--x-color-primary, #4A90E2) 100%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+}
+
+.x-region-input:hover:not(.is-disabled) {
+  border-color: var(--x-color-primary-light, #E6F2FF);
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  background-color: var(--x-bg-color, #FFFFFF);
+}
+
+.x-region-input:hover:not(.is-disabled)::before {
+  opacity: 0.01;
+}
+
+.x-region-input:focus {
+  outline: none;
+  border-color: var(--x-color-primary, #4A90E2);
+  box-shadow: 0 0 0 2px var(--x-color-primary-opacity, rgba(74, 144, 226, 0.08));
+}
+
+.x-region-input.is-disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  background-color: var(--x-fill-color-light, #F2F2F7);
+}
+
+/* 输入框内容 */
+.x-region-input-content {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex: 1;
+  overflow: hidden;
+}
+
+.x-region-input-value {
+  font-size: var(--x-font-size, 15px);
+  color: var(--x-text-color-primary, #1C1C1E);
+  font-weight: 500;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  letter-spacing: -0.3px;
+  animation: value-fade-in 0.3s ease-out;
+}
+
+@keyframes value-fade-in {
+  from {
+    opacity: 0;
+    transform: translateX(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.x-region-input-placeholder {
+  font-size: var(--x-font-size, 15px);
+  color: var(--x-text-color-placeholder, #8E8E93);
+  letter-spacing: -0.2px;
+}
+
+/* iOS 箭头图标 */
+.x-region-input-arrow {
+  width: 20px;
+  height: 20px;
+  color: var(--x-text-color-secondary, #3C3C43);
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  flex-shrink: 0;
+  opacity: 0.6;
+}
+
+.x-region-input-arrow.is-open {
+  transform: rotate(180deg);
+  color: var(--x-color-primary, #007AFF);
+  opacity: 1;
+}
+
+/* iOS 下拉框容器 */
+.x-region-dropdown {
+  background-color: var(--x-bg-color, #FFFFFF);
+  border-radius: var(--x-radius-lg, 14px);
+  min-width: 320px;
+  width: max-content;
+  max-width: 90vw;
+  font-family: var(--x-font-family, -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Segoe UI', Roboto, sans-serif);
+  overflow: hidden;
+}
+
+/* iOS 搜索区域 */
+.x-region-search {
+  padding: 16px;
+  background-color: var(--x-fill-color-lighter, #FAFAFC);
+  border-bottom: 1px solid var(--x-border-color, rgba(0, 0, 0, 0.04));
+  backdrop-filter: blur(20px);
+  animation: search-slide-down 0.3s ease-out;
+}
+
+@keyframes search-slide-down {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.x-region-search-wrapper {
+  position: relative;
+}
+
+/* iOS 搜索输入框 */
+.x-region-search-input {
+  width: 100%;
+  padding: 10px 40px;
+  font-size: var(--x-font-size, 15px);
+  border: none;
+  border-radius: var(--x-radius-sm, 8px);
+  background-color: var(--x-bg-color-secondary, rgba(255, 255, 255, 0.8));
+  backdrop-filter: blur(10px);
+  transition: all var(--x-transition, 0.3s ease);
+  outline: none;
+  letter-spacing: -0.3px;
+}
+
+.x-region-search-input:focus {
+  outline: none;
+  background-color: var(--x-bg-color, #FFFFFF);
+  box-shadow: 0 0 0 3px var(--x-color-primary-opacity, rgba(0, 122, 255, 0.15));
+}
+
+.x-region-search-input::placeholder {
+  color: var(--x-text-color-placeholder, #8E8E93);
+  letter-spacing: -0.2px;
+}
+
+/* iOS 搜索图标 */
+.x-region-search-icon {
+  position: absolute;
+  left: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 18px;
+  height: 18px;
+  color: var(--x-text-color-secondary, #8E8E93);
+  pointer-events: none;
+}
+
+/* iOS 清除按钮 */
+.x-region-search-clear {
+  position: absolute;
+  right: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 28px;
+  height: 28px;
+  color: var(--x-text-color-secondary, #8E8E93);
+  cursor: pointer;
+  background-color: var(--x-fill-color, #E5E5EA);
+  border: none;
+  border-radius: var(--x-radius-full, 50%);
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  animation: clear-scale-in 0.2s ease-out;
+}
+
+@keyframes clear-scale-in {
+  from {
+    opacity: 0;
+    transform: translateY(-50%) scale(0.8);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(-50%) scale(1);
+  }
+}
+
+.x-region-search-clear:hover {
+  background-color: var(--x-fill-color-darker, #D1D1D6);
+  transform: translateY(-50%) scale(1.1);
+}
+
+.x-region-search-clear:active {
+  transform: translateY(-50%) scale(0.95);
+}
+
+.x-region-search-clear svg {
+  width: 14px;
+  height: 14px;
+}
+
+/* 当前路径提示 */
+.x-region-current-path {
+  margin-top: 10px;
+  padding: 8px 12px;
+  font-size: 13px;
+  color: var(--x-text-color-secondary, #8E8E93);
+  background-color: var(--x-bg-color-secondary, rgba(0, 122, 255, 0.05));
+  border-radius: var(--x-radius-sm, 8px);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  animation: path-fade-in 0.3s ease-out 0.1s both;
+}
+
+@keyframes path-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.x-region-current-path-label {
+  font-weight: 600;
+  color: var(--x-color-primary, #007AFF);
+  letter-spacing: -0.3px;
+}
+
+/* iOS 搜索结果 */
+.x-region-search-results {
+  max-height: 420px;
+  overflow-y: auto;
+  min-width: 500px;
+  background-color: var(--x-bg-color, #FFFFFF);
+  animation: results-expand 0.3s ease-out;
+}
+
+@keyframes results-expand {
+  from {
+    opacity: 0;
+    max-height: 0;
+  }
+  to {
+    opacity: 1;
+    max-height: 420px;
+  }
+}
+
+.x-region-search-header {
+  padding: 12px 16px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--x-text-color-secondary, #8E8E93);
+  background-color: var(--x-fill-color-lighter, #F9F9F9);
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  letter-spacing: -0.2px;
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--x-border-color-light, rgba(0, 0, 0, 0.04));
+}
+
+/* iOS 搜索项 */
+.x-region-search-item {
+  padding: 14px 16px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border-bottom: 1px solid var(--x-border-color-light, rgba(0, 0, 0, 0.04));
+  position: relative;
+  overflow: hidden;
+}
+
+.x-region-search-item::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-color: var(--x-fill-color-hover, rgba(0, 122, 255, 0.04));
+  transform: translateX(-100%);
+  transition: transform 0.3s ease;
+}
+
+.x-region-search-item:hover::before {
+  transform: translateX(0);
+}
+
+.x-region-search-item:hover {
+  background-color: var(--x-fill-color-light, #F2F2F7);
+}
+
+.x-region-search-item:active {
+  background-color: var(--x-fill-color, #E5E5EA);
+  transform: scale(0.99);
+}
+
+.x-region-search-item-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: relative;
+  z-index: 1;
+}
+
+.x-region-search-item-main {
+  flex: 1;
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+}
+
+.x-region-search-item-label {
+  font-size: var(--x-font-size, 15px);
+  font-weight: 500;
+  color: var(--x-text-color-primary, #1C1C1E);
+  letter-spacing: -0.3px;
+}
+
+.x-region-search-item-level {
+  font-size: 12px;
+  padding: 2px 8px;
+  border-radius: var(--x-radius-xs, 4px);
+  background-color: var(--x-fill-color, #E5E5EA);
+  color: var(--x-text-color-secondary, #8E8E93);
+  font-weight: 500;
+}
+
+.x-region-search-item-path {
+  font-size: 13px;
+  color: var(--x-text-color-secondary, #8E8E93);
+  margin-top: 6px;
+  letter-spacing: -0.2px;
+  opacity: 0.8;
+}
+
+/* iOS 级联列表 */
+.x-region-cascader-lists {
+  display: flex;
+  min-width: 480px;
+  background-color: var(--x-bg-color, #FFFFFF);
+  animation: lists-fade-in 0.3s ease-out;
+}
+
+@keyframes lists-fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* iOS 列表 */
+.x-region-list {
+  flex: 1;
+  border-right: 1px solid var(--x-border-color-light, rgba(0, 0, 0, 0.08));
+  max-height: 360px;
+  overflow-y: auto;
+  min-width: 160px;
+  background-color: var(--x-bg-color, #FFFFFF);
+  position: relative;
+  scroll-behavior: smooth;
+}
+
+.x-region-list:last-child {
+  border-right: none;
+}
+
+/* iOS 列表项 */
+.x-region-list-item {
+  padding: 14px 16px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+  font-size: var(--x-font-size, 15px);
+  color: var(--x-text-color-primary, #1C1C1E);
+  position: relative;
+  overflow: hidden;
+  letter-spacing: -0.3px;
+}
+
+.x-region-list-item::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, transparent 0%, var(--x-color-primary, #007AFF) 50%, transparent 100%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  transform: scaleX(0);
+}
+
+.x-region-list-item:hover {
+  background-color: var(--x-fill-color-light, #F2F2F7);
+  padding-left: 20px;
+}
+
+.x-region-list-item:active {
+  background-color: var(--x-fill-color, #E5E5EA);
+  transform: scale(0.98);
+}
+
+.x-region-list-item.is-selected {
+  background-color: var(--x-color-primary-light, #F6F9FF);
+  color: var(--x-color-primary, #4A90E2);
+  font-weight: 500;
+  position: relative;
+  padding-left: 24px;
+}
+
+.x-region-list-item.is-selected::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 3px;
+  background-color: var(--x-color-primary, #4A90E2);
+  animation: selected-slide-in 0.3s ease-out;
+}
+
+@keyframes selected-slide-in {
+  from {
+    transform: scaleY(0);
+  }
+  to {
+    transform: scaleY(1);
+  }
+}
+
+/* iOS 加载状态 */
+.x-region-loading {
+  padding: 60px 24px;
+  text-align: center;
+  animation: loading-fade-in 0.3s ease-out;
+}
+
+@keyframes loading-fade-in {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.x-region-loading-text {
+  font-size: var(--x-font-size, 15px);
+  color: var(--x-text-color-secondary, #8E8E93);
+  margin-bottom: 8px;
+  font-weight: 500;
+  letter-spacing: -0.3px;
+}
+
+.x-region-loading-desc {
+  font-size: 13px;
+  color: var(--x-text-color-placeholder, #C7C7CC);
+  letter-spacing: -0.2px;
+}
+
+/* 加载动画 */
+.x-region-loading::before {
+  content: '';
+  display: block;
+  width: 48px;
+  height: 48px;
+  margin: 0 auto 20px;
+  border: 3px solid var(--x-border-color-light, #E5E5EA);
+  border-radius: 50%;
+  border-top-color: var(--x-color-primary, #007AFF);
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* iOS 空状态 */
+.x-region-empty {
+  padding: 60px 24px;
+  text-align: center;
+  color: var(--x-text-color-placeholder, #8E8E93);
+}
+
+.x-region-empty-text {
+  font-size: var(--x-font-size, 15px);
+  font-weight: 500;
+  letter-spacing: -0.3px;
+}
+
+/* 高亮文本 */
+.x-region-highlight {
+  background-color: var(--x-color-warning-light, #FFEB3B);
+  color: var(--x-text-color-primary, #1C1C1E);
+  font-weight: 600;
+  padding: 0 2px;
+  border-radius: 2px;
+  animation: highlight-pulse 0.3s ease-out;
+}
+
+@keyframes highlight-pulse {
+  from {
+    background-color: var(--x-color-warning, #FFC107);
+  }
+  to {
+    background-color: var(--x-color-warning-light, #FFEB3B);
+  }
+}
+
+/* iOS 风格滚动条 */
+.x-region-list::-webkit-scrollbar,
+.x-region-search-results::-webkit-scrollbar {
+  width: 6px;
+  background-color: transparent;
+}
+
+.x-region-list::-webkit-scrollbar-track,
+.x-region-search-results::-webkit-scrollbar-track {
+  background-color: transparent;
+}
+
+.x-region-list::-webkit-scrollbar-thumb,
+.x-region-search-results::-webkit-scrollbar-thumb {
+  background-color: var(--x-scrollbar-color, rgba(0, 0, 0, 0.2));
+  border-radius: 3px;
+  transition: background-color 0.2s;
+}
+
+.x-region-list:hover::-webkit-scrollbar-thumb,
+.x-region-search-results:hover::-webkit-scrollbar-thumb {
+  background-color: var(--x-scrollbar-hover-color, rgba(0, 0, 0, 0.3));
+}
+
+/* 响应式优化 */
+@media (max-width: 768px) {
+  .x-region-dropdown {
+    min-width: 280px;
+  }
+  
+  .x-region-cascader-lists {
+    min-width: 280px;
+    flex-direction: column;
+    max-height: 400px;
+  }
+  
+  .x-region-list {
+    border-right: none;
+    border-bottom: 1px solid var(--x-border-color-light, rgba(0, 0, 0, 0.08));
+    max-height: 200px;
+    min-width: auto;
+  }
+  
+  .x-region-list:last-child {
+    border-bottom: none;
+  }
+  
+  .x-region-search-results {
+    min-width: 280px;
+  }
+}
+
+/* 深色模式支持 */
+@media (prefers-color-scheme: dark) {
+  .x-region-input {
+    background-color: var(--x-bg-color-dark, #1C1C1E);
+    border-color: var(--x-border-color-dark, #3A3A3C);
+    color: var(--x-text-color-dark, #FFFFFF);
+  }
+  
+  .x-region-dropdown {
+    background-color: var(--x-bg-color-dark, #1C1C1E);
+  }
+  
+  .x-region-search {
+    background-color: var(--x-fill-color-dark, #2C2C2E);
+  }
+  
+  .x-region-search-input {
+    background-color: var(--x-fill-color-darker, #3A3A3C);
+    color: var(--x-text-color-dark, #FFFFFF);
+  }
+  
+  .x-region-list {
+    background-color: var(--x-bg-color-dark, #1C1C1E);
+  }
+  
+  .x-region-list-item:hover {
+    background-color: var(--x-fill-color-dark, #2C2C2E);
+  }
+  
+  .x-region-list-item.is-selected {
+    background-color: var(--x-color-primary-dark, #0A4F8F);
+  }
+  
+  :global(.x-region-cascader-popper) {
+    background-color: var(--x-bg-color-dark, #1C1C1E) !important;
+    border-color: var(--x-border-color-dark, #3A3A3C) !important;
+  }
+}
+
+/* 减少动画偏好 */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  
+  .x-region-list {
+    scroll-behavior: auto;
+  }
+}
+</style>

@@ -83,8 +83,8 @@
         <!-- 表体行 -->
         <template v-if="dataSource.length > 0">
           <template 
-            v-for="(row, rowIndex) in dataSource" 
-            :key="`row-${row[rowKey] || rowIndex}`"
+            v-for="(row, idx) in visibleData" 
+            :key="`row-${row[rowKey] || (props.virtual ? virtualStartIndex + idx : idx)}`"
           >
             <!-- 选择列 -->
             <div 
@@ -92,12 +92,12 @@
               class="x-table-cell x-table-body-cell x-table-selection-cell"
               :class="[
                 { 'x-table-cell-fixed': true },
-                { 'x-table-row-hover': hoveredRow === rowIndex },
+                { 'x-table-row-hover': hoveredRow === getRealRowIndex(idx) },
                 { 'x-table-row-selected': isRowSelected(row) },
-                { 'x-table-row-stripe': props.stripe && rowIndex % 2 === 1 }
+                { 'x-table-row-stripe': props.stripe && getRealRowIndex(idx) % 2 === 1 }
               ]"
               @click.stop="handleRowSelect(row)"
-              @mouseenter="handleRowHover(rowIndex)"
+              @mouseenter="handleRowHover(getRealRowIndex(idx))"
               @mouseleave="handleRowLeave"
             >
               <div class="x-table-cell-content">
@@ -124,13 +124,13 @@
                 `x-table-align-${col.align || 'left'}`,
                 { 'x-table-cell-fixed': col.fixed === 'left' },
                 { 'x-table-cell-fixed-right': col.fixed === 'right' },
-                { 'x-table-row-hover': hoveredRow === rowIndex },
+                { 'x-table-row-hover': hoveredRow === getRealRowIndex(idx) },
                 { 'x-table-row-selected': isRowSelected(row) },
-                { 'x-table-row-stripe': props.stripe && rowIndex % 2 === 1 }
+                { 'x-table-row-stripe': props.stripe && getRealRowIndex(idx) % 2 === 1 }
               ]"
               :style="getFixedStyle(col, colIndex)"
-              @click="handleRowClick(row, rowIndex)"
-              @mouseenter="handleRowHover(rowIndex)"
+              @click="handleRowClick(row, getRealRowIndex(idx))"
+              @mouseenter="handleRowHover(getRealRowIndex(idx))"
               @mouseleave="handleRowLeave"
             >
               <div class="x-table-cell-content">
@@ -138,7 +138,7 @@
                   v-if="col.slot" 
                   :name="col.slot" 
                   :record="row" 
-                  :index="rowIndex"
+                  :index="getRealRowIndex(idx)"
                   :value="row[col.dataIndex]"
                   >
                   {{ row[col.dataIndex] }}
@@ -288,9 +288,16 @@ export interface TableProps {
   getCheckboxProps?: (record: any) => { disabled?: boolean }
   /** selectionChange 事件是否返回完整行数据。true: 返回完整数据; false: 返回空数组（仅ids） */
   returnSelectedRows?: boolean
+  /** 是否启用虚拟滚动（适用于大量数据） */
+  virtual?: boolean
+  /** 虚拟滚动行高（像素） */
+  virtualRowHeight?: number
+  /** 虚拟滚动缓冲区行数 */
+  virtualBuffer?: number
 }
 
 const props = withDefaults(defineProps<TableProps>(), {
+  dataSource: () => [],
   rowKey: 'id',
   height: '600px',
   loading: false,
@@ -305,7 +312,10 @@ const props = withDefaults(defineProps<TableProps>(), {
   highlightHoverRow: true,
   preserveSelectedRowKeys: false,
   getCheckboxProps: () => () => ({}),
-  returnSelectedRows: true
+  returnSelectedRows: true,
+  virtual: false,
+  virtualRowHeight: 48,
+  virtualBuffer: 5
 })
 
 const emit = defineEmits<{
@@ -341,6 +351,12 @@ const editingCell = ref<{ rowKey: string | number | null; columnKey: string | nu
   columnKey: null
 })
 const editInputRef = ref<HTMLInputElement | null>(null)
+
+// 虚拟滚动相关状态
+const virtualScrollTop = ref(0)
+const virtualStartIndex = ref(0)
+const virtualEndIndex = ref(0)
+const containerHeight = ref(0)
 
 // 监听外部selectedRowKeys变化
 watch(() => props.selectedRowKeys, (newVal) => {
@@ -392,6 +408,35 @@ const fixedRightColumns = computed(() =>
 const hasFixedLeft = computed(() => fixedLeftColumns.value.length > 0 || props.rowSelection)
 const hasFixedRight = computed(() => fixedRightColumns.value.length > 0)
 
+// 虚拟滚动：计算实际渲染的数据
+const visibleData = computed(() => {
+  if (!props.virtual) {
+    return props.dataSource
+  }
+  
+  return props.dataSource.slice(virtualStartIndex.value, virtualEndIndex.value)
+})
+
+// 虚拟滚动：获取真实行索引
+const getRealRowIndex = (visibleIndex: number) => {
+  return props.virtual ? virtualStartIndex.value + visibleIndex : visibleIndex
+}
+
+// 虚拟滚动：计算padding样式
+const virtualPaddingStyle = computed(() => {
+  if (!props.virtual) {
+    return {}
+  }
+  
+  const paddingTop = virtualStartIndex.value * props.virtualRowHeight
+  const paddingBottom = (props.dataSource.length - virtualEndIndex.value) * props.virtualRowHeight
+  
+  return {
+    paddingTop: `${paddingTop}px`,
+    paddingBottom: `${paddingBottom}px`
+  }
+})
+
 // 计算Grid模板列
 const gridTemplateStyle = computed(() => {
   const columns: string[] = []
@@ -413,7 +458,8 @@ const gridTemplateStyle = computed(() => {
   })
   
   return {
-    gridTemplateColumns: columns.join(' ')
+    gridTemplateColumns: columns.join(' '),
+    ...virtualPaddingStyle.value
   }
 })
 
@@ -521,11 +567,33 @@ const isIndeterminate = computed(() => {
   return selectedCount > 0 && selectedCount < selectable.length
 })
 
+// 计算虚拟滚动的可见范围
+const updateVirtualRange = (scrollTop: number) => {
+  if (!props.virtual) return
+  
+  const visibleCount = Math.ceil(containerHeight.value / props.virtualRowHeight)
+  const totalCount = props.dataSource.length
+  
+  // 计算起始索引（添加缓冲区）
+  const startIndex = Math.max(0, Math.floor(scrollTop / props.virtualRowHeight) - props.virtualBuffer)
+  // 计算结束索引（添加缓冲区）
+  const endIndex = Math.min(totalCount, startIndex + visibleCount + props.virtualBuffer * 2)
+  
+  virtualStartIndex.value = startIndex
+  virtualEndIndex.value = endIndex
+}
+
 // 处理滚动
 const handleScroll = (e: Event) => {
   const target = e.target as HTMLDivElement
   scrollLeft.value = target.scrollLeft
   maxScrollLeft.value = target.scrollWidth - target.clientWidth
+  
+  // 虚拟滚动处理
+  if (props.virtual) {
+    virtualScrollTop.value = target.scrollTop
+    updateVirtualRange(target.scrollTop)
+  }
 }
 
 // 排序处理
@@ -696,6 +764,12 @@ onMounted(() => {
   window.addEventListener('resize', handleResize)
   setTimeout(() => {
     handleResize()
+    
+    // 初始化虚拟滚动
+    if (props.virtual && containerRef.value) {
+      containerHeight.value = containerRef.value.clientHeight
+      updateVirtualRange(0)
+    }
   }, 0)
 })
 

@@ -62,6 +62,7 @@ export default defineConfig({
     nav: [
       { text: '指南', link: '/guide/introduction' },
       { text: '组件', link: '/components/button' },
+      {text:'更新日志',link:'/guide/changelog'},
       { text: 'API 工具', link: '/api/' },
       { text: '在线演示', link: 'https://admin.xlcig.cn' },
       { 
@@ -81,6 +82,7 @@ export default defineConfig({
             { text: '介绍', link: '/guide/introduction' },
             { text: '安装', link: '/guide/installation' },
             { text: '快速开始', link: '/guide/quickstart' },
+            { text: '更新日志', link: '/guide/changelog' },
           ]
         }
       ],
@@ -95,11 +97,11 @@ export default defineConfig({
         {
           text: '通用',
           items: [
-            { text: 'Button 按钮', link: '/components/button' },
-            { text: 'Link 链接', link: '/components/link' },
-            { text: 'Tag 标签', link: '/components/tag' },
+            { text: 'Button 按钮 😲', link: '/components/button' },
+            { text: 'Link 链接 😲', link: '/components/link' },
+            { text: 'Tag 标签 😲', link: '/components/tag' },
             { text: 'Search 搜索', link: '/components/search' },
-            { text: 'Table 表格(测试版)', link: '/components/table' },
+            { text: 'Table 表格 😲', link: '/components/table' },
             { text: 'Icon 图标', link: '/components/icon' },
           ]
         },
@@ -114,9 +116,9 @@ export default defineConfig({
           items: [
             { text: 'Flex 弹性布局', link: '/components/flex' },
             { text: 'Grid 网格布局', link: '/components/grid' },
-            { text: 'Card 卡片', link: '/components/card' },
-            { text: 'Divider 分割线', link: '/components/divider' },
-            { text: 'Menu 菜单', link: '/components/menu' },
+            { text: 'Card 卡片 😲', link: '/components/card' },
+            { text: 'Divider 分割线 😲', link: '/components/divider' },
+            { text: 'Menu 菜单 😲', link: '/components/menu' },
          
           ]
         },
@@ -124,14 +126,14 @@ export default defineConfig({
           text: '表单',
           items: [
             { text: 'Form 表单', link: '/components/form' },
-            { text: 'Input 输入框', link: '/components/input' },
-            { text: 'Select 选择器', link: '/components/select' },
-            { text: 'Checkboxes 多选框', link: '/components/checkboxes' },
-            { text: 'Radio 单选框', link: '/components/radio' },
+            { text: 'Input 输入框 😲', link: '/components/input' },
+            { text: 'Select 选择器 😲', link: '/components/select' },
+            { text: 'Checkboxes 多选框 😲', link: '/components/checkboxes' },
+            { text: 'Radio 单选框 😲', link: '/components/radio' },
             { text: 'CountrySelect 国家选择', link: '/components/country-select' },
             { text: 'RegionCascader 地区级联', link: '/components/region-cascader' },
-            { text: 'Switch 开关', link: '/components/switch' },
-            { text: 'DateTimePicker 日期时间选择器', link: '/components/datetime-picker' },
+            { text: 'Switch 开关 😲', link: '/components/switch' },
+            { text: 'DateTimePicker 日期时间选择器 😲', link: '/components/datetime-picker' },
             { text: 'Color 颜色选择器', link: '/components/color' },
             { text: 'Upload 上传', link: '/components/upload' },
           ]
@@ -142,16 +144,16 @@ export default defineConfig({
             { text: 'Carousel 走马灯', link: '/components/carousel' },
             { text: 'Timeline 时间轴', link: '/components/timeline' },
             { text: 'Tree 树形控件', link: '/components/tree' },
-            { text: 'Accordion 手风琴', link: '/components/accordion' },
-            { text: 'Skeleton 骨架屏', link: '/components/skeleton' },
+            { text: 'Accordion 手风琴 😲', link: '/components/accordion' },
+            { text: 'Skeleton 骨架屏 😲', link: '/components/skeleton' },
             { text: 'ThumbnailContainer 缩略图容器', link: '/components/thumbnail-container' },
             { text: 'Score 评分', link: '/components/score' },
             { text:'Qrcode 二维码',link:'/components/qrcode'},
             { text: 'Segmented 分段控制器', link: '/components/segmented' },
-            { text: 'Badge 徽标', link: '/components/badge' },
+            { text: 'Badge 徽标 😲', link: '/components/badge' },
             { text: 'Image 图片', link: '/components/image' },
             { text: 'DragSort 拖拽排序', link: '/components/drag-sort' },
-            { text: 'Pagination 分页', link: '/components/pagination' },
+            { text: 'Pagination 分页 😲', link: '/components/pagination' },
             { text: 'List 列表', link: '/components/list' },
             { text: 'Chart 图表', link: '/components/chart' },
           ]
@@ -159,9 +161,9 @@ export default defineConfig({
         {
           text: '反馈',
           items: [
-            { text: 'Alert 警告提示', link: '/components/alert' },
-            { text: 'Modal 弹窗', link: '/components/modal' },
-            { text: 'Drawer 抽屉', link: '/components/drawer' },
+            { text: 'Alert 警告提示 😲', link: '/components/alert' },
+            { text: 'Modal 弹窗 😲', link: '/components/modal' },
+            { text: 'Drawer 抽屉 😲', link: '/components/drawer' },
             { text: 'Msg 消息提示', link: '/components/msg' },
             { text: 'Tooltips 提示框', link: '/components/tooltips' },
             { text: 'Dropdown 下拉容器', link: '/components/dropdown' },

@@ -2,9 +2,9 @@
 
 居中显示的警告提示，支持自动关闭和手动关闭。
 
-<div style="columns: 2; column-gap: 32px; margin-top: 32px;">
+<div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px; margin-top: 32px;">
 
-<div style="break-inside: avoid; margin-bottom: 24px;">
+<div>
 
 ## 基础用法
 
@@ -47,42 +47,6 @@ const showError = () => {
 
 :::
 
-</div>
-
-<div style="break-inside: avoid; margin-bottom: 24px;">
-
-## 带标题的 Alert
-
-可以添加标题，使信息更清晰。
-
-:::demo
-
-```vue
-<template>
-  <XButton type="success" @click="showWithTitle">带标题的提示</XButton>
-</template>
-
-<script setup>
-import { XButton, useAlert } from '@xlui/xux-ui'
-
-const alert = useAlert()
-
-const showWithTitle = () => {
-  alert.show({
-    title: '操作成功',
-    content: '您的订单已提交，我们会尽快为您处理。订单号：#12345',
-    type: 'success'
-  })
-}
-</script>
-```
-
-:::
-
-</div>
-
-<div style="break-inside: avoid; margin-bottom: 24px;">
-
 ## 自定义关闭时间
 
 通过 `duration` 属性设置自动关闭时间，单位为毫秒。设置为 0 则不自动关闭。
@@ -121,7 +85,35 @@ const showNoClose = () => {
 
 </div>
 
-<div style="break-inside: avoid; margin-bottom: 24px;">
+<div>
+
+## 带标题的 Alert
+
+可以添加标题，使信息更清晰。
+
+:::demo
+
+```vue
+<template>
+  <XButton type="success" @click="showWithTitle">带标题的提示</XButton>
+</template>
+
+<script setup>
+import { XButton, useAlert } from '@xlui/xux-ui'
+
+const alert = useAlert()
+
+const showWithTitle = () => {
+  alert.show({
+    title: '操作成功',
+    content: '您的订单已提交，我们会尽快为您处理。订单号：#12345',
+    type: 'success'
+  })
+}
+</script>
+```
+
+:::
 
 ## 手动关闭
 
@@ -182,4 +174,5 @@ const closeAlert = () => {
 | title | 标题 | `string` | `''` |
 | content | 内容 | `string` | `''` |
 | type | 类型 | `'success' \| 'info' \| 'warning' \| 'error'` | `'info'` |
-| duration | 自动关闭时间（毫秒），0 为不自动关闭 | `number` | `3000` |
+| duration | 自动关闭时间（毫秒），0 为不自动关闭 | `number` | `5000` |
+| closable | 是否显示关闭按钮 | `boolean` | `true` |

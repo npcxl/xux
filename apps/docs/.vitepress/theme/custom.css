@@ -3,6 +3,24 @@
  * 主题色: #1a1a1a
  */
 
+/* 首页3D背景样式 */
+.Layout[data-is-home="true"] {
+  overflow-x: hidden;
+}
+
+.Layout[data-is-home="true"] .VPHome {
+  padding: 0 !important;
+}
+
+.Layout[data-is-home="true"] .VPContent {
+  padding: 0 !important;
+}
+
+/* 隐藏默认的hero区域 */
+.Layout[data-is-home="true"] .VPHero {
+  display: none !important;
+}
+
  :root {
   /* 品牌色 - 使用 #1a1a1a 作为主色调 */
   --vp-c-brand-1: #1a1a1a;
@@ -115,6 +133,47 @@
 }
 
 /* Hero 区域优化 */
+.VPHero .name {
+  font-size: 64px;
+  font-weight: 800;
+  line-height: 1.2;
+  background: linear-gradient(
+    90deg,
+    #1a1a1a 0%,
+    #ff6b6b 25%,
+    #4ecdc4 50%,
+    #45b7d1 75%,
+    #1a1a1a 100%
+  );
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: gradientShift 4s ease-in-out infinite;
+  transition: transform 0.3s ease;
+}
+
+.VPHero .name:hover {
+  transform: scale(1.05);
+  animation-play-state: paused;
+}
+
+.dark .VPHero .name {
+  background: linear-gradient(
+    90deg,
+    #ffffff 0%,
+    #ff6b6b 25%,
+    #4ecdc4 50%,
+    #45b7d1 75%,
+    #ffffff 100%
+  );
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: gradientShift 4s ease-in-out infinite;
+}
+
 .VPHero .text {
   font-size: 48px;
   font-weight: 700;

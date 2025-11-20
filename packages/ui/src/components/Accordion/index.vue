@@ -215,8 +215,8 @@ defineExpose({
 }
 
 .accordion-container--bordered {
-  border: 1px solid var(--x-color-gray-200, #e9ecef);
-  border-radius: var(--x-radius-lg, 8px);
+  border: 1px solid var(--x-border-color-lighter, #E5E5E7);
+  border-radius: var(--x-radius-lg, 12px);
   overflow: hidden;
 }
 
@@ -248,15 +248,17 @@ defineExpose({
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 18px 20px;
+  padding: 16px 20px;
   text-align: left;
   border: none;
   background: transparent;
   cursor: pointer;
-  transition: all var(--x-transition, 0.2s ease);
+  transition: all 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
   font-size: var(--x-font-size, 15px);
+  font-family: var(--x-font-family);
   font-weight: 500;
-  color: var(--x-text-color-primary, #1e293b);
+  letter-spacing: -0.3px;
+  color: var(--x-text-color-primary);
   outline: none;
   user-select: none;
 }
@@ -311,15 +313,17 @@ defineExpose({
 
 .accordion-content {
   overflow: hidden;
-  transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-  background: var(--x-fill-color-lighter, rgba(26, 26, 26, 0.01));
+  transition: max-height 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  background: transparent;
 }
 
 .accordion-body {
-  padding: 0 20px 20px 20px;
-  color: var(--x-text-color-regular, #64748b);
-  line-height: 1.6;
-  font-size: var(--x-font-size-sm, 14px);
+  padding: 0 20px 16px 20px;
+  color: var(--x-text-color-regular);
+  font-family: var(--x-font-family);
+  line-height: 1.5;
+  font-size: var(--x-font-size, 15px);
+  letter-spacing: -0.2px;
 }
 
 /* 响应式设计 */

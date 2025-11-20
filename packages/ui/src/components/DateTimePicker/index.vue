@@ -1040,7 +1040,7 @@ import { zhCN, enUS, type I18nTexts } from './i18n'
 </style>
 
 <style scoped>
-/* 基础样式 */
+/* 基础样式 - iOS 风格 */
 .x-datetime-picker {
   position: relative;
   display: inline-block;
@@ -1051,21 +1051,21 @@ import { zhCN, enUS, type I18nTexts } from './i18n'
   position: relative;
   display: flex;
   align-items: center;
-  border: 1px solid var(--x-border-color, #e5e7eb);
-  border-radius: 0.5rem;
+  border: 1px solid var(--x-border-color, #C6C6C8);
+  border-radius: 10px;
   background-color: var(--x-bg-color, #ffffff);
-  transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
-  box-shadow: var(--x-shadow-sm, 0 1px 2px 0 rgba(0, 0, 0, 0.03));
+  transition: all 0.25s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
 }
 
 .datetime-input-wrapper:hover {
-  border-color: var(--x-color-primary, #1a1a1a);
-  box-shadow: var(--x-shadow-md, 0 1px 3px 0 rgba(0, 0, 0, 0.08));
+  border-color: var(--x-color-primary);
+  box-shadow: var(--x-shadow, 0 2px 8px rgba(0, 0, 0, 0.08));
 }
 
 .datetime-input-wrapper:focus-within {
-  border-color: var(--x-color-primary, #1a1a1a);
-  box-shadow: 0 0 0 3px var(--x-shadow-focus, rgba(26, 26, 26, 0.08));
+  border-color: var(--x-color-primary);
+  box-shadow: var(--x-shadow-focus-primary), var(--x-shadow);
 }
 
 .datetime-input {
@@ -1074,8 +1074,8 @@ import { zhCN, enUS, type I18nTexts } from './i18n'
   border: none;
   outline: none;
   background: transparent;
-  font-size: 0.875rem;
-  color: var(--x-text-color-primary, #1a1a1a);
+  font-size: var(--x-font-size-sm);
+  color: var(--x-text-color-primary);
   cursor: pointer;
   line-height: 1.5;
 }
@@ -1107,13 +1107,13 @@ import { zhCN, enUS, type I18nTexts } from './i18n'
   justify-content: center;
   width: 1.75rem;
   height: 1.75rem;
-  color: #6b7280;
+  color: var(--x-text-color-secondary);
   margin-right: 0.5rem;
-  transition: color 0.15s ease;
+  transition: color var(--x-transition-fast);
 }
 
 .datetime-input-wrapper:hover .datetime-icon {
-  color: #1a1a1a;
+  color: var(--x-text-color-primary);
 }
 
 /* 尺寸变体 */
@@ -1148,29 +1148,32 @@ import { zhCN, enUS, type I18nTexts } from './i18n'
   cursor: not-allowed;
 }
 
-/* 选择器面板 */
+/* 选择器面板 - iOS 风格 */
 .datetime-panel {
   background: var(--x-bg-color, #ffffff);
-  border-radius: 0.75rem;
+  border-radius: 16px;
   overflow: hidden;
   min-width: 320px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.12), 0 2px 8px rgba(0, 0, 0, 0.08);
 }
 
-/* 头部 */
+/* 头部 - iOS 风格 */
 .datetime-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0.875rem 1rem;
-  border-bottom: 1px solid var(--x-border-color-lighter, #f3f4f6);
-  background: var(--x-gradient-bg-light, linear-gradient(to bottom, #fafafa, #ffffff));
+  padding: 1rem 1.25rem;
+  border-bottom: 0.5px solid rgba(60, 60, 67, 0.12);
+  background: linear-gradient(to bottom, rgba(250, 250, 250, 0.8), rgba(255, 255, 255, 0.95));
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
 }
 
 .datetime-title {
   font-weight: 600;
-  color: var(--x-text-color-primary, #1a1a1a);
-  font-size: 0.9375rem;
-  letter-spacing: -0.01em;
+  color: var(--x-text-color-primary);
+  font-size: var(--x-font-size-lg);
+  letter-spacing: -0.4px;
 }
 
 .datetime-close {
@@ -1188,8 +1191,8 @@ import { zhCN, enUS, type I18nTexts } from './i18n'
 }
 
 .datetime-close:hover {
-  background-color: var(--x-fill-color, #e5e7eb);
-  color: var(--x-text-color-primary, #1a1a1a);
+  background-color: var(--x-fill-color);
+  color: var(--x-text-color-primary);
 }
 
 /* 模式切换 */
@@ -1217,13 +1220,13 @@ import { zhCN, enUS, type I18nTexts } from './i18n'
 }
 
 .mode-btn.active {
-  background-color: var(--x-color-primary, #1a1a1a);
-  color: var(--x-color-white, #ffffff);
+  background-color: var(--x-color-primary);
+  color: var(--x-color-white);
 }
 
 .mode-btn:hover:not(.active) {
-  background-color: var(--x-fill-color, #e5e7eb);
-  color: var(--x-text-color-primary, #1a1a1a);
+  background-color: var(--x-fill-color);
+  color: var(--x-text-color-primary);
 }
 
 /* 日期选择器 */
@@ -1247,24 +1250,26 @@ import { zhCN, enUS, type I18nTexts } from './i18n'
   justify-content: center;
   gap: 0.375rem;
   padding: 0.5rem 0.75rem;
-  border: 1px solid var(--x-border-color, #e5e7eb);
-  background: var(--x-bg-color, #ffffff);
-  color: var(--x-text-color-secondary, #6b7280);
+  border: none;
+  background: var(--x-fill-color-primary-lighter);
+  color: var(--x-color-primary);
   cursor: pointer;
-  border-radius: 0.375rem;
-  font-size: 0.75rem;
+  border-radius: var(--x-radius-sm);
+  font-size: var(--x-font-size-sm);
   font-weight: 500;
-  transition: all 0.2s ease;
+  transition: all var(--x-transition-fast);
 }
 
 .shortcut-btn:hover {
-  border-color: var(--x-color-primary, #1a1a1a);
-  background-color: var(--x-fill-color-lighter, #f9fafb);
-  color: var(--x-text-color-primary, #1a1a1a);
+  background: var(--x-fill-color-primary-light);
+  color: var(--x-color-primary);
+  transform: translateY(-1px);
+  box-shadow: var(--x-shadow-sm);
 }
 
 .shortcut-btn:active {
-  transform: scale(0.98);
+  transform: scale(0.96);
+  background: var(--x-ripple-color-primary);
 }
 
 .shortcut-icon {
@@ -1294,14 +1299,14 @@ import { zhCN, enUS, type I18nTexts } from './i18n'
 }
 
 .nav-btn:hover {
-  background-color: var(--x-fill-color, #e5e7eb);
-  color: var(--x-text-color-primary, #1a1a1a);
+  background-color: var(--x-fill-color);
+  color: var(--x-text-color-primary);
 }
 
 .current-month {
   font-weight: 600;
-  color: var(--x-text-color-primary, #1a1a1a);
-  font-size: 1rem;
+  color: var(--x-text-color-primary);
+  font-size: var(--x-font-size);
 }
 
 .weekdays {
@@ -1316,9 +1321,9 @@ import { zhCN, enUS, type I18nTexts } from './i18n'
   align-items: center;
   justify-content: center;
   height: 2rem;
-  font-size: 0.75rem;
+  font-size: var(--x-font-size-xs);
   font-weight: 500;
-  color: #6b7280;
+  color: var(--x-text-color-secondary);
 }
 
 .date-grid {
@@ -1332,14 +1337,14 @@ import { zhCN, enUS, type I18nTexts } from './i18n'
   align-items: center;
   justify-content: center;
   height: 2.25rem;
-  font-size: 0.8125rem;
-  color: var(--x-text-color-regular, #374151);
+  font-size: var(--x-font-size);
+  color: var(--x-text-color-regular);
   cursor: pointer;
-  border-radius: 0.25rem;
+  border-radius: var(--x-radius-sm);
   font-weight: 500;
   position: relative;
   background-color: transparent;
-  transition: color 0.2s ease, background-color 0.2s ease;
+  transition: all var(--x-transition-fast);
   overflow: hidden;
 }
 
@@ -1350,37 +1355,38 @@ import { zhCN, enUS, type I18nTexts } from './i18n'
   pointer-events: none;
 }
 
-/* Windows 10 风格 - 动画边框盒子 */
+/* iOS 风格 - 圆角背景 */
 .date-cell::before,
 .date-cell::after {
   content: '';
   position: absolute;
   inset: 0;
-  border-radius: 0.25rem;
+  border-radius: var(--x-radius-sm);
   pointer-events: none;
   opacity: 0;
-  transition: opacity 0.2s ease;
+  transition: all var(--x-transition-fast);
 }
 
 /* 外层边框 */
 .date-cell::before {
-  border: 2px solid transparent;
+  border: none;
   z-index: 0;
 }
 
 /* 内层背景 */
 .date-cell::after {
-  background-color: #f3f4f6;
+  background-color: var(--x-ripple-color);
   z-index: 0;
 }
 
 .date-cell:hover:not(.date-disabled):not(.date-selected)::after {
   opacity: 1;
-  animation: backgroundFade 0.3s ease;
+  background-color: var(--x-fill-color-primary-lighter);
 }
 
 .date-cell:hover:not(.date-disabled):not(.date-selected) {
-  color: #1a1a1a;
+  color: var(--x-color-primary);
+  transform: scale(1.05);
 }
 
 /* 边框扫入动画 */
@@ -1413,62 +1419,51 @@ import { zhCN, enUS, type I18nTexts } from './i18n'
 }
 
 .date-other-month {
-  color: #d1d5db;
+  color: var(--x-text-color-disabled);
 }
 
-/* 今天的日期 */
+/* 今天的日期 - iOS 风格 */
 .date-today {
-  color:var(--x-color-primary, #3b82f6);
+  color: var(--x-color-primary);
   font-weight: 600;
   position: relative;
 }
 
-.date-today::before {
-  border: 2px solid var(--x-color-primary, #3b82f6);
+.date-today::after {
+  border: 1.5px solid var(--x-color-primary);
+  background-color: transparent;
   opacity: 1;
 }
 
 /* 今天的日期悬停效果 */
-.date-today:hover:not(.date-selected)::before {
-  border-color: var(--x-color-primary, #3b82f6);
-  animation: borderSweep 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
 .date-today:hover:not(.date-selected)::after {
-  background-color: var(--x-datetime-today-hover-bg, #eff6ff);
-  opacity: 1;
-  animation: backgroundFade 0.3s ease;
+  background-color: var(--x-fill-color-primary-light);
+  border-color: var(--x-color-primary);
 }
 
-/* 选中的日期 - Windows 10 风格 */
+/* 选中的日期 - iOS 风格 */
 .date-selected {
-  color: var(--x-color-primary, #3b82f6);
+  color: var(--x-color-white);
   font-weight: 600;
 }
 
 .date-selected::before {
-  border: 2px solid var(--x-color-white, #ffffff);
-  opacity: 1;
-  box-shadow: 0 0 0 1px var(--x-datetime-selected-shadow, rgba(59, 130, 246, 0.1));
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  border: none;
+  opacity: 0;
 }
 
 .date-selected::after {
-  background-color: var(--x-color-primary, #3b82f6);
+  background: linear-gradient(135deg, var(--x-color-primary) 0%, var(--x-color-primary-light) 100%);
   opacity: 1;
-  box-shadow: 0 2px 4px var(--x-datetime-selected-shadow-md, rgba(59, 130, 246, 0.3));
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: var(--x-shadow-primary);
+  transition: all var(--x-transition);
 }
 
 /* 选中日期的悬停效果 */
-.date-selected:hover::before {
-  border-color: var(--x-color-primary, #3b82f6);
-  transform: scale(1.05);
-}
-
 .date-selected:hover::after {
-  background-color: var(--x-color-primary, #3b82f6);
-  box-shadow: 0 4px 8px rgba(59, 130, 246, 0.4);
+  background: linear-gradient(135deg, var(--x-color-primary-dark) 0%, var(--x-color-primary) 100%);
+  box-shadow: var(--x-shadow-primary-lg);
+  transform: scale(1.05);
 }
 
 /* 禁用状态 */
@@ -1483,42 +1478,40 @@ import { zhCN, enUS, type I18nTexts } from './i18n'
   display: none;
 }
 
-/* 范围选择样式 */
+/* 范围选择样式 - iOS 风格 */
 .date-range-start,
 .date-range-end {
-  color: var(--x-color-white, #ffffff);
+  color: var(--x-color-white);
   font-weight: 600;
 }
 
 .date-range-start::before,
 .date-range-end::before {
-  border: 2px solid var(--x-color-primary, #3b82f6);
-  opacity: 1;
-  transition: border-color 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  opacity: 0;
 }
 
 .date-range-start::after,
 .date-range-end::after {
-  background-color: var(--x-color-primary, #3b82f6);
+  background: linear-gradient(135deg, var(--x-color-primary) 0%, var(--x-color-primary-light) 100%);
   opacity: 1;
-  transition: background-color 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: var(--x-shadow-primary);
+  transition: all var(--x-transition);
 }
 
 .date-in-range {
-  color: #1a1a1a;
+  color: var(--x-color-primary);
   position: relative;
+  font-weight: 500;
 }
 
 .date-in-range::before {
-  border: 2px solid transparent;
-  opacity: 1;
-  transition: border-color 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  opacity: 0;
 }
 
 .date-in-range::after {
-  background-color: rgba(26, 26, 26, 0.08);
+  background-color: var(--x-fill-color-primary-light);
   opacity: 1;
-  transition: background-color 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: all var(--x-transition);
 }
 
 /* 时间选择器 */
@@ -1540,9 +1533,9 @@ import { zhCN, enUS, type I18nTexts } from './i18n'
 }
 
 .time-range-title {
-  font-size: 0.875rem;
+  font-size: var(--x-font-size-sm);
   font-weight: 600;
-  color: #1a1a1a;
+  color: var(--x-text-color-primary);
   margin-bottom: 1rem;
   padding-left: 0.25rem;
 }
@@ -1582,8 +1575,8 @@ import { zhCN, enUS, type I18nTexts } from './i18n'
 
 .time-input:focus {
   outline: none;
-  border-color: var(--x-color-primary, #3b82f6);
-  box-shadow: 0 0 0 1px #1a1a1a;
+  border-color: var(--x-color-primary);
+  box-shadow: var(--x-shadow-focus-primary);
 }
 
 .time-separator {
@@ -1606,8 +1599,8 @@ import { zhCN, enUS, type I18nTexts } from './i18n'
 }
 
 .slider-label {
-  font-size: 0.875rem;
-  color: #1a1a1a;
+  font-size: var(--x-font-size-sm);
+  color: var(--x-text-color-primary);
   font-weight: 500;
 }
 
@@ -1634,21 +1627,20 @@ import { zhCN, enUS, type I18nTexts } from './i18n'
   width: 1.25rem;
   height: 1.25rem;
   border-radius: 50%;
-  background: var(--x-color-primary, #3b82f6);
+  background: linear-gradient(135deg, var(--x-color-primary) 0%, var(--x-color-primary-light) 100%);
   cursor: pointer;
-  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  transition: all var(--x-transition-fast);
+  box-shadow: var(--x-shadow-primary);
 }
 
 .time-slider::-webkit-slider-thumb:hover {
-  transform: scale(1.2);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-  background: var(--x-color-primary, #3b82f6);
+  transform: scale(1.15);
+  box-shadow: var(--x-shadow-primary-lg);
 }
 
 .time-slider::-webkit-slider-thumb:active {
-  transform: scale(1.1);
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25);
+  transform: scale(1.05);
+  box-shadow: var(--x-shadow-primary);
 }
 
 .time-slider::-moz-range-thumb {
@@ -1678,16 +1670,16 @@ import { zhCN, enUS, type I18nTexts } from './i18n'
   top: -2rem;
   transform: translateX(-50%);
   padding: 0.25rem 0.75rem;
-  background-color: #1a1a1a;
-  color: var(--x-color-white, #ffffff);
-  font-size: 0.75rem;
+  background-color: var(--x-color-gray-900);
+  color: var(--x-color-white);
+  font-size: var(--x-font-size-xs);
   font-weight: 600;
-  border-radius: 0.375rem;
+  border-radius: var(--x-radius-sm);
   white-space: nowrap;
   pointer-events: none;
   z-index: 10;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
-  transition: left 0.15s ease;
+  box-shadow: var(--x-shadow);
+  transition: left var(--x-transition-fast);
 }
 
 .slider-tooltip::after {
@@ -1697,7 +1689,7 @@ import { zhCN, enUS, type I18nTexts } from './i18n'
   left: 50%;
   transform: translateX(-50%);
   border: 0.25rem solid transparent;
-  border-top-color: #1a1a1a;
+  border-top-color: var(--x-color-gray-900);
 }
 
 /* 一直显示的 Tooltip */

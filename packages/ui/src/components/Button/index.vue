@@ -169,43 +169,48 @@ function handleMouseDown(event: MouseEvent) {
 </script>
 
 <style scoped>
+/* iOS 风格按钮 */
 .x-btn {
   position: relative;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 6px;
-  font-weight: 500;
-  border: 1px solid transparent;
+  font-weight: 600;
+  font-family: var(--x-font-family);
+  border: none;
   cursor: pointer;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: all var(--x-transition);
   user-select: none;
   white-space: nowrap;
   outline: none;
   overflow: hidden;
-  transform: translateY(0);
+  transform: scale(1);
+  letter-spacing: -0.3px;
 }
 
+/* iOS 点击效果 - 轻柔缩放 */
 .x-btn:active:not(.x-btn-disabled):not(.x-btn-loading) {
-  transform: translateY(1px);
+  transform: scale(0.96);
+  transition: transform 0.1s ease-out;
 }
 
-/* 波纹效果 */
+/* iOS 波纹效果 - 更轻柔 */
 .x-btn-ripple {
   position: absolute;
   border-radius: var(--x-radius-full, 50%);
-  background-color: rgba(255, 255, 255, 0.4);
+  background-color: rgba(255, 255, 255, 0.25);
   width: 0;
   height: 0;
   pointer-events: none;
-  animation: ripple-animation 0.6s ease-out;
+  animation: ripple-animation 0.5s ease-out;
   transform: translate(-50%, -50%);
 }
 
 @keyframes ripple-animation {
   to {
-    width: 300px;
-    height: 300px;
+    width: 250px;
+    height: 250px;
     opacity: 0;
   }
 }
@@ -214,19 +219,20 @@ function handleMouseDown(event: MouseEvent) {
 .x-btn-icon {
   display: inline-flex;
   align-items: center;
-  font-size: 1.2em;
-  animation: icon-in 0.3s ease-out;
+  font-size: 1.15em;
+  animation: icon-in 0.25s ease-out;
 }
 
 .x-btn-content {
   display: inline-flex;
   align-items: center;
+  line-height: 1.2;
 }
 
 @keyframes icon-in {
   from {
     opacity: 0;
-    transform: scale(0.8);
+    transform: scale(0.85);
   }
   to {
     opacity: 1;
@@ -234,256 +240,259 @@ function handleMouseDown(event: MouseEvent) {
   }
 }
 
-/* 尺寸 */
+/* iOS 尺寸 - 更圆润的圆角 */
 .x-btn-small {
-  padding: 4px 12px;
-  font-size: 14px;
-  border-radius: 4px;
-  height: 28px;
+  padding: 5px 12px;
+  font-size: var(--x-font-size-sm, 13px);
+  border-radius: var(--x-radius-sm, 6px);
+  height: 30px;
+  min-width: 60px;
 }
 
 .x-btn-medium {
   padding: 8px 16px;  
-  font-size: 14px;
-  border-radius: 6px;
-  height: 36px;
+  font-size: var(--x-font-size, 15px);
+  border-radius: var(--x-radius, 10px);
+  height: 40px;
+  min-width: 80px;
 }
 
 .x-btn-large {
-  padding: 12px 20px;
-  font-size: 16px;
-  border-radius: 8px;
-  height: 44px;
+  padding: 12px 24px;
+  font-size: var(--x-font-size-lg, 17px);
+  border-radius: var(--x-radius-md, 12px);
+  height: 50px;
+  min-width: 100px;
 }
 
-/* 类型 - default */
+/* iOS 类型 - default (灰色填充) */
 .x-btn-default {
-  background-color: var(--x-color-white, #ffffff);
-  border-color: var(--x-color-gray-300, #cacaca);
-  color: var(--x-color-black, #1a1a1a);
+  background-color: var(--x-color-gray-50, #F2F2F7);
+  color: var(--x-color-primary, #007AFF);
+  box-shadow: none;
 }
 
 .x-btn-default:hover:not(.x-btn-disabled):not(.x-btn-loading) {
-  border-color: var(--x-color-primary, #1a1a1a);
-  color: var(--x-color-primary, #1a1a1a);
-  transform: translateY(-2px);
+  background-color: var(--x-color-gray-100, #E5E5EA);
+  opacity: 0.85;
 }
 
-/* 类型 - primary */
+/* iOS 类型 - primary (系统蓝) */
 .x-btn-primary {
-  background: var(--x-gradient-primary, linear-gradient(135deg, #ff6b35 0%, #ff8c61 100%));
-  border-color: var(--x-color-primary, #ff6b35);
-  color: var(--x-color-white, #ffffff);
+  background-color: var(--x-color-primary, #007AFF);
+  color: var(--x-color-white, #FFFFFF);
+  box-shadow: 0 2px 8px rgba(0, 122, 255, 0.15);
 }
 
 .x-btn-primary:hover:not(.x-btn-disabled):not(.x-btn-loading) {
-  background: var(--x-gradient-primary-hover, linear-gradient(135deg, #ff8c61 0%, #ffad8d 100%));
-  transform: translateY(-2px);
+  background-color: var(--x-color-primary-dark, #0062CC);
+  box-shadow: 0 4px 12px rgba(0, 122, 255, 0.2);
+  opacity: 0.9;
 }
 
-/* 类型 - success */
+/* iOS 类型 - success (系统绿) */
 .x-btn-success {
-  background: var(--x-gradient-success, linear-gradient(135deg, #10b981 0%, #059669 100%));
-  border-color: var(--x-color-success, #10b981);
-  color: var(--x-color-white, #ffffff);
+  background-color: var(--x-color-success, #34C759);
+  color: var(--x-color-white, #FFFFFF);
+  box-shadow: 0 2px 8px rgba(52, 199, 89, 0.15);
 }
 
 .x-btn-success:hover:not(.x-btn-disabled):not(.x-btn-loading) {
-  background: var(--x-gradient-success-hover, linear-gradient(135deg, var(--x-color-success-light, #34d399) 0%, var(--x-color-success, #10b981) 100%));
-  transform: translateY(-2px);
+  background-color: var(--x-color-success-dark, #248A3D);
+  box-shadow: 0 4px 12px rgba(52, 199, 89, 0.2);
+  opacity: 0.9;
 }
 
-/* 类型 - warning */
+/* iOS 类型 - warning (系统橙) */
 .x-btn-warning {
-  background: var(--x-gradient-warning, linear-gradient(135deg, #f59e0b 0%, #d97706 100%));
-  border-color: var(--x-color-warning, #f59e0b);
-  color: var(--x-color-white, #ffffff);
+  background-color: var(--x-color-warning, #FF9500);
+  color: var(--x-color-white, #FFFFFF);
+  box-shadow: 0 2px 8px rgba(255, 149, 0, 0.15);
 }
 
 .x-btn-warning:hover:not(.x-btn-disabled):not(.x-btn-loading) {
-  background: var(--x-gradient-warning-hover, linear-gradient(135deg, var(--x-color-warning-light, #fbbf24) 0%, var(--x-color-warning, #f59e0b) 100%));
-  transform: translateY(-2px);
+  background-color: var(--x-color-warning-dark, #CC7700);
+  box-shadow: 0 4px 12px rgba(255, 149, 0, 0.2);
+  opacity: 0.9;
 }
 
-/* 类型 - danger */
+/* iOS 类型 - danger (系统红) */
 .x-btn-danger {
-  background: var(--x-gradient-danger, linear-gradient(135deg, #ef4444 0%, #dc2626 100%));
-  border-color: var(--x-color-danger, #ef4444);
-  color: var(--x-color-white, #ffffff);
+  background-color: var(--x-color-danger, #FF3B30);
+  color: var(--x-color-white, #FFFFFF);
+  box-shadow: 0 2px 8px rgba(255, 59, 48, 0.15);
 }
 
 .x-btn-danger:hover:not(.x-btn-disabled):not(.x-btn-loading) {
-  background: var(--x-gradient-danger-hover, linear-gradient(135deg, var(--x-color-danger-light, #f87171) 0%, var(--x-color-danger, #ef4444) 100%));
-  transform: translateY(-2px);
+  background-color: var(--x-color-danger-dark, #CC2F26);
+  box-shadow: 0 4px 12px rgba(255, 59, 48, 0.2);
+  opacity: 0.9;
 }
 
-/* 类型 - text */
+/* iOS 类型 - text (无背景) */
 .x-btn-text {
   background-color: transparent;
-  border-color: transparent;
-  color: var(--x-color-black, #1a1a1a);
+  color: var(--x-color-primary, #007AFF);
+  box-shadow: none;
+  min-width: auto;
 }
 
 .x-btn-text:hover:not(.x-btn-disabled):not(.x-btn-loading) {
-  background-color: var(--x-color-gray-100, #f5f5f5);
-  color: var(--x-color-primary, #ff6b35);
+  background-color: var(--x-fill-color-primary-lighter, rgba(0, 122, 255, 0.05));
+  opacity: 0.8;
 }
 
-/* 类型 - link */
+/* iOS 类型 - link (链接样式) */
 .x-btn-link {
   background-color: transparent;
-  border-color: transparent;
-  color: var(--x-color-primary, #1a73e8);
+  color: var(--x-color-primary, #007AFF);
   box-shadow: none;
   padding: 0;
   height: auto;
+  min-width: auto;
+  text-decoration: none;
 }
 
 .x-btn-link:hover:not(.x-btn-disabled):not(.x-btn-loading) {
-  color: var(--x-color-primary-hover, #1557b0);
+  opacity: 0.7;
   text-decoration: underline;
-  transform: none;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 2px;
 }
 
 .x-btn-link:active:not(.x-btn-disabled):not(.x-btn-loading) {
-  transform: none;
-  box-shadow: none;
+  transform: scale(0.98);
 }
 
-/* 幽灵按钮 - Ghost Button */
+/* iOS 幽灵按钮 - 边框样式 */
 .x-btn-ghost.x-btn-default {
   background-color: transparent;
-  background: transparent;
-  border-color: var(--x-color-gray-300, #cacaca);
-  color: var(--x-color-black, #1a1a1a);
+  border: 1px solid var(--x-color-gray-300, #C7C7CC);
+  color: var(--x-text-color-primary, #000000);
   box-shadow: none;
 }
 
 .x-btn-ghost.x-btn-default:hover:not(.x-btn-disabled):not(.x-btn-loading) {
-  background-color: color-mix(in srgb, var(--x-color-gray-400, #a0a0a0) 10%, transparent);
-  background: color-mix(in srgb, var(--x-color-gray-400, #a0a0a0) 10%, transparent);
-  border-color: var(--x-color-gray-400, #a0a0a0);
+  background-color: var(--x-fill-color-light, #F9F9F9);
+  border-color: var(--x-color-gray-400, #AEAEB2);
 }
 
 .x-btn-ghost.x-btn-primary {
   background-color: transparent;
-  background: transparent;
-  border-color: var(--x-color-primary, #1a1a1a);
-  color: var(--x-color-primary, #1a1a1a);
+  border: 1px solid var(--x-color-primary, #007AFF);
+  color: var(--x-color-primary, #007AFF);
   box-shadow: none;
 }
 
 .x-btn-ghost.x-btn-primary:hover:not(.x-btn-disabled):not(.x-btn-loading) {
-  background-color: color-mix(in srgb, var(--x-color-primary, #1a1a1a) 10%, transparent);
-  background: color-mix(in srgb, var(--x-color-primary, #1a1a1a) 10%, transparent);
-  border-color: var(--x-color-primary, #1a1a1a);
-  box-shadow: none;
+  background-color: var(--x-fill-color-primary-lighter, rgba(0, 122, 255, 0.05));
+  border-color: var(--x-color-primary-dark, #0062CC);
 }
 
 .x-btn-ghost.x-btn-success {
   background-color: transparent;
-  background: transparent;
-  border-color: var(--x-color-success, #10b981);
-  color: var(--x-color-success, #10b981);
+  border: 1px solid var(--x-color-success, #34C759);
+  color: var(--x-color-success, #34C759);
   box-shadow: none;
 }
 
 .x-btn-ghost.x-btn-success:hover:not(.x-btn-disabled):not(.x-btn-loading) {
-  background-color: color-mix(in srgb, var(--x-color-success, #10b981) 10%, transparent);
-  background: color-mix(in srgb, var(--x-color-success, #10b981) 10%, transparent);
-  border-color: var(--x-color-success, #10b981);
-  box-shadow: none;
+  background-color: var(--x-fill-color-success-lighter, rgba(52, 199, 89, 0.05));
+  border-color: var(--x-color-success-dark, #248A3D);
 }
 
 .x-btn-ghost.x-btn-warning {
   background-color: transparent;
-  background: transparent;
-  border-color: var(--x-color-warning, #f59e0b);
-  color: var(--x-color-warning, #f59e0b);
+  border: 1px solid var(--x-color-warning, #FF9500);
+  color: var(--x-color-warning, #FF9500);
   box-shadow: none;
 }
 
 .x-btn-ghost.x-btn-warning:hover:not(.x-btn-disabled):not(.x-btn-loading) {
-  background-color: color-mix(in srgb, var(--x-color-warning, #f59e0b) 10%, transparent);
-  background: color-mix(in srgb, var(--x-color-warning, #f59e0b) 10%, transparent);
-  border-color: var(--x-color-warning, #f59e0b);
-  box-shadow: none;
+  background-color: var(--x-fill-color-warning-lighter, rgba(255, 149, 0, 0.05));
+  border-color: var(--x-color-warning-dark, #CC7700);
 }
 
 .x-btn-ghost.x-btn-danger {
   background-color: transparent;
-  background: transparent;
-  border-color: var(--x-color-danger, #ef4444);
-  color: var(--x-color-danger, #ef4444);
+  border: 1px solid var(--x-color-danger, #FF3B30);
+  color: var(--x-color-danger, #FF3B30);
   box-shadow: none;
 }
 
 .x-btn-ghost.x-btn-danger:hover:not(.x-btn-disabled):not(.x-btn-loading) {
-  background-color: color-mix(in srgb, var(--x-color-danger, #ef4444) 10%, transparent);
-  background: color-mix(in srgb, var(--x-color-danger, #ef4444) 10%, transparent);
-  border-color: var(--x-color-danger, #ef4444);
-  box-shadow: none;
+  background-color: var(--x-fill-color-danger-lighter, rgba(255, 59, 48, 0.05));
+  border-color: var(--x-color-danger-dark, #CC2F26);
 }
 
-/* 幽灵按钮波纹效果调整 */
+/* iOS 幽灵按钮波纹效果 */
 .x-btn-ghost .x-btn-ripple {
-  background-color: var(--x-ripple-color, rgba(0, 0, 0, 0.08));
+  background-color: var(--x-ripple-color, rgba(0, 0, 0, 0.06));
 }
 
 .x-btn-ghost.x-btn-primary .x-btn-ripple {
-  background-color: var(--x-ripple-color-primary, rgba(26, 26, 26, 0.15));
+  background-color: var(--x-ripple-color-primary, rgba(0, 122, 255, 0.15));
 }
 
 .x-btn-ghost.x-btn-success .x-btn-ripple {
-  background-color: var(--x-ripple-color-success, rgba(16, 185, 129, 0.15));
+  background-color: var(--x-ripple-color-success, rgba(52, 199, 89, 0.15));
 }
 
 .x-btn-ghost.x-btn-warning .x-btn-ripple {
-  background-color: var(--x-ripple-color-warning, rgba(245, 158, 11, 0.15));
+  background-color: var(--x-ripple-color-warning, rgba(255, 149, 0, 0.15));
 }
 
 .x-btn-ghost.x-btn-danger .x-btn-ripple {
-  background-color: var(--x-ripple-color-danger, rgba(239, 68, 68, 0.15));
+  background-color: var(--x-ripple-color-danger, rgba(255, 59, 48, 0.15));
 }
 
-/* 圆角按钮 */
+/* iOS 圆角按钮 - 完全圆形 */
 .x-btn-round.x-btn-small {
-  border-radius: var(--x-radius-full, 14px);
+  border-radius: var(--x-radius-full, 15px);
+  padding-left: 14px;
+  padding-right: 14px;
 }
 
 .x-btn-round.x-btn-medium {
-  border-radius: var(--x-radius-full, 18px);
+  border-radius: var(--x-radius-full, 20px);
+  padding-left: 18px;
+  padding-right: 18px;
 }
 
 .x-btn-round.x-btn-large {
-  border-radius: var(--x-radius-full, 22px);
+  border-radius: var(--x-radius-full, 25px);
+  padding-left: 26px;
+  padding-right: 26px;
 }
 
-/* 块级按钮 */
+/* iOS 块级按钮 */
 .x-btn-block {
   display: flex;
   width: 100%;
 }
 
-/* 禁用状态 */
+/* iOS 禁用状态 */
 .x-btn-disabled {
   cursor: not-allowed;
-  opacity: 0.6;
+  opacity: 0.4;
+  filter: saturate(0.7);
 }
 
-/* 加载状态 */
+.x-btn-disabled:hover {
+  opacity: 0.4 !important;
+  transform: scale(1) !important;
+}
+
+/* iOS 加载状态 */
 .x-btn-loading {
-  cursor: wait;
-  opacity: 0.8;
-}
-
-.x-btn.x-btn-loading {
+  cursor: default;
+  opacity: 0.7;
   pointer-events: none;
 }
 
 .x-btn-loading .x-btn-icon {
   font-size: 1em;
-  animation: spin 1s linear infinite;
+  animation: spin 0.8s linear infinite;
 }
 
 @keyframes spin {

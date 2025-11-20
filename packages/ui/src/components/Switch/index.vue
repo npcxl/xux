@@ -387,11 +387,11 @@ const handleChange = () => {
 
 /* The switch - the box around the slider */
 .switch {
-  font-size: 17px;
+  font-size: 16px;
   position: relative;
   display: inline-block;
-  width: 3.5em;
-  height: 2em;
+  width: 51px;
+  height: 31px;
 }
 
 /* Hide default HTML checkbox */
@@ -406,113 +406,117 @@ const handleChange = () => {
   position: absolute;
   cursor: pointer;
   inset: 0;
-  border: 2px solid transparent;
-  border-radius: 50px;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  background-color: var(--x-switch-bg, #e5e7eb);
+  border: none;
+  border-radius: 16px;
+  transition: background-color 0.25s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  background-color: var(--x-border-color-dark, #C7C7CC);
 }
 
 .slider:before {
   position: absolute;
   content: "";
-  height: 1.4em;
-  width: 1.4em;
-  left: 0.2em;
-  bottom: 0.2em;
-  background-color: var(--x-switch-thumb, #ffffff);
-  border-radius: inherit;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  height: 27px;
+  width: 27px;
+  left: 2px;
+  top: 2px;
+  background-color: var(--x-switch-thumb, #FFFFFF);
+  border-radius: 50%;
+  transition: transform 0.25s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.15), 0 1px 3px rgba(0, 0, 0, 0.2);
 }
 
 .switch input:checked + .slider {
-  border-color: var(--x-switch-active-border, var(--x-color-primary, #1a1a1a));
-  background-color: var(--x-switch-active-bg, var(--x-color-primary, #1a1a1a));
+  background-color: var(--x-color-success, #34C759);
 }
 
 .switch input:checked + .slider:before {
-  transform: translateX(1.5em);
+  transform: translateX(20px);
 }
 
 /* 尺寸变体 */
 .switch.size-small {
-  width: 2.5em;
-  height: 1.4em;
+  width: 39px;
+  height: 24px;
   font-size: 14px;
 }
 
+.switch.size-small .slider {
+  border-radius: 12px;
+}
+
 .switch.size-small .slider:before {
-  height: 1em;
-  width: 1em;
+  height: 20px;
+  width: 20px;
 }
 
 .switch.size-small input:checked + .slider:before {
-  transform: translateX(1.1em);
+  transform: translateX(15px);
 }
 
 .switch.size-medium {
-  width: 3.5em;
-  height: 2em;
-  font-size: 17px;
+  width: 51px;
+  height: 31px;
+  font-size: 16px;
 }
 
 .switch.size-large {
-  width: 4.5em;
-  height: 2.6em;
-  font-size: 20px;
+  width: 63px;
+  height: 39px;
+  font-size: 18px;
+}
+
+.switch.size-large .slider {
+  border-radius: 20px;
 }
 
 .switch.size-large .slider:before {
-  height: 1.8em;
-  width: 1.8em;
+  height: 35px;
+  width: 35px;
 }
 
 .switch.size-large input:checked + .slider:before {
-  transform: translateX(1.9em);
+  transform: translateX(24px);
 }
 
 /* 禁用状态 */
 .switch.disabled .slider {
   cursor: not-allowed;
-  opacity: 0.5;
-  border-color: #9ca3af;
+  opacity: 0.4;
 }
 
 .switch.disabled .slider:before {
-  background-color: #9ca3af;
-}
-
-.switch.disabled input:checked + .slider {
-  border-color: #9ca3af;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
 /* 悬停效果 */
-.switch:not(.disabled):not(.loading):hover .slider {
-  border-color: var(--x-switch-hover-border, rgba(26, 26, 26, 0.4));
+.switch:not(.disabled):not(.loading):hover .slider:before {
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2), 0 1px 4px rgba(0, 0, 0, 0.25);
 }
 
 /* 点击效果 */
-.switch:not(.disabled):not(.loading) input:active + .slider {
-  transform: scale(0.96);
-}
-
 .switch:not(.disabled):not(.loading) input:active + .slider:before {
-  width: 1.6em;
+  transform: scale(0.92);
 }
 
 .switch:not(.disabled):not(.loading) input:checked:active + .slider:before {
-  width: 1.6em;
-  transform: translateX(1.3em);
+  transform: translateX(20px) scale(0.92);
+}
+
+.switch.size-small:not(.disabled):not(.loading) input:checked:active + .slider:before {
+  transform: translateX(15px) scale(0.92);
+}
+
+.switch.size-large:not(.disabled):not(.loading) input:checked:active + .slider:before {
+  transform: translateX(24px) scale(0.92);
 }
 
 /* 焦点状态 */
 .switch input:focus-visible + .slider {
-  outline: 2px solid var(--x-switch-focus-outline, rgba(26, 26, 26, 0.5));
-  outline-offset: 2px;
+  box-shadow: 0 0 0 4px rgba(142, 142, 147, 0.2);
 }
 
 .switch input:checked:focus-visible + .slider {
-  outline: 2px solid var(--x-switch-focus-outline, rgba(26, 26, 26, 0.5));
-  outline-offset: 2px;
+  box-shadow: 0 0 0 4px rgba(52, 199, 89, 0.2);
 }
 
 /* 加载状态 */
@@ -538,35 +542,34 @@ const handleChange = () => {
 
 .spinner-inner {
   display: block;
-  width: 0.8em;
-  height: 0.8em;
-  border: 2px solid rgba(255, 255, 255, 0.3);
-  border-top-color: var(--x-switch-thumb, #ffffff);
+  width: 14px;
+  height: 14px;
+  border: 2px solid rgba(142, 142, 147, 0.3);
+  border-top-color: var(--x-border-color-dark, #8E8E93);
   border-radius: 50%;
-  animation: spin 0.6s linear infinite;
+  animation: spin 0.7s linear infinite;
 }
 
 .switch.checked .spinner-inner {
-  border-color: var(--x-switch-loading-border, rgba(26, 26, 26, 0.3));
-  border-top-color: var(--x-switch-active-bg, var(--x-color-primary, #1a1a1a));
+  border-color: rgba(52, 199, 89, 0.3);
+  border-top-color: var(--x-color-success, #34C759);
 }
 
 .switch.size-small .spinner-inner {
-  width: 0.6em;
-  height: 0.6em;
+  width: 11px;
+  height: 11px;
   border-width: 1.5px;
 }
 
 .switch.size-large .spinner-inner {
-  width: 1em;
-  height: 1em;
+  width: 17px;
+  height: 17px;
   border-width: 2.5px;
 }
 
 /* 加载状态下禁用悬停效果 */
-.switch.loading:hover .slider {
-  transform: none;
-  border-color: transparent;
+.switch.loading:hover .slider:before {
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.15), 0 1px 3px rgba(0, 0, 0, 0.2);
 }
 
 @keyframes spin {
