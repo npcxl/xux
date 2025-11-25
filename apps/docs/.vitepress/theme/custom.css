@@ -362,6 +362,80 @@ tr:hover {
   font-weight: 500;
 }
 
+/* 侧边栏徽章样式基础 */
+.sidebar-badge {
+  display: inline-block;
+  font-size: 11px;
+  padding: 2px 6px;
+  border-radius: 4px;
+  margin-left: 8px;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+  vertical-align: middle;
+  line-height: 1.2;
+}
+
+/* 更新徽章 */
+.sidebar-badge.update {
+  background-color: rgba(74, 144, 226, 0.1) !important;
+  color: #4A90E2 !important;
+}
+
+/* 新增徽章 */
+.sidebar-badge.new {
+  background-color: rgba(52, 199, 89, 0.1) !important;
+  color: #34C759 !important;
+}
+
+/* 暗色模式下的更新徽章 */
+.dark .sidebar-badge.update {
+  background-color: rgba(74, 144, 226, 0.2) !important;
+  color: #6FA8DC !important;
+}
+
+/* 暗色模式下的新增徽章 */
+.dark .sidebar-badge.new {
+  background-color: rgba(52, 199, 89, 0.2) !important;
+  color: #52D869 !important;
+}
+
+/* VitePress 默认徽章样式（兼容） */
+.VPSidebarItem .VPBadge.info {
+  background-color: rgba(74, 144, 226, 0.1) !important;
+  color: #4A90E2 !important;
+  font-size: 11px;
+  padding: 2px 6px;
+  border-radius: 4px;
+  margin-left: 8px;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+  vertical-align: middle;
+  border: none;
+}
+
+.VPSidebarItem .VPBadge.tip {
+  background-color: rgba(52, 199, 89, 0.1) !important;
+  color: #34C759 !important;
+  font-size: 11px;
+  padding: 2px 6px;
+  border-radius: 4px;
+  margin-left: 8px;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+  vertical-align: middle;
+  border: none;
+}
+
+.dark .VPSidebarItem .VPBadge.info {
+  background-color: rgba(74, 144, 226, 0.2) !important;
+  color: #6FA8DC !important;
+}
+
+.dark .VPSidebarItem .VPBadge.tip {
+  background-color: rgba(52, 199, 89, 0.2) !important;
+  color: #52D869 !important;
+}
+
 /* 侧边栏优化 */
 .VPSidebar {
   padding-top: 24px;
@@ -810,10 +884,10 @@ tr:hover {
   transition: all 0.3s ease;
 }
 
-/* 左侧导航激活状态 */
+/* 左侧导航激活状态 - 使用浅蓝色背景 */
 .VPSidebarItem.is-active > .item > .link {
-  background-color: #1a1a1a !important;
-  color: #ffffff !important;
+  background-color: rgba(74, 144, 226, 0.08) !important;
+  color: #1C1C1E !important;
   border-radius: 6px;
   font-weight: 600;
   padding-left: 16px !important;
@@ -826,7 +900,7 @@ tr:hover {
 
 /* 左侧导航激活状态（亮色主题） */
 .VPSidebarItem.is-active > .item > .link .text {
-  color: #ffffff !important;
+  color: #1C1C1E !important;
 }
 
 /* 左侧导航激活状态图标 */
@@ -834,9 +908,9 @@ tr:hover {
   color: #ffffff !important;
 }
 
-/* 左侧导航悬停效果 */
+/* 左侧导航悬停效果 - 更浅的蓝色 */
 .VPSidebarItem:not(.is-active) > .item > .link:hover {
-  background-color: rgba(26, 26, 26, 0.08);
+  background-color: rgba(74, 144, 226, 0.04);
   border-radius: 6px;
   color: #1a1a1a !important;
   padding-left: 16px !important;
@@ -859,18 +933,18 @@ tr:hover {
   letter-spacing: 0.3px;
 }
 
-/* 暗色模式下的左侧导航 */
+/* 暗色模式下的左侧导航 - 使用浅蓝色背景 */
 .dark .VPSidebarItem.is-active > .item > .link {
-  background-color: #ffffff !important;
-  color: #1a1a1a !important;
+  background-color: rgba(74, 144, 226, 0.15) !important;
+  color: #ffffff !important;
 }
 
 .dark .VPSidebarItem.is-active > .item > .link .text {
-  color: #1a1a1a !important;
+  color: #ffffff !important;
 }
 
 .dark .VPSidebarItem:not(.is-active) > .item > .link:hover {
-  background-color: rgba(255, 255, 255, 0.1);
+  background-color: rgba(74, 144, 226, 0.08);
 }
 
 /* ==================== 右侧锚点导航优化 ==================== */
@@ -928,18 +1002,18 @@ tr:hover {
   transform: translateX(2px);
 }
 
-/* 激活的锚点 */
+/* 激活的锚点 - 使用浅蓝色背景 */
 .VPDocOutlineItem.active a {
-  color: #ffffff !important;
-  background-color: #1a1a1a !important;
-  border-left-color: #1a1a1a;
+  color: #1C1C1E !important;
+  background-color: rgba(74, 144, 226, 0.08) !important;
+  border-left-color: #4A90E2;
   font-weight: 600;
 }
 
 .dark .VPDocOutlineItem.active a {
-  color: #1a1a1a !important;
-  background-color: #ffffff !important;
-  border-left-color: #ffffff;
+  color: #ffffff !important;
+  background-color: rgba(74, 144, 226, 0.15) !important;
+  border-left-color: #4A90E2;
 }
 
 /* 响应式 */

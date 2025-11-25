@@ -241,13 +241,13 @@ const handleChange = (value: string | number) => {
 .radio-list .x-radio-item.radio-item-disabled {
   opacity: 0.5;
   cursor: not-allowed;
-  background-color: #f9fafb;
-  border-color: #e5e7eb;
+  background-color:var(--x-fill-color-lighter, #f9fafb);
+  border-color: var(--x-border-color, #e5e7eb);
 }
 
 .radio-list .x-radio-item.radio-item-disabled:hover {
-  border-color: #e5e7eb;
-  background-color: #f9fafb;
+  border-color: var(--x-border-color, #e5e7eb);
+  background-color: var(--x-fill-color-lighter, #f9fafb);
   transform: none;
   box-shadow: none;
 }

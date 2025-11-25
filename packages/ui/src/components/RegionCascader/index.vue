@@ -1539,13 +1539,14 @@ defineExpose({
 }
 
 .x-region-list-item.is-selected {
-  background-color: var(--x-color-primary-light, #F6F9FF);
-  color: var(--x-color-primary, #4A90E2);
-  font-weight: 500;
+  background-color: rgba(74, 144, 226, 0.08);  /* 更浅的背景色 */
+  color: #1C1C1E;  /* 深色文字，确保可读性 */
+  font-weight: 600;
   position: relative;
-  padding-left: 24px;
+  padding-left: 16px;  /* 恢复正常的左内边距 */
 }
 
+/* 注释掉左侧线条 
 .x-region-list-item.is-selected::after {
   content: '';
   position: absolute;
@@ -1555,7 +1556,7 @@ defineExpose({
   width: 3px;
   background-color: var(--x-color-primary, #4A90E2);
   animation: selected-slide-in 0.3s ease-out;
-}
+} */
 
 @keyframes selected-slide-in {
   from {
@@ -1701,7 +1702,52 @@ defineExpose({
   }
 }
 
-/* 深色模式支持 */
+/* 深色模式支持 - 通过 .dark 类和 media query */
+.dark .x-region-input,
+@media (prefers-color-scheme: dark) {
+  .x-region-input {
+    background-color: var(--x-bg-color-dark, #1C1C1E);
+    border-color: var(--x-border-color-dark, #3A3A3C);
+    color: var(--x-text-color-dark, #FFFFFF);
+  }
+}
+
+.dark .x-region-dropdown {
+  background-color: var(--x-bg-color-dark, #1C1C1E);
+}
+
+.dark .x-region-search {
+  background-color: var(--x-fill-color-dark, #2C2C2E);
+}
+
+.dark .x-region-search-input {
+  background-color: var(--x-fill-color-darker, #3A3A3C);
+  color: var(--x-text-color-dark, #FFFFFF);
+}
+
+.dark .x-region-list {
+  background-color: var(--x-bg-color-dark, #1C1C1E);
+}
+
+.dark .x-region-list-item {
+  color: var(--x-text-color-dark, #FFFFFF);
+}
+
+.dark .x-region-list-item:hover {
+  background-color: var(--x-fill-color-dark, #2C2C2E);
+}
+
+.dark .x-region-list-item.is-selected {
+  background-color: rgba(74, 144, 226, 0.15);  /* 暗黑模式下更浅的背景色 */
+  color: #FFFFFF;  /* 白色文字确保可读性 */
+}
+
+:global(.dark .x-region-cascader-popper) {
+  background-color: var(--x-bg-color-dark, #1C1C1E) !important;
+  border-color: var(--x-border-color-dark, #3A3A3C) !important;
+}
+
+/* Media Query 深色模式支持 */
 @media (prefers-color-scheme: dark) {
   .x-region-input {
     background-color: var(--x-bg-color-dark, #1C1C1E);
@@ -1726,12 +1772,17 @@ defineExpose({
     background-color: var(--x-bg-color-dark, #1C1C1E);
   }
   
+  .x-region-list-item {
+    color: var(--x-text-color-dark, #FFFFFF);
+  }
+  
   .x-region-list-item:hover {
     background-color: var(--x-fill-color-dark, #2C2C2E);
   }
   
   .x-region-list-item.is-selected {
-    background-color: var(--x-color-primary-dark, #0A4F8F);
+    background-color: rgba(74, 144, 226, 0.15);  /* 暗黑模式下更浅的背景色 */
+    color: #FFFFFF;  /* 白色文字确保可读性 */
   }
   
   :global(.x-region-cascader-popper) {

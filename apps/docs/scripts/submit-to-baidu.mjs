@@ -60,6 +60,7 @@ function getAllUrls() {
     '/components/radio',
     '/components/country-select',
     '/components/region-cascader',
+    '/components/autocomplete',
     '/components/switch',
     '/components/datetime-picker',
     '/components/color',

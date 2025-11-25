@@ -1,79 +1,48 @@
 <template>
-  <div 
-    class="x-table-container" 
-    ref="containerRef" 
-    :style="{ height: height }"
-    :class="[
-      `x-table-size-${props.size}`,
-      `x-table-border-${props.border}`,
-      { 'x-table-stripe': props.stripe }
-    ]"
-  >
+  <div class="x-table-container" ref="containerRef" :style="{ height: height }" :class="[
+    `x-table-size-${props.size}`,
+    `x-table-border-${props.border}`,
+    { 'x-table-stripe': props.stripe }
+  ]">
     <!-- 滚动容器 -->
     <div class="x-table-scroll-wrapper" @scroll="handleScroll" ref="scrollRef">
-      <div 
-        class="x-table-grid"
-        :style="gridTemplateStyle"
-      >
+      <div class="x-table-grid" :style="gridTemplateStyle">
         <!-- 表头行 -->
         <template v-if="props.showHeader">
           <!-- 选择列表头 -->
-          <div 
-            v-if="props.rowSelection"
-            class="x-table-cell x-table-header-cell x-table-selection-cell"
-            :class="{ 'x-table-cell-fixed': true }"
-          >
+          <div v-if="props.rowSelection" class="x-table-cell x-table-header-cell x-table-selection-cell"
+            :class="{ 'x-table-cell-fixed': true }">
             <div class="x-table-cell-content">
               <div class="x-table-checkbox-wrapper">
-                <input 
-                  type="checkbox"
-                  :checked="isAllSelected"
-                  :indeterminate.prop="isIndeterminate"
-                  :disabled="selectableRows.length === 0"
-                  @change="handleSelectAll"
-                  class="x-table-checkbox"
-                  :class="{ 'x-table-checkbox-indeterminate': isIndeterminate }"
-                />
+                <input type="checkbox" :checked="isAllSelected" :indeterminate.prop="isIndeterminate"
+                  :disabled="selectableRows.length === 0" @change="handleSelectAll" class="x-table-checkbox"
+                  :class="{ 'x-table-checkbox-indeterminate': isIndeterminate }" />
               </div>
             </div>
           </div>
-          
+
           <!-- 数据列表头 -->
-          <div 
-            v-for="(col, colIndex) in visibleColumns" 
-            :key="`header-${col.key}`"
-            class="x-table-cell x-table-header-cell"
-            :class="[
+          <div v-for="(col, colIndex) in visibleColumns" :key="`header-${col.key}`"
+            class="x-table-cell x-table-header-cell" :class="[
               col.headerClass,
               `x-table-align-${col.align || 'left'}`,
               { 'x-table-cell-fixed': col.fixed === 'left' },
               { 'x-table-cell-fixed-right': col.fixed === 'right' },
               { 'x-table-sortable': col.sortable },
               { 'x-table-sorted': sortState.column?.key === col.key }
-            ]"
-            :style="getFixedStyle(col, colIndex)"
-            :title="col.tooltip"
-          >
+            ]" :style="getFixedStyle(col, colIndex)" :title="col.tooltip">
             <div class="x-table-cell-content">
               <span @click="handleSort(col)">{{ col.title }}</span>
               <span v-if="col.sortable" class="x-table-sort-icon" @click="handleSort(col)">
-                <svg 
-                  class="x-table-sort-asc" 
+                <svg class="x-table-sort-asc"
                   :class="{ active: sortState.column?.key === col.key && sortState.order === 'asc' }"
-                  viewBox="0 0 24 24" 
-                  width="12" 
-                  height="12"
-                >
-                  <path d="M7 14l5-5 5 5z" fill="currentColor"/>
+                  viewBox="0 0 24 24" width="12" height="12">
+                  <path d="M7 14l5-5 5 5z" fill="currentColor" />
                 </svg>
-                <svg 
-                  class="x-table-sort-desc" 
+                <svg class="x-table-sort-desc"
                   :class="{ active: sortState.column?.key === col.key && sortState.order === 'desc' }"
-                  viewBox="0 0 24 24" 
-                  width="12" 
-                  height="12"
-                >
-                  <path d="M7 10l5 5 5-5z" fill="currentColor"/>
+                  viewBox="0 0 24 24" width="12" height="12">
+                  <path d="M7 10l5 5 5-5z" fill="currentColor" />
                 </svg>
               </span>
             </div>
@@ -82,43 +51,27 @@
 
         <!-- 表体行 -->
         <template v-if="dataSource.length > 0">
-          <template 
-            v-for="(row, idx) in visibleData" 
-            :key="`row-${row[rowKey] || (props.virtual ? virtualStartIndex + idx : idx)}`"
-          >
+          <template v-for="(row, idx) in visibleData"
+            :key="`row-${row[rowKey] || (props.virtual ? virtualStartIndex + idx : idx)}`">
             <!-- 选择列 -->
-            <div 
-              v-if="props.rowSelection"
-              class="x-table-cell x-table-body-cell x-table-selection-cell"
-              :class="[
-                { 'x-table-cell-fixed': true },
-                { 'x-table-row-hover': hoveredRow === getRealRowIndex(idx) },
-                { 'x-table-row-selected': isRowSelected(row) },
-                { 'x-table-row-stripe': props.stripe && getRealRowIndex(idx) % 2 === 1 }
-              ]"
-              @click.stop="handleRowSelect(row)"
-              @mouseenter="handleRowHover(getRealRowIndex(idx))"
-              @mouseleave="handleRowLeave"
-            >
+            <div v-if="props.rowSelection" class="x-table-cell x-table-body-cell x-table-selection-cell" :class="[
+              { 'x-table-cell-fixed': true },
+              { 'x-table-row-hover': hoveredRow === getRealRowIndex(idx) },
+              { 'x-table-row-selected': isRowSelected(row) },
+              { 'x-table-row-stripe': props.stripe && getRealRowIndex(idx) % 2 === 1 }
+            ]" @click.stop="handleRowSelect(row)" @mouseenter="handleRowHover(getRealRowIndex(idx))"
+              @mouseleave="handleRowLeave">
               <div class="x-table-cell-content">
                 <div class="x-table-checkbox-wrapper">
-                  <input 
-                    type="checkbox"
-                    :checked="isRowSelected(row)"
-                    :disabled="isRowDisabled(row)"
-                    class="x-table-checkbox"
-                    @click.stop
-                    @change="handleRowSelect(row)"
-                  />
+                  <input type="checkbox" :checked="isRowSelected(row)" :disabled="isRowDisabled(row)"
+                    class="x-table-checkbox" @click.stop @change="handleRowSelect(row)" />
                 </div>
               </div>
             </div>
-            
+
             <!-- 数据列 -->
-            <div 
-              v-for="(col, colIndex) in visibleColumns" 
-              :key="`cell-${row[rowKey] || rowIndex}-${col.key}`"
-              class="x-table-cell x-table-body-cell"
+            <div v-for="(col, colIndex) in visibleColumns"
+              :key="`cell-${row[rowKey] || getRealRowIndex(idx)}-${col.key}`" class="x-table-cell x-table-body-cell"
               :class="[
                 col.cellClass,
                 `x-table-align-${col.align || 'left'}`,
@@ -127,42 +80,25 @@
                 { 'x-table-row-hover': hoveredRow === getRealRowIndex(idx) },
                 { 'x-table-row-selected': isRowSelected(row) },
                 { 'x-table-row-stripe': props.stripe && getRealRowIndex(idx) % 2 === 1 }
-              ]"
-              :style="getFixedStyle(col, colIndex)"
-              @click="handleRowClick(row, getRealRowIndex(idx))"
-              @mouseenter="handleRowHover(getRealRowIndex(idx))"
-              @mouseleave="handleRowLeave"
-            >
+              ]" :style="getFixedStyle(col, colIndex)" @click="handleRowClick(row, getRealRowIndex(idx))"
+              @mouseenter="handleRowHover(getRealRowIndex(idx))" @mouseleave="handleRowLeave">
               <div class="x-table-cell-content">
-                <slot 
-                  v-if="col.slot" 
-                  :name="col.slot" 
-                  :record="row" 
-                  :index="getRealRowIndex(idx)"
-                  :value="row[col.dataIndex]"
-                  >
+                <slot v-if="col.slot" :name="col.slot" :record="row" :index="getRealRowIndex(idx)"
+                  :value="row[col.dataIndex]">
                   {{ row[col.dataIndex] }}
                 </slot>
                 <!-- 可编辑单元格 -->
                 <div v-else-if="col.editable" class="x-table-editable-cell">
-                  <input
-                    v-if="editingCell.rowKey === row[rowKey] && editingCell.columnKey === col.key"
-                    type="text"
-                    class="x-table-edit-input"
-                    :value="row[col.dataIndex]"
-                    @blur="handleCellEditEnd(row, col, $event)"
-                    @keyup.enter="handleCellEditEnd(row, col, $event)"
-                    @keyup.esc="handleCellEditCancel"
-                    ref="editInputRef"
-                  />
-                  <span 
-                    v-else
-                    class="x-table-editable-content"
-                    @dblclick="handleCellEditStart(row, col)"
-                  >
+                  <input v-if="editingCell.rowKey === row[rowKey] && editingCell.columnKey === col.key" type="text"
+                    class="x-table-edit-input" :value="row[col.dataIndex]" @blur="handleCellEditEnd(row, col, $event)"
+                    @keyup.enter="handleCellEditEnd(row, col, $event)" @keyup.esc="handleCellEditCancel"
+                    ref="editInputRef" />
+                  <span v-else class="x-table-editable-content" @dblclick="handleCellEditStart(row, col)">
                     {{ row[col.dataIndex] }}
                     <svg class="x-table-edit-icon" viewBox="0 0 24 24" width="14" height="14">
-                      <path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z" fill="currentColor"/>
+                      <path
+                        d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"
+                        fill="currentColor" />
                     </svg>
                   </span>
                 </div>
@@ -175,27 +111,22 @@
 
       <!-- 空状态 -->
       <div v-if="dataSource.length === 0" class="x-table-empty">
-        <XResult
-          status="info"
-          :title="emptyText"
-          subTitle="暂无数据显示"
-        />
+        <slot name="empty">
+          <XResult :status="emptyStatus" :title="emptyText">
+            <template v-if="$slots.emptyIcon" #icon>
+              <slot name="emptyIcon"></slot>
+            </template>
+          </XResult>
+        </slot>
       </div>
     </div>
 
     <!-- 固定列阴影 -->
-    <div 
-      v-if="hasFixedLeft" 
-      class="x-table-fixed-shadow-left"
-      :class="{ 'x-table-fixed-shadow-active': scrollLeft > 0 }"
-      :style="{ left: fixedLeftWidth + 'px' }"
-    ></div>
-    <div 
-      v-if="hasFixedRight" 
-      class="x-table-fixed-shadow-right"
-      :class="{ 'x-table-fixed-shadow-active': scrollLeft < maxScrollLeft }"
-      :style="{ right: fixedRightWidth + 'px' }"
-    ></div>
+    <div v-if="hasFixedLeft" class="x-table-fixed-shadow-left"
+      :class="{ 'x-table-fixed-shadow-active': scrollLeft > 0 }" :style="{ left: fixedLeftWidth + 'px' }"></div>
+    <div v-if="hasFixedRight" class="x-table-fixed-shadow-right"
+      :class="{ 'x-table-fixed-shadow-active': scrollLeft < maxScrollLeft }" :style="{ right: fixedRightWidth + 'px' }">
+    </div>
 
     <!-- 加载状态 -->
     <div v-if="loading" class="x-table-loading">
@@ -268,6 +199,8 @@ export interface TableProps {
   loadingText?: string
   /** 空数据提示文字 */
   emptyText?: string
+  /** 空状态类型 */
+  emptyStatus?: 'success' | 'error' | 'warning' | 'info' | '404' | '403' | '500'
   /** 表格尺寸 */
   size?: TableSize
   /** 是否显示斑马纹 */
@@ -303,6 +236,7 @@ const props = withDefaults(defineProps<TableProps>(), {
   loading: false,
   loadingText: '加载中...',
   emptyText: '暂无数据',
+  emptyStatus: 'info',
   size: 'default',
   stripe: false,
   border: 'horizontal',
@@ -361,7 +295,7 @@ const containerHeight = ref(0)
 // 监听外部selectedRowKeys变化
 watch(() => props.selectedRowKeys, (newVal) => {
   internalSelectedRowKeys.value = [...newVal]
-  
+
   // 当外部keys变化时，尝试从当前数据源更新缓存
   props.dataSource.forEach(row => {
     const rowKey = row[props.rowKey]
@@ -385,23 +319,23 @@ watch(() => props.dataSource, (newDataSource) => {
 // 过滤可见列并验证固定列必须有宽度
 const visibleColumns = computed(() => {
   const cols = props.columns.filter(col => col.visible !== false)
-  
+
   // 验证固定列必须有明确的宽度
   cols.forEach(col => {
     if ((col.fixed === 'left' || col.fixed === 'right') && !col.width) {
       console.warn(`[XTable] 固定列 "${col.title}" (key: ${col.key}) 必须设置 width 属性`)
     }
   })
-  
+
   return cols
 })
 
 // 计算固定列
-const fixedLeftColumns = computed(() => 
+const fixedLeftColumns = computed(() =>
   visibleColumns.value.filter(col => col.fixed === 'left')
 )
 
-const fixedRightColumns = computed(() => 
+const fixedRightColumns = computed(() =>
   visibleColumns.value.filter(col => col.fixed === 'right')
 )
 
@@ -413,7 +347,7 @@ const visibleData = computed(() => {
   if (!props.virtual) {
     return props.dataSource
   }
-  
+
   return props.dataSource.slice(virtualStartIndex.value, virtualEndIndex.value)
 })
 
@@ -427,10 +361,10 @@ const virtualPaddingStyle = computed(() => {
   if (!props.virtual) {
     return {}
   }
-  
+
   const paddingTop = virtualStartIndex.value * props.virtualRowHeight
   const paddingBottom = (props.dataSource.length - virtualEndIndex.value) * props.virtualRowHeight
-  
+
   return {
     paddingTop: `${paddingTop}px`,
     paddingBottom: `${paddingBottom}px`
@@ -440,12 +374,12 @@ const virtualPaddingStyle = computed(() => {
 // 计算Grid模板列
 const gridTemplateStyle = computed(() => {
   const columns: string[] = []
-  
+
   // 选择列
   if (props.rowSelection) {
     columns.push('48px')
   }
-  
+
   // 数据列
   visibleColumns.value.forEach(col => {
     if (col.width) {
@@ -456,7 +390,7 @@ const gridTemplateStyle = computed(() => {
       columns.push('minmax(100px, 1fr)')
     }
   })
-  
+
   return {
     gridTemplateColumns: columns.join(' '),
     ...virtualPaddingStyle.value
@@ -487,7 +421,7 @@ const fixedRightWidth = computed(() => {
 // 获取固定列样式
 const getFixedStyle = (col: Column, colIndex: number) => {
   const style: Record<string, string> = {}
-  
+
   if (col.fixed === 'left') {
     let left = props.rowSelection ? 48 : 0
     for (let i = 0; i < colIndex; i++) {
@@ -507,7 +441,7 @@ const getFixedStyle = (col: Column, colIndex: number) => {
     }
     style.right = right + 'px'
   }
-  
+
   return style
 }
 
@@ -522,11 +456,11 @@ const isRowDisabled = (record: any) => {
 const getAllSelectedRows = () => {
   if (!props.preserveSelectedRowKeys) {
     // 非跨页模式：只返回当前页的选中数据
-    return props.dataSource.filter(row => 
+    return props.dataSource.filter(row =>
       internalSelectedRowKeys.value.includes(row[props.rowKey])
     )
   }
-  
+
   // 跨页模式：从缓存中获取所有已选行数据
   const rows: any[] = []
   internalSelectedRowKeys.value.forEach(key => {
@@ -552,7 +486,7 @@ const selectableRows = computed(() => {
 const isAllSelected = computed(() => {
   const selectable = selectableRows.value
   if (!selectable.length) return false
-  return selectable.every(row => 
+  return selectable.every(row =>
     internalSelectedRowKeys.value.includes(row[props.rowKey])
   )
 })
@@ -561,7 +495,7 @@ const isAllSelected = computed(() => {
 const isIndeterminate = computed(() => {
   const selectable = selectableRows.value
   if (!selectable.length) return false
-  const selectedCount = selectable.filter(row => 
+  const selectedCount = selectable.filter(row =>
     internalSelectedRowKeys.value.includes(row[props.rowKey])
   ).length
   return selectedCount > 0 && selectedCount < selectable.length
@@ -570,15 +504,15 @@ const isIndeterminate = computed(() => {
 // 计算虚拟滚动的可见范围
 const updateVirtualRange = (scrollTop: number) => {
   if (!props.virtual) return
-  
+
   const visibleCount = Math.ceil(containerHeight.value / props.virtualRowHeight)
   const totalCount = props.dataSource.length
-  
+
   // 计算起始索引（添加缓冲区）
   const startIndex = Math.max(0, Math.floor(scrollTop / props.virtualRowHeight) - props.virtualBuffer)
   // 计算结束索引（添加缓冲区）
   const endIndex = Math.min(totalCount, startIndex + visibleCount + props.virtualBuffer * 2)
-  
+
   virtualStartIndex.value = startIndex
   virtualEndIndex.value = endIndex
 }
@@ -588,7 +522,7 @@ const handleScroll = (e: Event) => {
   const target = e.target as HTMLDivElement
   scrollLeft.value = target.scrollLeft
   maxScrollLeft.value = target.scrollWidth - target.clientWidth
-  
+
   // 虚拟滚动处理
   if (props.virtual) {
     virtualScrollTop.value = target.scrollTop
@@ -599,7 +533,7 @@ const handleScroll = (e: Event) => {
 // 排序处理
 const handleSort = (column: Column) => {
   if (!column.sortable) return
-  
+
   // 切换排序状态: null -> asc -> desc -> null
   let newOrder: 'asc' | 'desc' | null = null
   if (sortState.value.column?.key === column.key) {
@@ -613,12 +547,12 @@ const handleSort = (column: Column) => {
   } else {
     newOrder = 'asc'
   }
-  
+
   sortState.value = {
     column: newOrder ? column : null,
     order: newOrder
   }
-  
+
   emit('sortChange', column, newOrder)
 }
 
@@ -626,7 +560,7 @@ const handleSort = (column: Column) => {
 const handleSelectAll = () => {
   const newSelected = !isAllSelected.value
   const selectableRowKeys = selectableRows.value.map(row => row[props.rowKey])
-  
+
   if (props.preserveSelectedRowKeys) {
     // 跨页选择模式：只操作当前页的可选行
     if (newSelected) {
@@ -636,7 +570,7 @@ const handleSelectAll = () => {
         key => !currentPageKeys.includes(key)
       )
       internalSelectedRowKeys.value = [...otherPageKeys, ...selectableRowKeys]
-      
+
       // 将当前页的可选行添加到缓存
       selectableRows.value.forEach(row => {
         selectedRowsCache.value.set(row[props.rowKey], row)
@@ -646,7 +580,7 @@ const handleSelectAll = () => {
       internalSelectedRowKeys.value = internalSelectedRowKeys.value.filter(
         key => !selectableRowKeys.includes(key)
       )
-      
+
       // 从缓存中移除当前页的可选行
       selectableRowKeys.forEach(key => {
         selectedRowsCache.value.delete(key)
@@ -666,10 +600,10 @@ const handleSelectAll = () => {
       selectedRowsCache.value.clear()
     }
   }
-  
+
   // 根据 returnSelectedRows 参数决定是否返回完整行数据
   const selectedRows = props.returnSelectedRows ? getAllSelectedRows() : []
-  
+
   emit('selectAll', newSelected)
   emit('selectionChange', internalSelectedRowKeys.value, selectedRows)
 }
@@ -679,10 +613,10 @@ const handleRowSelect = (record: any) => {
   if (isRowDisabled(record)) {
     return
   }
-  
+
   const rowKey = record[props.rowKey]
   const index = internalSelectedRowKeys.value.indexOf(rowKey)
-  
+
   // 使用不可变的方式更新数组，确保响应式更新
   if (index > -1) {
     // 取消选择：从列表和缓存中移除
@@ -693,10 +627,10 @@ const handleRowSelect = (record: any) => {
     internalSelectedRowKeys.value = [...internalSelectedRowKeys.value, rowKey]
     selectedRowsCache.value.set(rowKey, record)
   }
-  
+
   // 根据 returnSelectedRows 参数决定是否返回完整行数据
   const selectedRows = props.returnSelectedRows ? getAllSelectedRows() : []
-  
+
   emit('selectionChange', internalSelectedRowKeys.value, selectedRows)
 }
 
@@ -739,12 +673,12 @@ const handleCellEditEnd = (record: any, column: Column, event: Event) => {
   const input = event.target as HTMLInputElement
   const newValue = input.value
   const oldValue = record[column.dataIndex]
-  
+
   if (newValue !== oldValue) {
     // 触发编辑事件
     emit('cellEdit', record, column, newValue)
   }
-  
+
   // 清空编辑状态
   editingCell.value = { rowKey: null, columnKey: null }
 }
@@ -764,7 +698,7 @@ onMounted(() => {
   window.addEventListener('resize', handleResize)
   setTimeout(() => {
     handleResize()
-    
+
     // 初始化虚拟滚动
     if (props.virtual && containerRef.value) {
       containerHeight.value = containerRef.value.clientHeight
@@ -794,10 +728,10 @@ const clearSelection = () => {
  */
 const setSelectedRows = (keys: (string | number)[]) => {
   internalSelectedRowKeys.value = [...keys]
-  
+
   // 清空缓存
   selectedRowsCache.value.clear()
-  
+
   // 从当前数据源中查找对应的行并添加到缓存
   props.dataSource.forEach(row => {
     const rowKey = row[props.rowKey]
@@ -805,10 +739,10 @@ const setSelectedRows = (keys: (string | number)[]) => {
       selectedRowsCache.value.set(rowKey, row)
     }
   })
-  
+
   // 根据 returnSelectedRows 参数决定是否返回完整行数据
   const selectedRows = props.returnSelectedRows ? getAllSelectedRows() : []
-  
+
   emit('selectionChange', keys, selectedRows)
 }
 
@@ -914,7 +848,7 @@ const clearCurrentPageSelection = () => {
 const selectCurrentPage = () => {
   // 只选择可选择的行（排除禁用的行）
   const selectableRowKeys = selectableRows.value.map(row => row[props.rowKey])
-  
+
   if (props.preserveSelectedRowKeys) {
     const otherPageKeys = getOtherPageSelectedRowKeys()
     internalSelectedRowKeys.value = [...otherPageKeys, ...selectableRowKeys]

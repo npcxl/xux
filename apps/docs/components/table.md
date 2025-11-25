@@ -516,17 +516,68 @@ const toggleLoading = () => {
 
 ## 空状态
 
-没有数据时显示的空状态。
+没有数据时显示的空状态。支持完全自定义，灵活配置。
 
 :::demo
 
 ```vue
 <template>
-  <XTable 
-    :columns="columns" 
-    :dataSource="[]"
-    emptyText="暂无数据"
-  />
+  <div style="display: flex; flex-direction: column; gap: 20px;">
+    <!-- 基础用法：只设置文字 -->
+    <div>
+      <h4>基础用法</h4>
+      <XTable 
+        :columns="columns" 
+        :dataSource="[]"
+        emptyText="暂无数据"
+      />
+    </div>
+    
+    <!-- 自定义状态类型 -->
+    <div>
+      <h4>自定义状态类型</h4>
+      <XTable 
+        :columns="columns" 
+        :dataSource="[]"
+        emptyText="加载失败"
+        emptyStatus="error"
+      />
+    </div>
+    
+    <!-- 自定义图标 -->
+    <div>
+      <h4>自定义图标</h4>
+      <XTable 
+        :columns="columns" 
+        :dataSource="[]"
+        emptyText="暂无数据"
+      >
+        <template #emptyIcon>
+          <div style="width: 100px; height: 100px;  background:red; color: white; font-size: 20px;">
+             可以是一个demo
+          </div>
+        </template>
+      </XTable>
+    </div>
+    
+    <!-- 完全自定义 -->
+    <div>
+      <h4>完全自定义</h4>
+      <XTable 
+        :columns="columns" 
+        :dataSource="[]"
+      >
+        <template #empty>
+          <div style="padding: 60px 20px; text-align: center;">
+            <div style="font-size: 48px; margin-bottom: 16px;">现在所有数据都是你写的 #empty插槽内容来显示，想写什么写什么</div>
+            <div style="font-size: 18px; font-weight: 600; margin-bottom: 8px; color: #333;">没有找到数据</div>
+            <div style="font-size: 14px; color: #999; margin-bottom: 24px;">请尝试调整筛选条件或刷新页面</div>
+            <XButton size="small" type="primary">刷新数据</XButton>
+          </div>
+        </template>
+      </XTable>
+    </div>
+  </div>
 </template>
 
 <script setup>
@@ -686,10 +737,10 @@ const dataSource = ref([
 import { ref } from 'vue'
 
 const columns = ref([
-  { key: 'name', title: '姓名', dataIndex: 'name', editable: true, width: '120px' },
-  { key: 'age', title: '年龄', dataIndex: 'age', editable: true, width: '100px' },
-  { key: 'email', title: '邮箱', dataIndex: 'email', editable: true, width: '200px' },
-  { key: 'department', title: '部门', dataIndex: 'department', width: '120px' }
+  { key: 'name', title: '姓名', dataIndex: 'name', editable: true,  },
+  { key: 'age', title: '年龄', dataIndex: 'age', editable: true,  },
+  { key: 'email', title: '邮箱', dataIndex: 'email', editable: true,  },
+  { key: 'department', title: '部门', dataIndex: 'department',}
 ])
 
 const dataSource = ref([
@@ -740,11 +791,11 @@ const handleCellEdit = (record, column, value) => {
 import { ref } from 'vue'
 
 const columns = ref([
-  { key: 'name', title: '姓名', dataIndex: 'name', width: '120px' },
-  { key: 'email', title: '邮箱', dataIndex: 'email', width: '200px', editable: true },
-  { key: 'phone', title: '电话', dataIndex: 'phone', width: '150px' },
-  { key: 'company', title: '公司', dataIndex: 'company', width: '180px' },
-  { key: 'city', title: '城市', dataIndex: 'city', width: '120px' }
+  { key: 'name', title: '姓名', dataIndex: 'name', },
+  { key: 'email', title: '邮箱', dataIndex: 'email',  editable: true },
+  { key: 'phone', title: '电话', dataIndex: 'phone', },
+  { key: 'company', title: '公司', dataIndex: 'company',},
+  { key: 'city', title: '城市', dataIndex: 'city',  }
 ])
 
 const dataSource = ref([])
@@ -2049,6 +2100,7 @@ const handleRefresh = () => {
 | loading | 加载状态 | `boolean` | `false` |
 | loadingText | 加载提示文字 | `string` | `'加载中...'` |
 | emptyText | 空数据提示文字 | `string` | `'暂无数据'` |
+| emptyStatus | 空状态类型 | `'success' \| 'error' \| 'warning' \| 'info' \| '404' \| '403' \| '500'` | `'info'` |
 | size | 表格尺寸 | `'large' \| 'default' \| 'small'` | `'default'` |
 | stripe | 是否显示斑马纹 | `boolean` | `false` |
 | border | 边框样式 | `'none' \| 'horizontal' \| 'vertical' \| 'all'` | `'horizontal'` |
@@ -2097,6 +2149,8 @@ const handleRefresh = () => {
 | 插槽名 | 说明 | 参数 |
 |--------|------|------|
 | [columnSlot] | 自定义单元格内容 | `{ record, index, value }` |
+| empty | 自定义空状态内容 | - |
+| emptyIcon | 自定义空状态图标 | - |
 
 ### 实例方法
 

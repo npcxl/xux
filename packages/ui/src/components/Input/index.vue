@@ -41,6 +41,7 @@
 
       <!-- 输入框 -->
       <input
+        v-if="!multiline"
         ref="inputRef"
         :type="actualType"
         :value="modelValue"
@@ -61,9 +62,34 @@
         @keyup="handleKeyup"
         @change="handleChange"
       />
+      
+      <!-- 文本域 -->
+      <textarea
+        v-else
+        ref="textareaRef"
+        :value="modelValue"
+        :placeholder="placeholder"
+        :disabled="disabled"
+        :readonly="readonly"
+        :required="required"
+        :maxlength="maxlength"
+        :minlength="minlength"
+        :autocomplete="autocomplete"
+        :aria-invalid="error"
+        :aria-label="label || placeholder"
+        :rows="currentRows"
+        :style="{ resize: resize, minHeight: textareaMinHeight, maxHeight: textareaMaxHeight }"
+        class="x-input x-textarea"
+        @input="handleInput"
+        @blur="handleBlur"
+        @focus="handleFocus"
+        @keydown="handleKeydown"
+        @keyup="handleKeyup"
+        @change="handleChange"
+      />
 
       <!-- 后缀区域 -->
-      <span v-if="hasSuffix || clearable || (type === 'password' && showPasswordToggle) || (type === 'number' && !disabled && !readonly) || loading" class="x-input-suffix">
+      <span v-if="!multiline && (hasSuffix || clearable || (type === 'password' && showPasswordToggle) || (type === 'number' && !disabled && !readonly) || loading)" class="x-input-suffix">
         <!-- 加载状态 -->
         <Icon v-if="loading" icon="mdi:loading" class="x-input-icon--loading" />
         
@@ -132,6 +158,36 @@
           <Icon v-if="suffixIcon" :icon="suffixIcon" />
         </slot>
       </span>
+      
+      <!-- 文本域的清除和状态按钮 -->
+      <div v-if="multiline && (clearable || loading || error || success)" class="x-textarea-controls">
+        <!-- 加载状态 -->
+        <Icon v-if="loading" icon="mdi:loading" class="x-input-icon--loading" />
+        
+        <!-- 清除按钮 -->
+        <button
+          v-else-if="clearable && modelValue && !disabled && !readonly"
+          type="button"
+          class="x-input-icon-btn x-input-clear"
+          tabindex="-1"
+          @click="handleClear"
+          @mousedown.prevent
+        >
+          <Icon icon="mdi:close-circle" />
+        </button>
+        
+        <!-- 状态图标 -->
+        <Icon 
+          v-else-if="error && !loading" 
+          icon="mdi:alert-circle" 
+          class="x-input-status-icon x-input-status-icon--error" 
+        />
+        <Icon 
+          v-else-if="success && !loading" 
+          icon="mdi:check-circle" 
+          class="x-input-status-icon x-input-status-icon--success" 
+        />
+      </div>
     </div>
 
     <!-- 底部提示信息 -->
@@ -170,7 +226,7 @@
 
 
 <script setup lang="ts">
-import { ref, computed, useSlots } from 'vue'
+import { ref, computed, useSlots, onMounted, watch, nextTick } from 'vue'
 import { Icon } from '@iconify/vue'
 /**
  * Input 输入框组件 - 企业级输入框组件
@@ -233,6 +289,19 @@ export interface InputProps {
   max?: number
   /** 精度 */
   precision?: number
+  // 文本域相关
+  /** 是否为多行输入 */
+  multiline?: boolean
+  /** 文本域行数 */
+  rows?: number
+  /** 是否自动调整高度 */
+  autoResize?: boolean
+  /** 自动调整高度时的最小行数 */
+  minRows?: number
+  /** 自动调整高度时的最大行数 */
+  maxRows?: number
+  /** 是否允许调整尺寸 */
+  resize?: 'none' | 'both' | 'horizontal' | 'vertical'
 }
 
 const props = withDefaults(defineProps<InputProps>(), {
@@ -254,7 +323,13 @@ const props = withDefaults(defineProps<InputProps>(), {
   step: 1,
   min: -Infinity,
   max: Infinity,
-  precision: undefined
+  precision: undefined,
+  multiline: false,
+  rows: 3,
+  autoResize: false,
+  minRows: 2,
+  maxRows: 10,
+  resize: 'none'
 })
 
 const emit = defineEmits<{
@@ -270,8 +345,12 @@ const emit = defineEmits<{
 
 const slots = useSlots()
 const inputRef = ref<HTMLInputElement>()
+const textareaRef = ref<HTMLTextAreaElement>()
 const isFocused = ref(false)
 const passwordVisible = ref(false)
+const currentRows = ref(props.rows)
+const textareaMinHeight = ref<string>('')
+const textareaMaxHeight = ref<string>('')
 
 // 计算属性
 const currentLength = computed(() => {
@@ -283,6 +362,7 @@ const hasPrefix = computed(() => {
 })
 
 const hasSuffix = computed(() => {
+  if (props.multiline) return false // 文本域模式不显示后缀
   return !!slots.suffix || !!props.suffixIcon
 })
 
@@ -354,10 +434,17 @@ const handleDecrease = () => {
 
 // 事件处理
 const handleInput = (event: Event) => {
-  const target = event.target as HTMLInputElement
+  const target = event.target as HTMLInputElement | HTMLTextAreaElement
   const value = target.value
   emit('update:modelValue', value)
   emit('input', value, event)
+  
+  // 文本域自动调整高度
+  if (props.multiline && props.autoResize) {
+    nextTick(() => {
+      adjustTextareaHeight()
+    })
+  }
 }
 
 const handleChange = (event: Event) => {
@@ -414,31 +501,115 @@ const handleKeyup = (event: KeyboardEvent) => {
 const handleClear = () => {
   emit('update:modelValue', '')
   emit('clear')
-  inputRef.value?.focus()
+  
+  if (props.multiline) {
+    textareaRef.value?.focus()
+  } else {
+    inputRef.value?.focus()
+  }
+  
+  // 清空后重新调整高度
+  if (props.multiline && props.autoResize) {
+    nextTick(() => {
+      adjustTextareaHeight()
+    })
+  }
 }
 
 const togglePasswordVisibility = () => {
   passwordVisible.value = !passwordVisible.value
 }
 
+// 文本域自动调整高度
+const adjustTextareaHeight = () => {
+  if (!props.autoResize || !textareaRef.value) return
+  
+  const textarea = textareaRef.value
+  
+  // 重置高度以获取准确的 scrollHeight
+  textarea.style.height = 'auto'
+  
+  const styles = window.getComputedStyle(textarea)
+  const paddingTop = parseFloat(styles.paddingTop)
+  const paddingBottom = parseFloat(styles.paddingBottom)
+  const lineHeight = parseFloat(styles.lineHeight)
+  const borderTop = parseFloat(styles.borderTopWidth)
+  const borderBottom = parseFloat(styles.borderBottomWidth)
+  
+  // 计算最小和最大高度
+  const minHeight = props.minRows * lineHeight + paddingTop + paddingBottom + borderTop + borderBottom
+  const maxHeight = props.maxRows * lineHeight + paddingTop + paddingBottom + borderTop + borderBottom
+  
+  // 获取内容高度
+  let contentHeight = textarea.scrollHeight
+  
+  // 设置高度
+  if (contentHeight < minHeight) {
+    textarea.style.height = `${minHeight}px`
+  } else if (contentHeight > maxHeight) {
+    textarea.style.height = `${maxHeight}px`
+  } else {
+    textarea.style.height = `${contentHeight}px`
+  }
+}
+
+// 监听值变化，调整高度
+watch(() => props.modelValue, () => {
+  if (props.multiline && props.autoResize) {
+    nextTick(() => {
+      adjustTextareaHeight()
+    })
+  }
+})
+
+// 初始化高度
+onMounted(() => {
+  if (props.multiline) {
+    currentRows.value = props.rows
+    
+    if (props.autoResize) {
+      // 设置最小和最大高度的 CSS 变量
+      const lineHeight = 24 // 默认行高
+      textareaMinHeight.value = `${props.minRows * lineHeight + 20}px`
+      textareaMaxHeight.value = `${props.maxRows * lineHeight + 20}px`
+      
+      nextTick(() => {
+        adjustTextareaHeight()
+      })
+    }
+  }
+})
+
 // 暴露方法
 const focus = () => {
-  inputRef.value?.focus()
+  if (props.multiline) {
+    textareaRef.value?.focus()
+  } else {
+    inputRef.value?.focus()
+  }
 }
 
 const blur = () => {
-  inputRef.value?.blur()
+  if (props.multiline) {
+    textareaRef.value?.blur()
+  } else {
+    inputRef.value?.blur()
+  }
 }
 
 const select = () => {
-  inputRef.value?.select()
+  if (props.multiline) {
+    textareaRef.value?.select()
+  } else {
+    inputRef.value?.select()
+  }
 }
 
 defineExpose({
   focus,
   blur,
   select,
-  ref: inputRef
+  ref: props.multiline ? textareaRef : inputRef
 })
 </script>
 <style scoped>
@@ -527,6 +698,36 @@ defineExpose({
   line-height: 1.5;
   font-weight: 400;
   transition: none;
+}
+
+/* ================================
+   文本域样式
+   ================================ */
+.x-textarea {
+  display: block;
+  resize: none;
+  min-height: auto;
+  line-height: 1.5;
+  overflow: auto;
+  word-break: break-word;
+}
+
+.x-textarea::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+.x-textarea::-webkit-scrollbar-thumb {
+  background-color: var(--x-border-color, #d1d5db);
+  border-radius: 3px;
+}
+
+.x-textarea::-webkit-scrollbar-thumb:hover {
+  background-color: var(--x-border-color-dark, #9ca3af);
+}
+
+.x-textarea::-webkit-scrollbar-track {
+  background: transparent;
 }
 
 .x-input::placeholder {
@@ -940,5 +1141,48 @@ defineExpose({
   50% {
     opacity: 0.7;
   }
+}
+
+/* ================================
+   文本域控制按钮
+   ================================ */
+.x-textarea-controls {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  z-index: 2;
+}
+
+.x-input-wrapper--small .x-textarea-controls {
+  top: 8px;
+  right: 10px;
+  gap: 4px;
+}
+
+.x-input-wrapper--large .x-textarea-controls {
+  top: 14px;
+  right: 14px;
+  gap: 8px;
+}
+
+/* 文本域模式下的输入框包装调整 */
+.x-input-wrapper:has(.x-textarea) {
+  align-items: flex-start;
+}
+
+.x-input-wrapper:has(.x-textarea) .x-input-prefix {
+  top: 12px;
+  transform: none;
+}
+
+.x-input-wrapper--small:has(.x-textarea) .x-input-prefix {
+  top: 8px;
+}
+
+.x-input-wrapper--large:has(.x-textarea) .x-input-prefix {
+  top: 14px;
 }
 </style>

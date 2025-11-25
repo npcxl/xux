@@ -60,6 +60,20 @@
   --x-shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.16);
   --x-shadow-xl: 0 16px 48px rgba(0, 0, 0, 0.20);
   
+  /* ========== iOS 主色阴影 ========== */
+  --x-shadow-primary-lighter: rgba(0, 122, 255, 0.1);
+  --x-shadow-primary-light: rgba(0, 122, 255, 0.15);
+  --x-shadow-primary: rgba(0, 122, 255, 0.25);
+  --x-shadow-primary-dark: rgba(0, 122, 255, 0.35);
+  --x-shadow-focus-primary: rgba(0, 122, 255, 0.12);
+  
+  /* ========== iOS 渐变背景 ========== */
+  --x-gradient-bg-light: linear-gradient(135deg, #fafafa, #f3f4f6);
+  --x-gradient-bg: linear-gradient(135deg, #ffffff, #f9fafb);
+  --x-gradient-primary-lighter: linear-gradient(135deg, rgba(0, 122, 255, 0.08) 0%, rgba(0, 122, 255, 0.04) 100%);
+  --x-gradient-primary-light: linear-gradient(135deg, rgba(0, 122, 255, 0.15) 0%, rgba(0, 122, 255, 0.08) 100%);
+  --x-gradient-primary: linear-gradient(135deg, #007AFF 0%, #0051D5 100%);
+  
   /* iOS 彩色阴影 (更柔和) */
   --x-shadow-primary: 0 4px 12px rgba(0, 122, 255, 0.18);
   --x-shadow-primary-lg: 0 8px 24px rgba(0, 122, 255, 0.24);
@@ -200,16 +214,43 @@
   --x-mask-color: rgba(0, 0, 0, 0.6);
   --x-mask-color-light: rgba(0, 0, 0, 0.4);
   
+  /* 表格暗色主题 */
+  --x-table-stripe-bg: rgba(255, 255, 255, 0.03);
+  --x-table-stripe-hover-bg: rgba(255, 255, 255, 0.06);
+  --x-table-row-selected-bg: rgba(24, 144, 255, 0.15);
+  --x-table-hover-bg: rgba(255, 255, 255, 0.05);
+  
   /* iOS 暗色阴影（几乎不可见） */
   --x-shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.3);
   --x-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
   --x-shadow-md: 0 4px 16px rgba(0, 0, 0, 0.5);
   --x-shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.6);
   --x-shadow-xl: 0 16px 48px rgba(0, 0, 0, 0.7);
+  
+  /* iOS 暗色主色阴影 */
+  --x-shadow-primary-lighter: rgba(10, 132, 255, 0.12);
+  --x-shadow-primary-light: rgba(10, 132, 255, 0.18);
+  --x-shadow-primary: rgba(10, 132, 255, 0.3);
+  --x-shadow-primary-dark: rgba(10, 132, 255, 0.4);
+  --x-shadow-focus-primary: rgba(10, 132, 255, 0.15);
+  
+  /* iOS 暗色渐变背景 */
+  --x-gradient-bg-light: linear-gradient(135deg, #2C2C2E, #1C1C1E);
+  --x-gradient-bg: linear-gradient(135deg, #3A3A3C, #2C2C2E);
+  --x-gradient-primary-lighter: linear-gradient(135deg, rgba(10, 132, 255, 0.08) 0%, rgba(10, 132, 255, 0.04) 100%);
+  --x-gradient-primary-light: linear-gradient(135deg, rgba(10, 132, 255, 0.15) 0%, rgba(10, 132, 255, 0.08) 100%);
+  --x-gradient-primary: linear-gradient(135deg, #0A84FF 0%, #0051B3 100%);
 }
 
 /* ========== iOS 自动暗色模式（根据系统偏好） ========== */
 @media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    /* 表格暗色主题 */
+    --x-table-stripe-bg: rgba(255, 255, 255, 0.03);
+    --x-table-stripe-hover-bg: rgba(255, 255, 255, 0.06);
+    --x-table-row-selected-bg: rgba(24, 144, 255, 0.15);
+    --x-table-hover-bg: rgba(255, 255, 255, 0.05);
+  }
   :root:not(.light):not([data-theme="light"]) {
     /* iOS 主色 */
     --x-color-primary: #0A84FF;

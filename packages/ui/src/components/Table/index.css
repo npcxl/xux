@@ -661,6 +661,117 @@
 }
 
 /* ========== 暗色模式支持 ========== */
+/* 使用 .dark 类名的暗色模式 */
+.dark .x-table-container {
+  background: #141414;
+  border-color: #303030;
+}
+
+.dark .x-table-container:hover {
+  border-color: #434343;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.45);
+}
+
+.dark .x-table-header-cell {
+  background: #1f1f1f;
+  color: rgba(255, 255, 255, 0.85);
+  border-bottom-color: #303030;
+}
+
+.dark .x-table-header-cell:hover {
+  background: #262626;
+}
+
+.dark .x-table-body-cell {
+  color: rgba(255, 255, 255, 0.85);
+  background: #141414;
+  border-bottom-color: #303030;
+}
+
+/* 暗色模式下的斑马纹 - 使用更明显的对比色 */
+.dark .x-table-body-cell.x-table-row-stripe {
+  background: rgba(255, 255, 255, 0.03) !important;
+}
+
+.dark .x-table-body-cell.x-table-row-stripe.x-table-row-hover {
+  background: rgba(255, 255, 255, 0.06) !important;
+}
+
+.dark .x-table-body-cell.x-table-row-stripe.x-table-row-selected {
+  background: rgba(24, 144, 255, 0.15) !important;
+}
+
+.dark .x-table-body-cell.x-table-row-hover {
+  background: #262626 !important;
+}
+
+.dark .x-table-body-cell.x-table-row-selected {
+  background: rgba(24, 144, 255, 0.08) !important;
+}
+
+/* 暗色模式下的固定列 */
+.dark .x-table-body-cell.x-table-cell-fixed,
+.dark .x-table-body-cell.x-table-cell-fixed-right {
+  background: #141414;
+}
+
+.dark .x-table-body-cell.x-table-cell-fixed.x-table-row-stripe,
+.dark .x-table-body-cell.x-table-cell-fixed-right.x-table-row-stripe {
+  background: rgba(255, 255, 255, 0.03) !important;
+}
+
+.dark .x-table-body-cell.x-table-cell-fixed.x-table-row-stripe.x-table-row-hover,
+.dark .x-table-body-cell.x-table-cell-fixed-right.x-table-row-stripe.x-table-row-hover {
+  background: rgba(255, 255, 255, 0.06) !important;
+}
+
+.dark .x-table-body-cell.x-table-cell-fixed.x-table-row-stripe.x-table-row-selected,
+.dark .x-table-body-cell.x-table-cell-fixed-right.x-table-row-stripe.x-table-row-selected {
+  background: rgba(24, 144, 255, 0.15) !important;
+}
+
+.dark .x-table-checkbox {
+  border-color: #434343;
+  background: #141414;
+}
+
+.dark .x-table-checkbox:disabled {
+  background: #262626;
+  border-color: #434343;
+}
+
+.dark .x-table-checkbox:disabled:checked {
+  background: rgba(24, 144, 255, 0.3);
+  border-color: rgba(24, 144, 255, 0.3);
+}
+
+.dark .x-table-cell-fixed::after,
+.dark .x-table-cell-fixed-right::before {
+  background: #303030;
+}
+
+.dark .x-table-loading {
+  background: rgba(20, 20, 20, 0.85);
+}
+
+.dark .x-table-loading-text {
+  color: rgba(255, 255, 255, 0.65);
+}
+
+.dark .x-table-empty {
+  color: rgba(255, 255, 255, 0.45);
+}
+
+.dark .x-table-empty-icon {
+  color: rgba(255, 255, 255, 0.25);
+}
+
+.dark .x-table-pagination {
+  background: #1f1f1f;
+  border-top-color: #303030;
+}
+
+/* 系统偏好暗色模式 */
 @media (prefers-color-scheme: dark) {
   .x-table-container {
     background: #141414;

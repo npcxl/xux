@@ -88,6 +88,55 @@ const options = [
 </div>
 
 <div style="break-inside: avoid; margin-bottom: 24px;">
+<h3 style="margin: 0 0 12px 0; font-size: 16px; font-weight: 600;">可清除</h3>
+
+:::demo
+
+```vue
+<template>
+  <div style="min-height: 200px">
+    <div style="margin-bottom: 16px;">
+      <div style="font-size: 13px; font-weight: 500; margin-bottom: 8px; color: rgba(60, 60, 67, 0.6)">单选 - 可清除</div>
+      <XSelect 
+        v-model="clearableSelected" 
+        :options="options"
+        clearable
+        placeholder="选择后可清除"
+        width="100%"
+      />
+    </div>
+    <div>
+      <div style="font-size: 13px; font-weight: 500; margin-bottom: 8px; color: rgba(60, 60, 67, 0.6)">多选 - 可清除</div>
+      <XSelect 
+        v-model="clearableMultiple" 
+        :options="options"
+        clearable
+        multiple
+        placeholder="选择多个后可一键清除"
+        width="100%"
+      />
+    </div>
+  </div>
+</template>
+
+<script setup>
+import { ref } from 'vue'
+
+const clearableSelected = ref('')
+const clearableMultiple = ref([])
+const options = [
+  { label: '选项一', value: '1' },
+  { label: '选项二', value: '2' },
+  { label: '选项三', value: '3' },
+  { label: '选项四', value: '4' }
+]
+</script>
+```
+
+:::
+</div>
+
+<div style="break-inside: avoid; margin-bottom: 24px;">
 <h3 style="margin: 0 0 12px 0; font-size: 16px; font-weight: 600;">禁用状态</h3>
 
 :::demo
@@ -340,7 +389,7 @@ const sizeOptions = [
 | noOptionsText | 无选项提示文本 | `string` | `'暂无选项'` |
 | clearable | 是否可清空 | `boolean` | `false` |
 | borderless | 是否无边框 | `boolean` | `false` |
-| width | 选择器宽度 | `string` | `'200px'` |
+| width | 选择器宽度 | `string` | `'100%'` |
 | size | 尺寸大小 | `'small' \| 'medium' \| 'large'` | `'medium'` |
 
 ### SelectOption

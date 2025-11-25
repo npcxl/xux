@@ -1,6 +1,6 @@
-# CountrySelect 国家选择器
+# CountrySelect 国家/地区选择器
 
-国家选择器组件，支持国旗显示、IP自动检测、自定义后端接口等功能。
+一个功能强大的国家和地区选择器组件，提供完整的国家列表、国旗展示、智能搜索、IP 地址自动检测等功能。
 
 <div style="columns: 2; column-gap: 32px; margin-top: 32px;">
 
@@ -8,18 +8,20 @@
 
 ## 基础用法
 
-默认显示国家选择器，支持搜索和选择功能。
+最简单的用法，提供基础的国家选择功能。
 
 :::demo
 
 ```vue
 <template>
+  <div style="width:300px">
   <XFlex vertical gap="16" style="min-height: 300px">
     <XCountrySelect v-model="selectedCountry" placeholder="请选择国家" />
     <div style="font-size: 14px; color: #666">
       选中的国家：{{ selectedCountry || '未选择' }}
     </div>
   </XFlex>
+  </div>
 </template>
 
 <script setup>
@@ -36,9 +38,9 @@ const selectedCountry = ref('')
 
 <div style="break-inside: avoid; margin-bottom: 24px;">
 
-## IP 自动检测
+## IP 地址智能检测
 
-启用 `auto-detect-from-ip` 属性后，组件会自动根据用户 IP 检测所在国家。
+通过 `auto-detect-from-ip` 属性启用 IP 地址检测功能，自动识别用户所在国家/地区。
 
 :::demo
 
@@ -77,9 +79,9 @@ const handleDetectSuccess = (countryCode) => {
 
 <div style="break-inside: avoid; margin-bottom: 24px;">
 
-## 返回类型
+## 返回值类型
 
-通过 `return-type` 属性控制返回国家名称还是国家代码。
+使用 `return-type` 属性控制组件返回的数据格式，支持返回国家名称或 ISO 代码。
 
 :::demo
 
@@ -288,51 +290,76 @@ const limitedCountries = ref([])
 
 </div>
 
-## API
+## API 文档
 
-### Props
+### 属性 Props
 
 | 属性名 | 说明 | 类型 | 默认值 |
 |--------|------|------|--------|
-| modelValue | 绑定值 | `string \| string[]` | `''` / `[]` |
-| placeholder | 占位文本 | `string` | `'请选择国家'` |
-| width | 选择器宽度 | `string` | `'280px'` |
-| return-type | 返回值类型 | `'name' \| 'code'` | `'name'` |
-| multiple | 是否支持多选 | `boolean` | `false` |
-| max-selection | 最大选择数量，0表示无限制 | `number` | `0` |
-| auto-detect-from-ip | 是否自动从 IP 检测国家 | `boolean` | `false` |
-| ip-detect-url | 自定义 IP 检测接口 URL | `string` | `'https://ipinfo.io/json'` |
-| ip-detect-method | IP 检测请求方法 | `'GET' \| 'POST'` | `'GET'` |
-| ip-detect-headers | 自定义请求头 | `Record<string, string>` | `{}` |
-| ip-detect-response-parser | 自定义响应解析函数 | `(data: any) => string` | - |
-| priority-countries | 优先显示的国家代码列表 | `string[]` | `['US', 'CA', 'GB', 'DE', 'FR', 'JP', 'CN', 'AU']` |
-| disabled | 是否禁用 | `boolean` | `false` |
-| required | 是否必填 | `boolean` | `false` |
-| custom-class | 自定义样式类 | `string` | `''` |
+| **modelValue** | 绑定值，单选时为字符串，多选时为数组 | `string \| string[]` | `''` / `[]` |
+| **placeholder** | 输入框占位文本 | `string` | `'请选择国家'` |
+| **width** | 选择器宽度，支持任何 CSS 宽度值 | `string` | `'280px'` |
+| **return-type** | 返回值类型（国家名称或 ISO 代码） | `'name' \| 'code'` | `'name'` |
+| **multiple** | 是否启用多选模式 | `boolean` | `false` |
+| **max-selection** | 多选模式下最大可选数量（0 表示不限制） | `number` | `0` |
+| **auto-detect-from-ip** | 是否自动根据 IP 地址检测国家 | `boolean` | `false` |
+| **ip-detect-url** | 自定义 IP 检测服务的接口地址 | `string` | `'https://ipinfo.io/json'` |
+| **ip-detect-method** | IP 检测服务的请求方法 | `'GET' \| 'POST'` | `'GET'` |
+| **ip-detect-headers** | IP 检测请求的自定义请求头 | `Record<string, string>` | `{}` |
+| **ip-detect-response-parser** | 自定义 IP 检测响应解析函数 | `(data: any) => string` | - |
+| **priority-countries** | 优先显示的国家代码列表（ISO 代码） | `string[]` | 见下方说明 |
+| **disabled** | 是否禁用选择器 | `boolean` | `false` |
+| **required** | 是否为必填项 | `boolean` | `false` |
+| **custom-class** | 自定义 CSS 类名 | `string` | `''` |
 
-### Events
+> **priority-countries 默认值：** `['US', 'CA', 'GB', 'DE', 'FR', 'JP', 'CN', 'AU']`
+
+### 事件 Events
 
 | 事件名 | 说明 | 回调参数 |
 |--------|------|----------|
-| update:modelValue | 值变化时触发 | `(value: string \| string[])` |
-| change | 值变化时触发 | `(value: string \| string[], country: Country \| Country[])` |
-| ip-detect-start | IP 检测开始 | - |
-| ip-detect-success | IP 检测成功 | `(countryCode: string)` |
-| ip-detect-error | IP 检测失败 | `(error: Error)` |
+| **update:modelValue** | 选中值变化时触发，用于 `v-model` | `(value: string \| string[])` |
+| **change** | 选中值变化时触发，返回值和国家对象 | `(value: string \| string[], country: Country \| Country[])` |
+| **ip-detect-start** | IP 地址检测开始时触发 | - |
+| **ip-detect-success** | IP 地址检测成功时触发 | `(countryCode: string)` |
+| **ip-detect-error** | IP 地址检测失败时触发 | `(error: Error)` |
 
-### Methods
+### 方法 Methods
+
+通过 `ref` 调用组件实例方法：
+
+```javascript
+const countrySelectRef = ref()
+
+// 手动触发 IP 检测
+countrySelectRef.value.detectCountryFromIp()
+
+// 清除所有选择
+countrySelectRef.value.clearAll()
+```
 
 | 方法名 | 说明 | 参数 | 返回值 |
 |--------|------|------|--------|
-| detectCountryFromIp | 手动触发 IP 检测 | - | `Promise<void>` |
-| clearAll | 清除所有选择 | - | `void` |
+| **detectCountryFromIp** | 手动触发 IP 地址检测 | - | `Promise<void>` |
+| **clearAll** | 清除所有已选择的国家 | - | `void` |
 
-### Expose
+### 暴露属性 Expose
 
-| 属性/方法 | 说明 | 类型 |
+组件暴露的只读属性，可通过 `ref` 访问：
+
+| 属性名 | 说明 | 类型 |
 |--------|------|------|
-| detectCountryFromIp | 手动触发 IP 检测 | `() => Promise<void>` |
-| clearAll | 清除所有选择 | `() => void` |
-| allCountries | 所有国家列表 | `Readonly<Ref<Country[]>>` |
-| sortedCountries | 排序后的国家列表 | `Readonly<Ref<Country[]>>` |
-| selectedCountries | 已选择的国家列表（多选模式） | `Readonly<Ref<Country[]>>` |
+| **allCountries** | 所有可选国家的完整列表 | `Readonly<Ref<Country[]>>` |
+| **sortedCountries** | 根据优先级排序后的国家列表 | `Readonly<Ref<Country[]>>` |
+| **selectedCountries** | 当前已选择的国家列表（多选模式） | `Readonly<Ref<Country[]>>` |
+
+### 类型定义 Types
+
+```typescript
+interface Country {
+  name: string      // 国家名称
+  code: string      // ISO 3166-1 alpha-2 代码
+  dialCode: string  // 国际电话区号
+  flagSvg: string   // 国旗 SVG 图片地址
+}
+```

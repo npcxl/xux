@@ -532,12 +532,14 @@
   /* 容器 */
   .country-select-container {
     position: relative;
+    min-width: 250px;
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
   }
   
   /* 输入框 */
   .country-select-input {
     width: 100%;
+    min-width: 250px;
     padding: 8px 12px;
     border: 1px solid var(--x-border-color, #d1d5db);
     border-radius: 6px;
@@ -868,4 +870,165 @@
     opacity: 1;
     transform: translateY(0);
   }
-  </style> 
+  
+  /* ========== 暗色模式 ========== */
+  .dark .country-select-input {
+    background-color: rgba(30, 30, 30, 0.9);
+    border-color: rgba(255, 255, 255, 0.1);
+    color: rgba(255, 255, 255, 0.95);
+  }
+  
+  .dark .country-select-input:hover:not(.is-disabled) {
+    background-color: rgba(40, 40, 40, 0.95);
+    border-color: rgba(255, 255, 255, 0.15);
+  }
+  
+  .dark .country-select-input:focus {
+    border-color: #0A84FF;
+    box-shadow: 0 0 0 2px rgba(10, 132, 255, 0.2);
+  }
+  
+  .dark .country-select-placeholder,
+  .dark .is-placeholder {
+    color: rgba(235, 235, 245, 0.5);
+  }
+  
+  .dark .country-select-arrow {
+    color: rgba(235, 235, 245, 0.6);
+  }
+  
+  .dark .country-tag {
+    background-color: rgba(50, 50, 50, 0.9);
+    border-color: rgba(255, 255, 255, 0.1);
+    color: rgba(255, 255, 255, 0.9);
+  }
+  
+  .dark .country-tag-close:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+  }
+  
+  .dark .country-select-dropdown {
+    background-color: rgba(28, 28, 30, 0.98);
+  }
+  
+  .dark .country-select-search {
+    background-color: rgba(40, 40, 40, 0.6);
+    border-color: rgba(255, 255, 255, 0.08);
+  }
+  
+  .dark .country-search-input {
+    color: rgba(255, 255, 255, 0.95);
+    background: transparent;
+  }
+  
+  .dark .country-search-input::placeholder {
+    color: rgba(235, 235, 245, 0.4);
+  }
+  
+  .dark .country-search-icon,
+  .dark .country-search-clear {
+    color: rgba(235, 235, 245, 0.5);
+  }
+  
+  .dark .country-search-clear:hover {
+    color: rgba(235, 235, 245, 0.7);
+  }
+  
+  .dark .country-select-toolbar {
+    background-color: rgba(40, 40, 40, 0.6);
+    border-color: rgba(255, 255, 255, 0.08);
+  }
+  
+  .dark .country-select-count {
+    color: rgba(235, 235, 245, 0.6);
+  }
+  
+  .dark .country-select-item {
+    color: rgba(255, 255, 255, 0.9);
+  }
+  
+  .dark .country-select-item:hover {
+    background-color: rgba(10, 132, 255, 0.15);
+  }
+  
+  .dark .country-select-item.is-selected {
+    background-color: rgba(10, 132, 255, 0.25);
+  }
+  
+  .dark .country-checkbox {
+    background-color: rgba(50, 50, 50, 0.9);
+    border-color: rgba(235, 235, 245, 0.2);
+  }
+  
+  .dark .country-checkbox-checked {
+    background-color: #0A84FF;
+    border-color: #0A84FF;
+  }
+  
+  .dark .country-select-empty,
+  .dark .country-loading {
+    color: rgba(235, 235, 245, 0.5);
+  }
+  
+  /* 系统偏好暗色模式 */
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) .country-select-input {
+      background-color: rgba(30, 30, 30, 0.9);
+      border-color: rgba(255, 255, 255, 0.1);
+      color: rgba(255, 255, 255, 0.95);
+    }
+    
+    :root:not([data-theme="light"]) .country-select-dropdown {
+      background-color: rgba(28, 28, 30, 0.98);
+    }
+    
+    :root:not([data-theme="light"]) .country-select-item {
+      color: rgba(255, 255, 255, 0.9);
+    }
+  }
+  
+  /* 响应式布局 - 移动设备 */
+  @media (max-width: 640px) {
+    .country-select-container {
+      min-width: 100%;
+    }
+    
+    .country-select-input {
+      min-width: 100%;
+    }
+    
+    .country-select-dropdown {
+      min-width: 100%;
+      max-width: 100%;
+    }
+  }
+  </style>
+
+<style>
+/* Element Plus Popover 样式覆盖 */
+.x-country-select-popper.el-popper {
+  border-radius: 8px !important;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06) !important;
+  padding: 0 !important;
+  border: 1px solid #e5e7eb !important;
+  background: rgba(255, 255, 255, 0.98) !important;
+}
+
+.x-country-select-popper .el-popper__arrow {
+  display: none !important;
+}
+
+/* 暗色模式下的弹出层 */
+.dark .x-country-select-popper.el-popper {
+  background: rgba(28, 28, 30, 0.98) !important;
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5), 0 4px 16px rgba(0, 0, 0, 0.4) !important;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .x-country-select-popper.el-popper {
+    background: rgba(28, 28, 30, 0.98) !important;
+    border: 1px solid rgba(255, 255, 255, 0.08) !important;
+  }
+}
+</style> 
