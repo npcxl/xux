@@ -158,6 +158,7 @@ export default defineConfig({
             { text: 'Pagination 分页 <span class="sidebar-badge update">更新</span>', link: '/components/pagination' },
             { text: 'List 列表', link: '/components/list' },
             { text: 'Chart 图表', link: '/components/chart' },
+            { text: 'VirtualList 虚拟滚动列表 <span class="sidebar-badge new">新增</span>', link: '/components/virtual-list' },
           ]
         },
         {
