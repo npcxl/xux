@@ -63,7 +63,7 @@ const dataSource = ref(
     >
       <template #default="{ item, index }">
         <div style="padding: 20px; border-bottom: 1px solid #f0f0f0; display: flex; align-items: center; gap: 16px;">
-          <div style="width: 50px; height: 50px; border-radius: 8px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; font-size: 20px;">
+          <div style="width: 50px; height: 50px; border-radius: 8px;display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; font-size: 20px;">
             {{ String(index + 1).padStart(2, '0') }}
           </div>
           <div style="flex: 1;">
@@ -220,51 +220,6 @@ const toggleLoading = () => {
 
 :::
 
-## 滚动进入动画
-
-启用 `animated` 属性，列表项滚动进入视口时会有流畅的动画效果。
-
-:::demo
-
-```vue
-<template>
-  <XVirtualList
-    :dataSource="animatedData"
-    height="500px"
-    :itemHeight="80"
-    animated
-    :animationDelay="30"
-  >
-    <template #default="{ item, index }">
-      <div style="padding: 20px; border-bottom: 1px solid #f0f0f0; display: flex; align-items: center; gap: 16px;">
-        <div style="width: 60px; height: 60px; border-radius: 12px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; font-size: 24px;">
-          {{ String(index + 1).padStart(2, '0') }}
-        </div>
-        <div style="flex: 1;">
-          <div style="font-weight: 600; font-size: 16px; margin-bottom: 4px;">{{ item.title }}</div>
-          <div style="font-size: 14px; color: #666;">{{ item.description }}</div>
-        </div>
-        <div style="font-size: 12px; color: #999;">{{ item.time }}</div>
-      </div>
-    </template>
-  </XVirtualList>
-</template>
-
-<script setup>
-import { ref } from 'vue'
-
-const animatedData = ref(
-  Array.from({ length: 500 }, (_, i) => ({
-    id: i + 1,
-    title: `动画项目 ${i + 1}`,
-    description: `滚动查看流畅的进入动画效果，每个项目都有独立的动画延迟。`,
-    time: `${Math.floor(i / 10)} 分钟前`
-  }))
-)
-</script>
-```
-
-:::
 
 ## 商品列表场景
 
@@ -477,7 +432,7 @@ const loadMore = () => {
   >
     <template #empty>
       <div style="padding: 60px 20px; text-align: center;">
-        <div style="font-size: 48px; margin-bottom: 16px;">📭</div>
+        <div style="font-size: 48px; margin-bottom: 16px;">这是一个盒子，想放什么放什么</div>
         <div style="font-size: 18px; font-weight: 600; margin-bottom: 8px; color: #333;">没有找到数据</div>
         <div style="font-size: 14px; color: #999; margin-bottom: 24px;">请尝试调整筛选条件或刷新页面</div>
         <XButton size="small" type="primary">刷新数据</XButton>

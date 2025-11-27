@@ -200,12 +200,14 @@ onMounted(() => {
   opacity: 0.5;
 }
 
-.x-segmented label:not(.disabled):hover {
-  background-color: var(--x-fill-color-dark, rgba(0, 0, 0, 0.04));
+/* Hover 状态 - 使用原本的背景色高亮，完全遮住底部选中块 */
+.x-segmented label:not(.disabled):not(:has(input:checked)):hover {
+  background-color: var(--x-bg-color, #ffffff);
+  z-index: 3; /* 确保在选中块之上 */
 }
 
-.x-segmented label:not(.disabled):hover .icon {
-  opacity: 0.9;
+.x-segmented label:not(.disabled):not(:has(input:checked)):hover .icon {
+  opacity: 1;
 }
 
 .x-segmented label .icon {

@@ -46,13 +46,7 @@
       <div
         v-for="(item, index) in visibleItems"
         :key="getItemKey(item, startIndex + index)"
-        :ref="animated ? (el) => setItemRef(el, startIndex + index) : undefined"
         class="x-virtual-list-item"
-        :class="{
-          'x-virtual-list-item--animated': animated,
-          'x-virtual-list-item--visible': animated && isItemVisible(startIndex + index)
-        }"
-        :style="animated ? { '--animation-delay': `${index * animationDelay}ms` } : undefined"
       >
         <slot :item="item" :index="startIndex + index">
           <div class="x-virtual-list-item-default">
@@ -68,7 +62,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, watch, onMounted, onBeforeUnmount, nextTick } from 'vue'
+import { ref, computed, onMounted, onBeforeUnmount } from 'vue'
 
 /**
  * VirtualList 虚拟滚动列表组件
@@ -96,10 +90,6 @@ export interface VirtualListProps {
   emptyText?: string
   /** 项的唯一标识字段 */
   itemKey?: string | ((item: any, index: number) => string | number)
-  /** 是否启用滚动动画 */
-  animated?: boolean
-  /** 动画延迟间隔（ms） */
-  animationDelay?: number
 }
 
 const props = withDefaults(defineProps<VirtualListProps>(), {
@@ -111,9 +101,7 @@ const props = withDefaults(defineProps<VirtualListProps>(), {
   loading: false,
   loadingText: '加载中...',
   emptyText: '暂无数据',
-  itemKey: 'id',
-  animated: true,
-  animationDelay: 30
+  itemKey: 'id'
 })
 
 const emit = defineEmits<{
@@ -125,15 +113,8 @@ const emit = defineEmits<{
 const containerRef = ref<HTMLDivElement>()
 const scrollTop = ref(0)
 const containerHeight = ref(0)
-const itemRefs = ref<Map<number, HTMLElement>>(new Map())
-const visibleItemsSet = ref<Set<number>>(new Set())
 
-// 滚动优化
-let rafId: number | null = null
-let lastScrollTop = 0
-let scrollVelocity = 0
-let lastUpdateTime = 0
-const velocityHistory: number[] = [] // 速度历史，用于平滑计算
+// 不再需要 RAF，直接同步更新
 
 // 计算总高度
 const totalHeight = computed(() => {
@@ -145,96 +126,66 @@ const totalHeight = computed(() => {
   return props.dataSource.length * props.itemHeight
 })
 
-// 计算可见范围（优化版本，增加动态缓冲区）
-const visibleRange = computed(() => {
+// 计算可见范围（完全参考表格组件的实现）
+const updateVirtualRange = (scrollTopValue: number) => {
   if (!containerRef.value || props.dataSource.length === 0) {
     return { start: 0, end: 0 }
   }
 
-  const scrollTopValue = scrollTop.value
-  // 确保容器高度有效，如果为0则使用默认值
+  // 确保容器高度有效
   let containerHeightValue = containerHeight.value
   if (containerHeightValue === 0 && containerRef.value) {
     containerHeightValue = containerRef.value.clientHeight || 400
   }
-  
-  // 根据滚动速度动态调整缓冲区大小
-  // 滚动越快，缓冲区越大，防止空白
-  const absVelocity = Math.abs(scrollVelocity)
-  // 限制缓冲区最大为 buffer * 5，最小为 buffer
-  const dynamicBuffer = absVelocity > 1 
-    ? Math.max(props.buffer, Math.min(props.buffer * 5, Math.ceil(absVelocity * 1.5)))
-    : props.buffer
-  
-  let start = 0
-  let end = props.dataSource.length
 
   if (props.dynamicHeight && props.getItemHeight) {
     // 动态高度模式
     let accumulatedHeight = 0
+    let start = 0
+    let end = props.dataSource.length
+    
+    // 找到起始索引
     for (let i = 0; i < props.dataSource.length; i++) {
       const itemHeight = props.getItemHeight!(props.dataSource[i], i)
       if (accumulatedHeight + itemHeight >= scrollTopValue) {
-        start = Math.max(0, i - dynamicBuffer)
+        start = Math.max(0, i - props.buffer)
         break
       }
       accumulatedHeight += itemHeight
     }
     
+    // 找到结束索引
     accumulatedHeight = 0
+    const visibleHeight = scrollTopValue + containerHeightValue
     for (let i = 0; i < props.dataSource.length; i++) {
       accumulatedHeight += props.getItemHeight!(props.dataSource[i], i)
-      if (accumulatedHeight >= scrollTopValue + containerHeightValue) {
-        end = Math.min(props.dataSource.length, i + dynamicBuffer + 1)
+      if (accumulatedHeight >= visibleHeight) {
+        end = Math.min(props.dataSource.length, i + props.buffer + 1)
         break
       }
     }
+    
+    return { start, end }
   } else {
-    // 固定高度模式 - 优化计算
+    // 固定高度模式（完全按照表格组件的实现）
     const itemHeight = props.itemHeight
+    const totalCount = props.dataSource.length
     
-    // 计算可见区域的起始和结束索引（基于滚动位置）
-    // 注意：索引从0开始，所以需要确保计算正确
-    const firstVisibleIndex = Math.max(0, Math.floor(scrollTopValue / itemHeight))
-    const lastVisibleIndex = Math.min(
-      props.dataSource.length - 1, // 确保不超过最大索引
-      Math.ceil((scrollTopValue + containerHeightValue) / itemHeight) - 1
-    )
+    // 计算可见区域能显示多少项
+    const visibleCount = Math.ceil(containerHeightValue / itemHeight)
     
-    // 应用缓冲区，扩大渲染范围
-    start = Math.max(0, firstVisibleIndex - dynamicBuffer)
-    // end 应该是 exclusive 的，所以需要 +1
-    end = Math.min(props.dataSource.length, lastVisibleIndex + dynamicBuffer + 1)
+    // 计算起始索引（添加缓冲区）
+    const startIndex = Math.max(0, Math.floor(scrollTopValue / itemHeight) - props.buffer)
+    // 计算结束索引（添加缓冲区，注意是 buffer * 2）
+    const endIndex = Math.min(totalCount, startIndex + visibleCount + props.buffer * 2)
     
-    // 确保至少渲染可见区域的项目
-    if (end <= start) {
-      // 如果计算出的范围无效，至少渲染可见区域
-      start = Math.max(0, firstVisibleIndex)
-      end = Math.min(props.dataSource.length, Math.max(lastVisibleIndex + 1, firstVisibleIndex + 1))
-    }
-    
-    // 确保 end 至少比 start 大 1
-    if (end <= start) {
-      end = Math.min(props.dataSource.length, start + 1)
-    }
+    return { start: startIndex, end: endIndex }
   }
+}
 
-  // 最终安全检查：确保范围有效且不超出数据源
-  start = Math.max(0, start)
-  end = Math.min(props.dataSource.length, Math.max(end, start + 1))
-  
-  // 如果数据源为空，返回空范围
-  if (props.dataSource.length === 0) {
-    return { start: 0, end: 0 }
-  }
-  
-  // 最后的保险：确保范围始终有效
-  if (start >= end) {
-    start = 0
-    end = Math.min(1, props.dataSource.length)
-  }
-
-  return { start, end }
+// 使用 computed 计算可见范围
+const visibleRange = computed(() => {
+  return updateVirtualRange(scrollTop.value)
 })
 
 // 可见项目
@@ -284,23 +235,14 @@ const getItemKey = (item: any, index: number): string | number => {
   return item[props.itemKey] ?? index
 }
 
-// 设置项引用
-const setItemRef = (el: any, index: number) => {
-  if (el) {
-    itemRefs.value.set(index, el)
-  }
-}
 
-// 判断项是否可见
-const isItemVisible = (index: number): boolean => {
-  return visibleItemsSet.value.has(index)
-}
-
-// 处理滚动（使用 requestAnimationFrame + 节流优化）
+// 处理滚动（完全按照表格组件的实现，直接同步更新）
 const handleScroll = (e: Event) => {
   const target = e.target as HTMLDivElement
   const currentScrollTop = target.scrollTop
-  const currentTime = Date.now()
+  
+  // 直接同步更新，不使用 RAF（表格组件就是这样做的）
+  scrollTop.value = currentScrollTop
   
   // 更新容器高度（可能在滚动过程中变化）
   if (containerRef.value) {
@@ -308,41 +250,6 @@ const handleScroll = (e: Event) => {
     if (newHeight > 0 && newHeight !== containerHeight.value) {
       containerHeight.value = newHeight
     }
-  }
-  
-  // 计算滚动速度（用于动态调整缓冲区）
-  const timeDelta = currentTime - lastUpdateTime
-  if (timeDelta > 0 && timeDelta < 100) { // 防止异常时间差
-    const instantVelocity = (currentScrollTop - lastScrollTop) / timeDelta * 16 // 归一化到16ms
-    
-    // 使用滑动平均平滑速度计算，减少抖动
-    velocityHistory.push(instantVelocity)
-    if (velocityHistory.length > 3) {
-      velocityHistory.shift()
-    }
-    scrollVelocity = velocityHistory.reduce((sum, v) => sum + v, 0) / velocityHistory.length
-  }
-  lastScrollTop = currentScrollTop
-  lastUpdateTime = currentTime
-  
-  // 使用 requestAnimationFrame 优化，减少抖动
-  // 快速滚动时立即更新，慢速滚动时节流
-  if (Math.abs(scrollVelocity) > 5) {
-    // 快速滚动：立即更新
-    if (rafId !== null) {
-      cancelAnimationFrame(rafId)
-    }
-    scrollTop.value = currentScrollTop
-  } else {
-    // 慢速滚动：使用 RAF 节流
-    if (rafId !== null) {
-      cancelAnimationFrame(rafId)
-    }
-    
-    rafId = requestAnimationFrame(() => {
-      scrollTop.value = currentScrollTop
-      rafId = null
-    })
   }
   
   emit('scroll', currentScrollTop, target.scrollLeft)
@@ -355,68 +262,6 @@ const handleScroll = (e: Event) => {
   }
 }
 
-// IntersectionObserver 用于动画
-let observer: IntersectionObserver | null = null
-
-const initObserver = () => {
-  if (!props.animated || typeof window === 'undefined') return
-
-  observer = new IntersectionObserver(
-    (entries) => {
-      requestAnimationFrame(() => {
-        entries.forEach((entry) => {
-          const index = parseInt(entry.target.getAttribute('data-index') || '0')
-          if (entry.isIntersecting) {
-            visibleItemsSet.value.add(index)
-            entry.target.classList.add('x-virtual-list-item--visible')
-          } else {
-            visibleItemsSet.value.delete(index)
-            entry.target.classList.remove('x-virtual-list-item--visible')
-          }
-        })
-      })
-    },
-    {
-      threshold: 0.01,
-      rootMargin: '150px'
-    }
-  )
-
-  // 观察所有可见项
-  itemRefs.value.forEach((item, index) => {
-    if (item) {
-      item.setAttribute('data-index', index.toString())
-      observer?.observe(item)
-      
-      // 首屏元素立即显示
-      const rect = item.getBoundingClientRect()
-      const containerRect = containerRef.value?.getBoundingClientRect()
-      if (containerRect && rect.top < containerRect.bottom && rect.bottom > containerRect.top) {
-        visibleItemsSet.value.add(index)
-        item.classList.add('x-virtual-list-item--visible')
-      }
-    }
-  })
-}
-
-// 监听数据变化
-watch(() => props.dataSource, async () => {
-  if (props.animated) {
-    await nextTick()
-    if (observer) {
-      itemRefs.value.forEach((item) => {
-        if (item) {
-          observer?.unobserve(item)
-          item.classList.remove('x-virtual-list-item--visible')
-        }
-      })
-    }
-    itemRefs.value.clear()
-    visibleItemsSet.value.clear()
-    await nextTick()
-    initObserver()
-  }
-}, { deep: true })
 
 // 更新容器高度
 const updateContainerHeight = () => {
@@ -430,25 +275,12 @@ const updateContainerHeight = () => {
 
 onMounted(() => {
   updateContainerHeight()
-  lastUpdateTime = Date.now()
   
   // 监听窗口大小变化
   window.addEventListener('resize', updateContainerHeight)
-  
-  if (props.animated) {
-    nextTick(() => {
-      initObserver()
-    })
-  }
 })
 
 onBeforeUnmount(() => {
-  if (observer) {
-    observer.disconnect()
-  }
-  if (rafId !== null) {
-    cancelAnimationFrame(rafId)
-  }
   window.removeEventListener('resize', updateContainerHeight)
 })
 
@@ -497,8 +329,6 @@ defineExpose({
 
 .x-virtual-list-item {
   width: 100%;
-  /* 移除可能导致抖动的过渡 */
-  will-change: transform, opacity;
 }
 
 .x-virtual-list-item-default {
@@ -511,21 +341,6 @@ defineExpose({
   border-bottom: none;
 }
 
-/* 滚动动画 - 优化性能 */
-.x-virtual-list-item--animated {
-  opacity: 0;
-  transform: translateY(20px) scale(0.96);
-  transition: opacity 0.25s cubic-bezier(0.4, 0, 0.2, 1), 
-              transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-  transition-delay: var(--animation-delay, 0ms);
-  will-change: transform, opacity;
-}
-
-.x-virtual-list-item--animated.x-virtual-list-item--visible {
-  opacity: 1;
-  transform: translateY(0) scale(1);
-  will-change: auto;
-}
 
 /* 加载状态 */
 .x-virtual-list-loading {
