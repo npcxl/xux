@@ -89,7 +89,8 @@ function getAllUrls() {
     '/components/loading',
     '/components/dynamic-mech',
     '/components/special-effects',
-    '/components/datetime-functions'
+    '/components/datetime-functions',
+    '/components/virtual-list'
   ]
   componentPages.forEach(page => urls.push(`${baseUrl}${page}`))
 

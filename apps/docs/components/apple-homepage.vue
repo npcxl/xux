@@ -30,11 +30,11 @@
           </p>
           
           <div class="hero-buttons" data-aos="fade-up" data-aos-delay="200">
-            <XButton type="primary" size="large" round>
+            <XButton type="primary" size="large" @click="goToDocs" round>
               开始使用
             </XButton>
-            <XButton size="large" round plain>
-              查看文档
+            <XButton size="large" round plain @click="goToGitee">
+              查看源码
             </XButton>
           </div>
         
@@ -155,6 +155,14 @@ const observeTheme = () => {
   })
   
   return observer
+}
+
+const goToDocs = () => {
+  window.location.href = 'https://xux.xlcig.cn/components/theme-config'
+}
+
+const goToGitee = () => {
+  window.location.href = 'https://gitee.com/leheya/xux'
 }
 
 // 获取状态样式
