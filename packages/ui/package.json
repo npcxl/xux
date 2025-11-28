@@ -1,6 +1,6 @@
 {
   "name": "@xlui/xux-ui",
-  "version": "1.5.4",
+  "version": "1.5.5",
   "description": "VUE3组件库",
   "author": "leheya",
   "license": "MIT",
@@ -64,7 +64,7 @@
     "element-plus": "^2.9.3",
     "glob": "^11.0.3",
     "pinyin": "^4.0.0",
-    "qrcode": "^1.5.4",
+    "qrcode": "^1.5.5",
     "three": "^0.181.2",
     "xe-utils": "^3.7.9"
   },

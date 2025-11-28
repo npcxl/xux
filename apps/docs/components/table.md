@@ -175,6 +175,120 @@ generateData(10000)
 
 :::
 
+## 虚拟滚动 + 接口数据加载
+
+虚拟滚动配合接口数据加载，展示如何正确处理异步数据加载和虚拟滚动范围刷新。
+
+:::demo
+
+```vue
+<template>
+  <div>
+    <div style="margin-bottom: 16px; display: flex; gap: 12px; align-items: center;">
+      <XButton type="primary" @click="loadData" :loading="loading">
+        {{ loading ? '加载中...' : '重新加载数据' }}
+      </XButton>
+      <XButton @click="clearData">清空数据</XButton>
+      <span style="margin-left: auto;">数据量：{{ dataSource.length }} 条</span>
+    </div>
+    
+    <XTable 
+      ref="tableRef"
+      :columns="columns" 
+      :dataSource="dataSource"
+      height="500px"
+      :loading="loading"
+      loading-text="正在加载数据..."
+      virtual
+      :virtual-row-height="48"
+      :virtual-buffer="10"
+      stripe
+    />
+  </div>
+</template>
+
+<script setup>
+import { ref, onMounted } from 'vue'
+
+const tableRef = ref()
+const loading = ref(false)
+
+const columns = ref([
+  { key: 'id', title: 'ID', dataIndex: 'id', width: '80px' },
+  { key: 'name', title: '姓名', dataIndex: 'name', width: '120px' },
+  { key: 'username', title: '用户名', dataIndex: 'username', width: '120px' },
+  { key: 'email', title: '邮箱', dataIndex: 'email' },
+  { key: 'phone', title: '电话', dataIndex: 'phone', width: '130px' },
+  { key: 'website', title: '网站', dataIndex: 'website' }
+])
+
+const dataSource = ref([])
+
+// 模拟接口调用
+const loadData = async () => {
+  loading.value = true
+  dataSource.value = []
+  
+  try {
+    // 模拟接口延迟
+    await new Promise(resolve => setTimeout(resolve, 1000))
+    
+    // 使用 JSONPlaceholder 公开API获取用户数据
+    const response = await fetch('https://jsonplaceholder.typicode.com/users')
+    const users = await response.json()
+    
+    // 扩展数据，生成更多数据用于虚拟滚动测试
+    const expandedData = []
+    users.forEach((user, index) => {
+      // 每个用户生成10条数据
+      for (let i = 0; i < 10; i++) {
+        expandedData.push({
+          id: `${user.id}-${i + 1}`,
+          name: `${user.name} ${i + 1}`,
+          username: `${user.username}_${i + 1}`,
+          email: user.email,
+          phone: user.phone,
+          website: user.website
+        })
+      }
+    })
+    
+    dataSource.value = expandedData
+    
+    // 数据加载完成后，等待 DOM 更新，然后刷新虚拟滚动范围
+    await new Promise(resolve => setTimeout(resolve, 100))
+    
+    // 通过 ref 调用实例方法（
+    tableRef.value?.refreshVirtualRange?.()
+    
+    // 可选方式：通过事件获取的刷新函数
+    // if (refreshVirtualRangeFn.value) {
+    //   refreshVirtualRangeFn.value()
+    // }
+    
+    console.log(`成功加载 ${expandedData.length} 条数据`)
+  } catch (error) {
+    console.error('加载失败:', error)
+    xlMsg.error('数据加载失败')
+  } finally {
+    loading.value = false
+  }
+}
+
+const clearData = () => {
+  dataSource.value = []
+  xlMsg.info('已清空数据')
+}
+
+// 组件挂载时自动加载数据
+onMounted(() => {
+  loadData()
+})
+</script>
+```
+
+:::
+
 ## 固定表头
 
 设置 `height` 后表头会自动固定。
@@ -2143,6 +2257,7 @@ const handleRefresh = () => {
 | sort-change | 排序变化事件 | `(column: Column, order: 'asc'\|'desc'\|null)` |
 | select-all | 全选/取消全选事件 | `(selected: boolean)` |
 | cell-edit | 单元格编辑事件 | `(record: any, column: Column, value: any)` |
+| refreshVirtualRange | 虚拟滚动范围刷新函数暴露事件（可选，推荐使用 ref 方式调用实例方法） | `(refreshVirtualRange: () => void)` |
 
 ### Slots
 
@@ -2169,6 +2284,7 @@ const handleRefresh = () => {
 | getOtherPageSelectedRowKeys | 获取其他页的选中行键（跨页选择） | - | `(string\|number)[]` |
 | clearCurrentPageSelection | 清空当前页的选择（跨页选择） | - | `void` |
 | selectCurrentPage | 全选当前页（跨页选择） | - | `void` |
+| refreshVirtualRange | 刷新虚拟滚动范围（在数据加载完成后调用，解决有高度但没内容的问题） | - | `void` |
 
 ## 贡献者
 

@@ -62,7 +62,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted, onBeforeUnmount } from 'vue'
+import { ref, computed, onMounted, onBeforeUnmount, watch, nextTick } from 'vue'
 
 /**
  * VirtualList 虚拟滚动列表组件
@@ -107,6 +107,7 @@ const props = withDefaults(defineProps<VirtualListProps>(), {
 const emit = defineEmits<{
   'scroll': [scrollTop: number, scrollLeft: number]
   'scroll-end': []
+  'refreshVirtualRange': [refreshVirtualRange: () => void]
 }>()
 
 // Refs
@@ -263,7 +264,7 @@ const handleScroll = (e: Event) => {
 }
 
 
-// 更新容器高度
+// 更新容器高度（不触发刷新）
 const updateContainerHeight = () => {
   if (containerRef.value) {
     const newHeight = containerRef.value.clientHeight
@@ -273,11 +274,35 @@ const updateContainerHeight = () => {
   }
 }
 
-onMounted(() => {
+// 刷新虚拟滚动范围
+const refreshVirtualRange = () => {
+  if (!containerRef.value) return
   updateContainerHeight()
+  // 触发重新计算可见范围（通过更新 scrollTop 来触发 computed）
+  if (containerRef.value) {
+    scrollTop.value = containerRef.value.scrollTop
+  }
+}
+
+// 监听数据源变化，在数据加载完成后刷新虚拟滚动范围
+watch(() => props.dataSource, async () => {
+  // 等待 DOM 更新完再刷新
+  await nextTick()
+  refreshVirtualRange()
+}, { immediate: true })
+
+onMounted(async () => {
+  await nextTick()
+  refreshVirtualRange()
   
   // 监听窗口大小变化
-  window.addEventListener('resize', updateContainerHeight)
+  window.addEventListener('resize', () => {
+    updateContainerHeight()
+    refreshVirtualRange()
+  })
+  
+  // 暴露刷新函数给用户手动刷新
+  emit('refreshVirtualRange', refreshVirtualRange)
 })
 
 onBeforeUnmount(() => {
@@ -308,7 +333,8 @@ defineExpose({
       containerRef.value.scrollTo({ top: containerRef.value.scrollHeight, behavior: 'smooth' })
     }
   },
-  getScrollTop: () => scrollTop.value
+  getScrollTop: () => scrollTop.value,
+  refreshVirtualRange
 })
 </script>
 

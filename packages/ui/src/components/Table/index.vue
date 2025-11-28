@@ -263,6 +263,7 @@ const emit = defineEmits<{
   selectAll: [selected: boolean]
   cellEdit: [record: any, column: Column, value: any]
   filterChange: [filters: Record<string, any[]>]
+  refreshVirtualRange: [refreshVirtualRange: () => void]//用于虚拟滚动事件主动刷新
 }>()
 
 // Refs
@@ -517,6 +518,19 @@ const updateVirtualRange = (scrollTop: number) => {
   virtualEndIndex.value = endIndex
 }
 
+const refreshVirtualRange = () => {
+  if (!props.virtual || !containerRef.value) return
+  containerHeight.value = containerRef.value.clientHeight
+  updateVirtualRange(scrollRef.value?.scrollTop ?? 0)
+}
+
+// 监听外部 dataSource 变化（接口返回后）
+watch(() => props.dataSource, async () => {
+  // 等待 DOM 更新完再量高度
+  await nextTick()
+  refreshVirtualRange()
+}, { immediate: true })
+
 // 处理滚动
 const handleScroll = (e: Event) => {
   const target = e.target as HTMLDivElement
@@ -692,19 +706,26 @@ const handleResize = () => {
   if (scrollRef.value) {
     maxScrollLeft.value = scrollRef.value.scrollWidth - scrollRef.value.clientWidth
   }
+  // 窗口大小变化时，需要重新计算虚拟滚动范围
+  if (props.virtual) {
+    refreshVirtualRange()
+  }
 }
 
-onMounted(() => {
+onMounted(async () => {
   window.addEventListener('resize', handleResize)
+  await nextTick()
+  // 初始化虚拟滚动
+  refreshVirtualRange()
   setTimeout(() => {
     handleResize()
-
-    // 初始化虚拟滚动
-    if (props.virtual && containerRef.value) {
-      containerHeight.value = containerRef.value.clientHeight
-      updateVirtualRange(0)
+    // 确保虚拟滚动范围正确
+    if (props.virtual) {
+      refreshVirtualRange()
     }
   }, 0)
+  // 暴露刷新函数给用户手动刷新
+  emit('refreshVirtualRange', refreshVirtualRange)
 })
 
 onUnmounted(() => {
@@ -887,6 +908,7 @@ defineExpose({
   getCurrentPageSelectedRows,
   getOtherPageSelectedRowKeys,
   clearCurrentPageSelection,
-  selectCurrentPage
+  selectCurrentPage,
+  refreshVirtualRange
 })
 </script>

@@ -529,6 +529,7 @@ const scrollToBottom = () => {
 | --- | --- | --- |
 | scroll | 滚动时触发 | `(scrollTop: number, scrollLeft: number)` |
 | scroll-end | 滚动到底部时触发 | - |
+| refreshVirtualRange | 虚拟滚动范围刷新函数暴露事件，用于手动刷新虚拟滚动范围（在数据加载完成后调用） | `(refreshVirtualRange: () => void)` |
 
 ### Slots
 
@@ -545,6 +546,7 @@ const scrollToBottom = () => {
 | scrollToTop | 滚动到顶部 | - |
 | scrollToBottom | 滚动到底部 | - |
 | getScrollTop | 获取当前滚动位置 | - |
+| refreshVirtualRange | 刷新虚拟滚动范围（在数据加载完成后手动调用，解决有高度但没内容的问题） | - |
 
 ## 性能优化
 
