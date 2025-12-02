@@ -3,13 +3,14 @@
     <!-- 商品卡片 -->
     <template v-if="type === 'product'">
       <div class="x-card-image-wrapper">
-        <div class="x-card-image">
-          <img
-            :src="image"
-            :alt="title"
-            loading="lazy"
-          />
-          <div class="x-card-light-effect"></div>
+        <div class="x-card-image" :class="{ 'no-fixed-ratio': !fixedImageRatio }">
+          <slot name="image">
+            <img
+              :src="image"
+              :alt="title"
+              loading="lazy"
+            />
+          </slot>
         </div>
         
         <div v-if="label" class="x-card-label">
@@ -50,10 +51,11 @@
 
     <!-- 基础卡片 -->
     <template v-else>
-      <div v-if="image" class="x-card-image-wrapper">
+      <div v-if="image || $slots.image" class="x-card-image-wrapper">
         <div class="x-card-image">
-          <img :src="image" :alt="title" loading="lazy" />
-          <div class="x-card-light-effect"></div>
+          <slot name="image">
+            <img :src="image" :alt="title" loading="lazy" />
+          </slot>
         </div>
       </div>
       <div class="x-card-content">
@@ -99,13 +101,16 @@ export interface CardProps {
   icon?: string
   /** 额外信息（信息卡片） */
   extra?: string
+  /** 是否固定图片宽高比（瀑布流场景可设为false） */
+  fixedImageRatio?: boolean
 }
 
 const props = withDefaults(defineProps<CardProps>(), {
   type: 'basic',
   showDescription: false,
   showLike: true,
-  isLiked: false
+  isLiked: false,
+  fixedImageRatio: true
 })
 
 const emit = defineEmits<{
@@ -174,11 +179,36 @@ const handleLike = () => {
     inset 0 1px 0 rgba(255, 255, 255, 0.5);
 }
 
+/* 不固定宽高比（瀑布流场景） */
+.x-card-image.no-fixed-ratio {
+  aspect-ratio: unset;
+  height: auto;
+}
+
 .x-card-image img {
   width: 100%;
   height: 100%;
   object-fit: cover;
   transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.x-card-image.no-fixed-ratio {
+  min-height: 200px;
+}
+
+.x-card-image.no-fixed-ratio img {
+  height: auto;
+  max-height: none;
+  object-fit: cover;
+}
+
+.x-card-image.no-fixed-ratio :deep(.x-image) {
+  height: auto !important;
+}
+
+.x-card-image.no-fixed-ratio :deep(.x-image img) {
+  height: auto !important;
+  object-fit: cover;
 }
 
 .x-card:hover .x-card-image img {
@@ -296,33 +326,6 @@ const handleLike = () => {
   transform: scale(0.95);
 }
 
-/* 光效蒙版动画 - 更柔和 */
-.x-card-light-effect {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(
-    105deg,
-    transparent 0%,
-    transparent 40%,
-    rgba(255, 255, 255, 0.3) 50%,
-    rgba(255, 255, 255, 0.5) 55%,
-    rgba(255, 255, 255, 0.3) 60%,
-    transparent 70%,
-    transparent 100%
-  );
-  transform: translateX(-100%) translateY(-100%);
-  transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
-  pointer-events: none;
-  z-index: 1;
-}
-
-.x-card:hover .x-card-light-effect {
-  transform: translateX(100%) translateY(100%);
-}
-
 /* ========== 商品卡片 ========== */
 .x-card-product .x-card-content {
   padding: 14px 16px 16px;
@@ -397,37 +400,76 @@ const handleLike = () => {
 }
 
 /* ========== 暗色模式 ========== */
+.dark .x-card,
+[data-theme="dark"] .x-card {
+  background: var(--x-bg-color-overlay, rgba(28, 28, 30, 0.8));
+  border-color: var(--x-border-color, rgba(142, 142, 147, 0.12));
+  box-shadow: 
+    0 3px 8px rgba(0, 0, 0, 0.3),
+    0 1px 2px rgba(0, 0, 0, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08);
+}
+
+.dark .x-card:hover,
+[data-theme="dark"] .x-card:hover {
+  box-shadow: 
+    0 10px 30px rgba(0, 0, 0, 0.4),
+    0 4px 8px rgba(0, 0, 0, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+}
+
+.dark .x-card-title,
+[data-theme="dark"] .x-card-title {
+  color: var(--x-text-color-primary, #FFFFFF);
+}
+
+.dark .x-card-description,
+[data-theme="dark"] .x-card-description {
+  color: var(--x-text-color-secondary, #98989D);
+}
+
+.dark .x-card-image,
+[data-theme="dark"] .x-card-image {
+  background: var(--x-fill-color, linear-gradient(135deg, #2C2C2E 0%, #1C1C1E 100%));
+}
+
+.dark .x-card-info .x-card-icon,
+[data-theme="dark"] .x-card-info .x-card-icon {
+  background: var(--x-fill-color-primary-light, rgba(10, 132, 255, 0.18));
+}
+
+/* 兼容系统深色模式 */
 @media (prefers-color-scheme: dark) {
-  .x-card {
-    background: rgba(28, 28, 30, 0.8);
-    border-color: rgba(142, 142, 147, 0.12);
+  :root:not(.light):not([data-theme="light"]) .x-card {
+    background: var(--x-bg-color-overlay, rgba(28, 28, 30, 0.8));
+    border-color: var(--x-border-color, rgba(142, 142, 147, 0.12));
     box-shadow: 
       0 3px 8px rgba(0, 0, 0, 0.3),
       0 1px 2px rgba(0, 0, 0, 0.2),
       inset 0 1px 0 rgba(255, 255, 255, 0.08);
   }
   
-  .x-card:hover {
+  :root:not(.light):not([data-theme="light"]) .x-card:hover {
     box-shadow: 
       0 10px 30px rgba(0, 0, 0, 0.4),
       0 4px 8px rgba(0, 0, 0, 0.3),
       inset 0 1px 0 rgba(255, 255, 255, 0.1);
   }
   
-  .x-card-title {
-    color: #FFFFFF;
+  :root:not(.light):not([data-theme="light"]) .x-card-title {
+    color: var(--x-text-color-primary, #FFFFFF);
   }
   
-  .x-card-description {
-    color: #98989D;
+  :root:not(.light):not([data-theme="light"]) .x-card-description {
+    color: var(--x-text-color-secondary, #98989D);
   }
   
-  .x-card-image {
-    background: linear-gradient(135deg, #2C2C2E 0%, #1C1C1E 100%);
+  :root:not(.light):not([data-theme="light"]) .x-card-image {
+    background: var(--x-fill-color, linear-gradient(135deg, #2C2C2E 0%, #1C1C1E 100%));
   }
   
-  .x-card-info .x-card-icon {
-    background: rgba(10, 132, 255, 0.18);
+  :root:not(.light):not([data-theme="light"]) .x-card-info .x-card-icon {
+    background: var(--x-fill-color-primary-light, rgba(10, 132, 255, 0.18));
   }
 }
 
@@ -435,7 +477,6 @@ const handleLike = () => {
 @media (prefers-reduced-motion: reduce) {
   .x-card,
   .x-card-image img,
-  .x-card-light-effect,
   .x-card-like-icon {
     transition: none;
   }

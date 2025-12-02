@@ -340,55 +340,7 @@ const menuItems = ref([
 
 :::
 
-## 自定义图标
 
-使用插槽自定义图标。
-
-:::demo
-
-```vue
-<template>
-  <XMenu 
-    :items="menuItems" 
-    v-model:activeKey="activeKey"
-  >
-    <template #icon-custom1>
-      <div style="width: 20px; height: 20px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 4px;"></div>
-    </template>
-    <template #icon-custom2>
-      <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
-        <path d="M12 2L2 7v10c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V7l-10-5z"/>
-      </svg>
-    </template>
-  </XMenu>
-</template>
-
-<script setup>
-import { ref } from 'vue'
-
-const activeKey = ref('custom1')
-
-const menuItems = ref([
-  {
-    key: 'custom1',
-    label: '自定义图标1',
-    customIcon: true
-  },
-  {
-    key: 'custom2',
-    label: '自定义图标2',
-    customIcon: true
-  },
-  {
-    key: 'normal',
-    label: 'XIcon图标',
-    xicon: 'home'
-  }
-])
-</script>
-```
-
-:::
 
 ## 不可折叠模式（分组目录）
 
@@ -723,6 +675,47 @@ const menuItems = ref([
 
 :::
 
+## 无边框容器
+
+隐藏菜单外层边框与阴影，使页面更简洁。
+
+:::demo
+
+```vue
+<template>
+  <XMenu 
+    :items="menuItems" 
+    v-model:activeKey="activeKey"
+    :bordered="false"
+  />
+</template>
+
+<script setup>
+import { ref } from 'vue'
+
+const activeKey = ref('home')
+
+const menuItems = ref([
+  {
+    key: 'home',
+    label: '首页',
+    icon: 'mdi:home'
+  },
+  {
+    key: 'system',
+    label: '系统管理',
+    icon: 'mdi:cog-outline',
+    children: [
+      { key: 'user-list', label: '用户管理', icon: 'mdi:account-multiple' },
+      { key: 'role-list', label: '角色管理', icon: 'mdi:shield-account' }
+    ]
+  }
+])
+</script>
+```
+
+:::
+
 ## 固定高度与滚动
 
 设置 `height` 属性后，菜单会限制高度并支持滚动，适合在固定高度容器中展示大量菜单项。
@@ -984,6 +977,7 @@ const handleOpenChange = (keys) => {
 | height | 菜单高度（超出自动滚动） | `string` | - |
 | accordion | 手风琴模式（只展开一个） | `boolean` | `false` |
 | collapsible | 是否可折叠（false时父级变为分组目录样式：小字号、淡颜色、无箭头、子菜单始终展开） | `boolean` | `true` |
+| bordered | 是否显示容器边框与阴影 | `boolean` | `true` |
 
 ### MenuItem 类型
 

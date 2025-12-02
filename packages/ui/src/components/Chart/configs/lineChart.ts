@@ -26,14 +26,15 @@ export const createLineChartOption = (
       boundaryGap: false,
       axisLine: {
         lineStyle: {
-          color: isDark ? '#4b5563' : '#e5e7eb',
-          width: 2
+          color: isDark ? 'rgba(142, 142, 147, 0.2)' : 'rgba(0, 0, 0, 0.08)',
+          width: 1
         }
       },
       axisLabel: {
-        color: isDark ? '#9ca3af' : '#6b7280',
+        color: isDark ? 'rgba(255, 255, 255, 0.6)' : 'rgba(0, 0, 0, 0.6)',
         fontSize: responsive.fontSize.axisLabel,
-        fontWeight: 500
+        fontWeight: 400,
+        fontFamily: '-apple-system, BlinkMacSystemFont, "SF Pro Text", system-ui, sans-serif'
       },
       axisTick: {
         show: false
@@ -49,15 +50,16 @@ export const createLineChartOption = (
       },
       splitLine: {
         lineStyle: {
-          color: isDark ? '#374151' : '#f3f4f6',
-          type: 'dashed',
+          color: isDark ? 'rgba(142, 142, 147, 0.12)' : 'rgba(0, 0, 0, 0.04)',
+          type: 'solid',
           width: 1
         }
       },
       axisLabel: {
-        color: isDark ? '#9ca3af' : '#6b7280',
+        color: isDark ? 'rgba(255, 255, 255, 0.6)' : 'rgba(0, 0, 0, 0.6)',
         fontSize: responsive.fontSize.axisLabel,
-        fontWeight: 500
+        fontWeight: 400,
+        fontFamily: '-apple-system, BlinkMacSystemFont, "SF Pro Text", system-ui, sans-serif'
       }
     },
     series: (data.series || []).map((item: any, index: number) => {

@@ -83,101 +83,103 @@ const getColors = () => {
   return chartColors[theme] || chartColors.light
 }
 
-// 生成基础配置 - 顶级视觉效果版本
+// 生成基础配置 - iOS 风格
 const createBaseConfig = () => {
   const colors = getColors()
   const theme = getTheme()
   const responsive = getResponsiveConfig()
   const isDark = theme === 'dark'
-  
+
   return {
     color: colors,
     animation: props.animation,
-    animationDuration: 1000,
-    animationEasing: 'cubicOut',
-    animationDelay: (idx: number) => idx * 60,
-    // 精美的工具提示
+    animationDuration: 800,
+    animationEasing: 'cubic-bezier(0.25, 0.46, 0.45, 0.94)',
+    animationDelay: (idx: number) => idx * 50,
+    // iOS 风格工具提示
     tooltip: {
       trigger: props.type === 'pie' || props.type === 'doughnut' ? 'item' : 'axis',
-      backgroundColor: isDark ? 'rgba(31, 41, 55, 0.95)' : 'rgba(255, 255, 255, 0.95)',
-      borderWidth: 1,
-      borderColor: isDark ? 'rgba(75, 85, 99, 0.5)' : 'rgba(229, 231, 235, 0.8)',
+      backgroundColor: isDark ? 'rgba(28, 28, 30, 0.95)' : 'rgba(255, 255, 255, 0.98)',
+      borderWidth: 0,
+      borderColor: 'transparent',
       textStyle: {
-        color: isDark ? '#e5e7eb' : '#374151',
+        color: isDark ? '#FFFFFF' : '#000000',
         fontSize: responsive.fontSize.label,
-        fontWeight: 500
+        fontWeight: 500,
+        fontFamily: '-apple-system, BlinkMacSystemFont, "SF Pro Text", system-ui, sans-serif'
       },
-      padding: [12, 16],
+      padding: [10, 14],
       extraCssText: `
-        border-radius: 10px; 
-        backdrop-filter: blur(12px);
-        box-shadow: ${isDark 
-          ? '0 10px 30px rgba(0, 0, 0, 0.3), 0 1px 8px rgba(0, 0, 0, 0.2)' 
-          : '0 10px 30px rgba(0, 0, 0, 0.1), 0 1px 8px rgba(0, 0, 0, 0.06)'
+        border-radius: 14px; 
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        box-shadow: ${isDark
+          ? '0 20px 60px rgba(0, 0, 0, 0.3), 0 4px 16px rgba(0, 0, 0, 0.2)'
+          : '0 20px 60px rgba(0, 0, 0, 0.1), 0 4px 16px rgba(0, 0, 0, 0.08)'
         };
+        border: 1px solid ${isDark ? 'rgba(142, 142, 147, 0.12)' : 'rgba(0, 0, 0, 0.04)'};
       `,
       axisPointer: {
         type: props.type === 'line' || props.type === 'area' ? 'cross' : 'shadow',
         crossStyle: {
-          color: isDark ? '#6b7280' : '#9ca3af',
+          color: isDark ? 'rgba(142, 142, 147, 0.3)' : 'rgba(0, 0, 0, 0.1)',
           width: 1,
           type: 'dashed'
         },
         lineStyle: {
-          color: isDark ? '#4b5563' : '#d1d5db',
+          color: isDark ? 'rgba(142, 142, 147, 0.3)' : 'rgba(0, 0, 0, 0.1)',
           width: 1,
           type: 'dashed'
         },
         shadowStyle: {
-          color: isDark ? 'rgba(139, 92, 246, 0.1)' : 'rgba(99, 102, 241, 0.1)'
+          color: isDark ? 'rgba(0, 0, 0, 0.1)' : 'rgba(0, 0, 0, 0.05)'
         },
         label: {
-          backgroundColor: isDark ? '#374151' : '#f3f4f6',
-          color: isDark ? '#e5e7eb' : '#374151',
-          borderColor: isDark ? '#4b5563' : '#d1d5db',
+          backgroundColor: isDark ? 'rgba(28, 28, 30, 0.95)' : 'rgba(255, 255, 255, 0.98)',
+          color: isDark ? '#FFFFFF' : '#000000',
+          borderColor: isDark ? 'rgba(142, 142, 147, 0.12)' : 'rgba(0, 0, 0, 0.04)',
           borderWidth: 1,
-          borderRadius: 6,
-          padding: [6, 10],
-          fontWeight: 600
+          borderRadius: 8,
+          padding: [5, 10],
+          fontWeight: 600,
+          fontFamily: '-apple-system, BlinkMacSystemFont, "SF Pro Display", system-ui, sans-serif'
         }
       }
     },
-    // 精美的图例
+    // iOS 风格图例
     legend: props.showLegend ? {
       top: '5%',
       textStyle: {
-        color: isDark ? '#e5e7eb' : '#374151',
+        color: isDark ? '#FFFFFF' : '#000000',
         fontSize: responsive.fontSize.legend,
-        fontWeight: 500
+        fontWeight: 500,
+        fontFamily: '-apple-system, BlinkMacSystemFont, "SF Pro Text", system-ui, sans-serif'
       },
-      itemWidth: 16,
-      itemHeight: 10,
-      itemGap: responsive.fontSize.legend + 6,
-      borderRadius: 3,
-      // 图例图标样式
+      itemWidth: 14,
+      itemHeight: 8,
+      itemGap: responsive.fontSize.legend + 8,
+      borderRadius: 4,
       icon: 'roundRect',
-      // 图例悬浮效果
       emphasis: {
         selectorLabel: {
           fontSize: responsive.fontSize.legend + 1,
           fontWeight: 600
         }
       },
-      // 图例选择器样式
       selectorLabel: {
-        color: isDark ? '#9ca3af' : '#6b7280',
+        color: isDark ? 'rgba(142, 142, 147, 0.8)' : 'rgba(0, 0, 0, 0.6)',
         fontSize: responsive.fontSize.legend - 1,
         fontWeight: 500
       },
-      selectorItemGap: 8,
-      selectorButtonGap: 12
+      selectorItemGap: 10,
+      selectorButtonGap: 14
     } : undefined,
-    // 精美的网格
+    // iOS 风格网格
     grid: props.showGrid && !['pie', 'doughnut', 'gauge', 'radar'].includes(props.type) ? {
       ...responsive.grid,
       top: props.showLegend ? responsive.grid.top : '10%',
       containLabel: true,
-      borderColor: isDark ? '#374151' : '#f3f4f6',
+      borderColor: isDark ? 'rgba(142, 142, 147, 0.12)' : 'rgba(0, 0, 0, 0.04)',
       borderWidth: 0
     } : undefined,
     responsive: responsive
@@ -187,7 +189,7 @@ const createBaseConfig = () => {
 // 生成图表配置
 const generateOption = () => {
   if (props.option) return props.option
-  
+
   const baseConfig = createBaseConfig()
   const theme = getTheme()
   const chartData = props.data || {}
@@ -201,7 +203,7 @@ const generateOption = () => {
         return createStepLineChartOption(baseConfig, chartData, theme)
       }
       return createLineChartOption(baseConfig, chartData, theme, props.smooth, props.showLabel)
-      
+
     case 'bar':
       if (props.variant === 'stacked') {
         return createStackedBarChartOption(baseConfig, chartData, theme)
@@ -210,19 +212,19 @@ const generateOption = () => {
         return createHorizontalBarChartOption(baseConfig, chartData, theme)
       }
       return createBarChartOption(baseConfig, chartData, theme, props.showLabel)
-      
+
     case 'pie':
       if (props.variant === 'rose') {
         return createRoseChartOption(baseConfig, chartData, theme)
       }
       return createPieChartOption(baseConfig, chartData, theme)
-      
+
     case 'doughnut':
       if (props.variant === 'semi') {
         return createSemiDoughnutChartOption(baseConfig, chartData, theme)
       }
       return createDoughnutChartOption(baseConfig, chartData, theme)
-      
+
     case 'area':
       if (props.variant === 'stacked') {
         return createStackedAreaChartOption(baseConfig, chartData, theme, props.smooth)
@@ -231,7 +233,7 @@ const generateOption = () => {
         return createGradientAreaChartOption(baseConfig, chartData, theme)
       }
       return createAreaChartOption(baseConfig, chartData, theme, props.smooth)
-      
+
     case 'scatter':
       return createScatterChartOption(baseConfig, chartData, theme)
     case 'radar':
@@ -248,33 +250,33 @@ const generateOption = () => {
 // 初始化图表
 const initChart = () => {
   if (!chartRef.value) return
-  
+
   chartInstance = echarts.init(chartRef.value, getTheme())
-  
+
   const option = generateOption()
   chartInstance.setOption(option, true)
-  
+
   // 绑定事件
   chartInstance.on('click', (params) => {
     emit('click', params)
   })
-  
+
   chartInstance.on('legendselectchanged', (params) => {
     emit('legendselectchanged', params)
   })
-  
+
   // 监听窗口大小变化
   resizeObserver = new ResizeObserver(() => {
     chartInstance?.resize()
   })
-  
+
   resizeObserver.observe(chartRef.value)
 }
 
 // 更新图表
 const updateChart = () => {
   if (!chartInstance) return
-  
+
   const option = generateOption()
   chartInstance.setOption(option, true)
 }
@@ -282,7 +284,7 @@ const updateChart = () => {
 // 设置加载状态
 const setLoading = (loading: boolean) => {
   if (!chartInstance) return
-  
+
   if (loading) {
     chartInstance.showLoading('default', {
       text: '加载中...',
@@ -356,6 +358,7 @@ defineExpose({
 .x-chart {
   position: relative;
   min-height: 200px;
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', system-ui, sans-serif;
 }
 
 /* 响应式适配 */

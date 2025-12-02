@@ -67,7 +67,7 @@
       <XSelect
         v-model="internalPageSize"
         :options="pageSizeOpts"
-        width="120px"
+        width="240px"
         @change="handlePageSizeChange"
       />
       

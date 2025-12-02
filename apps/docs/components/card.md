@@ -215,34 +215,6 @@ const handleClick = () => {
 
 :::
 
-## 基础卡片带图片
-
-基础卡片也可以显示图片。
-
-:::demo
-
-```vue
-<template>
-  <div style="max-width: 280px;">
-    <XCard 
-      type="basic"
-      title="精美风景"
-      description="探索世界的美好，记录生活的点滴。"
-      image="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400"
-      @click="handleClick"
-    />
-  </div>
-</template>
-
-<script setup>
-const handleClick = () => {
-  console.log('点击卡片')
-}
-</script>
-```
-
-:::
-
 </div>
 
 </div>

@@ -277,6 +277,8 @@ function handleMouseDown(event: MouseEvent) {
   opacity: 0.85;
 }
 
+
+
 /* iOS 类型 - primary (系统蓝) */
 .x-btn-primary {
   background-color: var(--x-color-primary, #007AFF);
@@ -285,8 +287,8 @@ function handleMouseDown(event: MouseEvent) {
 }
 
 .x-btn-primary:hover:not(.x-btn-disabled):not(.x-btn-loading) {
-  background-color: var(--x-color-primary-dark, #0062CC);
-  box-shadow: 0 4px 12px rgba(0, 122, 255, 0.2);
+  background-color: color-mix(in oklab, var(--x-color-primary), black 12%);
+  box-shadow: 0 4px 12px color-mix(in oklab, var(--x-color-primary), transparent 80%);
   opacity: 0.9;
 }
 
@@ -298,8 +300,8 @@ function handleMouseDown(event: MouseEvent) {
 }
 
 .x-btn-success:hover:not(.x-btn-disabled):not(.x-btn-loading) {
-  background-color: var(--x-color-success-dark, #248A3D);
-  box-shadow: 0 4px 12px rgba(52, 199, 89, 0.2);
+  background-color: color-mix(in oklab, var(--x-color-success), black 12%);
+  box-shadow: 0 4px 12px color-mix(in oklab, var(--x-color-success), transparent 80%);
   opacity: 0.9;
 }
 
@@ -311,8 +313,8 @@ function handleMouseDown(event: MouseEvent) {
 }
 
 .x-btn-warning:hover:not(.x-btn-disabled):not(.x-btn-loading) {
-  background-color: var(--x-color-warning-dark, #CC7700);
-  box-shadow: 0 4px 12px rgba(255, 149, 0, 0.2);
+  background-color: color-mix(in oklab, var(--x-color-warning), black 12%);
+  box-shadow: 0 4px 12px color-mix(in oklab, var(--x-color-warning), transparent 80%);
   opacity: 0.9;
 }
 
@@ -324,8 +326,8 @@ function handleMouseDown(event: MouseEvent) {
 }
 
 .x-btn-danger:hover:not(.x-btn-disabled):not(.x-btn-loading) {
-  background-color: var(--x-color-danger-dark, #CC2F26);
-  box-shadow: 0 4px 12px rgba(255, 59, 48, 0.2);
+  background-color: color-mix(in oklab, var(--x-color-danger), black 12%);
+  box-shadow: 0 4px 12px color-mix(in oklab, var(--x-color-danger), transparent 80%);
   opacity: 0.9;
 }
 
@@ -386,7 +388,7 @@ function handleMouseDown(event: MouseEvent) {
 
 .x-btn-ghost.x-btn-primary:hover:not(.x-btn-disabled):not(.x-btn-loading) {
   background-color: var(--x-fill-color-primary-lighter, rgba(0, 122, 255, 0.05));
-  border-color: var(--x-color-primary-dark, #0062CC);
+  border-color: color-mix(in oklab, var(--x-color-primary), black 12%);
 }
 
 .x-btn-ghost.x-btn-success {
@@ -398,7 +400,7 @@ function handleMouseDown(event: MouseEvent) {
 
 .x-btn-ghost.x-btn-success:hover:not(.x-btn-disabled):not(.x-btn-loading) {
   background-color: var(--x-fill-color-success-lighter, rgba(52, 199, 89, 0.05));
-  border-color: var(--x-color-success-dark, #248A3D);
+  border-color: color-mix(in oklab, var(--x-color-success), black 12%);
 }
 
 .x-btn-ghost.x-btn-warning {
@@ -410,7 +412,7 @@ function handleMouseDown(event: MouseEvent) {
 
 .x-btn-ghost.x-btn-warning:hover:not(.x-btn-disabled):not(.x-btn-loading) {
   background-color: var(--x-fill-color-warning-lighter, rgba(255, 149, 0, 0.05));
-  border-color: var(--x-color-warning-dark, #CC7700);
+  border-color: color-mix(in oklab, var(--x-color-warning), black 12%);
 }
 
 .x-btn-ghost.x-btn-danger {
@@ -422,7 +424,7 @@ function handleMouseDown(event: MouseEvent) {
 
 .x-btn-ghost.x-btn-danger:hover:not(.x-btn-disabled):not(.x-btn-loading) {
   background-color: var(--x-fill-color-danger-lighter, rgba(255, 59, 48, 0.05));
-  border-color: var(--x-color-danger-dark, #CC2F26);
+  border-color: color-mix(in oklab, var(--x-color-danger), black 12%);
 }
 
 /* iOS 幽灵按钮波纹效果 */

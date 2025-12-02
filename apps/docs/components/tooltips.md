@@ -138,6 +138,71 @@ import { XFlex, XButton, XTooltips } from '@xlui/xux-ui'
 
 </div>
 
+## 自定义宽度和长文本
+
+支持自定义宽度，长文本会自动换行显示。
+
+:::demo
+
+```vue
+<template>
+  <div style="padding: 40px; display: flex; flex-direction: column; gap: 24px; align-items: center;">
+    <!-- 默认：无限制宽度，自动换行 -->
+    <div>
+      <h4 style="margin-bottom: 12px; text-align: center;">默认模式（无限制宽度）</h4>
+      <XTooltips 
+        content="这是一段非常长的提示内容，当内容超出一定长度时会自动换行显示，不会出现横向滚动条，确保用户能够完整阅读所有信息。"
+        placement="top"
+      >
+        <XButton>悬停查看长文本</XButton>
+      </XTooltips>
+    </div>
+    
+    <!-- 自定义宽度 -->
+    <div>
+      <h4 style="margin-bottom: 12px; text-align: center;">自定义宽度（500px）</h4>
+      <XTooltips 
+        content="这是一段非常长的提示内容，设置了自定义宽度为500px，当内容超出这个宽度时会自动换行显示。"
+        placement="top"
+        width="500px"
+      >
+        <XButton>自定义宽度</XButton>
+      </XTooltips>
+    </div>
+    
+    <!-- 设置最大宽度 -->
+    <div>
+      <h4 style="margin-bottom: 12px; text-align: center;">最大宽度限制（300px）</h4>
+      <XTooltips 
+        content="这是一段非常长的提示内容，设置了最大宽度为300px，当内容超出这个宽度时会自动换行显示，但不会超过最大宽度。"
+        placement="top"
+        max-width="300px"
+      >
+        <XButton>最大宽度限制</XButton>
+      </XTooltips>
+    </div>
+    
+    <!-- 超长文本示例 -->
+    <div>
+      <h4 style="margin-bottom: 12px; text-align: center;">超长文本示例</h4>
+      <XTooltips 
+        content="这是一段超长的提示内容，用于测试Tooltips组件在处理大量文本时的表现。当文本内容很长时，组件会自动换行，确保所有内容都能完整显示。你可以设置自定义宽度来控制提示框的显示宽度，也可以设置最大宽度来限制提示框的最大尺寸。这样可以让提示框的显示更加灵活和美观。"
+        placement="top"
+        width="600px"
+      >
+        <XButton>超长文本</XButton>
+      </XTooltips>
+    </div>
+  </div>
+</template>
+
+<script setup>
+import { XButton, XTooltips } from '@xlui/xux-ui'
+</script>
+```
+
+:::
+
 ## API
 
 ### Props
@@ -148,6 +213,8 @@ import { XFlex, XButton, XTooltips } from '@xlui/xux-ui'
 | placement | 提示框位置 | `'top' \| 'top-start' \| 'top-end' \| 'bottom' \| 'bottom-start' \| 'bottom-end' \| 'left' \| 'left-start' \| 'left-end' \| 'right' \| 'right-start' \| 'right-end'` | `'top'` |
 | showArrow | 是否显示箭头 | `boolean` | `true` |
 | offset | 偏移距离（像素） | `number` | `8` |
+| width | 自定义宽度（支持 px、%、em 等单位，不设置则无限制） | `string` | - |
+| maxWidth | 最大宽度（支持 px、%、em 等单位，不设置则无限制） | `string` | - |
 
 ### Slots
 

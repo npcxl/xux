@@ -1,19 +1,16 @@
 <template>
-  <div :class="['x-menu', { 'x-menu-collapsed': collapsed }]" :style="{ width: menuWidth, height: props.height }">
+  <div :class="['x-menu', { 'x-menu-collapsed': collapsed, 'x-menu-borderless': !props.bordered }]"
+    :style="{ width: menuWidth, height: props.height }">
     <div class="x-menu-items">
       <template v-for="item in menuItems" :key="item.key">
         <!-- 单层菜单项（无子菜单） -->
-        <div
-          v-if="!item.children || item.children.length === 0"
-          :class="[
-            'x-menu-item',
-            {
-              'x-menu-item-active': activeKey === item.key,
-              'x-menu-item-disabled': item.disabled
-            }
-          ]"
-          @click="handleMenuClick(item)"
-        >
+        <div v-if="!item.children || item.children.length === 0" :class="[
+          'x-menu-item',
+          {
+            'x-menu-item-active': activeKey === item.key,
+            'x-menu-item-disabled': item.disabled
+          }
+        ]" @click="handleMenuClick(item)">
           <div class="x-menu-item-content">
             <!-- 图标 -->
             <span v-if="item.icon || item.xicon || item.customIcon" class="x-menu-item-icon">
@@ -24,35 +21,28 @@
               <XIcon v-else-if="item.xicon" :name="item.xicon" />
               <Icon v-else-if="item.icon" :icon="item.icon" />
             </span>
-            
+
             <!-- 标题 -->
             <span v-if="!collapsed" class="x-menu-item-title">{{ item.label }}</span>
-            
+
             <!-- 徽标 -->
             <span v-if="item.badge && !collapsed" class="x-menu-item-badge">{{ item.badge }}</span>
           </div>
         </div>
 
         <!-- 两层菜单项（有子菜单） -->
-        <div
-          v-else
-          :class="[
-            'x-menu-group',
-            {
-              'x-menu-group-open': openKeys.includes(item.key),
-              'x-menu-group-disabled': item.disabled
-            }
-          ]"
-          :ref="el => setGroupRef(el, item.key)"
-          @mouseenter="collapsed ? handleGroupHover(item.key) : null"
-          @mouseleave="collapsed ? handleGroupLeave() : null"
-        >
+        <div v-else :class="[
+          'x-menu-group',
+          {
+            'x-menu-group-open': openKeys.includes(item.key),
+            'x-menu-group-disabled': item.disabled
+          }
+        ]" :ref="el => setGroupRef(el, item.key)" @mouseenter="collapsed ? handleGroupHover(item.key) : null"
+          @mouseleave="collapsed ? handleGroupLeave() : null">
           <!-- 父级标题 -->
-          <div 
-            :class="['x-menu-group-title', { 'x-menu-group-title--category': !collapsible }]"
+          <div :class="['x-menu-group-title', { 'x-menu-group-title--category': !collapsible }]"
             @click="collapsible ? handleGroupClick(item) : null"
-            :style="{ cursor: collapsible ? 'pointer' : 'default' }"
-          >
+            :style="{ cursor: collapsible ? 'pointer' : 'default' }">
             <div class="x-menu-item-content">
               <!-- 图标 -->
               <span v-if="item.icon || item.xicon || item.customIcon" class="x-menu-item-icon">
@@ -64,10 +54,10 @@
                 <XIcon v-else-if="item.xicon" :name="item.xicon" />
                 <Icon v-else-if="item.icon" :icon="item.icon" />
               </span>
-              
+
               <!-- 标题 -->
               <span v-if="!collapsed" class="x-menu-item-title">{{ item.label }}</span>
-              
+
               <!-- 徽标 -->
               <span v-if="item.badge && !collapsed" class="x-menu-item-badge">{{ item.badge }}</span>
               <!-- 展开箭头（仅在可折叠模式显示） -->
@@ -80,19 +70,14 @@
           <!-- 子菜单列表（展开模式） -->
           <transition name="x-menu-collapse">
             <div v-show="(collapsible ? openKeys.includes(item.key) : true) && !collapsed" class="x-menu-submenu">
-              
-              <div
-                v-for="subItem in item.children"
-                :key="subItem.key"
-                :class="[
-                  'x-menu-subitem',
-                  {
-                    'x-menu-subitem-active': activeKey === subItem.key,
-                    'x-menu-subitem-disabled': subItem.disabled
-                  }
-                ]"
-                @click="handleSubMenuClick(item, subItem)"
-              >
+
+              <div v-for="subItem in item.children" :key="subItem.key" :class="[
+                'x-menu-subitem',
+                {
+                  'x-menu-subitem-active': activeKey === subItem.key,
+                  'x-menu-subitem-disabled': subItem.disabled
+                }
+              ]" @click="handleSubMenuClick(item, subItem)">
                 <div class="x-menu-subitem-content">
                   <!-- 子项图标 -->
                   <span v-if="subItem.icon || subItem.xicon || subItem.customIcon" class="x-menu-subitem-icon">
@@ -103,10 +88,10 @@
                     <XIcon v-else-if="subItem.xicon" :name="subItem.xicon" />
                     <Icon v-else-if="subItem.icon" :icon="subItem.icon" />
                   </span>
-                  
+
                   <!-- 子项标题 -->
                   <span class="x-menu-subitem-title">{{ subItem.label }}</span>
-                  
+
                   <!-- 子项徽标 -->
                   <span v-if="subItem.badge" class="x-menu-subitem-badge">{{ subItem.badge }}</span>
                 </div>
@@ -117,27 +102,18 @@
           <!-- 悬浮子菜单（折叠模式） - 使用 Teleport 传送到 body -->
           <Teleport to="body">
             <transition name="x-menu-popup">
-              <div 
-                v-if="collapsed && hoveredGroup === item.key"
-                class="x-menu-popup"
+              <div v-if="collapsed && hoveredGroup === item.key" class="x-menu-popup"
                 :style="{ position: 'fixed', top: popupPosition.top + 'px', left: popupPosition.left + 'px' }"
-                @mouseenter="handlePopupEnter"
-                @mouseleave="handlePopupLeave"
-              >
+                @mouseenter="handlePopupEnter" @mouseleave="handlePopupLeave">
                 <div class="x-menu-popup-title">{{ item.label }}</div>
                 <div class="x-menu-popup-items">
-                  <div
-                    v-for="subItem in item.children"
-                    :key="subItem.key"
-                    :class="[
-                      'x-menu-popup-item',
-                      {
-                        'x-menu-popup-item-active': activeKey === subItem.key,
-                        'x-menu-popup-item-disabled': subItem.disabled
-                      }
-                    ]"
-                    @click="handleSubMenuClick(item, subItem)"
-                  >
+                  <div v-for="subItem in item.children" :key="subItem.key" :class="[
+                    'x-menu-popup-item',
+                    {
+                      'x-menu-popup-item-active': activeKey === subItem.key,
+                      'x-menu-popup-item-disabled': subItem.disabled
+                    }
+                  ]" @click="handleSubMenuClick(item, subItem)">
                     <span v-if="subItem.icon || subItem.xicon || subItem.customIcon" class="x-menu-popup-item-icon">
                       <slot v-if="subItem.customIcon" :name="`icon-${subItem.key}`">
                         <XIcon v-if="subItem.xicon" :name="subItem.xicon" />
@@ -215,6 +191,8 @@ export interface MenuProps {
   accordion?: boolean
   /** 是否可折叠（是否显示箭头和折叠功能） */
   collapsible?: boolean
+  /** 是否显示边框 */
+  bordered?: boolean
 }
 
 const props = withDefaults(defineProps<MenuProps>(), {
@@ -225,7 +203,8 @@ const props = withDefaults(defineProps<MenuProps>(), {
   width: '280px',
   height: '',
   accordion: false,
-  collapsible: true
+  collapsible: true,
+  bordered: true
 })
 
 const emit = defineEmits<{
@@ -280,9 +259,9 @@ const handleMenuClick = (item: MenuItem) => {
 // 处理分组点击
 const handleGroupClick = (item: MenuItem) => {
   if (item.disabled) return
-  
+
   const index = openKeys.value.indexOf(item.key)
-  
+
   if (props.accordion) {
     // 手风琴模式：只展开一个
     if (index > -1) {
@@ -298,7 +277,7 @@ const handleGroupClick = (item: MenuItem) => {
       openKeys.value.push(item.key)
     }
   }
-  
+
   emit('openChange', openKeys.value)
 }
 
@@ -385,6 +364,11 @@ onUnmounted(() => {
   box-shadow: 0 2px 12px rgba(0, 0, 0, 0.04), 0 1px 4px rgba(0, 0, 0, 0.02);
   overflow-y: auto;
   overflow-x: hidden;
+}
+
+.x-menu.x-menu-borderless {
+  border: none;
+  box-shadow: none;
 }
 
 /* 滚动条样式美化 */
@@ -584,8 +568,8 @@ onUnmounted(() => {
 }
 
 /* 分组目录模式下的子菜单 */
-.x-menu-group-title--category + .x-menu-submenu,
-.x-menu-group-title--category ~ * .x-menu-submenu {
+.x-menu-group-title--category+.x-menu-submenu,
+.x-menu-group-title--category~* .x-menu-submenu {
   margin-top: 2px;
   padding-top: 2px;
 }
@@ -840,5 +824,3 @@ onUnmounted(() => {
   transform: translateX(-8px) scale(0.96);
 }
 </style>
-
-

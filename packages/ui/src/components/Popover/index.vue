@@ -2,20 +2,23 @@
   <div ref="referenceRef" class="x-popover-reference">
     <slot name="reference"></slot>
   </div>
-  <Teleport to="body" v-if="visible || isMounted">
+  <Teleport v-if="teleported && renderTeleport" to="body">
     <Transition name="x-popover-fade">
       <div
         v-show="visible"
         ref="popperRef"
-        :class="['x-popover', popperClass]"
+        :class="['x-popover', effectClass, popperClass]"
         :style="{
           position: strategy,
           top: y ? `${y}px` : '',
           left: x ? `${x}px` : '',
+          width: computedWidth,
           ...popperStyle
         }"
+        :data-popper-placement="placement"
         @mouseenter="handleMouseEnter"
         @mouseleave="handleMouseLeave"
+        @click="handleContentClick"
       >
         <div 
           v-if="showArrow" 
@@ -26,10 +29,55 @@
             top: middlewareData.arrow?.y != null ? `${middlewareData.arrow.y}px` : ''
           }"
         ></div>
+        <template v-if="title">
+          <div class="x-popover__title">{{ title }}</div>
+        </template>
+        <template v-if="content">
+          <div class="x-popover__content" v-if="!rawContent">{{ content }}</div>
+          <div class="x-popover__content" v-else v-html="content"></div>
+        </template>
         <slot></slot>
       </div>
     </Transition>
   </Teleport>
+  <template v-else>
+    <Transition name="x-popover-fade">
+      <div
+        v-show="visible"
+        ref="popperRef"
+        :class="['x-popover', effectClass, popperClass]"
+        :style="{
+          position: strategy,
+          top: y ? `${y}px` : '',
+          left: x ? `${x}px` : '',
+          width: computedWidth,
+          ...popperStyle
+        }"
+        :data-popper-placement="placement"
+        @mouseenter="handleMouseEnter"
+        @mouseleave="handleMouseLeave"
+        @click="handleContentClick"
+      >
+        <div 
+          v-if="showArrow" 
+          ref="arrowRef" 
+          class="x-popover__arrow"
+          :style="{
+            left: middlewareData.arrow?.x != null ? `${middlewareData.arrow.x}px` : '',
+            top: middlewareData.arrow?.y != null ? `${middlewareData.arrow.y}px` : ''
+          }"
+        ></div>
+        <template v-if="title">
+          <div class="x-popover__title">{{ title }}</div>
+        </template>
+        <template v-if="content">
+          <div class="x-popover__content" v-if="!rawContent">{{ content }}</div>
+          <div class="x-popover__content" v-else v-html="content"></div>
+        </template>
+        <slot></slot>
+      </div>
+    </Transition>
+  </template>
 </template>
 
 <script setup lang="ts">
@@ -42,28 +90,28 @@ import { useFloating, autoUpdate, offset, flip, shift, arrow, type Placement } f
  */
 
 export interface PopoverProps {
-  /** 是否显示 */
   visible?: boolean
-  /** 触发方式 */
-  trigger?: 'click' | 'hover' | 'focus' | 'manual'
-  /** 弹出框位置 */
+  trigger?: 'click' | 'hover' | 'focus' | 'manual' | 'contextmenu'
   placement?: 'top' | 'top-start' | 'top-end' | 'bottom' | 'bottom-start' | 'bottom-end' | 'left' | 'left-start' | 'left-end' | 'right' | 'right-start' | 'right-end'
-  /** 是否显示箭头 */
   showArrow?: boolean
-  /** 偏移距离 */
   offset?: number
-  /** 弹出框宽度 */
   width?: string | number
-  /** 是否禁用 */
   disabled?: boolean
-  /** 弹出框自定义类名 */
   popperClass?: string
-  /** 弹出框自定义样式 */
   popperStyle?: Record<string, any>
-  /** 延迟显示时间（毫秒） */
-  showDelay?: number
-  /** 延迟隐藏时间（毫秒） */
-  hideDelay?: number
+  title?: string
+  content?: string
+  rawContent?: boolean
+  teleported?: boolean
+  persistent?: boolean
+  hideOnClick?: boolean
+  popperOptions?: Record<string, any>
+  virtualRef?: HTMLElement | null
+  virtualTriggering?: boolean
+  effect?: 'light' | 'dark'
+  /** 与 Element 对齐的命名 */
+  openDelay?: number
+  closeDelay?: number
 }
 
 const props = withDefaults(defineProps<PopoverProps>(), {
@@ -73,8 +121,15 @@ const props = withDefaults(defineProps<PopoverProps>(), {
   showArrow: true,
   offset: 8,
   disabled: false,
-  showDelay: 0,
-  hideDelay: 0
+  openDelay: 0,
+  closeDelay: 0,
+  teleported: true,
+  persistent: false,
+  rawContent: false,
+  hideOnClick: true,
+  virtualRef: null,
+  virtualTriggering: false,
+  effect: 'light'
 })
 
 const emit = defineEmits<{
@@ -105,14 +160,16 @@ const visible = computed({
 })
 
 // 使用 floating-ui 进行定位
-const { x, y, strategy, middlewareData } = useFloating(referenceRef, popperRef, {
+const anchorRef = computed(() => props.virtualRef ?? referenceRef)
+const { x, y, strategy, middlewareData } = useFloating(anchorRef, popperRef, {
   placement: props.placement as Placement,
   middleware: [
     offset(props.offset),
     flip(),
     shift({ padding: 8 }),
     ...(props.showArrow ? [arrow({ element: arrowRef })] : [])
-  ]
+  ],
+  ...(props.popperOptions || {})
 })
 
 // 更新 visible 状态
@@ -140,10 +197,10 @@ const show = () => {
     hideTimer = null
   }
   
-  if (props.showDelay > 0) {
+  if (props.openDelay > 0) {
     showTimer = setTimeout(() => {
       updateVisible(true)
-    }, props.showDelay)
+    }, props.openDelay)
   } else {
     updateVisible(true)
   }
@@ -160,10 +217,10 @@ const hide = () => {
     hideTimer = null
   }
   
-  if (props.hideDelay > 0) {
+  if (props.closeDelay > 0) {
     hideTimer = setTimeout(() => {
       updateVisible(false)
-    }, props.hideDelay)
+    }, props.closeDelay)
   } else {
     updateVisible(false)
   }
@@ -219,7 +276,8 @@ const destroyFloating = () => {
 
 // 处理点击事件
 const handleClick = (e: MouseEvent) => {
-  if (props.disabled || props.trigger !== 'click') return
+  if (props.disabled) return
+  if (props.trigger !== 'click') return
   
   const target = e.target as HTMLElement
   if (referenceRef.value?.contains(target)) {
@@ -227,6 +285,13 @@ const handleClick = (e: MouseEvent) => {
   } else if (popperRef.value && !popperRef.value.contains(target)) {
     hide()
   }
+}
+
+// 右键触发
+const handleContextMenu = (e: MouseEvent) => {
+  if (props.disabled || props.trigger !== 'contextmenu') return
+  e.preventDefault()
+  show()
 }
 
 // 处理焦点事件
@@ -238,6 +303,13 @@ const handleFocus = () => {
 
 const handleBlur = () => {
   if (props.trigger === 'focus' && !props.disabled) {
+    hide()
+  }
+}
+
+// 内容点击处理（hide-on-click）
+const handleContentClick = () => {
+  if (props.hideOnClick) {
     hide()
   }
 }
@@ -260,17 +332,26 @@ watch(() => visible.value, (val) => {
   }
 })
 
+const computedWidth = computed(() => typeof props.width === 'number' ? `${props.width}px` : (props.width || ''))
+const effectClass = computed(() => props.effect === 'dark' ? 'x-popover--dark' : 'x-popover--light')
+
+const renderTeleport = computed(() => props.persistent ? true : visible.value)
+
 onMounted(() => {
   isMounted.value = true
   
-  if (props.trigger === 'click') {
-    document.addEventListener('click', handleClick, true)
-  } else if (props.trigger === 'focus') {
-    referenceRef.value?.addEventListener('focus', handleFocus)
-    referenceRef.value?.addEventListener('blur', handleBlur)
-  } else if (props.trigger === 'hover') {
-    referenceRef.value?.addEventListener('mouseenter', show)
-    referenceRef.value?.addEventListener('mouseleave', hide)
+  if (!props.virtualTriggering) {
+    if (props.trigger === 'click') {
+      document.addEventListener('click', handleClick, true)
+    } else if (props.trigger === 'focus') {
+      referenceRef.value?.addEventListener('focus', handleFocus)
+      referenceRef.value?.addEventListener('blur', handleBlur)
+    } else if (props.trigger === 'hover') {
+      referenceRef.value?.addEventListener('mouseenter', show)
+      referenceRef.value?.addEventListener('mouseleave', hide)
+    } else if (props.trigger === 'contextmenu') {
+      referenceRef.value?.addEventListener('contextmenu', handleContextMenu)
+    }
   }
   
   if (visible) {
@@ -286,14 +367,18 @@ onBeforeUnmount(() => {
     clearTimeout(hideTimer)
   }
   
-  if (props.trigger === 'click') {
-    document.removeEventListener('click', handleClick, true)
-  } else if (props.trigger === 'focus') {
-    referenceRef.value?.removeEventListener('focus', handleFocus)
-    referenceRef.value?.removeEventListener('blur', handleBlur)
-  } else if (props.trigger === 'hover') {
-    referenceRef.value?.removeEventListener('mouseenter', show)
-    referenceRef.value?.removeEventListener('mouseleave', hide)
+  if (!props.virtualTriggering) {
+    if (props.trigger === 'click') {
+      document.removeEventListener('click', handleClick, true)
+    } else if (props.trigger === 'focus') {
+      referenceRef.value?.removeEventListener('focus', handleFocus)
+      referenceRef.value?.removeEventListener('blur', handleBlur)
+    } else if (props.trigger === 'hover') {
+      referenceRef.value?.removeEventListener('mouseenter', show)
+      referenceRef.value?.removeEventListener('mouseleave', hide)
+    } else if (props.trigger === 'contextmenu') {
+      referenceRef.value?.removeEventListener('contextmenu', handleContextMenu)
+    }
   }
   
   destroyFloating()
@@ -322,6 +407,22 @@ defineExpose({
   padding: 12px;
   min-width: 150px;
   word-wrap: break-word;
+}
+
+.x-popover--dark {
+  background: #1f2329;
+  color: #e5e7eb;
+  border-color: #30363d;
+}
+
+.x-popover__title {
+  font-weight: 600;
+  font-size: 14px;
+  margin-bottom: 8px;
+}
+
+.x-popover__content {
+  font-size: 14px;
 }
 
 .x-popover__arrow {

@@ -63,10 +63,58 @@
   --vp-code-bg: #f6f8fa;
   --vp-code-color: #1a1a1a;
   
-  /* 自定义组件库颜色变量 */
-  --x-color-primary: #1a1a1a;
-  --x-color-primary-light: #3a3a3a;
-  --x-color-primary-dark: #0d0d0d;
+  /* 自定义组件库颜色变量 - 浅色模式 */
+  --x-color-primary: #007AFF;
+  --x-color-primary-light: #4DA2FF;
+  --x-color-primary-lighter: #80BFFF;
+  --x-color-primary-dark: #0062CC;
+  --x-color-primary-darker: #004999;
+  
+  /* iOS 组件背景色 */
+  --x-bg-color: #FFFFFF;
+  --x-bg-color-page: #F2F2F7;
+  --x-bg-color-overlay: #FFFFFF;
+  --x-bg-color-secondary: #F9F9F9;
+  
+  /* iOS 文本颜色 */
+  --x-text-color-primary: #000000;
+  --x-text-color-regular: #1C1C1E;
+  --x-text-color-secondary: #3A3A3C;
+  --x-text-color-placeholder: #8E8E93;
+  --x-text-color-disabled: #C7C7CC;
+  
+  /* iOS 边框颜色 */
+  --x-border-color: #C6C6C8;
+  --x-border-color-light: #D1D1D6;
+  --x-border-color-lighter: #E5E5EA;
+  --x-border-color-dark: #AEAEB2;
+  
+  /* iOS 填充颜色 */
+  --x-fill-color: #F2F2F7;
+  --x-fill-color-light: #F9F9F9;
+  --x-fill-color-lighter: #FFFFFF;
+  --x-fill-color-dark: #E5E5EA;
+  
+  /* iOS 阴影 */
+  --x-shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.04);
+  --x-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  --x-shadow-md: 0 4px 16px rgba(0, 0, 0, 0.12);
+  --x-shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.16);
+  --x-shadow-xl: 0 16px 48px rgba(0, 0, 0, 0.20);
+  
+  /* iOS 中性色 */
+  --x-color-white: #FFFFFF;
+  --x-color-black: #000000;
+  --x-color-gray-50: #F2F2F7;
+  --x-color-gray-100: #E5E5EA;
+  --x-color-gray-200: #D1D1D6;
+  --x-color-gray-300: #C7C7CC;
+  --x-color-gray-400: #AEAEB2;
+  --x-color-gray-500: #8E8E93;
+  --x-color-gray-600: #636366;
+  --x-color-gray-700: #48484A;
+  --x-color-gray-800: #3A3A3C;
+  --x-color-gray-900: #1C1C1E;
 }
 
 /* 暗色模式 */
@@ -99,9 +147,58 @@
   --vp-code-bg: #0d0d0d;
   --vp-code-color: #e5e5e5;
   
-  --x-color-primary: #e5e5e5;
-  --x-color-primary-light: #ffffff;
-  --x-color-primary-dark: #cacaca;
+  /* 自定义组件库颜色变量 - 深色模式 */
+  --x-color-primary: #0A84FF;
+  --x-color-primary-light: #409CFF;
+  --x-color-primary-lighter: #64A8FF;
+  --x-color-primary-dark: #0070E0;
+  --x-color-primary-darker: #0051B3;
+  
+  /* iOS 暗色组件背景 */
+  --x-bg-color: #000000;
+  --x-bg-color-page: #1C1C1E;
+  --x-bg-color-overlay: #2C2C2E;
+  --x-bg-color-secondary: #1C1C1E;
+  
+  /* iOS 暗色文本 */
+  --x-text-color-primary: #FFFFFF;
+  --x-text-color-regular: #E5E5EA;
+  --x-text-color-secondary: #AEAEB2;
+  --x-text-color-placeholder: #636366;
+  --x-text-color-disabled: #48484A;
+  
+  /* iOS 暗色边框 */
+  --x-border-color: #38383A;
+  --x-border-color-light: #2C2C2E;
+  --x-border-color-lighter: #1C1C1E;
+  --x-border-color-dark: #48484A;
+  
+  /* iOS 暗色填充 */
+  --x-fill-color: #1C1C1E;
+  --x-fill-color-light: #2C2C2E;
+  --x-fill-color-lighter: #3A3A3C;
+  --x-fill-color-dark: #000000;
+  
+  /* iOS 暗色阴影 */
+  --x-shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.3);
+  --x-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+  --x-shadow-md: 0 4px 16px rgba(0, 0, 0, 0.5);
+  --x-shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.6);
+  --x-shadow-xl: 0 16px 48px rgba(0, 0, 0, 0.7);
+  
+  /* iOS 暗色中性色 */
+  --x-color-white: #000000;
+  --x-color-black: #FFFFFF;
+  --x-color-gray-50: #1C1C1E;
+  --x-color-gray-100: #2C2C2E;
+  --x-color-gray-200: #3A3A3C;
+  --x-color-gray-300: #48484A;
+  --x-color-gray-400: #636366;
+  --x-color-gray-500: #8E8E93;
+  --x-color-gray-600: #AEAEB2;
+  --x-color-gray-700: #C7C7CC;
+  --x-color-gray-800: #D1D1D6;
+  --x-color-gray-900: #E5E5EA;
 }
 
 /* 自定义样式增强 */
@@ -320,6 +417,30 @@ div[class*='language-'] pre {
   overflow-x: auto;
 }
 
+/* Demo块 - 确保CSS变量正确应用 */
+.vp-demo,
+.demoblock-custom {
+  /* 在demo容器内显式设置CSS变量，确保正确应用（浅色模式） */
+  --x-bg-color: #FFFFFF;
+  --x-bg-color-overlay: #FFFFFF;
+  --x-text-color-primary: #000000;
+  --x-text-color-secondary: #3A3A3C;
+  --x-border-color-lighter: #E5E5EA;
+  --x-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+/* Demo块深色模式 - 确保CSS变量正确应用 */
+.dark .vp-demo,
+.dark .demoblock-custom {
+  /* 在demo容器内显式设置CSS变量，确保正确应用（深色模式） */
+  --x-bg-color: #000000;
+  --x-bg-color-overlay: #2C2C2E;
+  --x-text-color-primary: #FFFFFF;
+  --x-text-color-secondary: #AEAEB2;
+  --x-border-color-lighter: #1C1C1E;
+  --x-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+}
+
 /* 表格优化 */
 table {
   display: block;
@@ -385,6 +506,12 @@ tr:hover {
 .sidebar-badge.new {
   background-color: rgba(52, 199, 89, 0.1) !important;
   color: #34C759 !important;
+}
+
+/* 测试版徽章 */
+.sidebar-badge.test {
+  background-color: rgba(255, 215, 0, 0.1) !important;
+  color: #FF9800 !important;
 }
 
 /* 暗色模式下的更新徽章 */

@@ -755,15 +755,15 @@ import { ref, computed, onMounted, onUnmounted, nextTick } from 'vue'
 }
 
 .x-select-option:hover:not(.is-selected) {
-  background: rgba(0, 122, 255, 0.06);
+  background: var(--x-fill-color-primary-lighter, rgba(0, 122, 255, 0.06));
   transform: scale(0.995);
 }
 
 .x-select-option.is-selected {
   background: linear-gradient(135deg, #E3F2FF 0%, #D1E7FF 100%);
-  color: #007AFF;
+  color: var(--x-color-primary, #007AFF);
   font-weight: 500;
-  box-shadow: 0 2px 6px rgba(0, 122, 255, 0.1);
+  box-shadow: 0 2px 6px var(--x-shadow-primary, rgba(0, 122, 255, 0.1));
 }
 
 .x-select-option-content {

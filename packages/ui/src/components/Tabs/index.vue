@@ -20,6 +20,7 @@
             }"
             @click="handleTabClick(tab, index)"
             @mouseenter="handleTabHover(tab, index)"
+            @contextmenu.prevent="handleContextMenu($event, tab)"
           >
             <!-- 标签图标 -->
             <span v-if="tab.icon" class="x-tabs__item-icon">
@@ -110,11 +111,55 @@
     <div class="x-tabs__content">
       <slot />
     </div>
+    
+    <!-- 右键菜单 -->
+    <Teleport to="body">
+      <div
+        v-if="contextMenuVisible"
+        ref="contextMenuRef"
+        class="x-tabs__context-menu"
+        :style="contextMenuStyle"
+        @click.stop
+      >
+        <div
+          class="x-tabs__context-menu-item"
+          :class="{ 'is-disabled': !canCloseLeft }"
+          @click.stop.prevent="handleCloseLeft"
+        >
+          <Icon icon="mdi:chevron-double-left" />
+          <span>关闭左侧</span>
+        </div>
+        <div
+          class="x-tabs__context-menu-item"
+          :class="{ 'is-disabled': !canCloseRight }"
+          @click.stop.prevent="handleCloseRight"
+        >
+          <Icon icon="mdi:chevron-double-right" />
+          <span>关闭右侧</span>
+        </div>
+        <div
+          class="x-tabs__context-menu-item"
+          :class="{ 'is-disabled': !canCloseOther }"
+          @click.stop.prevent="handleCloseOther"
+        >
+          <Icon icon="mdi:close-circle-outline" />
+          <span>关闭其他</span>
+        </div>
+        <div
+          class="x-tabs__context-menu-item"
+          :class="{ 'is-disabled': tabs.length === 0 }"
+          @click.stop.prevent="handleCloseAll"
+        >
+          <Icon icon="mdi:close-circle-multiple-outline" />
+          <span>全部关闭</span>
+        </div>
+      </div>
+    </Teleport>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, computed, watch, nextTick, onMounted, provide } from 'vue'
+import { ref, computed, watch, nextTick, onMounted, provide, onUnmounted } from 'vue'
 import { Icon } from '@iconify/vue'
 import XDropdown from '../Dropdown/index.vue'
 
@@ -156,6 +201,10 @@ const emit = defineEmits<{
   'tab-click': [tab: TabPane, index: number]
   'tab-remove': [name: string | number]
   'tab-add': []
+  'tab-close-left': [name: string | number]
+  'tab-close-right': [name: string | number]
+  'tab-close-other': [name: string | number]
+  'tab-close-all': []
 }>()
 
 // 标签数据
@@ -168,6 +217,12 @@ const indicatorRef = ref<HTMLElement>()
 const dropdownRef = ref()
 const visibleTabs = ref<TabPane[]>([])
 const overflowTabs = ref<TabPane[]>([])
+
+// 右键菜单相关
+const contextMenuVisible = ref(false)
+const contextMenuRef = ref<HTMLElement>()
+const contextMenuStyle = ref<{ left: string; top: string }>({ left: '0px', top: '0px' })
+const contextMenuTab = ref<{ tab: TabPane; index: number } | null>(null)
 
 // 注册标签页
 const registerTab = (tab: TabPane) => {
@@ -360,6 +415,194 @@ const handleDropdownTabClick = (tab: TabPane) => {
   handleTabClick(tab, index)
 }
 
+// 处理右键菜单
+const handleContextMenu = (event: MouseEvent, tab: TabPane) => {
+  // 只有启用 closable 时才显示右键菜单
+  if (!props.closable) {
+    return
+  }
+  
+  // 如果标签被禁用，不显示菜单
+  if (tab.disabled) {
+    return
+  }
+  
+  event.preventDefault()
+  event.stopPropagation()
+  
+  // 找到标签在 tabs 数组中的真实索引
+  const realIndex = tabs.value.findIndex(t => t.name === tab.name)
+  if (realIndex === -1) {
+    return
+  }
+  
+  // 先关闭之前的菜单（如果有）
+  closeContextMenu()
+  
+  // 设置菜单位置和显示
+  contextMenuTab.value = { tab, index: realIndex }
+  contextMenuStyle.value = {
+    left: `${event.clientX}px`,
+    top: `${event.clientY}px`
+  }
+  contextMenuVisible.value = true
+  
+  // 确保菜单在视口内
+  nextTick(() => {
+    if (!contextMenuRef.value) return
+    const rect = contextMenuRef.value.getBoundingClientRect()
+    const viewportWidth = window.innerWidth
+    const viewportHeight = window.innerHeight
+    
+    let newLeft = event.clientX
+    let newTop = event.clientY
+    
+    if (rect.right > viewportWidth) {
+      newLeft = event.clientX - rect.width
+    }
+    if (rect.bottom > viewportHeight) {
+      newTop = event.clientY - rect.height
+    }
+    
+    if (newLeft !== event.clientX || newTop !== event.clientY) {
+      contextMenuStyle.value = {
+        left: `${newLeft}px`,
+        top: `${newTop}px`
+      }
+    }
+  })
+}
+
+// 关闭右键菜单
+const closeContextMenu = () => {
+  contextMenuVisible.value = false
+  contextMenuTab.value = null
+}
+
+// 计算是否可以关闭左侧
+const canCloseLeft = computed(() => {
+  if (!contextMenuTab.value) return false
+  return contextMenuTab.value.index > 0
+})
+
+// 计算是否可以关闭右侧
+const canCloseRight = computed(() => {
+  if (!contextMenuTab.value) return false
+  return contextMenuTab.value.index < tabs.value.length - 1
+})
+
+// 计算是否可以关闭其他
+const canCloseOther = computed(() => {
+  if (!contextMenuTab.value) return false
+  return tabs.value.length > 1
+})
+
+// 关闭左侧标签
+const handleCloseLeft = () => {
+  if (!canCloseLeft.value || !contextMenuTab.value) return
+  
+  const { index, tab: currentTab } = contextMenuTab.value
+  const tabsToClose = tabs.value.slice(0, index)
+  
+  // 发射事件并移除标签
+  tabsToClose.forEach(tab => {
+    if (tab.closable !== false) {
+      emit('tab-remove', tab.name)
+      emit('tab-close-left', tab.name)
+    }
+    unregisterTab(tab.name)
+  })
+  
+  // 如果当前激活的标签被关闭，切换到当前右键的标签
+  if (tabsToClose.some(tab => tab.name === activeKey.value)) {
+    activeKey.value = currentTab.name
+    emit('update:modelValue', currentTab.name)
+    emit('change', currentTab.name)
+  }
+  
+  closeContextMenu()
+  nextTick(() => {
+    calculateOverflow()
+    updateIndicator()
+  })
+}
+
+// 关闭右侧标签
+const handleCloseRight = () => {
+  if (!canCloseRight.value || !contextMenuTab.value) return
+  
+  const { index } = contextMenuTab.value
+  const tabsToClose = tabs.value.slice(index + 1)
+  
+  // 发射事件并移除标签
+  tabsToClose.forEach(tab => {
+    if (tab.closable !== false) {
+      emit('tab-remove', tab.name)
+      emit('tab-close-right', tab.name)
+    }
+    unregisterTab(tab.name)
+  })
+  
+  closeContextMenu()
+  nextTick(() => {
+    calculateOverflow()
+    updateIndicator()
+  })
+}
+
+// 关闭其他标签
+const handleCloseOther = () => {
+  if (!canCloseOther.value || !contextMenuTab.value) return
+  
+  const { tab: currentTab } = contextMenuTab.value
+  const tabsToClose = tabs.value.filter(t => t.name !== currentTab.name)
+  
+  // 发射事件并移除标签
+  tabsToClose.forEach(tab => {
+    if (tab.closable !== false) {
+      emit('tab-remove', tab.name)
+      emit('tab-close-other', tab.name)
+    }
+    unregisterTab(tab.name)
+  })
+  
+  // 切换到当前右键的标签
+  activeKey.value = currentTab.name
+  emit('update:modelValue', currentTab.name)
+  emit('change', currentTab.name)
+  
+  closeContextMenu()
+  nextTick(() => {
+    calculateOverflow()
+    updateIndicator()
+  })
+}
+
+// 全部关闭
+const handleCloseAll = () => {
+  if (tabs.value.length === 0) return
+  
+  const tabsToClose = tabs.value.filter(tab => tab.closable !== false)
+  
+  tabsToClose.forEach(tab => {
+    emit('tab-remove', tab.name)
+  })
+  emit('tab-close-all')
+  
+  tabs.value.forEach(tab => {
+    unregisterTab(tab.name)
+  })
+  
+  activeKey.value = ''
+  emit('update:modelValue', '')
+  
+  closeContextMenu()
+  nextTick(() => {
+    calculateOverflow()
+    updateIndicator()
+  })
+}
+
 // 监听 modelValue 变化
 watch(() => props.modelValue, (val) => {
   activeKey.value = val
@@ -375,6 +618,13 @@ watch(() => tabs.value.length, () => {
   })
 })
 
+// 点击外部关闭右键菜单
+const handleClickOutside = (event: MouseEvent) => {
+  if (contextMenuVisible.value && contextMenuRef.value && !contextMenuRef.value.contains(event.target as Node)) {
+    closeContextMenu()
+  }
+}
+
 onMounted(() => {
   calculateOverflow()
   updateIndicator()
@@ -385,6 +635,15 @@ onMounted(() => {
     updateIndicator()
   }
   window.addEventListener('resize', handleResize)
+  
+  // 监听点击外部关闭右键菜单
+  document.addEventListener('click', handleClickOutside)
+  document.addEventListener('contextmenu', handleClickOutside)
+})
+
+onUnmounted(() => {
+  document.removeEventListener('click', handleClickOutside)
+  document.removeEventListener('contextmenu', handleClickOutside)
 })
 
 // 暴露方法
@@ -1105,6 +1364,92 @@ defineExpose({
   100% {
     transform: scale(1);
     opacity: 0.6;
+  }
+}
+
+/* ============================================
+   右键菜单
+   ============================================ */
+.x-tabs__context-menu {
+  position: fixed;
+  z-index: 99999;
+  min-width: 160px;
+  padding: 4px;
+  background: var(--x-bg-color, white);
+  border: 1px solid var(--x-border-color, #e5e7eb);
+  border-radius: var(--x-radius-md, 8px);
+  box-shadow: 
+    0 4px 6px -1px rgba(0, 0, 0, 0.1),
+    0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  animation: contextMenuIn 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  pointer-events: auto;
+}
+
+@keyframes contextMenuIn {
+  0% {
+    opacity: 0;
+    transform: scale(0.95) translateY(-4px);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+.x-tabs__context-menu-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  font-size: 14px;
+  color: var(--x-text-color, #333);
+  cursor: pointer;
+  border-radius: var(--x-radius-sm, 4px);
+  transition: all 0.2s ease;
+  user-select: none;
+}
+
+.x-tabs__context-menu-item:hover:not(.is-disabled) {
+  background: var(--x-bg-color-hover, #f5f5f5);
+  color: var(--x-color-primary, #1a1a1a);
+}
+
+.x-tabs__context-menu-item.is-disabled {
+  color: var(--x-text-color-disabled, #ccc);
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+.x-tabs__context-menu-item.is-disabled:hover {
+  background: transparent;
+  color: var(--x-text-color-disabled, #ccc);
+}
+
+.x-tabs__context-menu-item :deep(svg) {
+  font-size: 18px;
+  flex-shrink: 0;
+}
+
+.x-tabs__context-menu-item span {
+  flex: 1;
+  white-space: nowrap;
+}
+
+/* 深色模式 */
+@media (prefers-color-scheme: dark) {
+  .x-tabs__context-menu {
+    background: var(--x-bg-color-dark, #1a1a1a);
+    border-color: var(--x-border-color-dark, #333);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.32);
+  }
+  
+  .x-tabs__context-menu-item {
+    color: var(--x-text-color-dark, #f3f4f6);
+  }
+  
+  .x-tabs__context-menu-item:hover:not(.is-disabled) {
+    background: var(--x-bg-color-hover-dark, rgba(255, 255, 255, 0.08));
+    color: var(--x-color-primary-dark, #fff);
   }
 }
 </style>

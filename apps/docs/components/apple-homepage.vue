@@ -16,7 +16,7 @@
           <!-- 版本标签 -->
           <div class="version-badge" data-aos="fade-down">
             <span class="version-dot"></span>
-            Version 1.5.5
+            Version 1.5.10
           </div>
           
           <h1 class="hero-title" data-aos="fade-up">

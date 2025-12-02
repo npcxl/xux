@@ -12,47 +12,63 @@
 <template>
   <div class="space-y-6">
     <div>
-      <h4 class="text-sm font-semibold mb-3 text-gray-900 dark:text-gray-100">线条风格（默认）</h4>
+      <h4 class="text-sm font-semibold mb-3 text-gray-900 dark:text-gray-100">
+        线条风格（默认）
+      </h4>
       <XTabs v-model="activeTab1">
         <XTabPane name="home" label="首页">
           <div class="p-4">
-            <h3 class="text-lg font-semibold mb-2 dark:text-gray-100">欢迎来到首页</h3>
+            <h3 class="text-lg font-semibold mb-2 dark:text-gray-100">
+              欢迎来到首页
+            </h3>
             <p class="text-gray-600 dark:text-gray-400">这是首页的内容区域</p>
           </div>
         </XTabPane>
         <XTabPane name="user" label="用户管理" icon="mdi:account">
           <div class="p-4">
-            <h3 class="text-lg font-semibold mb-2 dark:text-gray-100">用户管理</h3>
+            <h3 class="text-lg font-semibold mb-2 dark:text-gray-100">
+              用户管理
+            </h3>
             <p class="text-gray-600 dark:text-gray-400">管理系统用户信息</p>
           </div>
         </XTabPane>
         <XTabPane name="settings" label="系统设置" icon="mdi:cog">
           <div class="p-4">
-            <h3 class="text-lg font-semibold mb-2 dark:text-gray-100">系统设置</h3>
+            <h3 class="text-lg font-semibold mb-2 dark:text-gray-100">
+              系统设置
+            </h3>
             <p class="text-gray-600 dark:text-gray-400">配置系统参数</p>
           </div>
         </XTabPane>
       </XTabs>
     </div>
-    
+
     <div>
-      <h4 class="text-sm font-semibold mb-3 text-gray-900 dark:text-gray-100">卡片风格</h4>
+      <h4 class="text-sm font-semibold mb-3 text-gray-900 dark:text-gray-100">
+        卡片风格
+      </h4>
       <XTabs v-model="activeTab2" type="card">
         <XTabPane name="orders" label="订单管理" icon="mdi:clipboard-list">
           <div class="p-4">
-            <h3 class="text-lg font-semibold mb-2 dark:text-gray-100">订单管理</h3>
+            <h3 class="text-lg font-semibold mb-2 dark:text-gray-100">
+              订单管理
+            </h3>
             <p class="text-gray-600 dark:text-gray-400">查看和管理所有订单</p>
           </div>
         </XTabPane>
         <XTabPane name="products" label="商品管理" icon="mdi:package-variant">
           <div class="p-4">
-            <h3 class="text-lg font-semibold mb-2 dark:text-gray-100">商品管理</h3>
+            <h3 class="text-lg font-semibold mb-2 dark:text-gray-100">
+              商品管理
+            </h3>
             <p class="text-gray-600 dark:text-gray-400">管理商品库存和信息</p>
           </div>
         </XTabPane>
         <XTabPane name="analytics" label="数据分析" icon="mdi:chart-line">
           <div class="p-4">
-            <h3 class="text-lg font-semibold mb-2 dark:text-gray-100">数据分析</h3>
+            <h3 class="text-lg font-semibold mb-2 dark:text-gray-100">
+              数据分析
+            </h3>
             <p class="text-gray-600 dark:text-gray-400">查看销售数据和趋势</p>
           </div>
         </XTabPane>
@@ -62,11 +78,11 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
-import { XTabs, XTabPane } from '@xlui/xux-ui'
+import { ref } from "vue";
+import { XTabs, XTabPane } from "@xlui/xux-ui";
 
-const activeTab1 = ref('home')
-const activeTab2 = ref('orders')
+const activeTab1 = ref("home");
+const activeTab2 = ref("orders");
 </script>
 
 <style scoped>
@@ -93,11 +109,15 @@ h4 {
         <div class="grid grid-cols-2 gap-4 mt-4">
           <div class="p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
             <div class="text-sm text-gray-600 dark:text-gray-400">总用户数</div>
-            <div class="text-2xl font-bold text-blue-600 dark:text-blue-400">12,345</div>
+            <div class="text-2xl font-bold text-blue-600 dark:text-blue-400">
+              12,345
+            </div>
           </div>
           <div class="p-4 bg-green-50 dark:bg-green-900/20 rounded-lg">
             <div class="text-sm text-gray-600 dark:text-gray-400">活跃用户</div>
-            <div class="text-2xl font-bold text-green-600 dark:text-green-400">8,901</div>
+            <div class="text-2xl font-bold text-green-600 dark:text-green-400">
+              8,901
+            </div>
           </div>
         </div>
       </div>
@@ -118,10 +138,10 @@ h4 {
 </template>
 
 <script setup>
-import { ref } from 'vue'
-import { XTabs, XTabPane } from '@xlui/xux-ui'
+import { ref } from "vue";
+import { XTabs, XTabPane } from "@xlui/xux-ui";
 
-const borderCardTab = ref('overview')
+const borderCardTab = ref("overview");
 </script>
 ```
 
@@ -164,10 +184,10 @@ const borderCardTab = ref('overview')
 </template>
 
 <script setup>
-import { ref } from 'vue'
-import { XTabs, XTabPane } from '@xlui/xux-ui'
+import { ref } from "vue";
+import { XTabs, XTabPane } from "@xlui/xux-ui";
 
-const buttonTab = ref('all')
+const buttonTab = ref("all");
 </script>
 ```
 
@@ -210,10 +230,10 @@ const buttonTab = ref('all')
 </template>
 
 <script setup>
-import { ref } from 'vue'
-import { XTabs, XTabPane } from '@xlui/xux-ui'
+import { ref } from "vue";
+import { XTabs, XTabPane } from "@xlui/xux-ui";
 
-const segmentTab = ref('day')
+const segmentTab = ref("day");
 </script>
 ```
 
@@ -227,16 +247,25 @@ const segmentTab = ref('day')
 
 ```vue
 <template>
-  <XTabs v-model="chromeTab" type="chrome" closable addable @tab-add="handleAddTab" @tab-remove="handleRemoveTab">
-    <XTabPane 
-      v-for="tab in chromeTabs" 
+  <XTabs
+    v-model="chromeTab"
+    type="chrome"
+    closable
+    addable
+    @tab-add="handleAddTab"
+    @tab-remove="handleRemoveTab"
+  >
+    <XTabPane
+      v-for="tab in chromeTabs"
       :key="tab.name"
-      :name="tab.name" 
-      :label="tab.label" 
+      :name="tab.name"
+      :label="tab.label"
       :icon="tab.icon"
     >
       <div class="p-6">
-        <h3 class="text-xl font-bold mb-3 dark:text-gray-100">{{ tab.label }}</h3>
+        <h3 class="text-xl font-bold mb-3 dark:text-gray-100">
+          {{ tab.label }}
+        </h3>
         <p class="text-gray-600 dark:text-gray-400 mb-4">{{ tab.content }}</p>
         <div class="flex gap-2">
           <XButton type="primary" size="small">操作</XButton>
@@ -248,38 +277,48 @@ const segmentTab = ref('day')
 </template>
 
 <script setup>
-import { ref } from 'vue'
-import { XTabs, XTabPane, XButton, xlMsg } from '@xlui/xux-ui'
+import { ref } from "vue";
+import { XTabs, XTabPane, XButton, xlMsg } from "@xlui/xux-ui";
 
-const msg = xlMsg()
-let tabIndex = 4
+const msg = xlMsg();
+let tabIndex = 4;
 
-const chromeTab = ref('tab1')
+const chromeTab = ref("tab1");
 const chromeTabs = ref([
-  { name: 'tab1', label: 'Google', icon: 'mdi:google', content: 'Google 搜索引擎页面' },
-  { name: 'tab2', label: 'GitHub', icon: 'mdi:github', content: 'GitHub 代码托管平台' },
-  { name: 'tab3', label: '设置', icon: 'mdi:cog', content: '浏览器设置页面' }
-])
+  {
+    name: "tab1",
+    label: "Google",
+    icon: "mdi:google",
+    content: "Google 搜索引擎页面",
+  },
+  {
+    name: "tab2",
+    label: "GitHub",
+    icon: "mdi:github",
+    content: "GitHub 代码托管平台",
+  },
+  { name: "tab3", label: "设置", icon: "mdi:cog", content: "浏览器设置页面" },
+]);
 
 const handleAddTab = () => {
   const newTab = {
     name: `tab${tabIndex++}`,
     label: `新标签 ${tabIndex - 1}`,
-    icon: 'mdi:tab',
-    content: `这是新建的标签页 ${tabIndex - 1}`
-  }
-  chromeTabs.value.push(newTab)
-  chromeTab.value = newTab.name
-  msg.success('新增标签页成功')
-}
+    icon: "mdi:tab",
+    content: `这是新建的标签页 ${tabIndex - 1}`,
+  };
+  chromeTabs.value.push(newTab);
+  chromeTab.value = newTab.name;
+  msg.success("新增标签页成功");
+};
 
 const handleRemoveTab = (name) => {
-  const index = chromeTabs.value.findIndex(tab => tab.name === name)
+  const index = chromeTabs.value.findIndex((tab) => tab.name === name);
   if (index > -1) {
-    chromeTabs.value.splice(index, 1)
-    msg.info('标签页已关闭')
+    chromeTabs.value.splice(index, 1);
+    msg.info("标签页已关闭");
   }
-}
+};
 </script>
 ```
 
@@ -293,12 +332,19 @@ const handleRemoveTab = (name) => {
 
 ```vue
 <template>
-  <XTabs v-model="safariTab" type="safari" closable addable @tab-add="handleAddTab" @tab-remove="handleRemoveTab">
-    <XTabPane 
-      v-for="tab in safariTabs" 
+  <XTabs
+    v-model="safariTab"
+    type="safari"
+    closable
+    addable
+    @tab-add="handleAddTab"
+    @tab-remove="handleRemoveTab"
+  >
+    <XTabPane
+      v-for="tab in safariTabs"
       :key="tab.name"
-      :name="tab.name" 
-      :label="tab.label" 
+      :name="tab.name"
+      :label="tab.label"
       :icon="tab.icon"
     >
       <div class="p-6 bg-gray-50 dark:bg-gray-800/50 rounded-lg">
@@ -310,11 +356,15 @@ const handleRemoveTab = (name) => {
         <div class="grid grid-cols-2 gap-4">
           <div class="p-4 bg-white dark:bg-gray-700/50 rounded-lg shadow-sm">
             <div class="text-sm text-gray-500 dark:text-gray-400">访问量</div>
-            <div class="text-2xl font-bold text-primary dark:text-blue-400">1.2K</div>
+            <div class="text-2xl font-bold text-primary dark:text-blue-400">
+              1.2K
+            </div>
           </div>
           <div class="p-4 bg-white dark:bg-gray-700/50 rounded-lg shadow-sm">
             <div class="text-sm text-gray-500 dark:text-gray-400">活跃度</div>
-            <div class="text-2xl font-bold text-success dark:text-green-400">95%</div>
+            <div class="text-2xl font-bold text-success dark:text-green-400">
+              95%
+            </div>
           </div>
         </div>
       </div>
@@ -323,39 +373,54 @@ const handleRemoveTab = (name) => {
 </template>
 
 <script setup>
-import { ref } from 'vue'
-import { XTabs, XTabPane, xlMsg } from '@xlui/xux-ui'
-import { Icon } from '@iconify/vue'
+import { ref } from "vue";
+import { XTabs, XTabPane, xlMsg } from "@xlui/xux-ui";
+import { Icon } from "@iconify/vue";
 
-const msg = xlMsg()
-let tabIndex = 4
+const msg = xlMsg();
+let tabIndex = 4;
 
-const safariTab = ref('tab1')
+const safariTab = ref("tab1");
 const safariTabs = ref([
-  { name: 'tab1', label: '仪表盘', icon: 'mdi:view-dashboard', content: '查看系统总览和关键指标' },
-  { name: 'tab2', label: '数据分析', icon: 'mdi:chart-bar', content: '深入分析业务数据和趋势' },
-  { name: 'tab3', label: '用户中心', icon: 'mdi:account-circle', content: '管理用户信息和权限' }
-])
+  {
+    name: "tab1",
+    label: "仪表盘",
+    icon: "mdi:view-dashboard",
+    content: "查看系统总览和关键指标",
+  },
+  {
+    name: "tab2",
+    label: "数据分析",
+    icon: "mdi:chart-bar",
+    content: "深入分析业务数据和趋势",
+  },
+  {
+    name: "tab3",
+    label: "用户中心",
+    icon: "mdi:account-circle",
+    content: "管理用户信息和权限",
+  },
+]);
 
 const handleAddTab = () => {
   const newTab = {
     name: `tab${tabIndex++}`,
     label: `页面 ${tabIndex - 1}`,
-    icon: 'mdi:file-document',
-    content: `这是新打开的页面 ${tabIndex - 1}`
-  }
-  safariTabs.value.push(newTab)
-  safariTab.value = newTab.name
-  msg.success('新增页面成功')
-}
+    icon: "mdi:file-document",
+    content: `这是新打开的页面 ${tabIndex - 1}`,
+  };
+  safariTabs.value.push(newTab);
+  safariTab.value = newTab.name;
+  msg.success("新增页面成功");
+};
 
 const handleRemoveTab = (name) => {
-  const index = safariTabs.value.findIndex(tab => tab.name === name)
+  const index = safariTabs.value.findIndex((tab) => tab.name === name);
   if (index > -1) {
-    safariTabs.value.splice(index, 1)
-    msg.info('页面已关闭')
+    safariTabs.value.splice(index, 1);
+    msg.info("页面已关闭");
   }
-}
+};
 </script>
 ```
 
@@ -386,16 +451,191 @@ const handleRemoveTab = (name) => {
 </template>
 
 <script setup>
-import { ref } from 'vue'
-import { XTabs, XTabPane, xlMsg } from '@xlui/xux-ui'
+import { ref } from "vue";
+import { XTabs, XTabPane, xlMsg } from "@xlui/xux-ui";
 
-const msg = xlMsg()
-const closableTab = ref('tab1')
+const msg = xlMsg();
+const closableTab = ref("tab1");
 
 const handleRemove = (name) => {
-  msg.warning(`标签 ${name} 已关闭`)
-}
+  msg.warning(`标签 ${name} 已关闭`);
+};
 </script>
+```
+
+:::
+
+## 右键菜单
+
+当 `closable` 为 `true` 时，右键点击标签会显示上下文菜单，可以快速关闭多个标签。
+
+:::demo
+
+```vue
+<template>
+  <div class="space-y-4">
+    <XTabs
+      v-model="contextMenuTab"
+      type="card"
+      closable
+      @tab-remove="handleRemove"
+      @tab-close-left="handleCloseLeft"
+      @tab-close-right="handleCloseRight"
+      @tab-close-other="handleCloseOther"
+      @tab-close-all="handleCloseAll"
+      @change="handleTabChange"
+    >
+      <XTabPane
+        v-for="tab in contextMenuTabs"
+        :key="tab.name"
+        :name="tab.name"
+        :label="tab.label"
+        :icon="tab.icon"
+      >
+        <div class="p-4">
+          <h3 class="text-lg font-semibold mb-2 dark:text-gray-100">
+            {{ tab.label }}
+          </h3>
+          <p class="text-gray-600 dark:text-gray-400">{{ tab.content }}</p>
+        </div>
+      </XTabPane>
+    </XTabs>
+
+    <div class="p-4 bg-gray-50 dark:bg-gray-800/50 rounded-lg">
+      <h4 class="text-sm font-semibold mb-2 dark:text-gray-100">操作提示：</h4>
+      <p class="text-sm text-gray-600 dark:text-gray-400 mb-2">
+        💡 右键点击任意标签可以打开上下文菜单，支持以下操作：
+      </p>
+      <ul
+        class="text-sm text-gray-600 dark:text-gray-400 space-y-1 list-disc list-inside"
+      >
+        <li>关闭左侧：关闭当前标签左侧的所有标签</li>
+        <li>关闭右侧：关闭当前标签右侧的所有标签</li>
+        <li>关闭其他：关闭除当前标签外的所有标签</li>
+        <li>全部关闭：关闭所有标签</li>
+      </ul>
+    </div>
+
+    <div class="p-4 bg-gray-50 dark:bg-gray-800/50 rounded-lg">
+      <h4 class="text-sm font-semibold mb-2 dark:text-gray-100">事件日志：</h4>
+      <div
+        class="text-sm text-gray-600 dark:text-gray-400 space-y-1 max-h-32 overflow-y-auto"
+      >
+        <div v-for="(log, index) in eventLogs" :key="index">{{ log }}</div>
+        <div v-if="eventLogs.length === 0" class="text-gray-400 italic">
+          暂无操作记录
+        </div>
+      </div>
+    </div>
+  </div>
+</template>
+
+<script setup>
+import { ref } from "vue";
+import { XTabs, XTabPane, xlMsg } from "@xlui/xux-ui";
+
+const msg = xlMsg();
+const contextMenuTab = ref("tab1");
+const eventLogs = ref([]);
+
+const contextMenuTabs = ref([
+  { name: "tab1", label: "首页", icon: "mdi:home", content: "欢迎来到首页" },
+  {
+    name: "tab2",
+    label: "产品",
+    icon: "mdi:package-variant",
+    content: "查看产品列表",
+  },
+  {
+    name: "tab3",
+    label: "订单",
+    icon: "mdi:clipboard-list",
+    content: "管理订单信息",
+  },
+  {
+    name: "tab4",
+    label: "用户",
+    icon: "mdi:account-group",
+    content: "用户管理页面",
+  },
+  { name: "tab5", label: "设置", icon: "mdi:cog", content: "系统设置页面" },
+  {
+    name: "tab6",
+    label: "帮助",
+    icon: "mdi:help-circle",
+    content: "帮助文档页面",
+  },
+]);
+
+const addLog = (message) => {
+  const timestamp = new Date().toLocaleTimeString();
+  eventLogs.value.unshift(`[${timestamp}] ${message}`);
+  if (eventLogs.value.length > 10) eventLogs.value.pop();
+};
+
+const handleRemove = (name) => {
+  const tab = contextMenuTabs.value.find((t) => t.name === name);
+  if (tab) {
+    const index = contextMenuTabs.value.findIndex((t) => t.name === name);
+    contextMenuTabs.value.splice(index, 1);
+    addLog(`关闭了标签: ${tab.label}`);
+  }
+
+  // 如果当前激活的标签被关闭，自动切换到第一个标签
+  if (contextMenuTab.value === name && contextMenuTabs.value.length > 0) {
+    contextMenuTab.value = contextMenuTabs.value[0].name;
+  } else if (contextMenuTabs.value.length === 0) {
+    contextMenuTab.value = "";
+  }
+};
+
+const handleTabChange = (name) => {
+  if (name) {
+    const tab = contextMenuTabs.value.find((t) => t.name === name);
+    if (tab) {
+      addLog(`切换到标签: ${tab.label}`);
+    }
+  }
+};
+
+const handleCloseLeft = (name) => {
+  const tab = contextMenuTabs.value.find((t) => t.name === name);
+  if (tab) {
+    addLog(`右键操作: 关闭 "${tab.label}" 左侧的所有标签`);
+  }
+};
+
+const handleCloseRight = (name) => {
+  const tab = contextMenuTabs.value.find((t) => t.name === name);
+  if (tab) {
+    addLog(`右键操作: 关闭 "${tab.label}" 右侧的所有标签`);
+  }
+};
+
+const handleCloseOther = (name) => {
+  const tab = contextMenuTabs.value.find((t) => t.name === name);
+  if (tab) {
+    addLog(`右键操作: 关闭除 "${tab.label}" 外的所有标签`);
+    // 组件会自动关闭其他标签，这里只记录日志
+    // 标签的实际移除会在 handleRemove 中处理
+  }
+};
+
+const handleCloseAll = () => {
+  addLog("右键操作: 全部关闭");
+  // 组件会自动关闭所有标签，这里只记录日志
+  // 标签的实际移除会在 handleRemove 中处理
+  // 清空标签列表
+  contextMenuTabs.value = [];
+  contextMenuTab.value = "";
+};
+</script>
+
+<style scoped>
+h4 {
+  margin: 0;
+}
+</style>
 ```
 
 :::
@@ -408,11 +648,18 @@ const handleRemove = (name) => {
 
 ```vue
 <template>
-  <XTabs v-model="editableTab" type="card" closable addable @tab-add="handleAdd" @tab-remove="handleRemove">
-    <XTabPane 
-      v-for="tab in editableTabs" 
+  <XTabs
+    v-model="editableTab"
+    type="card"
+    closable
+    addable
+    @tab-add="handleAdd"
+    @tab-remove="handleRemove"
+  >
+    <XTabPane
+      v-for="tab in editableTabs"
       :key="tab.name"
-      :name="tab.name" 
+      :name="tab.name"
       :label="tab.label"
     >
       <div class="p-4">
@@ -424,36 +671,36 @@ const handleRemove = (name) => {
 </template>
 
 <script setup>
-import { ref } from 'vue'
-import { XTabs, XTabPane, xlMsg } from '@xlui/xux-ui'
+import { ref } from "vue";
+import { XTabs, XTabPane, xlMsg } from "@xlui/xux-ui";
 
-const msg = xlMsg()
-let tabCount = 3
+const msg = xlMsg();
+let tabCount = 3;
 
-const editableTab = ref('tab1')
+const editableTab = ref("tab1");
 const editableTabs = ref([
-  { name: 'tab1', label: '标签 1', content: '标签 1 的内容' },
-  { name: 'tab2', label: '标签 2', content: '标签 2 的内容' }
-])
+  { name: "tab1", label: "标签 1", content: "标签 1 的内容" },
+  { name: "tab2", label: "标签 2", content: "标签 2 的内容" },
+]);
 
 const handleAdd = () => {
   const newTab = {
     name: `tab${tabCount++}`,
     label: `标签 ${tabCount}`,
-    content: `标签 ${tabCount} 的内容`
-  }
-  editableTabs.value.push(newTab)
-  editableTab.value = newTab.name
-  msg.success('新增标签成功')
-}
+    content: `标签 ${tabCount} 的内容`,
+  };
+  editableTabs.value.push(newTab);
+  editableTab.value = newTab.name;
+  msg.success("新增标签成功");
+};
 
 const handleRemove = (name) => {
-  const index = editableTabs.value.findIndex(tab => tab.name === name)
+  const index = editableTabs.value.findIndex((tab) => tab.name === name);
   if (index > -1) {
-    editableTabs.value.splice(index, 1)
-    msg.info('标签已删除')
+    editableTabs.value.splice(index, 1);
+    msg.info("标签已删除");
   }
-}
+};
 </script>
 ```
 
@@ -481,10 +728,10 @@ const handleRemove = (name) => {
 </template>
 
 <script setup>
-import { ref } from 'vue'
-import { XTabs, XTabPane } from '@xlui/xux-ui'
+import { ref } from "vue";
+import { XTabs, XTabPane } from "@xlui/xux-ui";
 
-const disabledTab = ref('tab1')
+const disabledTab = ref("tab1");
 </script>
 ```
 
@@ -500,25 +747,37 @@ const disabledTab = ref('tab1')
 <template>
   <XTabs v-model="extraTab">
     <template #extra>
-      <XButton type="primary" size="small" icon="mdi:refresh">
-        刷新
-      </XButton>
+      <XButton type="primary" size="small" icon="mdi:refresh"> 刷新 </XButton>
     </template>
-    
+
     <XTabPane name="tab1" label="数据监控" icon="mdi:monitor-dashboard">
       <div class="p-4">
         <div class="grid grid-cols-3 gap-4">
           <div class="p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
-            <div class="text-sm text-blue-600 dark:text-blue-400">CPU 使用率</div>
-            <div class="text-2xl font-bold text-blue-700 dark:text-blue-300">45%</div>
+            <div class="text-sm text-blue-600 dark:text-blue-400">
+              CPU 使用率
+            </div>
+            <div class="text-2xl font-bold text-blue-700 dark:text-blue-300">
+              45%
+            </div>
           </div>
           <div class="p-4 bg-green-50 dark:bg-green-900/20 rounded-lg">
-            <div class="text-sm text-green-600 dark:text-green-400">内存使用</div>
-            <div class="text-2xl font-bold text-green-700 dark:text-green-300">2.1GB</div>
+            <div class="text-sm text-green-600 dark:text-green-400">
+              内存使用
+            </div>
+            <div class="text-2xl font-bold text-green-700 dark:text-green-300">
+              2.1GB
+            </div>
           </div>
           <div class="p-4 bg-purple-50 dark:bg-purple-900/20 rounded-lg">
-            <div class="text-sm text-purple-600 dark:text-purple-400">网络流量</div>
-            <div class="text-2xl font-bold text-purple-700 dark:text-purple-300">150MB</div>
+            <div class="text-sm text-purple-600 dark:text-purple-400">
+              网络流量
+            </div>
+            <div
+              class="text-2xl font-bold text-purple-700 dark:text-purple-300"
+            >
+              150MB
+            </div>
           </div>
         </div>
       </div>
@@ -526,13 +785,19 @@ const disabledTab = ref('tab1')
     <XTabPane name="tab2" label="系统日志" icon="mdi:text-box-multiple">
       <div class="p-4">
         <div class="space-y-2">
-          <div class="p-3 bg-gray-50 dark:bg-gray-800/50 rounded text-sm dark:text-gray-300">
+          <div
+            class="p-3 bg-gray-50 dark:bg-gray-800/50 rounded text-sm dark:text-gray-300"
+          >
             [INFO] 系统启动成功
           </div>
-          <div class="p-3 bg-green-50 dark:bg-green-900/20 rounded text-sm text-green-700 dark:text-green-400">
+          <div
+            class="p-3 bg-green-50 dark:bg-green-900/20 rounded text-sm text-green-700 dark:text-green-400"
+          >
             [SUCCESS] 用户登录成功
           </div>
-          <div class="p-3 bg-yellow-50 dark:bg-yellow-900/20 rounded text-sm text-yellow-700 dark:text-yellow-400">
+          <div
+            class="p-3 bg-yellow-50 dark:bg-yellow-900/20 rounded text-sm text-yellow-700 dark:text-yellow-400"
+          >
             [WARNING] 磁盘空间不足
           </div>
         </div>
@@ -547,10 +812,10 @@ const disabledTab = ref('tab1')
 </template>
 
 <script setup>
-import { ref } from 'vue'
-import { XTabs, XTabPane, XButton } from '@xlui/xux-ui'
+import { ref } from "vue";
+import { XTabs, XTabPane, XButton } from "@xlui/xux-ui";
 
-const extraTab = ref('tab1')
+const extraTab = ref("tab1");
 </script>
 ```
 
@@ -567,21 +832,23 @@ const extraTab = ref('tab1')
   <div class="space-y-4">
     <div style="max-width: 600px;">
       <XTabs v-model="overflowTab" type="card" showOverflowDropdown>
-        <XTabPane 
-          v-for="tab in overflowTabs" 
+        <XTabPane
+          v-for="tab in overflowTabs"
           :key="tab.name"
-          :name="tab.name" 
+          :name="tab.name"
           :label="tab.label"
           :icon="tab.icon"
         >
           <div class="p-4">
-            <h3 class="text-lg font-semibold mb-2 dark:text-gray-100">{{ tab.label }}</h3>
+            <h3 class="text-lg font-semibold mb-2 dark:text-gray-100">
+              {{ tab.label }}
+            </h3>
             <p class="text-gray-600 dark:text-gray-400">{{ tab.content }}</p>
           </div>
         </XTabPane>
       </XTabs>
     </div>
-    
+
     <div class="text-sm text-gray-500 dark:text-gray-400">
       💡 提示：调整浏览器窗口大小查看下拉菜单效果
     </div>
@@ -589,20 +856,50 @@ const extraTab = ref('tab1')
 </template>
 
 <script setup>
-import { ref } from 'vue'
-import { XTabs, XTabPane } from '@xlui/xux-ui'
+import { ref } from "vue";
+import { XTabs, XTabPane } from "@xlui/xux-ui";
 
-const overflowTab = ref('tab1')
+const overflowTab = ref("tab1");
 const overflowTabs = ref([
-  { name: 'tab1', label: '首页', icon: 'mdi:home', content: '欢迎来到首页' },
-  { name: 'tab2', label: '用户管理', icon: 'mdi:account-group', content: '管理系统用户' },
-  { name: 'tab3', label: '商品列表', icon: 'mdi:package-variant', content: '查看所有商品' },
-  { name: 'tab4', label: '订单中心', icon: 'mdi:clipboard-list', content: '处理订单信息' },
-  { name: 'tab5', label: '数据分析', icon: 'mdi:chart-line', content: '查看数据报表' },
-  { name: 'tab6', label: '系统设置', icon: 'mdi:cog', content: '配置系统参数' },
-  { name: 'tab7', label: '权限管理', icon: 'mdi:shield-account', content: '管理用户权限' },
-  { name: 'tab8', label: '日志查看', icon: 'mdi:text-box-multiple', content: '查看系统日志' }
-])
+  { name: "tab1", label: "首页", icon: "mdi:home", content: "欢迎来到首页" },
+  {
+    name: "tab2",
+    label: "用户管理",
+    icon: "mdi:account-group",
+    content: "管理系统用户",
+  },
+  {
+    name: "tab3",
+    label: "商品列表",
+    icon: "mdi:package-variant",
+    content: "查看所有商品",
+  },
+  {
+    name: "tab4",
+    label: "订单中心",
+    icon: "mdi:clipboard-list",
+    content: "处理订单信息",
+  },
+  {
+    name: "tab5",
+    label: "数据分析",
+    icon: "mdi:chart-line",
+    content: "查看数据报表",
+  },
+  { name: "tab6", label: "系统设置", icon: "mdi:cog", content: "配置系统参数" },
+  {
+    name: "tab7",
+    label: "权限管理",
+    icon: "mdi:shield-account",
+    content: "管理用户权限",
+  },
+  {
+    name: "tab8",
+    label: "日志查看",
+    icon: "mdi:text-box-multiple",
+    content: "查看系统日志",
+  },
+]);
 </script>
 ```
 
@@ -617,8 +914,8 @@ const overflowTabs = ref([
 ```vue
 <template>
   <div class="space-y-4">
-    <XTabs 
-      v-model="eventTab" 
+    <XTabs
+      v-model="eventTab"
       type="card"
       closable
       @change="handleChange"
@@ -635,7 +932,7 @@ const overflowTabs = ref([
         <div class="p-4 dark:text-gray-100">设置内容</div>
       </XTabPane>
     </XTabs>
-    
+
     <div class="p-4 bg-gray-50 dark:bg-gray-800/50 rounded-lg">
       <h4 class="text-sm font-semibold mb-2 dark:text-gray-100">事件日志：</h4>
       <div class="text-sm text-gray-600 dark:text-gray-400 space-y-1">
@@ -646,26 +943,26 @@ const overflowTabs = ref([
 </template>
 
 <script setup>
-import { ref } from 'vue'
-import { XTabs, XTabPane } from '@xlui/xux-ui'
+import { ref } from "vue";
+import { XTabs, XTabPane } from "@xlui/xux-ui";
 
-const eventTab = ref('home')
-const eventLogs = ref([])
+const eventTab = ref("home");
+const eventLogs = ref([]);
 
 const handleChange = (name) => {
-  eventLogs.value.unshift(`切换到标签: ${name}`)
-  if (eventLogs.value.length > 5) eventLogs.value.pop()
-}
+  eventLogs.value.unshift(`切换到标签: ${name}`);
+  if (eventLogs.value.length > 5) eventLogs.value.pop();
+};
 
 const handleTabClick = (tab, index) => {
-  eventLogs.value.unshift(`点击了标签: ${tab.label} (索引: ${index})`)
-  if (eventLogs.value.length > 5) eventLogs.value.pop()
-}
+  eventLogs.value.unshift(`点击了标签: ${tab.label} (索引: ${index})`);
+  if (eventLogs.value.length > 5) eventLogs.value.pop();
+};
 
 const handleTabRemove = (name) => {
-  eventLogs.value.unshift(`关闭了标签: ${name}`)
-  if (eventLogs.value.length > 5) eventLogs.value.pop()
-}
+  eventLogs.value.unshift(`关闭了标签: ${name}`);
+  if (eventLogs.value.length > 5) eventLogs.value.pop();
+};
 </script>
 
 <style scoped>
@@ -681,49 +978,53 @@ h4 {
 
 ### Tabs Props
 
-| 属性 | 说明 | 类型 | 默认值 |
-|------|------|------|--------|
-| modelValue / v-model | 当前激活的标签页 | `string \| number` | - |
-| type | 标签页类型 | `'line' \| 'card' \| 'border-card' \| 'button' \| 'segment' \| 'chrome' \| 'safari'` | `'line'` |
-| position | 标签位置 | `'top' \| 'bottom' \| 'left' \| 'right'` | `'top'` |
-| closable | 标签是否可关闭 | `boolean` | `false` |
-| addable | 是否显示新增按钮 | `boolean` | `false` |
-| scrollable | 标签过多时是否可滚动 | `boolean` | `false` |
-| showOverflowDropdown | 超出宽度时显示下拉菜单 | `boolean` | `false` |
-| animated | 是否启用动画 | `boolean` | `true` |
+| 属性                 | 说明                   | 类型                                                                                 | 默认值   |
+| -------------------- | ---------------------- | ------------------------------------------------------------------------------------ | -------- |
+| modelValue / v-model | 当前激活的标签页       | `string \| number`                                                                   | -        |
+| type                 | 标签页类型             | `'line' \| 'card' \| 'border-card' \| 'button' \| 'segment' \| 'chrome' \| 'safari'` | `'line'` |
+| position             | 标签位置               | `'top' \| 'bottom' \| 'left' \| 'right'`                                             | `'top'`  |
+| closable             | 标签是否可关闭         | `boolean`                                                                            | `false`  |
+| addable              | 是否显示新增按钮       | `boolean`                                                                            | `false`  |
+| scrollable           | 标签过多时是否可滚动   | `boolean`                                                                            | `false`  |
+| showOverflowDropdown | 超出宽度时显示下拉菜单 | `boolean`                                                                            | `false`  |
+| animated             | 是否启用动画           | `boolean`                                                                            | `true`   |
 
 ### Tabs Events
 
-| 事件名 | 说明 | 回调参数 |
-|--------|------|----------|
-| update:modelValue | 激活标签改变时触发 | `(name: string \| number)` |
-| change | 激活标签改变时触发 | `(name: string \| number)` |
-| tab-click | 点击标签时触发 | `(tab: TabPane, index: number)` |
-| tab-remove | 关闭标签时触发 | `(name: string \| number)` |
-| tab-add | 点击新增按钮时触发 | `-` |
+| 事件名            | 说明                           | 回调参数                        |
+| ----------------- | ------------------------------ | ------------------------------- |
+| update:modelValue | 激活标签改变时触发             | `(name: string \| number)`      |
+| change            | 激活标签改变时触发             | `(name: string \| number)`      |
+| tab-click         | 点击标签时触发                 | `(tab: TabPane, index: number)` |
+| tab-remove        | 关闭标签时触发                 | `(name: string \| number)`      |
+| tab-add           | 点击新增按钮时触发             | `-`                             |
+| tab-close-left    | 通过右键菜单关闭左侧标签时触发 | `(name: string \| number)`      |
+| tab-close-right   | 通过右键菜单关闭右侧标签时触发 | `(name: string \| number)`      |
+| tab-close-other   | 通过右键菜单关闭其他标签时触发 | `(name: string \| number)`      |
+| tab-close-all     | 通过右键菜单全部关闭时触发     | `-`                             |
 
 ### Tabs Slots
 
-| 插槽名 | 说明 |
-|--------|------|
+| 插槽名  | 说明                       |
+| ------- | -------------------------- |
 | default | 标签页内容（TabPane 组件） |
-| extra | 额外操作区域 |
+| extra   | 额外操作区域               |
 
 ### TabPane Props
 
-| 属性 | 说明 | 类型 | 默认值 |
-|------|------|------|--------|
-| name | 标签页的唯一标识 | `string \| number` | - |
-| label | 标签页显示的文本 | `string` | - |
-| icon | 标签页图标 | `string` | - |
-| disabled | 是否禁用 | `boolean` | `false` |
-| closable | 是否可关闭（优先级高于 Tabs 的 closable） | `boolean` | `true` |
-| lazy | 是否懒加载 | `boolean` | `false` |
+| 属性     | 说明                                      | 类型               | 默认值  |
+| -------- | ----------------------------------------- | ------------------ | ------- |
+| name     | 标签页的唯一标识                          | `string \| number` | -       |
+| label    | 标签页显示的文本                          | `string`           | -       |
+| icon     | 标签页图标                                | `string`           | -       |
+| disabled | 是否禁用                                  | `boolean`          | `false` |
+| closable | 是否可关闭（优先级高于 Tabs 的 closable） | `boolean`          | `true`  |
+| lazy     | 是否懒加载                                | `boolean`          | `false` |
 
 ### TabPane Slots
 
-| 插槽名 | 说明 |
-|--------|------|
+| 插槽名  | 说明       |
+| ------- | ---------- |
 | default | 标签页内容 |
 
 ## 贡献者
@@ -802,4 +1103,3 @@ h4 {
   }
 }
 </style>
-

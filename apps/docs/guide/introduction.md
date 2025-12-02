@@ -30,7 +30,7 @@ XUX 是一个Vue3 UI 组件库。
 
 ## 版本
 
-当前版本：`1.5.5`
+当前版本：`1.5.10`
 
 查看 [更新日志](./changelog.md) | [GitHub Releases](https://gitee.com/leheya/xux/releases)
 

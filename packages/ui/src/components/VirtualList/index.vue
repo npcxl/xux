@@ -264,7 +264,7 @@ const handleScroll = (e: Event) => {
 }
 
 
-// 更新容器高度（不触发刷新）
+// 更新容器高度
 const updateContainerHeight = () => {
   if (containerRef.value) {
     const newHeight = containerRef.value.clientHeight
@@ -272,6 +272,8 @@ const updateContainerHeight = () => {
       containerHeight.value = newHeight
     }
   }
+  // 窗口大小变化时，也需要刷新虚拟滚动范围
+  refreshVirtualRange()
 }
 
 // 刷新虚拟滚动范围
@@ -296,10 +298,7 @@ onMounted(async () => {
   refreshVirtualRange()
   
   // 监听窗口大小变化
-  window.addEventListener('resize', () => {
-    updateContainerHeight()
-    refreshVirtualRange()
-  })
+  window.addEventListener('resize', updateContainerHeight)
   
   // 暴露刷新函数给用户手动刷新
   emit('refreshVirtualRange', refreshVirtualRange)

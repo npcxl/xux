@@ -1,12 +1,12 @@
 <template>
-  <ElPopover
-    :placement="placement"
-    trigger="hover"
-    :teleported="true"
-    :show-arrow="showArrow"
+  <ElPopover 
+    :placement="placement" 
+    trigger="hover" 
+    :teleported="true" 
+    :show-arrow="showArrow" 
     :offset="offset"
-    popper-class="x-tooltip-popper"
-    :popper-style="{ padding: '8px 12px' }"
+    :popper-class="['x-tooltip-popper', width ? 'x-tooltip-custom-width' : '']"
+    :popper-style="popperStyle"
   >
     <template #reference>
       <div class="x-tooltip-trigger">
@@ -20,6 +20,7 @@
 </template>
 
 <script setup lang="ts">
+import { computed } from 'vue'
 import { ElPopover } from 'element-plus'
 
 /**
@@ -36,12 +37,33 @@ export interface TooltipsProps {
   showArrow?: boolean
   /** 偏移距离 */
   offset?: number
+  /** 自定义宽度（支持 px、%、em 等单位，不设置则无限制） */
+  width?: string
+  /** 最大宽度（支持 px、%、em 等单位，不设置则无限制） */
+  maxWidth?: string
 }
 
-withDefaults(defineProps<TooltipsProps>(), {
+const props = withDefaults(defineProps<TooltipsProps>(), {
   placement: 'top',
   showArrow: true,
   offset: 8
+})
+
+// 计算 popper 样式
+const popperStyle = computed(() => {
+  const style: Record<string, string> = {
+    padding: '8px 12px'
+  }
+  
+  if (props.width) {
+    style.width = props.width
+  }
+  
+  if (props.maxWidth) {
+    style.maxWidth = props.maxWidth
+  }
+  
+  return style
 })
 </script>
 
@@ -55,7 +77,8 @@ withDefaults(defineProps<TooltipsProps>(), {
   font-size: 14px;
   line-height: 1.5;
   color: var(--x-text-color-white, #ffffff);
-  white-space: nowrap;
+  word-wrap: break-word;
+  word-break: break-word;
 }
 </style>
 
@@ -68,9 +91,15 @@ withDefaults(defineProps<TooltipsProps>(), {
   box-shadow: var(--x-shadow-md, 0 4px 12px rgba(0, 0, 0, 0.15)) !important;
   font-size: 14px !important;
   padding: 8px 12px !important;
-  max-width: 300px;
   word-wrap: break-word;
+  word-break: break-word;
   white-space: normal;
+  overflow-wrap: break-word;
+}
+
+/* 自定义宽度时移除默认限制 */
+.x-tooltip-custom-width {
+  max-width: none !important;
 }
 
 /* 暗色模式支持 */

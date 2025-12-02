@@ -88,10 +88,20 @@ export default defineConfig({
       ],
 
       '/components/': [
+
         {
           text: "主题",
           items: [
             { text: '主题化配置', link: '/components/theme-config' },
+          ]
+        },
+        {
+          text:"Latest Features",
+          items: [
+            { text: 'Video 视频 <span class="sidebar-badge new">新增</span>', link: '/components/video' },
+            { text: 'Waterfall 瀑布流 <span class="sidebar-badge new">新增</span>', link: '/components/waterfall' },
+            { text: 'WaterfallVirtual 瀑布流虚拟滚动 <span class="sidebar-badge test">测试版</span>', link: '/components/waterfall-virtual' },
+            { text: 'VirtualList 虚拟滚动列表 <span class="sidebar-badge new">新增</span>', link: '/components/virtual-list' },
           ]
         },
         {
@@ -154,6 +164,7 @@ export default defineConfig({
             { text: 'Segmented 分段控制器', link: '/components/segmented' },
             { text: 'Badge 徽标 <span class="sidebar-badge update">更新</span>', link: '/components/badge' },
             { text: 'Image 图片', link: '/components/image' },
+            { text: 'Video 视频 <span class="sidebar-badge new">新增</span>', link: '/components/video' },
             { text: 'DragSort 拖拽排序', link: '/components/drag-sort' },
             { text: 'Pagination 分页 <span class="sidebar-badge update">更新</span>', link: '/components/pagination' },
             { text: 'List 列表', link: '/components/list' },
@@ -181,6 +192,8 @@ export default defineConfig({
           text: '高级布局组件',
           items: [
             { text: 'DynamicMech 动画网格', link: '/components/dynamic-mech' },
+            { text: 'Waterfall 瀑布流', link: '/components/waterfall' },
+            { text: 'WaterfallVirtual 瀑布流虚拟滚动', link: '/components/waterfall-virtual' },
           ]
         },
         {

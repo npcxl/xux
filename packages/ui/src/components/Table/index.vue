@@ -227,6 +227,8 @@ export interface TableProps {
   virtualRowHeight?: number
   /** 虚拟滚动缓冲区行数 */
   virtualBuffer?: number
+  /** 选中行缓存最大条数 */
+  selectedRowsCacheLimit?: number
 }
 
 const props = withDefaults(defineProps<TableProps>(), {
@@ -249,7 +251,8 @@ const props = withDefaults(defineProps<TableProps>(), {
   returnSelectedRows: true,
   virtual: false,
   virtualRowHeight: 48,
-  virtualBuffer: 5
+  virtualBuffer: 5,
+  selectedRowsCacheLimit: 10000
 })
 
 const emit = defineEmits<{
@@ -269,6 +272,7 @@ const emit = defineEmits<{
 // Refs
 const containerRef = ref<HTMLDivElement>()
 const scrollRef = ref<HTMLDivElement>()
+let resizeObserver: ResizeObserver | null = null
 
 // State
 const scrollLeft = ref(0)
@@ -277,6 +281,15 @@ const hoveredRow = ref<number | null>(null)
 const internalSelectedRowKeys = ref<(string | number)[]>([...props.selectedRowKeys])
 // 缓存所有已选行的完整数据（用于跨页选择）
 const selectedRowsCache = ref<Map<string | number, any>>(new Map())
+const ensureCacheLimit = () => {
+  const limit = props.selectedRowsCacheLimit || 10000
+  while (selectedRowsCache.value.size > limit) {
+    const iter = selectedRowsCache.value.keys().next()
+    if (iter.done) break
+    const firstKey = iter.value as string | number
+    selectedRowsCache.value.delete(firstKey)
+  }
+}
 const sortState = ref<{ column: Column | null; order: 'asc' | 'desc' | null }>({
   column: null,
   order: null
@@ -313,9 +326,10 @@ watch(() => props.dataSource, (newDataSource) => {
     const rowKey = row[props.rowKey]
     if (internalSelectedRowKeys.value.includes(rowKey)) {
       selectedRowsCache.value.set(rowKey, row)
+      ensureCacheLimit()
     }
   })
-}, { immediate: true, deep: true })
+}, { immediate: true })
 
 // 过滤可见列并验证固定列必须有宽度
 const visibleColumns = computed(() => {
@@ -588,6 +602,7 @@ const handleSelectAll = () => {
       // 将当前页的可选行添加到缓存
       selectableRows.value.forEach(row => {
         selectedRowsCache.value.set(row[props.rowKey], row)
+        ensureCacheLimit()
       })
     } else {
       // 取消全选当前页：只移除当前页的可选行键
@@ -640,6 +655,7 @@ const handleRowSelect = (record: any) => {
     // 选择：添加到列表和缓存
     internalSelectedRowKeys.value = [...internalSelectedRowKeys.value, rowKey]
     selectedRowsCache.value.set(rowKey, record)
+    ensureCacheLimit()
   }
 
   // 根据 returnSelectedRows 参数决定是否返回完整行数据
@@ -715,21 +731,25 @@ const handleResize = () => {
 onMounted(async () => {
   window.addEventListener('resize', handleResize)
   await nextTick()
-  // 初始化虚拟滚动
   refreshVirtualRange()
-  setTimeout(() => {
-    handleResize()
-    // 确保虚拟滚动范围正确
-    if (props.virtual) {
+  handleResize()
+  if (containerRef.value && typeof ResizeObserver !== 'undefined') {
+    resizeObserver = new ResizeObserver(() => {
+      containerHeight.value = containerRef.value!.clientHeight
       refreshVirtualRange()
-    }
-  }, 0)
-  // 暴露刷新函数给用户手动刷新
-  emit('refreshVirtualRange', refreshVirtualRange)
+    })
+    resizeObserver.observe(containerRef.value)
+  }
 })
 
 onUnmounted(() => {
   window.removeEventListener('resize', handleResize)
+  if (resizeObserver) {
+    resizeObserver.disconnect()
+    resizeObserver = null
+  }
+  selectedRowsCache.value.clear()
+  internalSelectedRowKeys.value = []
 })
 
 // ========== 暴露的实例方法 ==========
@@ -758,6 +778,7 @@ const setSelectedRows = (keys: (string | number)[]) => {
     const rowKey = row[props.rowKey]
     if (keys.includes(rowKey)) {
       selectedRowsCache.value.set(rowKey, row)
+      ensureCacheLimit()
     }
   })
 
@@ -816,6 +837,7 @@ const getSelectedRows = () => {
  */
 const refresh = () => {
   handleResize()
+  refreshVirtualRange()
 }
 
 /**
@@ -876,6 +898,7 @@ const selectCurrentPage = () => {
     // 将当前页的可选行添加到缓存
     selectableRows.value.forEach(row => {
       selectedRowsCache.value.set(row[props.rowKey], row)
+      ensureCacheLimit()
     })
     // 根据 returnSelectedRows 参数决定是否返回完整行数据
     const selectedRows = props.returnSelectedRows ? getAllSelectedRows() : []
@@ -886,6 +909,7 @@ const selectCurrentPage = () => {
     selectedRowsCache.value.clear()
     selectableRows.value.forEach(row => {
       selectedRowsCache.value.set(row[props.rowKey], row)
+      ensureCacheLimit()
     })
     // 根据 returnSelectedRows 参数决定是否返回完整行数据
     const selectedRows = props.returnSelectedRows ? getAllSelectedRows() : []
