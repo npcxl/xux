@@ -207,6 +207,274 @@ const loadMore = () => {
 ```
 :::: 
 
+## 预加载模式
+
+通过 `preload` 属性启用预加载模式，**配合虚拟滚动**使用。当项目滚动到可见区域附近时，先显示骨架屏占位，在后台测量真实高度，测量完成后再显示真实内容，避免图片加载导致的布局跳动。
+
+::::demo
+```vue
+<template>
+  <div>
+    <div style="margin-bottom: 16px; display: flex; gap: 12px; align-items: center; flex-wrap: wrap;">
+      <div style="display: flex; gap: 8px; align-items: center;">
+        <span style="color: var(--x-text-color-secondary); font-size: 14px">预加载模式：</span>
+        <XButton size="small" :type="preloadMode ? 'primary' : 'default'" @click="togglePreload(true)">开启</XButton>
+        <XButton size="small" :type="!preloadMode ? 'primary' : 'default'" @click="togglePreload(false)">关闭</XButton>
+      </div>
+      <XButton @click="reloadPreloadItems">重新加载</XButton>
+    </div>
+    <XWaterfallVirtual 
+      :key="preloadKey"
+      :items="preloadItems" 
+      :cols="3" 
+      :gap="16" 
+      :row-gap="16" 
+      height="600px"
+      :preload="preloadMode"
+      :estimate-item-height="250"
+      @layout="onLayout"
+    >
+      <template #default="slotProps">
+        <div class="preload-item" v-if="slotProps?.item">
+          <img :src="slotProps.item.url" :alt="slotProps.item.title" class="preload-image" />
+        </div>
+      </template>
+    </XWaterfallVirtual>
+  </div>
+</template>
+
+<script setup>
+import { ref } from 'vue'
+import { XButton } from '@xlui/xux-ui'
+
+const preloadMode = ref(true)
+const preloadKey = ref(0)
+
+const categories = ['风景', '人物', '建筑', '动物', '美食', '艺术']
+
+const generatePreloadItems = () => {
+  return Array.from({ length: 3000 }, (_, i) => ({
+    id: i + 1,
+    title: `精选图片 ${i + 1}`,
+    desc: '高质量摄影作品展示',
+    category: categories[Math.floor(Math.random() * categories.length)],
+    url: `https://picsum.photos/seed/demo${i + 1}/400/${250 + Math.floor(Math.random() * 200)}`
+  }))
+}
+
+const preloadItems = ref(generatePreloadItems())
+
+const togglePreload = (value) => {
+  preloadMode.value = value
+  preloadKey.value++
+}
+
+const reloadPreloadItems = () => {
+  preloadItems.value = generatePreloadItems()
+  preloadKey.value++
+}
+
+const onLayout = (data) => {
+  console.log('布局完成:', data)
+}
+</script>
+
+<style scoped>
+.preload-item {
+  background: var(--x-bg-color, #FFFFFF);
+  border: 1px solid var(--x-border-color-lighter, #E5E5EA);
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: var(--x-shadow, 0 2px 8px rgba(0, 0, 0, 0.08));
+  box-sizing: border-box;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.preload-item:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.12);
+}
+
+.preload-image {
+  width: 100%;
+  height: auto;
+  display: block;
+  object-fit: cover;
+}
+
+.preload-content {
+  padding: 16px;
+}
+
+.preload-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--x-text-color-primary, #000000);
+  margin-bottom: 8px;
+}
+
+.preload-desc {
+  font-size: 13px;
+  color: var(--x-text-color-secondary, #666666);
+  line-height: 1.5;
+  margin-bottom: 12px;
+}
+
+.preload-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 10px;
+  background: var(--x-color-primary-light-9, #E3F2FD);
+  color: var(--x-color-primary, #007AFF);
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.badge-icon {
+  font-size: 14px;
+}
+</style>
+```
+:::: 
+
+
+## 队列渲染
+
+通过 `queue-render` 属性启用队列渲染，分批次渲染项目，适用于**超大数据量**场景（1000+ 项）。对于普通数据量，建议保持默认关闭以获得最佳体验。可以通过 `batch-size` 和 `batch-delay` 调整渲染策略。
+
+::::demo
+```vue
+<template>
+  <div>
+    <div style="margin-bottom: 16px; display: flex; gap: 12px; align-items: center; flex-wrap: wrap;">
+      <div style="display: flex; gap: 8px; align-items: center;">
+        <span style="color: var(--x-text-color-secondary); font-size: 14px">队列渲染：</span>
+        <XButton size="small" :type="queueRender ? 'primary' : 'default'" @click="toggleQueue(true)">开启</XButton>
+        <XButton size="small" :type="!queueRender ? 'primary' : 'default'" @click="toggleQueue(false)">关闭</XButton>
+      </div>
+      <div style="display: flex; gap: 8px; align-items: center;">
+        <span style="color: var(--x-text-color-secondary); font-size: 14px">渲染动画：</span>
+        <XButton size="small" :type="queueAnimation ? 'primary' : 'default'" @click="queueAnimation = true">开启</XButton>
+        <XButton size="small" :type="!queueAnimation ? 'primary' : 'default'" @click="queueAnimation = false">关闭</XButton>
+      </div>
+      <div style="display: flex; gap: 8px; align-items: center;">
+        <span style="color: var(--x-text-color-secondary); font-size: 14px">批次大小：</span>
+        <XButton size="small" :type="batchSize === 3 ? 'primary' : 'default'" @click="setBatchSize(3)">3</XButton>
+        <XButton size="small" :type="batchSize === 5 ? 'primary' : 'default'" @click="setBatchSize(5)">5</XButton>
+        <XButton size="small" :type="batchSize === 10 ? 'primary' : 'default'" @click="setBatchSize(10)">10</XButton>
+      </div>
+      <XButton @click="reloadItems">重新加载</XButton>
+    </div>
+    <div style="margin-bottom: 12px; padding: 12px; background: var(--x-bg-color-lighter, #F5F5F7); border-radius: 8px; font-size: 14px; color: var(--x-text-color-secondary);">
+      <div>队列渲染：{{ queueRender ? '开启' : '关闭' }} | 渲染动画：{{ queueAnimation ? '开启' : '关闭' }} | 每批渲染：{{ batchSize }} 项 | 数据总量：{{ queueItems.length }} 项</div>
+    </div>
+    <XWaterfallVirtual 
+      :key="renderKey"
+      :items="queueItems" 
+      :cols="3" 
+      :gap="16" 
+      :row-gap="16" 
+      height="600px"
+      :queue-render="queueRender"
+      :queue-animation="queueAnimation"
+      :batch-size="batchSize"
+      :batch-delay="16"
+      :estimate-item-height="180"
+    >
+      <template #default="slotProps">
+        <div class="queue-item" v-if="slotProps?.item" :style="{ height: (slotProps.item.height || 150) + 'px' }">
+          <div class="queue-number">#{{ slotProps.item.number }}</div>
+          <div class="queue-title">{{ slotProps.item.title }}</div>
+          <div class="queue-desc">{{ slotProps.item.desc }}</div>
+        </div>
+      </template>
+    </XWaterfallVirtual>
+  </div>
+</template>
+
+<script setup>
+import { ref } from 'vue'
+import { XButton } from '@xlui/xux-ui'
+
+const queueRender = ref(false)
+const queueAnimation = ref(false)
+const batchSize = ref(10)
+const renderKey = ref(0)
+
+const generateItems = () => {
+  return Array.from({ length: 100 }, (_, i) => ({
+    id: i + 1,
+    number: i + 1,
+    title: `队列项目 ${i + 1}`,
+    desc: '队列渲染可以分批加载项目，避免一次性渲染造成的卡顿',
+    height: 150 + Math.random() * 80
+  }))
+}
+
+const queueItems = ref(generateItems())
+
+const toggleQueue = (value) => {
+  queueRender.value = value
+  renderKey.value++
+}
+
+const setBatchSize = (size) => {
+  batchSize.value = size
+  renderKey.value++
+}
+
+const reloadItems = () => {
+  queueItems.value = generateItems()
+  renderKey.value++
+}
+</script>
+
+<style scoped>
+.queue-item {
+  padding: 20px;
+  background: linear-gradient(135deg, var(--x-color-primary-light-9, #E3F2FD) 0%, var(--x-bg-color, #FFFFFF) 100%);
+  border: 1px solid var(--x-border-color-lighter, #E5E5EA);
+  border-radius: 8px;
+  box-shadow: var(--x-shadow, 0 2px 8px rgba(0, 0, 0, 0.08));
+  text-align: center;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.3s ease;
+}
+
+.queue-item:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+}
+
+.queue-number {
+  font-size: 28px;
+  font-weight: bold;
+  color: var(--x-color-primary, #007AFF);
+}
+
+.queue-title {
+  font-size: 16px;
+  font-weight: 500;
+  color: var(--x-text-color-primary, #000000);
+}
+
+.queue-desc {
+  font-size: 12px;
+  color: var(--x-text-color-secondary, #666666);
+  line-height: 1.5;
+}
+</style>
+```
+:::: 
+
 ## 响应式断点
 
 通过 `breakpoints` 属性设置不同屏幕宽度下的列数，实现响应式布局。
@@ -595,6 +863,12 @@ const scrollToTop = () => {
 | estimateItemHeight | 估算的项目高度（用于虚拟滚动计算） | `number` | `200` |
 | breakpoints | 响应式断点配置 | `Array<{ width: number; cols: number }>` | `[{ width: 0, cols: 1 }, { width: 768, cols: 2 }, { width: 1200, cols: 3 }]` |
 | showErrorToast | 是否显示错误提示 | `boolean` | `false` |
+| preload | 是否启用预加载模式（虚拟滚动时，先骨架屏后内容，避免跳动） | `boolean` | `false` |
+| preloadBuffer | 预加载缓冲区大小（提前多少项开始预加载） | `number` | `3` |
+| queueRender | 是否启用队列渲染（适用于超大数据量场景） | `boolean` | `false` |
+| queueAnimation | 是否启用队列渲染的淡入动画 | `boolean` | `false` |
+| batchSize | 队列渲染每批渲染的项目数 | `number` | `10` |
+| batchDelay | 队列渲染每批之间的延迟（毫秒） | `number` | `0` |
 
 ## 事件
 

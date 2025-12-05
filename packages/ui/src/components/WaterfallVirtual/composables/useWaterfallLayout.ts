@@ -13,6 +13,11 @@ export function useWaterfallLayout(options: {
   const itemHeights = shallowRef<number[]>([])
   const containerHeight = shallowRef(0)
   const isCalculating = shallowRef(false)
+  const measuredCount = shallowRef(0)
+
+  const updateMeasuredCount = (count: number) => {
+    measuredCount.value = count
+  }
 
   const calculateLayout = async () => {
     const el = options.containerRef.value
@@ -20,6 +25,7 @@ export function useWaterfallLayout(options: {
       containerHeight.value = 0
       itemPositions.value = []
       isCalculating.value = false
+      measuredCount.value = 0
       return
     }
     isCalculating.value = true
@@ -66,5 +72,5 @@ export function useWaterfallLayout(options: {
     isCalculating.value = false
   }
 
-  return { columnHeights, itemPositions, itemHeights, containerHeight, isCalculating, calculateLayout }
+  return { columnHeights, itemPositions, itemHeights, containerHeight, isCalculating, measuredCount, updateMeasuredCount, calculateLayout }
 }

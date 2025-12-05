@@ -1,27 +1,46 @@
 <template>
   <div ref="containerRef" class="x-waterfall-container" :style="containerStyle" @scroll="onScroll">
-    <div v-if="virtualScroll && startOffset > 0" :style="{ height: startOffset + 'px' }"></div>
-    <Suspense v-for="(it, i) in visibleItems" :key="getKey(it, startIndex + i)">
-      <template #default>
-        <ErrorBoundary :index="startIndex + i">
-          <AsyncVirtualItem v-if="positions[startIndex + i]" :item="it" :index="startIndex + i"
-            :position="positions[startIndex + i]">
-            <template v-if="slots.default" #default="{ item, index }">
-              <slot :item="item" :index="index" />
+    <div class="x-waterfall-inner" :style="{ height: containerHeight + 'px', position: 'relative' }">
+      <div v-if="virtualScroll && startOffset > 0" :style="{ height: startOffset + 'px' }"></div>
+      <Suspense v-for="(it, i) in visibleItems" :key="getKey(it, startIndex + i)">
+        <template #default>
+          <ErrorBoundary :index="startIndex + i">
+            <!-- 预加载模式：未测量时显示骨架屏，测量完成后显示内容 -->
+            <template v-if="props.preload && !isItemMeasured(startIndex + i)">
+              <div :style="getSkeletonStyle(startIndex + i)" class="x-skeleton-block"></div>
+              <!-- 隐藏渲染，用于测量高度 -->
+              <div style="position: absolute; visibility: hidden; pointer-events: none;">
+                <AsyncVirtualItem v-if="positions[startIndex + i]" :item="it" :index="startIndex + i"
+                  :position="positions[startIndex + i]">
+                  <template v-if="slots.default" #default="{ item, index }">
+                    <slot :item="item" :index="index" />
+                  </template>
+                </AsyncVirtualItem>
+              </div>
             </template>
-          </AsyncVirtualItem>
-        </ErrorBoundary>
-      </template>
-      <template #fallback>
-        <div :style="getSkeletonStyle(startIndex + i)" class="x-skeleton-block"></div>
-      </template>
-    </Suspense>
-    <div v-if="virtualScroll && endOffset > 0" :style="{ height: endOffset + 'px' }"></div>
-    <div v-if="loading" class="x-waterfall-footer">
-      <div class="x-waterfall-spinner">
-        <div class="d"></div>
-        <div class="d"></div>
-        <div class="d"></div>
+            <!-- 普通模式或已测量完成：直接显示内容 -->
+            <template v-else>
+              <AsyncVirtualItem v-if="positions[startIndex + i] && isItemRendered(i)" :item="it" :index="startIndex + i"
+                :position="positions[startIndex + i]" :class="{ 'x-wf-item-fade': (props.preload || props.queueRender) && props.queueAnimation }">
+                <template v-if="slots.default" #default="{ item, index }">
+                  <slot :item="item" :index="index" />
+                </template>
+              </AsyncVirtualItem>
+              <div v-else-if="positions[startIndex + i]" :style="getSkeletonStyle(startIndex + i)" class="x-skeleton-block"></div>
+            </template>
+          </ErrorBoundary>
+        </template>
+        <template #fallback>
+          <div :style="getSkeletonStyle(startIndex + i)" class="x-skeleton-block"></div>
+        </template>
+      </Suspense>
+      <div v-if="virtualScroll && endOffset > 0" :style="{ height: endOffset + 'px' }"></div>
+      <div v-if="loading" class="x-waterfall-footer" :style="{ top: containerHeight + 'px' }">
+        <div class="x-waterfall-spinner">
+          <div class="d"></div>
+          <div class="d"></div>
+          <div class="d"></div>
+        </div>
       </div>
     </div>
   </div>
@@ -40,7 +59,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, provide, onMounted, onUnmounted, watch, defineAsyncComponent, useSlots } from 'vue'
+import { ref, computed, provide, onMounted, onUnmounted, watch, defineAsyncComponent, useSlots, nextTick } from 'vue'
 import type { CSSProperties } from 'vue'
 import { useElementSize, useThrottleFn } from '@vueuse/core'
 import ErrorBoundary from './components/ErrorBoundary.vue'
@@ -48,26 +67,47 @@ const AsyncVirtualItem = defineAsyncComponent(() => import('./components/Virtual
 import { useVirtualScroll } from './composables/useVirtualScroll'
 import { useLazyLoad } from './composables/useLazyLoad'
 import { useWaterfallLayout } from './composables/useWaterfallLayout'
-const props = withDefaults(defineProps<{ items: any[]; cols?: number; gap?: number; rowGap?: number; buffer?: number; virtualScroll?: boolean; width?: string; height?: string; loading?: boolean; loadMoreThreshold?: number; estimateItemHeight?: number; breakpoints?: Array<{ width: number; cols: number }>; showErrorToast?: boolean }>(), { cols: 3, gap: 16, rowGap: 16, buffer: 5, virtualScroll: true, width: '100%', height: '600px', loading: false, loadMoreThreshold: 200, estimateItemHeight: 200, breakpoints: () => ([{ width: 0, cols: 1 }, { width: 768, cols: 2 }, { width: 1200, cols: 3 }]), showErrorToast: false })
+import { useQueueRender } from './composables/useQueueRender'
+const props = withDefaults(defineProps<{ items: any[]; cols?: number; gap?: number; rowGap?: number; buffer?: number; virtualScroll?: boolean; width?: string; height?: string; loading?: boolean; loadMoreThreshold?: number; estimateItemHeight?: number; breakpoints?: Array<{ width: number; cols: number }>; showErrorToast?: boolean; queueRender?: boolean; batchSize?: number; batchDelay?: number; queueAnimation?: boolean; preload?: boolean; preloadBuffer?: number }>(), { cols: 3, gap: 16, rowGap: 16, buffer: 5, virtualScroll: true, width: '100%', height: '600px', loading: false, loadMoreThreshold: 200, estimateItemHeight: 200, breakpoints: () => ([{ width: 0, cols: 1 }, { width: 768, cols: 2 }, { width: 1200, cols: 3 }]), showErrorToast: false, queueRender: false, batchSize: 10, batchDelay: 0, queueAnimation: false, preload: false, preloadBuffer: 3 })
 const emit = defineEmits(['load-more', 'layout', 'error'])
 const slots = useSlots()
 
 const containerRef = ref<HTMLElement | null>(null)
 const { width: containerWidth } = useElementSize(containerRef)
-const estimateItemHeight = (index: number) => props.estimateItemHeight as number
+const estimateItemHeight = (_index: number) => props.estimateItemHeight as number
 const { loadingStates, loadImage } = useLazyLoad()
 provide('x-waterfall-loader', loadImage)
 const scheduleLayout = useThrottleFn(() => calculateLayout(), 100)
-const updateHeight = (index: number, height: number) => {
+const measuredHeights = ref<Set<number>>(new Set())
+const hasScrolled = ref(false)
+const isItemMeasured = (index: number) => {
+  // 如果没有启用预加载，所有项目都视为已测量
+  if (!props.preload) return true
+  // 如果还没有滚动过，初始可见的项目直接显示（不预加载）
+  if (!hasScrolled.value && index < (effectiveCols.value * 3)) {
+    return true
+  }
+  // 其他情况检查是否已测量
+  return measuredHeights.value.has(index)
+}
+
+const updateHeight = (idx: number, height: number) => {
   if (height > 0) {
     // 只有当新高度大于当前高度或估算高度时，才更新（避免图片加载后高度变小导致重叠）
-    const currentHeight = itemHeights.value[index] || estimateItemHeight(index)
-    const estimatedHeight = estimateItemHeight(index)
+    const currentHeight = itemHeights.value[idx] || estimateItemHeight(idx)
+    const estimatedHeight = estimateItemHeight(idx)
     // 使用较大的值作为安全区
     const safeHeight = Math.max(height, estimatedHeight)
     // 只有当高度变化超过阈值时才更新，避免频繁重新计算
     if (Math.abs(safeHeight - currentHeight) > 5) {
-      itemHeights.value[index] = safeHeight
+      itemHeights.value[idx] = safeHeight
+      
+      // 记录已测量的项目
+      if (!measuredHeights.value.has(idx)) {
+        measuredHeights.value.add(idx)
+        updateMeasuredCount(measuredHeights.value.size)
+      }
+      
       scheduleLayout()
     }
   }
@@ -80,17 +120,33 @@ const effectiveCols = computed(() => {
   const w = containerWidth.value
   const bps = props.breakpoints!
   let cols = props.cols!
-  for (let i = 0; i < bps.length; i++) {
-    if (w >= bps[i].width) cols = bps[i].cols
+  // 按宽度排序，从大到小匹配
+  const sortedBps = [...bps].sort((a, b) => b.width - a.width)
+  for (let i = 0; i < sortedBps.length; i++) {
+    if (w >= sortedBps[i].width) {
+      cols = sortedBps[i].cols
+      break
+    }
   }
   return cols
 })
 
-const { columnHeights, itemPositions, itemHeights, containerHeight, isCalculating, calculateLayout } = useWaterfallLayout({ items: props.items, getCols: () => effectiveCols.value, gap: props.gap!, rowGap: props.rowGap!, containerRef, estimateItemHeight })
+const { itemPositions, itemHeights, containerHeight, isCalculating, updateMeasuredCount, calculateLayout } = useWaterfallLayout({ items: props.items, getCols: () => effectiveCols.value, gap: props.gap!, rowGap: props.rowGap!, containerRef, estimateItemHeight })
 const { startIndex, endIndex, visibleItems, handleScroll } = useVirtualScroll({ items: props.items, positions: itemPositions.value, itemHeights: itemHeights.value, buffer: props.buffer, containerRef, virtualScroll: props.virtualScroll })
+
+// 队列渲染
+const { renderedCount, startRender } = useQueueRender({ batchSize: props.batchSize, batchDelay: props.batchDelay })
+const isItemRendered = (visibleIndex: number) => {
+  if (!props.queueRender) return true
+  return visibleIndex < renderedCount.value
+}
 
 const onScroll = (e: Event) => {
   const el = e.target as HTMLElement
+  // 标记已经滚动过
+  if (!hasScrolled.value && el.scrollTop > 0) {
+    hasScrolled.value = true
+  }
   handleScroll(el.scrollTop)
   const distanceToBottom = el.scrollHeight - el.scrollTop - el.clientHeight
   if (distanceToBottom <= (props.loadMoreThreshold || 200)) emit('load-more')
@@ -101,18 +157,15 @@ const positions = computed(() => itemPositions.value)
 const startOffset = computed(() => { const p = positions.value[startIndex.value]; return p ? p.top : 0 })
 const endOffset = computed(() => { const last = positions.value[endIndex.value - 1]; if (!last) return 0; return Math.max(0, containerHeight.value - (last.top + (itemHeights.value[endIndex.value - 1] || 0))) })
 const containerStyle = computed<CSSProperties>(() => ({
-  width: props.width as string,
-  height: props.height as string,
+  width: props.width || '100%',
+  height: props.height || '600px',
+  minHeight: props.height || '600px',
+  maxHeight: props.height || '600px',
   position: 'relative',
   overflowY: 'auto',
-  overflowX: 'hidden'
+  overflowX: 'hidden',
+  boxSizing: 'border-box'
 }))
-
-const getItemStyle = (index: number): CSSProperties => {
-  const p = positions.value[index]
-  if (!p) return { position: 'absolute', visibility: 'hidden' }
-  return { position: 'absolute', left: p.left + 'px', top: p.top + 'px', width: p.width + 'px', visibility: 'visible' }
-}
 
 const getSkeletonStyle = (index: number): CSSProperties => {
   const p = positions.value[index]
@@ -128,6 +181,9 @@ onMounted(() => {
 onUnmounted(() => { })
 
 watch(() => [props.items, props.cols, props.gap, props.rowGap], () => {
+  measuredHeights.value.clear()
+  hasScrolled.value = false
+  updateMeasuredCount(0)
   calculateLayout()
 }, { deep: true })
 
@@ -138,6 +194,14 @@ watch(containerWidth, () => {
 watch([containerHeight, effectiveCols, () => itemPositions.value.length], () => {
   emit('layout', { height: containerHeight.value, cols: effectiveCols.value, count: itemPositions.value.length })
 })
+
+// 当可见项变化时，触发队列渲染
+watch(visibleItems, async (newItems) => {
+  if (props.queueRender && newItems.length > 0) {
+    await nextTick()
+    startRender(newItems)
+  }
+}, { immediate: true })
 
 const scrollToIndex = (index: number) => {
   const p = positions.value[index]
@@ -151,6 +215,11 @@ defineExpose({ calculateLayout, scrollToIndex, scrollToTop })
 <style scoped>
 .x-waterfall-container {
   box-sizing: border-box
+}
+
+.x-waterfall-inner {
+  width: 100%;
+  position: relative
 }
 
 .x-waterfall-img {
@@ -167,11 +236,29 @@ defineExpose({ calculateLayout, scrollToIndex, scrollToTop })
   height: 100%
 }
 
+/* 队列渲染淡入动画 */
+.x-wf-item-fade {
+  animation: x-wf-fade-in 0.2s ease-out;
+}
+
+@keyframes x-wf-fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
 .x-waterfall-footer {
+  position: absolute;
+  left: 0;
+  right: 0;
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 12px
+  padding: 12px;
+  background: transparent
 }
 
 .x-waterfall-spinner {
