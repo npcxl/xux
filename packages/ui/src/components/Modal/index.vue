@@ -2,9 +2,10 @@
   <Teleport to="body">
     <Transition
       name="modal-mask"
+      @after-leave="onMaskLeave"
     >
       <div
-        v-if="visible"
+        v-if="internalVisible"
         class="modal-mask"
         :class="{ 'modal-mask--hidden': !showMask }"
         :style="{ zIndex: modalZIndex }"
@@ -162,6 +163,10 @@ const emit = defineEmits<{
   'closed': []
 }>()
 
+// 内部渲染状态，用于控制实际的 DOM 渲染
+// 这样可以在动画完成后才真正销毁组件
+const internalVisible = ref(false)
+
 // 创建唯一的 Modal 实例 ID
 const modalId = Symbol('modal')
 
@@ -276,10 +281,19 @@ const removeFromStack = () => {
   }
 }
 
+// 蒙版离开动画完成后的回调
+const onMaskLeave = () => {
+  // 动画完成后触发 closed 事件
+  emit('closed')
+}
+
 // 监听 visible 变化
 watch(() => props.visible, (val) => {
   if (val) {
-    // 打开弹框：添加到栈顶
+    // 打开弹框：立即设置内部状态为 true
+    internalVisible.value = true
+    
+    // 添加到栈顶
     pushToStack()
     
     // 只有第一个弹框时才禁止 body 滚动
@@ -292,17 +306,18 @@ watch(() => props.visible, (val) => {
     
     emit('opened')
   } else {
-    // 关闭弹框：从栈中移除
+    // 关闭弹框：设置内部状态为 false，触发关闭动画
+    internalVisible.value = false
+    
+    // 从栈中移除
     removeFromStack()
     
     // 只有所有弹框都关闭时才恢复 body 滚动
     if (modalStack.length === 0) {
       document.body.style.overflow = ''
     }
-    
-    emit('closed')
   }
-})
+}, { immediate: true })
 
 // 组件挂载时添加全局 ESC 事件监听
 onMounted(() => {
