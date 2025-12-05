@@ -9,7 +9,7 @@
 ::::demo
 ```vue
 <template>
-  <XWaterfallVirtual :items="basicItems" :cols="3" :gap="16" :row-gap="16" height="600px">
+  <XWaterfallVirtual :items="basicItems" :cols="5" :gap="16" :row-gap="16" height="600px">
     <template #default="slotProps">
       <div class="virtual-item" :style="{ height: (slotProps?.item?.height || 150) + 'px' }">
         {{ slotProps?.item?.content || '' }}
@@ -561,7 +561,7 @@ const dynamicItems = ref(
   align-items: center;
   gap: 8px;
   transition: all 0.3s ease;
-  color: white;
+  color: #1a1a1a;
 }
 
 .dynamic-number {
