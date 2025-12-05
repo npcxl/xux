@@ -117,17 +117,29 @@ const reportError = (payload?: number) => { errorCount.value++; if (typeof paylo
 provide('x-waterfall-context', { loadingStates, calculateLayout: () => calculateLayout(), requestMore: () => emit('load-more'), updateHeight, reportError })
 
 const effectiveCols = computed(() => {
+  // 如果没有设置 breakpoints 或为空数组，直接使用 cols
+  if (!props.breakpoints || props.breakpoints.length === 0) {
+    return props.cols || 3
+  }
+  
   const w = containerWidth.value
-  const bps = props.breakpoints!
-  let cols = props.cols!
-  // 按宽度排序，从大到小匹配
-  const sortedBps = [...bps].sort((a, b) => b.width - a.width)
-  for (let i = 0; i < sortedBps.length; i++) {
+  // 如果容器宽度还未获取到，使用默认 cols
+  if (w <= 0) {
+    return props.cols || 3
+  }
+  
+  const bps = props.breakpoints
+  let cols = props.cols || 3
+  
+  // 按宽度从小到大排序，找到最接近的断点
+  const sortedBps = [...bps].sort((a, b) => a.width - b.width)
+  for (let i = sortedBps.length - 1; i >= 0; i--) {
     if (w >= sortedBps[i].width) {
       cols = sortedBps[i].cols
       break
     }
   }
+  
   return cols
 })
 
@@ -159,8 +171,6 @@ const endOffset = computed(() => { const last = positions.value[endIndex.value -
 const containerStyle = computed<CSSProperties>(() => ({
   width: props.width || '100%',
   height: props.height || '600px',
-  minHeight: props.height || '600px',
-  maxHeight: props.height || '600px',
   position: 'relative',
   overflowY: 'auto',
   overflowX: 'hidden',

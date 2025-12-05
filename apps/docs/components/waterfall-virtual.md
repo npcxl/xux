@@ -435,7 +435,7 @@ const reloadItems = () => {
 <style scoped>
 .queue-item {
   padding: 20px;
-  background: linear-gradient(135deg, var(--x-color-primary-light-9, #E3F2FD) 0%, var(--x-bg-color, #FFFFFF) 100%);
+  background:var(--x-bg-color, #FFFFFF);
   border: 1px solid var(--x-border-color-lighter, #E5E5EA);
   border-radius: 8px;
   box-shadow: var(--x-shadow, 0 2px 8px rgba(0, 0, 0, 0.08));
@@ -470,6 +470,108 @@ const reloadItems = () => {
   font-size: 12px;
   color: var(--x-text-color-secondary, #666666);
   line-height: 1.5;
+}
+</style>
+```
+:::: 
+
+## 动态高度与自定义列数
+
+支持使用 CSS 表达式（如 `calc`）设置容器高度，以及自由控制列数。
+
+::::demo
+```vue
+<template>
+  <div>
+    <div style="margin-bottom: 16px; display: flex; gap: 12px; align-items: center; flex-wrap: wrap;">
+      <div style="display: flex; gap: 8px; align-items: center;">
+        <span style="color: var(--x-text-color-secondary); font-size: 14px">列数：</span>
+        <XButton size="small" :type="columns === 2 ? 'primary' : 'default'" @click="columns = 2">2列</XButton>
+        <XButton size="small" :type="columns === 3 ? 'primary' : 'default'" @click="columns = 3">3列</XButton>
+        <XButton size="small" :type="columns === 4 ? 'primary' : 'default'" @click="columns = 4">4列</XButton>
+        <XButton size="small" :type="columns === 5 ? 'primary' : 'default'" @click="columns = 5">5列</XButton>
+      </div>
+      <div style="display: flex; gap: 8px; align-items: center;">
+        <span style="color: var(--x-text-color-secondary); font-size: 14px">高度：</span>
+        <XButton size="small" :type="heightMode === 'fixed' ? 'primary' : 'default'" @click="heightMode = 'fixed'">固定</XButton>
+        <XButton size="small" :type="heightMode === 'calc' ? 'primary' : 'default'" @click="heightMode = 'calc'">calc</XButton>
+        <XButton size="small" :type="heightMode === 'vh' ? 'primary' : 'default'" @click="heightMode = 'vh'">vh</XButton>
+      </div>
+    </div>
+    <div style="margin-bottom: 12px; padding: 12px; background: var(--x-bg-color-lighter, #F5F5F7); border-radius: 8px; font-size: 13px; color: var(--x-text-color-secondary);">
+      <div><strong>当前配置：</strong></div>
+      <div>列数：{{ columns }} 列</div>
+      <div>高度：{{ currentHeight }}</div>
+    </div>
+    <XWaterfallVirtual 
+      :items="dynamicItems" 
+      :cols="columns"
+      :breakpoints="[]"
+      :gap="16" 
+      :row-gap="16" 
+      :height="currentHeight"
+    >
+      <template #default="slotProps">
+        <div class="dynamic-item" v-if="slotProps?.item" :style="{ height: (slotProps.item.height || 150) + 'px' }">
+          <div class="dynamic-number">#{{ slotProps.item.number }}</div>
+          <div class="dynamic-text">{{ columns }}列布局</div>
+        </div>
+      </template>
+    </XWaterfallVirtual>
+  </div>
+</template>
+
+<script setup>
+import { ref, computed } from 'vue'
+import { XButton } from '@xlui/xux-ui'
+
+const columns = ref(3)
+const heightMode = ref('fixed')
+
+const currentHeight = computed(() => {
+  switch (heightMode.value) {
+    case 'calc':
+      return 'calc(100vh - 350px)'
+    case 'vh':
+      return '60vh'
+    default:
+      return '500px'
+  }
+})
+
+const dynamicItems = ref(
+  Array.from({ length: 100 }, (_, i) => ({
+    id: i + 1,
+    number: i + 1,
+    height: 120 + Math.random() * 100
+  }))
+)
+</script>
+
+<style scoped>
+.dynamic-item {
+  padding: 20px;
+  background: var(--x-bg-color, #FFFFFF);
+  border-radius: 12px;
+  text-align: center;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.3s ease;
+  color: white;
+}
+
+.dynamic-number {
+  font-size: 32px;
+  font-weight: bold;
+}
+
+.dynamic-text {
+  font-size: 14px;
+  opacity: 0.9;
 }
 </style>
 ```
