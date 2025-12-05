@@ -5,7 +5,7 @@
     :style="wrapperStyle"
   >
     <img 
-      v-if="!error"
+      v-if="!error && displaySrc"
       :src="displaySrc"
       :alt="alt"
       :style="imgStyle"
@@ -84,8 +84,10 @@ const emit = defineEmits<{
 const loading = ref(true)
 const error = ref(false)
 // HEIC 转换后的运行时资源
-const displaySrc = ref(props.src)
-const displayList = ref<string[]>(props.previewList || [])
+const displaySrc = ref('')
+const displayList = ref<string[]>([])
+// 标记是否正在转换中，避免中途触发 error
+const converting = ref(false)
 // 记录创建的 object URL，方便销毁
 const objectUrls: string[] = []
 
@@ -123,17 +125,20 @@ function revokeObjectUrls() {
   objectUrls.length = 0
 }
 
-// 将当前 src/previewList 进行必要转换并重置加载状态
+    // 将当前 src/previewList 进行必要转换并重置加载状态
 async function prepareSources() {
   loading.value = true
   error.value = false
+  converting.value = true
   revokeObjectUrls()
+  displaySrc.value = ''
   // 转换源
   displaySrc.value = await convertIfHeic(props.src)
   // 转换列表
   displayList.value = props.previewList?.length
     ? await Promise.all(props.previewList.map((item) => convertIfHeic(item)))
     : []
+  converting.value = false
 }
 
 // 计算样式
@@ -155,6 +160,8 @@ function onLoad(ev: Event) {
 }
 // 图片加载失败
 function onError(ev: Event) {
+  // 转换期间的错误直接忽略，由转换完成后的 src 再次尝试加载
+  if (converting.value) return
   loading.value = false
   error.value = true
   emit('error', ev)
