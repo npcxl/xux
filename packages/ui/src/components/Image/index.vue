@@ -6,7 +6,7 @@
   >
     <img 
       v-if="!error"
-      :src="src"
+      :src="displaySrc"
       :alt="alt"
       :style="imgStyle"
       @load="onLoad"
@@ -46,6 +46,7 @@
 
 <script setup lang="ts">
 import { computed, onMounted, onUnmounted, ref, watch } from 'vue'
+import heic2any from 'heic2any'
 
 export interface ImageProps {
   src: string
@@ -82,55 +83,122 @@ const emit = defineEmits<{
 
 const loading = ref(true)
 const error = ref(false)
+// HEIC 转换后的运行时资源
+const displaySrc = ref(props.src)
+const displayList = ref<string[]>(props.previewList || [])
+// 记录创建的 object URL，方便销毁
+const objectUrls: string[] = []
 
+const isHeic = (url?: string) => !!url && /\.(heic|heif)$/i.test(url)
+
+// 在浏览器端将 HEIC/HEIF 转为 JPEG，提升兼容性
+async function convertIfHeic(url: string) {
+  if (!isHeic(url)) return url
+  try {
+    // 获取图片资源
+    const res = await fetch(url)
+    // 获取图片blob
+    const blob = await res.blob()
+    // 转换为jpeg
+    const converted = await heic2any({
+      blob,
+      toType: 'image/jpeg',
+      quality: 0.9
+    }) as Blob | Blob[]
+    // 获取输出blob
+    const output = Array.isArray(converted) ? converted[0] : converted
+    // 创建object URL
+    const objectUrl = URL.createObjectURL(output)
+    // 记录object URL
+    objectUrls.push(objectUrl)
+    return objectUrl
+  } catch (err) {
+    console.warn('[x-image] HEIC convert failed, fallback to original', err)
+    return url
+  }
+}
+// 释放转换的 blob URL
+function revokeObjectUrls() {
+  objectUrls.forEach((url) => URL.revokeObjectURL(url))
+  objectUrls.length = 0
+}
+
+// 将当前 src/previewList 进行必要转换并重置加载状态
+async function prepareSources() {
+  loading.value = true
+  error.value = false
+  revokeObjectUrls()
+  // 转换源
+  displaySrc.value = await convertIfHeic(props.src)
+  // 转换列表
+  displayList.value = props.previewList?.length
+    ? await Promise.all(props.previewList.map((item) => convertIfHeic(item)))
+    : []
+}
+
+// 计算样式
 const wrapperStyle = computed(() => ({
   width: props.width,
   height: props.height,
   borderRadius: props.radius
 }))
 
+// 图片样式
 const imgStyle = computed(() => ({
   objectFit: props.fit
 }))
 
+// 图片加载完成
 function onLoad(ev: Event) {
   loading.value = false
   emit('load', ev)
 }
+// 图片加载失败
 function onError(ev: Event) {
   loading.value = false
   error.value = true
   emit('error', ev)
 }
 
+// 预览状态
 const showPreview = ref(false)
+// 当前索引
 const activeIndex = ref(props.previewIndex)
 
-const hasList = computed(() => props.previewList && props.previewList.length > 0)
-const currentSrc = computed(() => hasList.value ? props.previewList[activeIndex.value] : props.src)
+// 是否有列表
+const hasList = computed(() => displayList.value.length > 0)
+// 当前源
+const currentSrc = computed(() => hasList.value ? displayList.value[activeIndex.value] : displaySrc.value)
+// 是否有上一张
 const hasPrev = computed(() => hasList.value && activeIndex.value > 0)
-const hasNext = computed(() => hasList.value && activeIndex.value < props.previewList.length - 1)
+// 是否有下一张
+const hasNext = computed(() => hasList.value && activeIndex.value < displayList.value.length - 1)
 
+// 打开预览
 function handleOpenPreview() {
   if (!props.preview) return
   showPreview.value = true
   emit('open', activeIndex.value)
 }
+// 关闭预览
 function closePreview() {
   showPreview.value = false
   emit('close')
 }
+// 上一张
 function prev() {
   if (!hasPrev.value) return
   activeIndex.value -= 1
   emit('change', activeIndex.value)
 }
+// 下一张
 function next() {
   if (!hasNext.value) return
   activeIndex.value += 1
   emit('change', activeIndex.value)
 }
 
+// 键盘事件
 function onKeydown(e: KeyboardEvent) {
   if (!showPreview.value) return
   if (e.key === 'Escape') closePreview()
@@ -138,17 +206,32 @@ function onKeydown(e: KeyboardEvent) {
   if (e.key === 'ArrowRight') next()
 }
 
+// 生命周期
 onMounted(() => {
   window.addEventListener('keydown', onKeydown)
+  prepareSources()
 })
 
+// 卸载
 onUnmounted(() => {
   window.removeEventListener('keydown', onKeydown)
+  revokeObjectUrls()
 })
 
+// 监听预览索引
 watch(() => props.previewIndex, (val) => {
   if (typeof val === 'number') activeIndex.value = val
 })
+
+// 监听源和列表
+watch(
+  () => [props.src, props.previewList],
+  () => {
+    activeIndex.value = props.previewIndex || 0
+    prepareSources()
+  },
+  { deep: true }
+)
 </script>
 
 <style scoped>

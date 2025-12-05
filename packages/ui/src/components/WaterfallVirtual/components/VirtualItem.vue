@@ -7,7 +7,7 @@
 </template>
 
 <script setup lang="ts">
-import { inject, computed, onMounted, onUnmounted, ref } from 'vue'
+import { inject, computed, onMounted, onUnmounted, ref, nextTick } from 'vue'
 import type { CSSProperties } from 'vue'
 import { vLazy } from '../directives/vLazy'
 defineOptions({ directives: { lazy: vLazy } })
@@ -30,7 +30,7 @@ let resizeTimer: ReturnType<typeof setTimeout> | null = null
 onMounted(() => {
   if (rootRef.value && typeof ResizeObserver !== 'undefined' && ctx?.updateHeight) {
     // 初始测量高度（延迟一下，确保元素已渲染）
-    setTimeout(() => {
+    nextTick(() => {
       if (rootRef.value) {
         const initialHeight = rootRef.value.offsetHeight || rootRef.value.scrollHeight || 0
         if (initialHeight > 0) {
@@ -38,7 +38,7 @@ onMounted(() => {
           ctx.updateHeight(props.index, initialHeight)
         }
       }
-    }, 50)
+    })
     
     // 监听高度变化（使用防抖，避免频繁更新）
     ro = new ResizeObserver(() => {
@@ -63,15 +63,15 @@ onMounted(() => {
     images.forEach(img => {
       if (!img.complete) {
         img.onload = () => {
-          setTimeout(() => {
+          nextTick(() => {
             if (rootRef.value) {
-              const newHeight = rootRef.value.offsetHeight || rootRef.value.scrollHeight || 0
-              if (newHeight > 0 && Math.abs(newHeight - lastHeight) > 5) {
+                  const newHeight = rootRef.value.offsetHeight || rootRef.value.scrollHeight || 0
+                  if (newHeight > 0 && Math.abs(newHeight - lastHeight) > 5) {
                 lastHeight = newHeight
                 ctx.updateHeight(props.index, newHeight)
               }
             }
-          }, 50)
+          })
         }
       }
     })

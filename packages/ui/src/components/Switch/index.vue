@@ -452,8 +452,8 @@ const handleChange = () => {
 .switch.size-large {
   --track-width: 64px;
   --track-height: 30px;
-  --thumb-size: 24px;
-  font-size: 18px;
+  --thumb-size: 26px;
+  font-size: 20px;
 }
 
 .switch.size-large .slider {
