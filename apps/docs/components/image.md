@@ -100,16 +100,16 @@ const list = [
       <span class="contributor-name">无敌暴龙神</span>
     </a>
   </div>
-  <!-- <div class="contributor-item">
-    <a href="https://gitee.com/haijun-li" target="_blank" rel="noopener noreferrer">
+  <div class="contributor-item">
+    <a href="https://gitee.com/T_ly" target="_blank" rel="noopener noreferrer">
       <img 
-        src="https://p3.itc.cn/images01/20230307/e9d72e3788844ed1a9259e442899e1bd.png" 
-        alt="lihaijun"
+        src="https://foruda.gitee.com/avatar/1677108466743165805/8033741_t_ly_1599548910.png!avatar200" 
+        alt="tly"
         class="contributor-avatar"
       />
-      <span class="contributor-name">lihaijun</span>
+      <span class="contributor-name">tly</span>
     </a>
-  </div> -->
+  </div>
 </div>
 
 <style scoped>
@@ -173,3 +173,4 @@ const list = [
   }
 }
 </style>
+
