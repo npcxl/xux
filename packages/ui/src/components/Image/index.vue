@@ -155,6 +155,15 @@ function revokeObjectUrls() {
 
 // 将当前 src/previewList 进行必要转换并重置加载状态
 async function prepareSources() {
+  // 如果 src 为空，直接结束加载状态
+  if (!props.src || props.src.trim() === "") {
+    loading.value = false;
+    error.value = false;
+    displaySrc.value = "";
+    displayList.value = [];
+    return;
+  }
+
   loading.value = true;
   error.value = false;
   converting.value = true;
@@ -167,6 +176,13 @@ async function prepareSources() {
     ? await Promise.all(props.previewList.map((item) => convertIfHeic(item)))
     : [];
   converting.value = false;
+
+  // 如果转换后的 src 仍然为空，结束加载状态
+  if (!displaySrc.value || displaySrc.value.trim() === "") {
+    loading.value = false;
+    error.value = true;
+    return;
+  }
 
   // 等待 DOM 更新后，检查图片是否已经加载完成（从缓存中）
   await nextTick();
