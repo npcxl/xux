@@ -21,25 +21,34 @@ export function useWaterfallLayout(options: {
 
   const calculateLayout = async () => {
     const el = options.containerRef.value
+    // 如果容器不存在或没有数据，则不计算布局
     if (!el || options.items.length === 0) {
+      console.log('容器不存在或没有数据，不计算布局');
       containerHeight.value = 0
       itemPositions.value = []
       isCalculating.value = false
       measuredCount.value = 0
       return
     }
+    // 开始计算布局
     isCalculating.value = true
     await nextTick()
+    // 获取容器宽度
     const containerWidth = el.offsetWidth
+    // 获取列数
     const cols = options.getCols()
+    // 如果容器宽度或列数小于等于0，则不计算布局
     if (containerWidth <= 0 || cols <= 0) {
+      console.log('容器宽度或列数小于等于0，不计算布局');
       isCalculating.value = false
       return
     }
+    // 计算列间距
     const totalGap = options.gap * (cols - 1)
+    // 计算列宽度
     const columnWidth = (containerWidth - totalGap) / cols
+    // 初始化列高度
     columnHeights.value = new Array(cols).fill(0)
-    
     // 先使用估算高度快速完成初始布局（不等待图片加载）
     columnHeights.value = new Array(cols).fill(0)
     for (let i = 0; i < options.items.length; i++) {

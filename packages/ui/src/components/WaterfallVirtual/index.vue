@@ -207,17 +207,15 @@ const updateHeight = (idx: number, height: number) => {
     // 使用较大的值作为安全区
     const safeHeight = Math.max(height, estimatedHeight);
     // 只有当高度变化超过阈值时才更新，避免频繁重新计算
-    if (Math.abs(safeHeight - currentHeight) > 5) {
-      itemHeights.value[idx] = safeHeight;
-
-      // 记录已测量的项目
-      if (!measuredHeights.value.has(idx)) {
-        measuredHeights.value.add(idx);
-        updateMeasuredCount(measuredHeights.value.size);
-      }
-
-      scheduleLayout();
+    // if (Math.abs(safeHeight - currentHeight) > 5) {
+    itemHeights.value[idx] = safeHeight;
+    // 记录已测量的项目
+    if (!measuredHeights.value.has(idx)) {
+      measuredHeights.value.add(idx);
+      updateMeasuredCount(measuredHeights.value.size);
     }
+    // }
+    scheduleLayout();
   }
 };
 const errorCount = ref(0);
@@ -355,7 +353,9 @@ const getSkeletonStyle = (index: number): CSSProperties => {
 
 onMounted(() => {
   getBreakpoints();
-  calculateLayout();
+  nextTick(() => {
+    calculateLayout();
+  });
 });
 
 onUnmounted(() => {});

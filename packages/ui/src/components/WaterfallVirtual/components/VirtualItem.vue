@@ -44,7 +44,7 @@ let ro: ResizeObserver | null = null;
 let lastHeight = 0;
 let resizeTimer: ReturnType<typeof setTimeout> | null = null;
 
-onMounted( async() => {
+onMounted(async () => {
   if (
     rootRef.value &&
     typeof ResizeObserver !== "undefined" &&
@@ -84,19 +84,30 @@ onMounted( async() => {
     // 监听图片加载完成
     const images = rootRef.value.querySelectorAll("img");
     images.forEach((img) => {
+      // 如果图片未加载完成，则监听加载完成事件
       if (!img.complete) {
         img.onload = () => {
           nextTick(() => {
-            if (rootRef.value) {
-              const newHeight =
-                rootRef.value.offsetHeight || rootRef.value.scrollHeight || 0;
-              if (newHeight > 0 && Math.abs(newHeight - lastHeight) > 5) {
-                lastHeight = newHeight;
-                ctx.updateHeight(props.index, newHeight);
-              }
-            }
+            // 图片已经加载完成 获取图片高度
+            const newHeight = img.naturalHeight;
+            // 如果图片高度大于0且高度变化超过阈值，则更新高度
+            // if (newHeight > 0 && Math.abs(newHeight - lastHeight) > 5) {
+            lastHeight = newHeight;
+            console.log("图片加载完成------------------------", props.index, newHeight);
+            ctx.updateHeight(props.index, newHeight);
+            // }
           });
         };
+      } else {
+        nextTick(() => {
+          let newHeight = img.naturalHeight;
+          // 如果图片高度大于0且高度变化超过阈值，则更新高度
+          // if (newHeight > 0 && Math.abs(newHeight - lastHeight) > 5) {
+          lastHeight = newHeight;
+          console.log("图片加载完成------------------------", props.index, newHeight);
+          ctx.updateHeight(props.index, props.index, newHeight);
+          // }
+        });
       }
     });
   }
